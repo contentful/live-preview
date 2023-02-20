@@ -1,0 +1,11 @@
+package:$1:
+  - packages/([^/]+)/.*
+
+configuration:
+  - .circleci/**/*
+  - .dependabot/**/*
+  - .github/**/*
+  - tsconfig.json
+  - lerna.json
+  - .eslintrc.js
+  - .prettierrc

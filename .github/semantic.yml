@@ -1,0 +1,17 @@
+# Always validate the PR title AND all the commits
+titleAndCommits: true
+anyCommit: true
+allowMergeCommits: false
+types:
+  - feat
+  - fix
+  - improvement
+  - docs
+  - style
+  - refactor
+  - perf
+  - test
+  - build
+  - ci
+  - chore
+  - revert
