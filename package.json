@@ -23,6 +23,7 @@
     "start": "vite build --watch",
     "build": "tsc && vite build",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "test:ci": "true",
     "prepare": "husky install"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",

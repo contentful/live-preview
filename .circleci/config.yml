@@ -37,7 +37,6 @@ jobs:
       - yarn_install
       - run: yarn lint
       - run: yarn build
-      - run: yarn tsc
   unit-tests:
     executor: linux-node
     steps:
