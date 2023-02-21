@@ -1,3 +1,3 @@
 export const testFunction = () => {
-  window.alert('live preview package works!');
+  console.log('live preview package works!');
 };
