@@ -1,8 +1,0 @@
-version: 1
-
-compressed-size:
-  compression: 'gzip'
-  pattern: './{dist}/**/*.{js,css}'
-  strip-hash: "\\b\\w{8}\\."
-  collapse-unchanged: true
-  minimum-change-threshold: 1024
