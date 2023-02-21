@@ -72,7 +72,7 @@ workflows:
           context: vault
           filters:
             branches:
-              only: master
+              only: main
           requires:
             - lint
             - unit-tests
