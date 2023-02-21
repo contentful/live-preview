@@ -37,3 +37,11 @@ npm install @contentful/live-preview
 
 The live preview package is open source software [licensed as MIT](./LICENSE).
 
+
+[contentful]: https://www.contentful.com
+[github-issues]: https://github.com/contentful/live-preview/issues
+[typescript]: https://www.typescriptlang.org/
+[react]: https://reactjs.org/
+[prettier]: https://prettier.io/
+[eslint]: https://eslint.org/
+[vite]: https://vitejs.dev/
