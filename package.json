@@ -23,7 +23,10 @@
     "start": "vite build --watch",
     "build": "tsc && vite build",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "prepare": "husky install"
+    "test:ci": "true",
+    "prepare": "husky install",
+    "presemantic-release": "yarn build",
+    "semantic-release": "semantic-release"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {},
@@ -31,6 +34,7 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@contentful/eslint-config-extension": "0.4.3",
+    "@semantic-release/changelog": "^6.0.2",
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
@@ -40,11 +44,35 @@
     "husky": "^8.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "semantic-release": "^19.0.2",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "releaseRules": [
+            {
+              "type": "build",
+              "scope": "deps",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
   }
 }

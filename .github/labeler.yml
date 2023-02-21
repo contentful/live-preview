@@ -6,6 +6,5 @@ configuration:
   - .dependabot/**/*
   - .github/**/*
   - tsconfig.json
-  - lerna.json
   - .eslintrc.js
   - .prettierrc
