@@ -5,8 +5,8 @@
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
   "source": "./src/index.tsx",
-  "main": "./dist/index.js",
-  "module": "dist/field-editor-rich-text.esm.js",
+  "main": "./dist/live-preview.cjs",
+  "module": "dist/live-preview.js",
   "typings": "dist/index.d.ts",
   "type": "module",
   "files": [
@@ -49,6 +49,7 @@
     "semantic-release": "^19.0.2",
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
+    "vite-plugin-dts": "^2.0.1",
     "vitest": "^0.28.5"
   },
   "peerDependencies": {
