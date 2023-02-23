@@ -23,12 +23,14 @@
     "start": "vite build --watch",
     "build": "tsc && vite build",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "tsc": "tsc --noEmit",
     "test": "vitest",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
     "prepare": "husky install",
     "presemantic-release": "yarn build",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "cm": "git-cz"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {},
@@ -41,9 +43,12 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "commitizen": "4.3.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-import-helpers": "^1.2.1",
     "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "semantic-release": "^19.0.2",
@@ -55,6 +60,20 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "lint-staged": {
+    "*.{t,j}s?(x)": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,yml,html}": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "release": {
     "branches": [

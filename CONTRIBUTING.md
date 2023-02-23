@@ -6,7 +6,7 @@ Please take a moment to review this document in order to make the contribution p
 
 ### Requirements
 
-- Node.js: `>=14.17.0`
+- Node.js: `>=16.15.0`
 - Yarn: `>=1.21.1`
 
 To install all dependencies and build all packages run the following commands from the root of the project.
@@ -53,25 +53,21 @@ yarn tsc
 
 ### Tests
 
-We use [Jest](https://jestjs.io/) and [Testing Library](https://testing-library.com/) for writing unit tests.
-
-#### Run tests for concrete package
+We use [vitest](https://vitest.dev) and [Testing Library](https://testing-library.com/) for writing unit tests.
 
 ```bash
-cd packages/single-line
 yarn test
 ```
 
-#### Run tests for all packages
+
+#### Run all tests
 
 ```bash
-# at the monorepo root
 yarn test:ci
 ```
 
 #### Links
 
 - [`@testing-library/react` documentation](https://testing-library.com/docs/react-testing-library/intro)
-- [`jest` documentation](https://testing-library.com/docs/react-testing-library/intro)
-- [`jest` cheat sheet](https://github.com/sapegin/jest-cheat-sheet)
+- [`vitest` documentation](https://vitest.dev/guide/)
 
