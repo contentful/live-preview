@@ -27,7 +27,18 @@ npm install @contentful/live-preview
 
 ### Field Tagging
 
-[Documentation on field tagging]
+To tag fields you need to add the live preview data-attributes to the rendered HTML element output.
+You can do this in React via our helper function.
+
+```
+import { getLivePreviewProps } from '@contentful/live-preview';
+
+...
+
+<h1 {...getLivePreviewProps({ entryId: id, fieldId: 'title', locale })}>
+  {title}
+</h1>
+```
 
 ### Live Updates
 
