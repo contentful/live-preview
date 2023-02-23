@@ -12,7 +12,6 @@ describe('getLivePreviewProps', () => {
       fieldId,
       locale,
     });
-
     expect(result).toStrictEqual({
       'data-contentful-field-id': `${entryId}:${fieldId}:${locale}`,
     });
