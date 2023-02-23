@@ -1,4 +1,3 @@
-import { indexForPath, routeForIndex, StaticRoutes } from './staticRoutes';
 import { describe, it, expect } from 'vitest';
 import { getLivePreviewProps } from './getLivePreviewProps';
 
