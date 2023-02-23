@@ -14,7 +14,9 @@ describe('getLivePreviewProps', () => {
     });
 
     expect(result).toStrictEqual({
-      'data-contentful-field-id': `${entryId}:${fieldId}:${locale}`,
+      'data-contentful-field-id': fieldId,
+      'data-contentful-entry-id': entryId,
+      'data-contentful-locale': locale,
     });
   });
 });
