@@ -1,3 +1,1 @@
-export const testFunction = () => {
-  console.log('live preview package works!');
-};
+export * from './features/tagging';
