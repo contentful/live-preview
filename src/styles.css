@@ -1,0 +1,45 @@
+[data-contentful-field-id] {
+  outline: 1px dashed rgba(64, 160, 255, 0) !important;
+  transition: outline-color 0.3s ease-in-out;
+}
+
+.contentful-inspector--active [data-contentful-field-id] {
+  outline: 1px dashed rgba(64, 160, 255, 1) !important;
+}
+
+button.contentful-tooltip {
+  padding: 0;
+  display: none;
+  outline: none;
+  border: none;
+  z-index: 999999 !important;
+  position: fixed;
+  margin: 0;
+  height: 32px;
+  width: 72px;
+  background: rgb(3, 111, 227);
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  transition: background 0.2s;
+  text-align: center !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 1px 0px rgba(17, 27, 43, 0.05);
+  box-sizing: border-box;
+  cursor: pointer;
+  gap: 6px;
+}
+
+button.contentful-tooltip:hover {
+  background: rgb(0, 89, 200);
+}
+
+button.contentful-tooltip:active:hover {
+  background: rgb(0, 65, 171);
+}
+
+.contentful-inspector--active button.contentful-tooltip {
+  display: flex;
+}
