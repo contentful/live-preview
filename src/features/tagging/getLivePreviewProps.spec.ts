@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
 import { getLivePreviewProps } from './getLivePreviewProps';
 
 describe('getLivePreviewProps', () => {
@@ -16,6 +17,7 @@ describe('getLivePreviewProps', () => {
       'data-contentful-field-id': fieldId,
       'data-contentful-entry-id': entryId,
       'data-contentful-locale': locale,
+      onClick: vi.spyOn(result, 'onClick'),
     });
   });
 });
