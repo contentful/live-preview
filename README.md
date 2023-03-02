@@ -25,17 +25,30 @@ npm install @contentful/live-preview
 
 ## Documentation
 
+### Initializing the SDK
+
+To establish a communication between your preview frontend and Contentful, you simply need to initialize the live preview SDK. This can be done by executing the following command:
+
+```
+import { ContentfulLivePreview } from '@contentful/live-preview';
+
+...
+
+ContentfulLivePreview.init();
+```
+
 ### Field Tagging
 
 To tag fields you need to add the live preview data-attributes to the rendered HTML element output.
 You can do this in React via our helper function.
+The necessary styles for the live edit tags can be found in the '@contentful/live-preview/dist/style.css' file.
 
 ```
-import { getLivePreviewProps } from '@contentful/live-preview';
-
+import { ContentfulLivePreview } from '@contentful/live-preview';
+import '@contentful/live-preview/dist/style.css';
 ...
 
-<h1 {...getLivePreviewProps({ entryId: id, fieldId: 'title', locale })}>
+<h1 {...ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title', locale })}>
   {title}
 </h1>
 ```
@@ -53,7 +66,6 @@ We want to provide a safe, inclusive, welcoming, and harassment-free space and e
 ## License
 
 The live preview package is open source software [licensed as MIT](./LICENSE).
-
 
 [contentful]: https://www.contentful.com
 [github-issues]: https://github.com/contentful/live-preview/issues
