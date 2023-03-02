@@ -20,14 +20,14 @@ export default class FieldTagging {
 
     this.resolveIncomingMessage = this.resolveIncomingMessage.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
-    this.addStyleOnHover = this.addStyleOnHover.bind(this);
+    this.addTooltipOnHover = this.addTooltipOnHover.bind(this);
     this.createTooltip = this.createTooltip.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
 
     this.createTooltip();
     window.addEventListener('message', this.resolveIncomingMessage);
     window.addEventListener('scroll', this.updateTooltipPosition);
-    window.addEventListener('mouseover', this.addStyleOnHover);
+    window.addEventListener('mouseover', this.addTooltipOnHover);
   }
 
   // Handles incoming messages from Contentful
@@ -63,8 +63,7 @@ export default class FieldTagging {
     return false;
   }
 
-  private addStyleOnHover(e: MouseEvent) {
-    let trigger = true;
+  private addTooltipOnHover(e: MouseEvent) {
     const eventTargets = e.composedPath();
 
     for (const eventTarget of eventTargets) {
@@ -76,7 +75,7 @@ export default class FieldTagging {
       const currEntryId = element.getAttribute(DATA_ENTRY_ID);
       const currLocale = element.getAttribute(DATA_LOCALE);
 
-      if (trigger && currFieldId && currEntryId && currLocale) {
+      if (currFieldId && currEntryId && currLocale) {
         this.currentElementBesideTooltip = element;
 
         if (this.updateTooltipPosition()) {
@@ -85,7 +84,7 @@ export default class FieldTagging {
           this.tooltip?.setAttribute(DATA_CURR_LOCALE, currLocale);
         }
 
-        trigger = false;
+        break;
       }
     }
   }
