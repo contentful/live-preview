@@ -2,13 +2,11 @@ import {
   DATA_CURR_ENTRY_ID,
   DATA_CURR_FIELD_ID,
   DATA_CURR_LOCALE,
-  DATA_ENTRY_ID,
-  DATA_FIELD_ID,
-  DATA_LOCALE,
   TOOLTIP_CLASS,
   TOOLTIP_HEIGHT,
   TOOLTIP_PADDING_LEFT,
 } from './constants';
+import { TagAttributes } from './types';
 
 export default class FieldTagging {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
@@ -71,9 +69,9 @@ export default class FieldTagging {
       if (element.nodeName === 'BODY') break;
       if (typeof element?.getAttribute !== 'function') continue;
 
-      const currFieldId = element.getAttribute(DATA_FIELD_ID);
-      const currEntryId = element.getAttribute(DATA_ENTRY_ID);
-      const currLocale = element.getAttribute(DATA_LOCALE);
+      const currFieldId = element.getAttribute(TagAttributes.FIELD_ID);
+      const currEntryId = element.getAttribute(TagAttributes.ENTRY_ID);
+      const currLocale = element.getAttribute(TagAttributes.LOCALE);
 
       if (currFieldId && currEntryId && currLocale) {
         this.currentElementBesideTooltip = element;

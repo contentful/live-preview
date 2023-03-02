@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ContentfulLivePreview } from '../index';
+import { TagAttributes } from '../types';
 
 describe('getProps', () => {
   it('returns the expected props with a given entryId, fieldId and locale', () => {
@@ -14,9 +15,9 @@ describe('getProps', () => {
     });
 
     expect(result).toStrictEqual({
-      'data-contentful-field-id': fieldId,
-      'data-contentful-entry-id': entryId,
-      'data-contentful-locale': locale,
+      [TagAttributes.FIELD_ID]: fieldId,
+      [TagAttributes.ENTRY_ID]: entryId,
+      [TagAttributes.LOCALE]: locale,
     });
   });
 });
