@@ -6667,9 +6667,9 @@ vite-node@0.29.2:
     vite "^3.0.0 || ^4.0.0"
 
 vite-plugin-dts@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-2.0.2.tgz#ecee6198830012ed3e741ad9c1c5223f99e49546"
-  integrity sha512-i3HBlrdqE2FQxQqrNwFj9P2ei/I7lt/d3Q8NOE1JCz/gNYhNf/oUeIJamIdWQUNQGhUd/Y6mtpm3kOYPw1gz8Q==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-2.1.0.tgz#40784ddad7a7be13176ed1da2c11352181f4891b"
+  integrity sha512-Vw0FdCuM3VLR4hTFHh0yMEzfwI7NyFvPIMFwvE+Q0t4qtoHIfYOP/JXs7nTnHuQk87FSjlhGeIJ1fLBcktgPgA==
   dependencies:
     "@babel/parser" "^7.20.15"
     "@microsoft/api-extractor" "^7.33.5"
