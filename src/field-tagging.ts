@@ -8,7 +8,7 @@ import {
 } from './constants';
 import { TagAttributes } from './types';
 
-export default class FieldTagging {
+export class ContentfulFieldTagging {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
 
@@ -16,24 +16,22 @@ export default class FieldTagging {
     this.tooltip = null;
     this.currentElementBesideTooltip = null;
 
-    this.resolveIncomingMessage = this.resolveIncomingMessage.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.addTooltipOnHover = this.addTooltipOnHover.bind(this);
     this.createTooltip = this.createTooltip.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
 
     this.createTooltip();
-    window.addEventListener('message', this.resolveIncomingMessage);
     window.addEventListener('scroll', this.updateTooltipPosition);
     window.addEventListener('mouseover', this.addTooltipOnHover);
   }
 
   // Handles incoming messages from Contentful
-  private resolveIncomingMessage(e: MessageEvent) {
-    if (typeof e.data !== 'object') return;
-    if (e.data.from !== 'live-preview') return;
-    // Toggle the contentful-inspector--active class on the body element based on the isInspectorActive boolean
-    document.body.classList.toggle('contentful-inspector--active', e.data.isInspectorActive);
+  public receiveMessage(data: Record<string, unknown>): void {
+    if (typeof data.isInspectorActive === 'boolean') {
+      // Toggle the contentful-inspector--active class on the body element based on the isInspectorActive boolean
+      document.body.classList.toggle('contentful-inspector--active', data.isInspectorActive);
+    }
   }
 
   // Updates the position of the tooltip

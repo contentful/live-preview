@@ -6,9 +6,10 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'LivePreview',
-      fileName: 'live-preview',
+      entry: [
+        resolve(__dirname, 'src/index.ts'),
+        resolve(__dirname, 'src/react.ts')
+      ],
       formats: ['cjs', 'es'],
     },
     rollupOptions: {
