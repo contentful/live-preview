@@ -5,8 +5,8 @@
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
   "source": "./src/index.tsx",
-  "main": "./dist/live-preview.cjs",
-  "module": "dist/live-preview.js",
+  "main": "./dist/index.cjs",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "type": "module",
   "files": [
@@ -39,6 +39,7 @@
     "@commitlint/config-conventional": "^17.4.4",
     "@contentful/eslint-config-extension": "0.4.3",
     "@semantic-release/changelog": "^6.0.2",
+    "@testing-library/react": "14.0.0",
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
