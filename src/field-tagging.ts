@@ -19,6 +19,7 @@ export default class FieldTagging {
     this.resolveIncomingMessage = this.resolveIncomingMessage.bind(this);
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.addTooltipOnHover = this.addTooltipOnHover.bind(this);
+    this.removeTooltip = this.removeTooltip.bind(this);
     this.createTooltip = this.createTooltip.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
 
@@ -76,13 +77,35 @@ export default class FieldTagging {
       if (currFieldId && currEntryId && currLocale) {
         this.currentElementBesideTooltip = element;
 
-        if (this.updateTooltipPosition()) {
-          this.tooltip?.setAttribute(DATA_CURR_FIELD_ID, currFieldId);
-          this.tooltip?.setAttribute(DATA_CURR_ENTRY_ID, currEntryId);
-          this.tooltip?.setAttribute(DATA_CURR_LOCALE, currLocale);
+        if (this.updateTooltipPosition() && this.tooltip) {
+          this.tooltip.style.display = '';
+          this.tooltip.setAttribute(DATA_CURR_FIELD_ID, currFieldId);
+          this.tooltip.setAttribute(DATA_CURR_ENTRY_ID, currEntryId);
+          this.tooltip.setAttribute(DATA_CURR_LOCALE, currLocale);
+          this.currentElementBesideTooltip.addEventListener('mouseout', this.removeTooltip);
         }
-
         break;
+      }
+    }
+  }
+
+  private removeTooltip(e: MouseEvent) {
+    if (this.tooltip) {
+      const relatedTarget = e.relatedTarget as HTMLElement;
+      // check if the element that the mouse is moving to is null or not a child of either the current element or the tooltip
+      if (
+        !relatedTarget ||
+        !(
+          this.currentElementBesideTooltip?.contains(relatedTarget) ||
+          this.tooltip.contains(relatedTarget)
+        )
+      ) {
+        this.tooltip.style.display = 'none';
+        this.tooltip.removeAttribute(DATA_CURR_FIELD_ID);
+        this.tooltip.removeAttribute(DATA_CURR_ENTRY_ID);
+        this.tooltip.removeAttribute(DATA_CURR_LOCALE);
+        this.currentElementBesideTooltip?.removeEventListener('mouseout', this.removeTooltip);
+        this.currentElementBesideTooltip = null;
       }
     }
   }
