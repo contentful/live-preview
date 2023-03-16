@@ -9,3 +9,7 @@ export enum TagAttributes {
   ENTRY_ID = 'data-contentful-entry-id',
   LOCALE = 'data-contentful-locale',
 }
+
+export type Entity = Record<string, unknown>;
+export type Argument = Entity | Entity[];
+export type SubscribeCallback = (data: Argument) => void;

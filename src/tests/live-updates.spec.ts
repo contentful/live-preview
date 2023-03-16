@@ -1,9 +1,9 @@
 import { describe, it, vi, expect } from 'vitest';
-import { ContentfulLiveUpdates } from '../live-updates';
+import { LiveUpdates } from '../live-updates';
 
-describe('ContentfulLiveUpdates', () => {
+describe('LiveUpdates', () => {
   it('should listen to changes and calls the subscribed handlers', () => {
-    const liveUpdates = new ContentfulLiveUpdates();
+    const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1' };
     const cb = vi.fn();
     liveUpdates.subscribe(data, 'en-US', cb);
@@ -15,7 +15,7 @@ describe('ContentfulLiveUpdates', () => {
   });
 
   it('no longer receives updates after unsubcribing', () => {
-    const liveUpdates = new ContentfulLiveUpdates();
+    const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1' };
     const cb = vi.fn();
     const unsubscribe = liveUpdates.subscribe(data, 'en-US', cb);
@@ -31,7 +31,7 @@ describe('ContentfulLiveUpdates', () => {
   });
 
   it('ignores invalid messages', () => {
-    const liveUpdates = new ContentfulLiveUpdates();
+    const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1' };
     const cb = vi.fn();
     liveUpdates.subscribe(data, 'en-US', cb);

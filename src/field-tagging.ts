@@ -7,8 +7,9 @@ import {
   TOOLTIP_PADDING_LEFT,
 } from './constants';
 import { TagAttributes } from './types';
+import { sendMessageToEditor } from './utils';
 
-export class ContentfulFieldTagging {
+export class FieldTagging {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
 
@@ -108,15 +109,10 @@ export class ContentfulFieldTagging {
     const entryId = this.tooltip.getAttribute(DATA_CURR_ENTRY_ID);
     const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
 
-    window.top?.postMessage(
-      {
-        from: 'live-preview',
-        fieldId,
-        entryId,
-        locale,
-      },
-      //todo: check if there is any security risk with this
-      '*'
-    );
+    sendMessageToEditor({
+      fieldId,
+      entryId,
+      locale,
+    });
   }
 }

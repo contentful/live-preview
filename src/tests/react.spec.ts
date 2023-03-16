@@ -15,10 +15,12 @@ describe('useContentfulLiveUpdates', () => {
 
   beforeEach(() => {
     subscribe.mockReturnValue(unsubscribe);
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   it('should return the original data', () => {
@@ -65,8 +67,37 @@ describe('useContentfulLiveUpdates', () => {
 
     act(() => {
       subscribe.mock.calls[0][2](updatedData);
+      vi.advanceTimersToNextTimer();
     });
 
     expect(result.current).toEqual(updatedData);
+  });
+
+  it('should debounce updates', () => {
+    let counter = 0;
+    const useTestHook = (data: any, locale: string) => {
+      const value = useContentfulLiveUpdates(data, locale);
+      counter++;
+      return value;
+    };
+
+    const { result } = renderHook((data) => useTestHook(data, locale), {
+      initialProps: initialData,
+    });
+
+    expect(result.current).toEqual(initialData);
+    expect(counter).toEqual(1);
+
+    act(() => {
+      subscribe.mock.calls[0][2]({ sys: { id: '1' }, title: 'Hello W' });
+      subscribe.mock.calls[0][2]({ sys: { id: '1' }, title: 'Hello Wo' });
+      subscribe.mock.calls[0][2]({ sys: { id: '1' }, title: 'Hello Wor' });
+      subscribe.mock.calls[0][2]({ sys: { id: '1' }, title: 'Hello Worl' });
+      subscribe.mock.calls[0][2](updatedData);
+      vi.advanceTimersToNextTimer();
+    });
+
+    expect(result.current).toEqual(updatedData);
+    expect(counter).toEqual(2);
   });
 });
