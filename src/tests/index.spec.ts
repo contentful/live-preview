@@ -3,26 +3,32 @@ import { describe, it, expect, vi, Mock, afterEach, beforeEach, beforeAll } from
 import { ContentfulLivePreview } from '../index';
 import { TagAttributes } from '../types';
 
-import { ContentfulFieldTagging } from '../field-tagging';
-import { ContentfulLiveUpdates } from '../live-updates';
+import { FieldTagging } from '../field-tagging';
+import { LiveUpdates } from '../live-updates';
+import { sendMessageToEditor } from '../utils';
 
 vi.mock('../field-tagging');
 vi.mock('../live-updates');
+vi.mock('../utils');
 
 describe('ContentfulLivePreview', () => {
   const receiveMessageTagging = vi.fn();
   const receiveMessageUpdates = vi.fn();
   const subscribe = vi.fn();
 
-  (ContentfulFieldTagging as Mock).mockImplementation(() => ({
+  (FieldTagging as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageTagging,
   }));
-  (ContentfulLiveUpdates as Mock).mockImplementation(() => ({
+  (LiveUpdates as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageUpdates,
     subscribe,
   }));
 
-  ContentfulLivePreview.init();
+  beforeAll(() => {
+    ContentfulLivePreview.init();
+    // establish the connection, needs to tested here, as we can only init the ContentfulLivePreview once
+    expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
+  });
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -57,12 +63,12 @@ describe('ContentfulLivePreview', () => {
   });
 
   describe('subscribe', () => {
-    it('should subscribe to changes from ContentfulLiveUpdates', () => {
+    it('should subscribe to changes from LiveUpdates', () => {
       const callback = vi.fn();
       const data = { entity: {} };
       ContentfulLivePreview.subscribe(data, 'en-US', callback);
 
-      // Check that the ContentfulLiveUpdates.subscribe was called correctly
+      // Check that the LiveUpdates.subscribe was called correctly
       expect(subscribe).toHaveBeenCalledOnce();
       expect(subscribe).toHaveBeenCalledWith(data, 'en-US', callback);
 

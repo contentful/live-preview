@@ -33,7 +33,9 @@
     "cm": "git-cz"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
-  "dependencies": {},
+  "dependencies": {
+    "use-deep-compare-effect": "1.8.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",

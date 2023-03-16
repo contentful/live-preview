@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeAll } from 'vitest';
 import { ContentfulLivePreview } from '../index';
-import { ContentfulFieldTagging } from '../field-tagging';
+import { FieldTagging } from '../field-tagging';
 
 describe('init', () => {
   it('returns a Promise that resolves to a LivePreview instance when running in a browser environment', async () => {
     const livePreviewInstance = await ContentfulLivePreview.init();
-    expect(livePreviewInstance).toBeInstanceOf(ContentfulFieldTagging);
+    expect(livePreviewInstance).toBeInstanceOf(FieldTagging);
   });
 
   it('returns undefined when not running in a browser environment', () => {

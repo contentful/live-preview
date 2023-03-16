@@ -1,12 +1,10 @@
-export type Entity = Record<string, unknown>;
-export type Argument = Entity | Entity[];
-export type SubscribeCallback = (data: Argument) => void;
+import { Argument, Entity, SubscribeCallback } from './types';
 
 /**
  * LiveUpdates for the Contentful Live Preview mode
  * receives the updated Entity from the Editor and merges them together with the provided data
  */
-export class ContentfulLiveUpdates {
+export class LiveUpdates {
   private subscriptions: { id: number; data: Argument; locale: string; cb: SubscribeCallback }[] =
     [];
 

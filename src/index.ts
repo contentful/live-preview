@@ -1,22 +1,23 @@
 import './styles.css';
-import { ContentfulFieldTagging } from './field-tagging';
-import { ContentfulLiveUpdates, type Entity, type SubscribeCallback } from './live-updates';
-import { LivePreviewProps, TagAttributes } from './types';
+import { FieldTagging } from './field-tagging';
+import { LiveUpdates } from './live-updates';
+import { Entity, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
+import { sendMessageToEditor } from './utils';
 
 export class ContentfulLivePreview {
-  static fieldTagging: ContentfulFieldTagging | null = null;
-  static liveUpdates: ContentfulLiveUpdates | null = null;
+  static fieldTagging: FieldTagging | null = null;
+  static liveUpdates: LiveUpdates | null = null;
 
   // Static method to initialize the LivePreview SDK
-  static init(): Promise<ContentfulFieldTagging> | undefined {
+  static init(): Promise<FieldTagging> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
       if (ContentfulLivePreview.fieldTagging) {
         console.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
       } else {
-        ContentfulLivePreview.fieldTagging = new ContentfulFieldTagging();
-        ContentfulLivePreview.liveUpdates = new ContentfulLiveUpdates();
+        ContentfulLivePreview.fieldTagging = new FieldTagging();
+        ContentfulLivePreview.liveUpdates = new LiveUpdates();
 
         window.addEventListener('message', (event) => {
           if (typeof event.data !== 'object' || !event.data) return;
@@ -24,6 +25,11 @@ export class ContentfulLivePreview {
 
           ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
+        });
+
+        sendMessageToEditor({
+          connected: true,
+          tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
         });
 
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
