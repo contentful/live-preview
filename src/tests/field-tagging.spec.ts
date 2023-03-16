@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { ContentfulFieldTagging } from '../field-tagging';
+import { FieldTagging } from '../field-tagging';
 
 describe('FieldTagging', () => {
-  let fieldTagging: ContentfulFieldTagging;
+  let fieldTagging: FieldTagging;
 
   beforeEach(() => {
-    fieldTagging = new ContentfulFieldTagging();
+    fieldTagging = new FieldTagging();
   });
 
   afterEach(() => {

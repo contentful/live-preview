@@ -58,7 +58,7 @@ import '@contentful/live-preview/dist/style.css';
 Live Updates from the editor to your applications are currently only supported for [React.js](https://reactjs.org/)
 
 ```tsx
-import { useContentfulLiveUpdates } from "@contentful/live-previews/dist/react"
+import { useContentfulLiveUpdates } from "@contentful/live-preview/dist/react"
 
 // ...
 const updated = useContentfulLiveUpdates(originalData, locale)
