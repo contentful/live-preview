@@ -4,8 +4,6 @@ import { LiveUpdates } from './live-updates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 import { sendMessageToEditor } from './utils';
 
-export * from './react';
-
 export class ContentfulLivePreview {
   static fieldTagging: FieldTagging | null = null;
   static liveUpdates: LiveUpdates | null = null;

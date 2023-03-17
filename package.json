@@ -6,8 +6,8 @@
   "description": "Preview SDK for both the field tagging connection + live content updates",
   "source": "./src/index.tsx",
   "main": "./dist/index.cjs",
-  "module": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "type": "module",
   "files": [
     "dist",
