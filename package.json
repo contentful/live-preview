@@ -11,7 +11,8 @@
   "type": "module",
   "files": [
     "dist",
-    "react"
+    "react",
+    "style.css"
   ],
   "exports": {
     ".": {
@@ -21,8 +22,7 @@
     "./react": {
       "import": "./dist/react.js",
       "require": "./dist/react.cjs"
-    },
-    "./style.css": "./dist/style.css"
+    }
   },
   "repository": {
     "type": "git",
