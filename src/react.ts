@@ -1,22 +1,22 @@
 import { useState } from 'react';
 
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect';
 
 import { ContentfulLivePreview } from '.';
-import { Entity } from './types';
+import { Argument } from './types';
 import { debounce } from './utils';
 
-export function useContentfulLiveUpdates<T extends Entity | null | undefined>(
+export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
   locale: string
 ): T {
   const [state, setState] = useState(data);
 
-  useDeepCompareEffect(() => {
+  useDeepCompareEffectNoCheck(() => {
     // update content from external
     setState(data);
-    // nothing to merge if there are no data
-    if (!data) {
+    // nothing to merge if there is no data
+    if (!data || (Array.isArray(data) && !data.length) || !Object.keys(data).length) {
       return;
     }
     // or update content through live updates
