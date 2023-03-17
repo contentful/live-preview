@@ -4,6 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useContentfulLiveUpdates } from '../react';
 import { ContentfulLivePreview } from '..';
+import { Argument } from '../types';
 
 describe('useContentfulLiveUpdates', () => {
   const unsubscribe = vi.fn();
@@ -99,5 +100,17 @@ describe('useContentfulLiveUpdates', () => {
 
     expect(result.current).toEqual(updatedData);
     expect(counter).toEqual(2);
+  });
+
+  it('shouldnt listen to changes if the initial data is empty', () => {
+    const { rerender } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
+      initialProps: undefined as Argument | null | undefined,
+    });
+
+    rerender(null);
+    rerender([]);
+    rerender({});
+
+    expect(subscribe).not.toHaveBeenCalled();
   });
 });
