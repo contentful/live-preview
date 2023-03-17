@@ -1,0 +1,15 @@
+{
+  "name": "@contentful/live-preview/react",
+  "version": "0.0.0-determined-by-semantic-release",
+  "author": "Contentful GmbH",
+  "license": "MIT",
+  "description": "Preview SDK for both the field tagging connection + live content updates (React)",
+  "source": "../src/react.tsx",
+  "main": "../dist/react.cjs",
+  "module": "../dist/react.js",
+  "typings": "../dist/react.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ]
+}

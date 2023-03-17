@@ -10,7 +10,8 @@
   "typings": "dist/index.d.ts",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "react"
   ],
   "exports": {
     ".": {

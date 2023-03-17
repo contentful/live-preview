@@ -1,6 +1,6 @@
+import react from '@vitejs/plugin-react-swc';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
-        react: resolve(__dirname, 'src/react.ts')
+        react: resolve(__dirname, 'src/react.ts'),
       },
       formats: ['cjs', 'es'],
     },

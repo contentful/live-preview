@@ -40,3 +40,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Sub packages
+react/dist/*
