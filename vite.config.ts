@@ -5,11 +5,12 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   build: {
+    outDir: './dist',
     lib: {
-      entry: [
-        resolve(__dirname, 'src/index.ts'),
-        resolve(__dirname, 'src/react.ts')
-      ],
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        react: resolve(__dirname, 'src/react.ts')
+      },
       formats: ['cjs', 'es'],
     },
     rollupOptions: {

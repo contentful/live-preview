@@ -12,6 +12,17 @@
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/live-preview.git"
@@ -21,7 +32,7 @@
   },
   "scripts": {
     "start": "vite build --watch",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
     "test": "vitest",
