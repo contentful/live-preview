@@ -22,6 +22,10 @@
     "./react": {
       "import": "./dist/react.js",
       "require": "./dist/react.cjs"
+    },
+    "./style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
     }
   },
   "repository": {
