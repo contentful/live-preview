@@ -1,7 +1,7 @@
 import './styles.css';
 import { FieldTagging } from './field-tagging';
 import { LiveUpdates } from './live-updates';
-import { Entity, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
+import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 import { sendMessageToEditor } from './utils';
 
 export class ContentfulLivePreview {
@@ -37,7 +37,7 @@ export class ContentfulLivePreview {
     }
   }
 
-  static subscribe(data: Entity, locale: string, callback: SubscribeCallback): VoidFunction {
+  static subscribe(data: Argument, locale: string, callback: SubscribeCallback): VoidFunction {
     if (!this.liveUpdates) {
       throw new Error(
         'Live Updates are not initialized, please call `ContentfulLivePreview.init()` first.'
