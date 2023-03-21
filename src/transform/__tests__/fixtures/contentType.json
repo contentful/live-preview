@@ -1,0 +1,289 @@
+{
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "80q6jb175og9"
+      }
+    },
+    "id": "fieldTypes",
+    "type": "ContentType",
+    "createdAt": "2023-03-14T18:36:32.224Z",
+    "updatedAt": "2023-03-15T07:45:51.251Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "publishedVersion": 7,
+    "publishedAt": "2023-03-15T07:45:51.251Z",
+    "firstPublishedAt": "2023-03-14T18:36:32.695Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "4LSGWE90WTQF3IXCiTEP74"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "4LSGWE90WTQF3IXCiTEP74"
+      }
+    },
+    "publishedCounter": 4,
+    "version": 8,
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "4LSGWE90WTQF3IXCiTEP74"
+      }
+    }
+  },
+  "displayField": "vDOpnJnlacj5Vd6p",
+  "name": "FieldTypes",
+  "description": "",
+  "assembly": false,
+  "fields": [
+    {
+      "id": "vDOpnJnlacj5Vd6p",
+      "apiName": "shortText",
+      "name": "Short Text",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "phV9Yneb9X0ZLny2",
+      "apiName": "shortTextList",
+      "name": "Short Text (List)",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Symbol",
+        "validations": []
+      }
+    },
+    {
+      "id": "j3HFWaem7j8YYOX1",
+      "apiName": "longText",
+      "name": "Long Text",
+      "type": "Text",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "vBGzBcEXwwxIE2hy",
+      "apiName": "numberInteger",
+      "name": "Number (Integer)",
+      "type": "Integer",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "K9qMpAog8ipH2j3h",
+      "apiName": "numberDecimal",
+      "name": "Number (Decimal)",
+      "type": "Integer",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "nbny24EE0Q2JYvAg",
+      "apiName": "dateTime",
+      "name": "Date & Time",
+      "type": "Date",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "JPjeGdLfiAAEXxAo",
+      "apiName": "location",
+      "name": "Location",
+      "type": "Location",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "HV7C9mvymQaHVGex",
+      "apiName": "json",
+      "name": "JSON",
+      "type": "Object",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "vY6Yi341M9Ve2jhv",
+      "apiName": "media",
+      "name": "Media",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Asset"
+    },
+    {
+      "id": "n5PCVXCdecdQijDe",
+      "apiName": "mediaMany",
+      "name": "Media (Many)",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [],
+        "linkType": "Asset"
+      }
+    },
+    {
+      "id": "mwfJkx0Y8L1hNkA3",
+      "apiName": "boolean",
+      "name": "Boolean",
+      "type": "Boolean",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "Z9HGbIbdXDMzcCJz",
+      "apiName": "richText",
+      "name": "Rich Text",
+      "type": "RichText",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "enabledNodeTypes": [
+            "heading-1",
+            "heading-2",
+            "heading-3",
+            "heading-4",
+            "heading-5",
+            "heading-6",
+            "ordered-list",
+            "unordered-list",
+            "hr",
+            "blockquote",
+            "embedded-entry-block",
+            "embedded-asset-block",
+            "table",
+            "hyperlink",
+            "entry-hyperlink",
+            "asset-hyperlink",
+            "embedded-entry-inline"
+          ]
+        },
+        {
+          "enabledMarks": ["bold", "italic", "underline", "code", "superscript", "subscript"]
+        }
+      ],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "cLWeBMwi5iaPXcI1",
+      "apiName": "reference",
+      "name": "Reference",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Entry"
+    },
+    {
+      "id": "Aoz98jYkj8lMnyFi",
+      "apiName": "referenceMany",
+      "name": "Reference (Many)",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [],
+        "linkType": "Entry"
+      }
+    },
+    {
+      "id": "PIh43g0NQmzDYo1j",
+      "apiName": "crossSpaceReference",
+      "name": "Cross Space Reference",
+      "type": "ResourceLink",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "allowedResources": [
+        {
+          "type": "Contentful:Entry",
+          "source": "crn:contentful:::content:spaces/3yzzz65gh9tw",
+          "contentTypes": ["crossSpaceContentType"]
+        }
+      ]
+    },
+    {
+      "id": "CCJZmPQ1oYq45nQi",
+      "apiName": "crossSpaceReferenceMany",
+      "name": "Cross Space Reference (Many)",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "ResourceLink",
+        "validations": []
+      },
+      "allowedResources": [
+        {
+          "type": "Contentful:Entry",
+          "source": "crn:contentful:::content:spaces/3yzzz65gh9tw",
+          "contentTypes": ["crossSpaceContentType"]
+        }
+      ]
+    }
+  ]
+}
