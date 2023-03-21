@@ -1,7 +1,7 @@
 import { EntryProps } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
-import { updateGQLEntry } from '../gql';
+import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
 import entry from './fixtures/entry.json';
 
@@ -22,7 +22,7 @@ describe('Update GraphQL Entry', () => {
     update?: EntryProps;
     locale?: string;
   }) => {
-    return updateGQLEntry(contentType, data, update, locale);
+    return updateEntry(contentType, data, update, locale);
   };
 
   it('keeps __typename unchanged', () => {

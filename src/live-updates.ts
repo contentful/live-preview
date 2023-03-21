@@ -1,3 +1,4 @@
+import * as gql from './graphql';
 import { Argument, Entity, SubscribeCallback } from './types';
 import { generateUID } from './utils';
 
@@ -16,9 +17,11 @@ export class LiveUpdates {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private mergeGraphQL(initial: Argument, locale: string, updated: Entity): Argument {
-    // TODO: https://contentful.atlassian.net/browse/TOL-1000
-    // TODO: https://contentful.atlassian.net/browse/TOL-1022
-    return initial;
+    if ((initial as any).__typename === 'Asset') {
+      return gql.updateAsset(initial as any, updated as any, locale);
+    }
+
+    return gql.updateEntry(null, initial, updated, locale);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,29 +1,6 @@
-import { ContentTypeProps, ContentFields, EntryProps } from 'contentful-management/types';
+import { ContentTypeProps, EntryProps } from 'contentful-management/types';
 
-function logUnrecognizedFields(contentTypeFields: string[], data: Record<string, unknown>) {
-  const recognized = new Set(['sys', '__typename', 'contentfulMetadata', ...contentTypeFields]);
-
-  for (const field of Object.keys(data)) {
-    if (!recognized.has(field)) {
-      console.warn(`Unrecognized field '${field}'. Note that GraphQL aliases are not supported`);
-    }
-  }
-}
-
-function isPrimitiveField(field: ContentFields) {
-  const types = new Set(['Symbol', 'Text', 'Integer', 'Boolean', 'Date', 'Location', 'Object']);
-
-  if (types.has(field.type)) {
-    return true;
-  }
-
-  // Array of Symbols
-  if (field.type === 'Array' && field.items?.type === 'Symbol') {
-    return true;
-  }
-
-  return false;
-}
+import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -33,7 +10,7 @@ function isPrimitiveField(field: ContentFields) {
  * @param update CMA entry object containing the update
  * @param locale locale code
  */
-export function updateGQLEntry(
+export function updateEntry(
   contentType: ContentTypeProps,
   data: Record<string, unknown>,
   update: EntryProps,

@@ -4,12 +4,13 @@ import {
   AssetProps,
   ContentFields,
 } from 'contentful-management/types';
-import { updateGQLEntry } from './entries';
+
+import { updateEntry } from './entries';
 
 const field = (name: string, type = 'Symbol'): ContentFields => ({
   id: name,
   name,
-  type: 'Symbol',
+  type,
   localized: true,
   required: false,
 });
@@ -42,12 +43,12 @@ const AssetContentType = {
  * @param asset CMA Asset object containing the update
  * @param locale locale code
  */
-export function updateGQLAsset(
+export function updateAsset(
   data: Record<string, unknown>,
   update: AssetProps,
   locale: string
 ): Record<string, unknown> {
   // FIXME: copy nested asset.fields.file values to root to match the
   // Content Type definition for GraphQL
-  return updateGQLEntry(AssetContentType, data, update as unknown as EntryProps, locale);
+  return updateEntry(AssetContentType, data, update as unknown as EntryProps, locale);
 }
