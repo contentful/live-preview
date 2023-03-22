@@ -14,6 +14,7 @@ interface Subscription {
  */
 export class LiveUpdates {
   private subscriptions = new Map<string, Subscription>();
+  private updatedEntriesCache = new Map<string, Record<string, unknown>>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private mergeGraphQL(
@@ -26,8 +27,16 @@ export class LiveUpdates {
       return gql.updateAsset(initial as any, updated as any, locale);
     }
 
+    const entryId = (initial as any).sys.id;
+    const cachedData = this.updatedEntriesCache.get(entryId) || initial;
+
     //@ts-expect-error -- ..
-    return gql.updateEntry(contentType, initial, updated, locale);
+    const updatedData = gql.updateEntry(contentType, cachedData, updated, locale);
+
+    // Cache the updated data for future updates
+    this.updatedEntriesCache.set(entryId, updatedData);
+
+    return updatedData;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -19,6 +19,10 @@ export function updateEntry(
   const modified = { ...data };
   const { fields } = contentType;
 
+  if (modified.sys.id !== update.sys.id) {
+    return modified;
+  }
+
   // Warn about unrecognized fields
   logUnrecognizedFields(
     fields.map((f) => f.apiName ?? f.name),
