@@ -8,7 +8,7 @@ import { isPrimitiveField, logUnrecognizedFields } from './utils';
  * @param contentType entity
  * @param data the GraphQL response to be updated
  * @param update CMA entry object containing the update
- * @param locale locale code
+ * @param locale code
  */
 export function updateEntry(
   contentType: ContentTypeProps,
