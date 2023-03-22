@@ -1,0 +1,195 @@
+{
+  "metadata": {
+    "tags": [
+      {
+        "sys": {
+          "type": "Link",
+          "linkType": "Tag",
+          "id": "myTag"
+        }
+      }
+    ]
+  },
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "80q6jb175og9"
+      }
+    },
+    "id": "4g1Xg1YnUCD5GUgndA7NLD",
+    "type": "Entry",
+    "createdAt": "2023-03-14T18:36:40.364Z",
+    "updatedAt": "2023-03-15T09:20:31.607Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "publishedVersion": 19,
+    "publishedAt": "2023-03-14T19:06:06.365Z",
+    "firstPublishedAt": "2023-03-14T18:46:51.055Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "4LSGWE90WTQF3IXCiTEP74"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "4LSGWE90WTQF3IXCiTEP74"
+      }
+    },
+    "publishedCounter": 3,
+    "version": 25,
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "4LSGWE90WTQF3IXCiTEP74"
+      }
+    },
+    "automationTags": [],
+    "contentType": {
+      "sys": {
+        "type": "Link",
+        "linkType": "ContentType",
+        "id": "fieldTypes"
+      }
+    }
+  },
+  "fields": {
+    "shortText": {
+      "en-US": "Short Text"
+    },
+    "shortTextList": {
+      "en-US": ["item 1", "item 2", "item 3"]
+    },
+    "longText": {
+      "en-US": "Long Text"
+    },
+    "numberInteger": {
+      "en-US": 1
+    },
+    "numberDecimal": {
+      "en-US": 1
+    },
+    "dateTime": {
+      "en-US": "2023-03-14T00:00+01:00"
+    },
+    "location": {
+      "en-US": {
+        "lon": 13.383788200574154,
+        "lat": 52.53941258524417
+      }
+    },
+    "json": {
+      "en-US": {
+        "test": "This is JSON"
+      }
+    },
+    "media": {
+      "en-US": {
+        "sys": {
+          "type": "Link",
+          "linkType": "Asset",
+          "id": "4YRUBbjYKnVAU17retktzF"
+        }
+      }
+    },
+    "mediaMany": {
+      "en-US": [
+        {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "4YRUBbjYKnVAU17retktzF"
+          }
+        },
+        {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "2bGsPN0EuQMOCc6sx3adsn"
+          }
+        }
+      ]
+    },
+    "boolean": {
+      "en-US": true
+    },
+    "richText": {
+      "en-US": {
+        "nodeType": "document",
+        "data": {},
+        "content": [
+          {
+            "nodeType": "paragraph",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "text",
+                "value": "Hello from Rich Text",
+                "marks": [],
+                "data": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "reference": {
+      "en-US": {
+        "sys": {
+          "type": "Link",
+          "linkType": "Entry",
+          "id": "422a9DU6Yb01C8Hh9ISq5c"
+        }
+      }
+    },
+    "referenceMany": {
+      "en-US": [
+        {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "6oD6HTe8N77dQQhBqULQhD"
+          }
+        },
+        {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "4BAzEzgu8AR1hVWsvBNlzE"
+          }
+        }
+      ]
+    },
+    "crossSpaceReference": {
+      "en-US": {
+        "sys": {
+          "type": "ResourceLink",
+          "linkType": "Contentful:Entry",
+          "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+        }
+      }
+    },
+    "crossSpaceReferenceMany": {
+      "en-US": [
+        {
+          "sys": {
+            "type": "ResourceLink",
+            "linkType": "Contentful:Entry",
+            "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+          }
+        }
+      ]
+    }
+  }
+}

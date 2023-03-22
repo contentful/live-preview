@@ -1,3 +1,4 @@
+import * as gql from './graphql';
 import { Argument, Entity, SubscribeCallback } from './types';
 import { generateUID } from './utils';
 
@@ -15,10 +16,18 @@ export class LiveUpdates {
   private subscriptions = new Map<string, Subscription>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private mergeGraphQL(initial: Argument, locale: string, updated: Entity): Argument {
-    // TODO: https://contentful.atlassian.net/browse/TOL-1000
-    // TODO: https://contentful.atlassian.net/browse/TOL-1022
-    return initial;
+  private mergeGraphQL(
+    initial: Argument,
+    locale: string,
+    updated: Entity,
+    contentType: any
+  ): Argument {
+    if ((initial as any).__typename === 'Asset') {
+      return gql.updateAsset(initial as any, updated as any, locale);
+    }
+
+    //@ts-expect-error -- ..
+    return gql.updateEntry(contentType, initial, updated, locale);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,17 +37,19 @@ export class LiveUpdates {
     return initial;
   }
 
-  private merge(initial: Argument, locale: string, updated: Entity): Argument {
+  private merge(initial: Argument, locale: string, updated: Entity, contentType: any): Argument {
     if ('__typename' in initial) {
-      return this.mergeGraphQL(initial, locale, updated);
+      return this.mergeGraphQL(initial, locale, updated, contentType);
     }
     return this.mergeRest(initial, locale, updated);
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
-  public receiveMessage({ entity }: Record<string, unknown>): void {
+  public receiveMessage({ entity, contentType }: Record<string, unknown>): void {
     if (entity && typeof entity === 'object') {
-      this.subscriptions.forEach((s) => s.cb(this.merge(s.data, s.locale, entity as Entity)));
+      this.subscriptions.forEach((s) =>
+        s.cb(this.merge(s.data, s.locale, entity as Entity, contentType))
+      );
     }
   }
 
