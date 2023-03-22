@@ -37,6 +37,12 @@ export function updateEntry(
       // FIXME: handle locale fallbacks
       modified[name] = update.fields?.[name]?.[locale] ?? null;
     }
+
+    if (field.type === 'RichText') {
+      // Falling back to 'null' as it's what GraphQL users would expect
+      // FIXME: handle locale fallbacks
+      modified[name].json = update?.fields?.[name]?.[locale] ?? null;
+    }
   }
 
   return modified;
