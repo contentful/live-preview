@@ -13,3 +13,12 @@ export enum TagAttributes {
 export type Entity = Record<string, unknown>;
 export type Argument = Entity | Entity[];
 export type SubscribeCallback = (data: Argument) => void;
+
+export interface SysProps {
+  id: string;
+  [key: string]: unknown;
+}
+
+export interface CollectionItem {
+  sys: SysProps;
+}

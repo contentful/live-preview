@@ -5,6 +5,7 @@ import {
   ContentFields,
 } from 'contentful-management/types';
 
+import { SysProps } from '../types';
 import { updateEntry } from './entries';
 
 const field = (name: string, type = 'Symbol'): ContentFields => ({
@@ -44,7 +45,7 @@ const AssetContentType = {
  * @param locale locale code
  */
 export function updateAsset(
-  data: Record<string, unknown>,
+  data: Record<string, unknown> & { sys: SysProps },
   update: AssetProps,
   locale: string
 ): Record<string, unknown> {

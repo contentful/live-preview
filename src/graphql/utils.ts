@@ -27,21 +27,3 @@ export function isPrimitiveField(field: ContentFields): boolean {
 
   return false;
 }
-
-export function isComplexField(field: ContentFields): boolean {
-  const types = new Set(['Link', 'ResourceLink']);
-
-  if (types.has(field.type)) {
-    return true;
-  }
-
-  // Array of Links or ResourceLinks
-  if (
-    (field.type === 'Array' && field.items?.type === 'Link') ||
-    (field.type === 'Array' && field.items?.type === 'ResourceLink')
-  ) {
-    return true;
-  }
-
-  return false;
-}
