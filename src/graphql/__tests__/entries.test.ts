@@ -41,7 +41,7 @@ describe('Update GraphQL Entry', () => {
   });
 
   it('warns but keeps unknown fields', () => {
-    const data = { unknownField: 'text', sys: { id: 'abc' } };
+    const data = { unknownField: 'text', sys: { id: entry.sys.id } };
     const warn = vi.spyOn(console, 'warn');
 
     const update = updateFn({ data });
@@ -67,7 +67,7 @@ describe('Update GraphQL Entry', () => {
         test: 'oldValue',
       },
       sys: {
-        id: 'abc',
+        id: entry.sys.id,
       },
     };
 
@@ -82,7 +82,7 @@ describe('Update GraphQL Entry', () => {
       location: entry.fields.location[EN],
       json: entry.fields.json[EN],
       sys: {
-        id: 'abc',
+        id: entry.sys.id,
       },
     });
   });
@@ -91,7 +91,7 @@ describe('Update GraphQL Entry', () => {
     const data = {
       shortText: 'oldValue',
       sys: {
-        id: 'abc',
+        id: entry.sys.id,
       },
     };
 
@@ -100,7 +100,7 @@ describe('Update GraphQL Entry', () => {
     expect(update).toEqual({
       shortText: null,
       sys: {
-        id: 'abc',
+        id: entry.sys.id,
       },
     });
   });
