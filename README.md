@@ -43,11 +43,11 @@ ContentfulLivePreview.init();
 
 To tag fields you need to add the live preview data-attributes to the rendered HTML element output.
 You can do this in React via our helper function.
-The necessary styles for the live edit tags can be found in the '@contentful/live-preview/dist/style.css' file.
+The necessary styles for the live edit tags can be found in the '@contentful/live-preview/style.css' file.
 
 ```jsx
 import { ContentfulLivePreview } from '@contentful/live-preview';
-import '@contentful/live-preview/dist/style.css';
+import '@contentful/live-preview/style.css';
 ...
 
 <h1 {...ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title', locale })}>
@@ -60,7 +60,7 @@ import '@contentful/live-preview/dist/style.css';
 Live Updates from the editor to your applications are currently only supported for [React.js](https://reactjs.org/)
 
 ```tsx
-import { useContentfulLiveUpdates } from '@contentful/live-preview/dist/react';
+import { useContentfulLiveUpdates } from "@contentful/live-preview/react";
 
 // ...
 const updated = useContentfulLiveUpdates(originalData, locale);
