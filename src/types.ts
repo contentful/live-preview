@@ -21,4 +21,5 @@ export interface SysProps {
 
 export interface CollectionItem {
   sys: SysProps;
+  __typename?: string;
 }

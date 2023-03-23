@@ -21,7 +21,8 @@ export class LiveUpdates {
     initial: Argument,
     locale: string,
     updated: Entity,
-    contentType: any
+    contentType: any,
+    references: any
   ): Argument {
     if ((initial as any).__typename === 'Asset') {
       return gql.updateAsset(initial as any, updated as any, locale);
@@ -31,7 +32,7 @@ export class LiveUpdates {
     const cachedData = this.updatedEntriesCache.get(entryId) || initial;
 
     //@ts-expect-error -- ..
-    const updatedData = gql.updateEntry(contentType, cachedData, updated, locale);
+    const updatedData = gql.updateEntry(contentType, cachedData, updated, locale, references);
 
     // Cache the updated data for future updates
     this.updatedEntriesCache.set(entryId, updatedData);
@@ -46,18 +47,24 @@ export class LiveUpdates {
     return initial;
   }
 
-  private merge(initial: Argument, locale: string, updated: Entity, contentType: any): Argument {
+  private merge(
+    initial: Argument,
+    locale: string,
+    updated: Entity,
+    contentType: any,
+    references: any
+  ): Argument {
     if ('__typename' in initial) {
-      return this.mergeGraphQL(initial, locale, updated, contentType);
+      return this.mergeGraphQL(initial, locale, updated, contentType, references);
     }
     return this.mergeRest(initial, locale, updated);
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
-  public receiveMessage({ entity, contentType }: Record<string, unknown>): void {
+  public receiveMessage({ entity, contentType, references }: Record<string, unknown>): void {
     if (entity && typeof entity === 'object') {
       this.subscriptions.forEach((s) =>
-        s.cb(this.merge(s.data, s.locale, entity as Entity, contentType))
+        s.cb(this.merge(s.data, s.locale, entity as Entity, contentType, references))
       );
     }
   }

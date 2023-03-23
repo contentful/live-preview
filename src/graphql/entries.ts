@@ -1,4 +1,4 @@
-import { ContentTypeProps, EntryProps } from 'contentful-management/types';
+import { ContentTypeProps, EntryProps, AssetProps } from 'contentful-management/types';
 
 import { CollectionItem, SysProps } from '../types';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
@@ -16,7 +16,8 @@ export function updateEntry(
   contentType: ContentTypeProps,
   data: Record<string, unknown> & { sys: SysProps },
   update: EntryProps,
-  locale: string
+  locale: string,
+  references: any
 ): Record<string, unknown> & { sys: SysProps } {
   const modified = { ...data };
   const { fields } = contentType;
@@ -38,7 +39,7 @@ export function updateEntry(
     } else if (field.type === 'RichText') {
       updateRichTextField(modified, update, name, locale);
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      updateMultiRefField(modified, update, name, locale);
+      updateMultiRefField(modified, update, name, locale, references);
     }
   }
 
@@ -67,32 +68,55 @@ function updateRichTextField(
   }
 }
 
+function getContentTypeOfEntityFromReferences(references: any, entityId?: string) {
+  if (references && entityId) {
+    const assetInfo = references.includes.Asset.find(
+      (asset: AssetProps) => asset.sys.id === entityId
+    );
+    const entryInfo = references.includes.Entry.find(
+      (entry: EntryProps) => entry.sys.id === entityId
+    );
+    const contentTypeId = entryInfo
+      ? entryInfo.sys.contentType.sys.id
+      : assetInfo
+      ? assetInfo.sys.contentType.sys.id
+      : undefined;
+
+    if (contentTypeId) {
+      return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
+    }
+  }
+}
+
 function updateMultiRefField(
   modified: Record<string, unknown>,
   update: EntryProps,
   name: string,
-  locale: string
+  locale: string,
+  references: any
 ) {
   const fieldName = `${name}Collection`;
 
   if (fieldName in modified) {
-    // Listen to sorting
-    (modified[fieldName] as { items: CollectionItem[] }).items.sort((a, b) => {
-      const aIndex = update?.fields?.[name]?.[locale].findIndex(
-        (item: CollectionItem) => item.sys.id === a.sys.id
+    const originalCollection = modified[fieldName] as { items: CollectionItem[] };
+    const modifiedItems = update?.fields?.[name]?.[locale].map((modifiedItem: any) => {
+      const currentItem = originalCollection.items.find(
+        (item) => item.sys.id === modifiedItem.sys.id
       );
-      const bIndex = update?.fields?.[name]?.[locale].findIndex(
-        (item: CollectionItem) => item.sys.id === b.sys.id
-      );
-      return aIndex - bIndex;
-    });
 
-    // Listen to removal
-    const updateRefIds = update?.fields?.[name]?.[locale].map(
-      (item: CollectionItem) => item.sys.id
-    );
-    (modified[fieldName] as { items: CollectionItem[] }).items = (
-      modified[fieldName] as { items: CollectionItem[] }
-    ).items.filter((item: CollectionItem) => updateRefIds.includes(item.sys.id));
+      if (currentItem && currentItem.__typename) {
+        return currentItem;
+      }
+
+      const modifiedRef = { ...modifiedItem };
+
+      const contentTypeId = getContentTypeOfEntityFromReferences(references, currentItem?.sys?.id);
+      if (contentTypeId) {
+        const typename = contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
+        modifiedRef.__typename = typename;
+      }
+      return modifiedRef;
+    });
+    (modified[fieldName] as { items: CollectionItem[] }).items = modifiedItems;
   }
 }
