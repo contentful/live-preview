@@ -81,6 +81,9 @@ describe('Update GraphQL Entry', () => {
       dateTime: entry.fields.dateTime[EN],
       location: entry.fields.location[EN],
       json: entry.fields.json[EN],
+      sys: {
+        id: 'abc',
+      },
     });
   });
 
@@ -96,6 +99,9 @@ describe('Update GraphQL Entry', () => {
 
     expect(update).toEqual({
       shortText: null,
+      sys: {
+        id: 'abc',
+      },
     });
   });
 });

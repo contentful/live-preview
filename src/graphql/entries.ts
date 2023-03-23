@@ -21,14 +21,14 @@ export function updateEntry(
   const modified = { ...data };
   const { fields } = contentType;
 
-  if (modified.sys.id !== update.sys.id) {
-    return modified;
-  }
-
   logUnrecognizedFields(
     fields.map((f) => f.apiName ?? f.name),
     data
   );
+
+  if (modified.sys.id !== update.sys.id) {
+    return modified;
+  }
 
   for (const field of fields) {
     const name = field.apiName ?? field.name;
@@ -73,20 +73,24 @@ function updateMultiRefField(
   name: string,
   locale: string
 ) {
-  // Listen to sorting
-  (modified[`${name}Collection`] as { items: CollectionItem[] }).items.sort((a, b) => {
-    const aIndex = update?.fields?.[name]?.[locale].findIndex(
-      (item: CollectionItem) => item.sys.id === a.sys.id
-    );
-    const bIndex = update?.fields?.[name]?.[locale].findIndex(
-      (item: CollectionItem) => item.sys.id === b.sys.id
-    );
-    return aIndex - bIndex;
-  });
+  if (name in modified) {
+    // Listen to sorting
+    (modified[`${name}Collection`] as { items: CollectionItem[] }).items.sort((a, b) => {
+      const aIndex = update?.fields?.[name]?.[locale].findIndex(
+        (item: CollectionItem) => item.sys.id === a.sys.id
+      );
+      const bIndex = update?.fields?.[name]?.[locale].findIndex(
+        (item: CollectionItem) => item.sys.id === b.sys.id
+      );
+      return aIndex - bIndex;
+    });
 
-  // Listen to removal
-  const updateRefIds = update?.fields?.[name]?.[locale].map((item: CollectionItem) => item.sys.id);
-  (modified[`${name}Collection`] as { items: CollectionItem[] }).items = (
-    modified[`${name}Collection`] as { items: CollectionItem[] }
-  ).items.filter((item: CollectionItem) => updateRefIds.includes(item.sys.id));
+    // Listen to removal
+    const updateRefIds = update?.fields?.[name]?.[locale].map(
+      (item: CollectionItem) => item.sys.id
+    );
+    (modified[`${name}Collection`] as { items: CollectionItem[] }).items = (
+      modified[`${name}Collection`] as { items: CollectionItem[] }
+    ).items.filter((item: CollectionItem) => updateRefIds.includes(item.sys.id));
+  }
 }
