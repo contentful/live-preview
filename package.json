@@ -17,11 +17,13 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./react": {
       "import": "./dist/react.js",
-      "require": "./dist/react.cjs"
+      "require": "./dist/react.cjs",
+      "types": "./dist/react.d.ts"
     },
     "./style.css": {
       "import": "./dist/style.css",
@@ -73,7 +75,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "semantic-release": "^19.0.2",
-    "typescript": "^4.9.3",
+    "typescript": "^5.0.2",
     "vite": "^4.1.0",
     "vite-plugin-dts": "^2.0.1",
     "vitest": "^0.29.2"
