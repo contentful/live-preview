@@ -73,9 +73,11 @@ function updateMultiRefField(
   name: string,
   locale: string
 ) {
-  if (name in modified) {
+  const fieldName = `${name}Collection`;
+
+  if (fieldName in modified) {
     // Listen to sorting
-    (modified[`${name}Collection`] as { items: CollectionItem[] }).items.sort((a, b) => {
+    (modified[fieldName] as { items: CollectionItem[] }).items.sort((a, b) => {
       const aIndex = update?.fields?.[name]?.[locale].findIndex(
         (item: CollectionItem) => item.sys.id === a.sys.id
       );
@@ -89,8 +91,8 @@ function updateMultiRefField(
     const updateRefIds = update?.fields?.[name]?.[locale].map(
       (item: CollectionItem) => item.sys.id
     );
-    (modified[`${name}Collection`] as { items: CollectionItem[] }).items = (
-      modified[`${name}Collection`] as { items: CollectionItem[] }
+    (modified[fieldName] as { items: CollectionItem[] }).items = (
+      modified[fieldName] as { items: CollectionItem[] }
     ).items.filter((item: CollectionItem) => updateRefIds.includes(item.sys.id));
   }
 }
