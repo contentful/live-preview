@@ -1,6 +1,7 @@
 import { EntryProps } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
+import { SysProps } from '../../types';
 import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
 import entry from './fixtures/entry.json';
@@ -18,7 +19,7 @@ describe('Update GraphQL Entry', () => {
     update = entry as EntryProps,
     locale = EN,
   }: {
-    data: Record<string, unknown>;
+    data: Record<string, unknown> & { sys: SysProps };
     update?: EntryProps;
     locale?: string;
   }) => {
@@ -27,7 +28,7 @@ describe('Update GraphQL Entry', () => {
 
   it('keeps __typename unchanged', () => {
     const warn = vi.spyOn(console, 'warn');
-    const data = { __typename: 'CT', shortText: 'text' };
+    const data = { __typename: 'CT', shortText: 'text', sys: { id: 'abc' } };
 
     const update = updateFn({ data });
 
@@ -40,7 +41,7 @@ describe('Update GraphQL Entry', () => {
   });
 
   it('warns but keeps unknown fields', () => {
-    const data = { unknownField: 'text' };
+    const data = { unknownField: 'text', sys: { id: 'abc' } };
     const warn = vi.spyOn(console, 'warn');
 
     const update = updateFn({ data });
@@ -65,6 +66,9 @@ describe('Update GraphQL Entry', () => {
       json: {
         test: 'oldValue',
       },
+      sys: {
+        id: 'abc',
+      },
     };
 
     expect(updateFn({ data })).toEqual({
@@ -83,6 +87,9 @@ describe('Update GraphQL Entry', () => {
   it('falls back to null for empty fields', () => {
     const data = {
       shortText: 'oldValue',
+      sys: {
+        id: 'abc',
+      },
     };
 
     const update = updateFn({ data, locale: 'n/a' });
