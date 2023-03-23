@@ -38,26 +38,30 @@ export function updateEntry(
         items: { sys: { id: string } }[];
       };
 
-      const updatedRefs =
-        fieldItems
-          .map((item) => {
-            const exists = modifiedCollectionItems.items.find(
-              (collectionItem) => collectionItem.sys.id === item.sys.id
-            );
+      if (fieldItems && modifiedCollectionItems) {
+        const updatedRefs =
+          fieldItems
+            ?.map((item) => {
+              const exists = modifiedCollectionItems.items.find(
+                (collectionItem) => collectionItem.sys.id === item.sys.id
+              );
 
-            if (!exists) {
-              // @TODO: When a new entry is added we don't know it's typename at this point. need to find workaround so this works
-              return {
-                sys: { id: item.sys.id },
-                //__typename: '',
-              };
-            }
+              if (!exists) {
+                // @TODO: When a new entry is added we don't know it's typename at this point. need to find workaround so this works
+                return {
+                  sys: { id: item.sys.id },
+                  //__typename: '',
+                };
+              }
 
-            return exists;
-          })
-          ?.filter(Boolean) ?? null;
+              return exists;
+            })
+            ?.filter(Boolean) ?? null;
 
-      modifiedCollectionItems.items = updatedRefs;
+        if (updatedRefs) {
+          modifiedCollectionItems.items = updatedRefs;
+        }
+      }
     }
   }
 
