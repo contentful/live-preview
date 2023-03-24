@@ -47,9 +47,16 @@ const AssetContentType = {
 export function updateAsset(
   data: Record<string, unknown> & { sys: SysProps },
   update: AssetProps,
-  locale: string
+  locale: string,
+  entityReferenceMap: any
 ): Record<string, unknown> {
   // FIXME: copy nested asset.fields.file values to root to match the
   // Content Type definition for GraphQL
-  return updateEntry(AssetContentType, data, update as unknown as EntryProps, locale);
+  return updateEntry(
+    AssetContentType,
+    data,
+    update as unknown as EntryProps,
+    locale,
+    entityReferenceMap
+  );
 }

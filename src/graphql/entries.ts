@@ -1,6 +1,7 @@
 import { ContentTypeProps, EntryProps, AssetProps } from 'contentful-management/types';
 
 import { CollectionItem, SysProps } from '../types';
+import { sendMessageToEditor } from '../utils';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
 /**
@@ -17,7 +18,7 @@ export function updateEntry(
   data: Record<string, unknown> & { sys: SysProps },
   update: EntryProps,
   locale: string,
-  references: any
+  entityReferenceMap: any
 ): Record<string, unknown> & { sys: SysProps } {
   const modified = { ...data };
   const { fields } = contentType;
@@ -39,7 +40,7 @@ export function updateEntry(
     } else if (field.type === 'RichText') {
       updateRichTextField(modified, update, name, locale);
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      updateMultiRefField(modified, update, name, locale, references);
+      updateMultiRefField(modified, update, name, locale, entityReferenceMap);
     }
   }
 
@@ -68,55 +69,61 @@ function updateRichTextField(
   }
 }
 
-function getContentTypeOfEntityFromReferences(references: any, entityId?: string) {
-  if (references && entityId) {
-    const assetInfo = references.includes.Asset.find(
-      (asset: AssetProps) => asset.sys.id === entityId
-    );
-    const entryInfo = references.includes.Entry.find(
-      (entry: EntryProps) => entry.sys.id === entityId
-    );
-    const contentTypeId = entryInfo
-      ? entryInfo.sys.contentType.sys.id
-      : assetInfo
-      ? assetInfo.sys.contentType.sys.id
-      : undefined;
-
-    if (contentTypeId) {
-      return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
+function getContentTypenameFromEntityReferenceMap(
+  referenceMap: Map<string, EntryProps | AssetProps>,
+  entityId?: string
+) {
+  if (referenceMap && entityId) {
+    const entity = referenceMap.get(entityId);
+    if (entity) {
+      const contentTypeId = entity.sys.contentType?.sys.id;
+      const typename = contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
+      return typename;
     }
   }
 }
 
 function updateMultiRefField(
-  modified: Record<string, unknown>,
-  update: EntryProps,
+  dataFromPreviewApp: Record<string, unknown>,
+  updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  references: any
+  entityReferenceMap: any
 ) {
   const fieldName = `${name}Collection`;
 
-  if (fieldName in modified) {
-    const originalCollection = modified[fieldName] as { items: CollectionItem[] };
-    const modifiedItems = update?.fields?.[name]?.[locale].map((modifiedItem: any) => {
-      const currentItem = originalCollection.items.find(
-        (item) => item.sys.id === modifiedItem.sys.id
-      );
+  if (fieldName in dataFromPreviewApp) {
+    const originalCollection = dataFromPreviewApp[fieldName] as { items: CollectionItem[] };
+    const dataFromPreviewAppItems = updateFromEntryEditor?.fields?.[name]?.[locale].map(
+      (dataFromPreviewAppItem: any) => {
+        const currentItem = originalCollection.items.find(
+          (item) => item.sys.id === dataFromPreviewAppItem.sys.id
+        );
 
-      if (currentItem && currentItem.__typename) {
-        return currentItem;
+        // it's already in graphql format so we can return
+        if (currentItem && currentItem.__typename) {
+          return currentItem;
+        }
+
+        const dataFromPreviewAppRef = { ...dataFromPreviewAppItem };
+
+        const entityTypename = getContentTypenameFromEntityReferenceMap(
+          entityReferenceMap,
+          dataFromPreviewAppItem.sys.id
+        );
+        if (entityTypename) {
+          dataFromPreviewAppRef.__typename = entityTypename;
+        } else {
+          // TODO: ask web app to fetch and message again
+          sendMessageToEditor({
+            action: 'fetchReferenceEntity',
+            referenceEntityId: dataFromPreviewAppItem.sys.id,
+          });
+        }
+
+        return dataFromPreviewAppRef;
       }
-
-      const modifiedRef = { ...modifiedItem };
-
-      const contentTypeId = getContentTypeOfEntityFromReferences(references, currentItem?.sys?.id);
-      if (contentTypeId) {
-        const typename = contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
-        modifiedRef.__typename = typename;
-      }
-      return modifiedRef;
-    });
-    (modified[fieldName] as { items: CollectionItem[] }).items = modifiedItems;
+    );
+    (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items = dataFromPreviewAppItems;
   }
 }

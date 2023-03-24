@@ -22,17 +22,23 @@ export class LiveUpdates {
     locale: string,
     updated: Entity,
     contentType: any,
-    references: any
+    entityReferenceMap: any
   ): Argument {
     if ((initial as any).__typename === 'Asset') {
-      return gql.updateAsset(initial as any, updated as any, locale);
+      return gql.updateAsset(initial as any, updated as any, locale, entityReferenceMap);
     }
 
     const entryId = (initial as any).sys.id;
     const cachedData = this.updatedEntriesCache.get(entryId) || initial;
 
-    //@ts-expect-error -- ..
-    const updatedData = gql.updateEntry(contentType, cachedData, updated, locale, references);
+    const updatedData = gql.updateEntry(
+      contentType,
+      //@ts-expect-error -- ..
+      cachedData,
+      updated,
+      locale,
+      entityReferenceMap
+    );
 
     // Cache the updated data for future updates
     this.updatedEntriesCache.set(entryId, updatedData);
@@ -52,19 +58,23 @@ export class LiveUpdates {
     locale: string,
     updated: Entity,
     contentType: any,
-    references: any
+    entityReferenceMap: any
   ): Argument {
     if ('__typename' in initial) {
-      return this.mergeGraphQL(initial, locale, updated, contentType, references);
+      return this.mergeGraphQL(initial, locale, updated, contentType, entityReferenceMap);
     }
     return this.mergeRest(initial, locale, updated);
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
-  public receiveMessage({ entity, contentType, references }: Record<string, unknown>): void {
+  public receiveMessage({
+    entity,
+    contentType,
+    entityReferenceMap,
+  }: Record<string, unknown>): void {
     if (entity && typeof entity === 'object') {
       this.subscriptions.forEach((s) =>
-        s.cb(this.merge(s.data, s.locale, entity as Entity, contentType, references))
+        s.cb(this.merge(s.data, s.locale, entity as Entity, contentType, entityReferenceMap))
       );
     }
   }
