@@ -23,3 +23,9 @@ export interface CollectionItem {
   sys: SysProps;
   __typename?: string;
 }
+
+export enum MessageAction {
+  IFRAME_CONNECTED = 'IFRAME_CONNECTED',
+  TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
+  ENTITY_NOT_KNOWN = 'ENTITY_NOT_KNOWN',
+}

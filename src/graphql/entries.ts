@@ -1,6 +1,6 @@
 import { ContentTypeProps, EntryProps, AssetProps } from 'contentful-management/types';
 
-import { CollectionItem, SysProps } from '../types';
+import { CollectionItem, SysProps, MessageAction } from '../types';
 import { sendMessageToEditor } from '../utils';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
@@ -115,8 +115,7 @@ function updateMultiRefField(
           dataFromPreviewAppRef.__typename = entityTypename;
         } else {
           // TODO: ask web app to fetch and message again
-          sendMessageToEditor({
-            action: 'fetchReferenceEntity',
+          sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
             referenceEntityId: dataFromPreviewAppItem.sys.id,
           });
         }
