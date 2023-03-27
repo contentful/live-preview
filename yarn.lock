@@ -305,6 +305,11 @@
     read-pkg-up "^7.0.1"
     semver "^7.3.2"
 
+"@contentful/rich-text-types@^16.0.3":
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.0.3.tgz#c590268483e07881fb01b6799e837337093e42bf"
+  integrity sha512-BsUtXj93jo5XUt0YeUwfCkMWRoZIzJDPUIY4vMy9SwGIO9olTsMoQKadjA2ktlmK+Gg6710WH3eFKZxj2q39Iw==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -2041,10 +2046,11 @@ console-control-strings@^1.1.0:
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
 contentful-management@^10.30.1:
-  version "10.30.1"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-10.30.1.tgz#a5dcb94b42c25dd1483721db34553d7e31464b03"
-  integrity sha512-Qkhtztxbqt+O7lEoKsZBeg7INSrN0sJYqs6Itg/9dOGTfKiJbL/bgbViZ+yfXmktFEEncUsiUdeBIziLIZi+gg==
+  version "10.31.2"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-10.31.2.tgz#b11e2caa6c36e3c16dd85735e1c7e3b5afbb032e"
+  integrity sha512-Hh4rAJz8uGLmPhJ5NDMi+nHDbFrZZM7RMSk/90CN8kgWusqhQuAUtx10Hz8xg+i7ACqKkPif/btLQmSOa2toMA==
   dependencies:
+    "@contentful/rich-text-types" "^16.0.3"
     "@types/json-patch" "0.0.30"
     axios "^0.27.1"
     contentful-sdk-core "^7.0.1"
