@@ -89,12 +89,9 @@ function getContentTypenameFromEntityReferenceMap(
 }
 
 function updateReferenceField(
-  updateFromEntryEditor: EntryProps,
-  fieldName: string,
-  locale: string,
+  updatedReference: EntryProps & { __typename?: string },
   entityReferenceMap: any
 ) {
-  const updatedReference = updateFromEntryEditor?.fields?.[fieldName]?.[locale] ?? null;
   // if the reference was deleted return null
   if (updatedReference === null) {
     return null;
@@ -119,6 +116,7 @@ function updateReferenceField(
     sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
       referenceEntityId: updatedReference.sys.id,
     });
+    return null;
   }
 }
 
@@ -130,12 +128,8 @@ function updateSingleRefField(
   entityReferenceMap: any
 ) {
   if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] = updateReferenceField(
-      updateFromEntryEditor,
-      name,
-      locale,
-      entityReferenceMap
-    );
+    const updatedReference = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+    dataFromPreviewApp[name] = updateReferenceField(updatedReference, entityReferenceMap);
   }
 }
 
@@ -147,36 +141,14 @@ function updateMultiRefField(
   entityReferenceMap: any
 ) {
   const fieldName = `${name}Collection`;
-
   if (fieldName in dataFromPreviewApp) {
-    const originalCollection = dataFromPreviewApp[fieldName] as { items: CollectionItem[] };
     const dataFromPreviewAppItems =
       updateFromEntryEditor?.fields?.[name]?.[locale]
         .map((dataFromPreviewAppItem: any) => {
-          const currentItem = originalCollection.items.find(
-            (item) => item.sys.id === dataFromPreviewAppItem.sys.id
+          return updateReferenceField(
+            dataFromPreviewAppItem as unknown as EntryProps,
+            entityReferenceMap
           );
-
-          // it's already in graphql format so we can return
-          if (currentItem && currentItem.__typename) {
-            return currentItem;
-          }
-
-          const dataFromPreviewAppRef = { ...dataFromPreviewAppItem };
-
-          const entityTypename = getContentTypenameFromEntityReferenceMap(
-            entityReferenceMap,
-            dataFromPreviewAppItem.sys.id
-          );
-
-          if (entityTypename) {
-            dataFromPreviewAppRef.__typename = entityTypename;
-            return dataFromPreviewAppRef;
-          } else {
-            sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
-              referenceEntityId: dataFromPreviewAppItem.sys.id,
-            });
-          }
         })
         .filter(Boolean) ?? [];
     (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items = dataFromPreviewAppItems;
