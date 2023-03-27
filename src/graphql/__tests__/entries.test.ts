@@ -99,6 +99,7 @@ describe('Update GraphQL Entry', () => {
         },
         reference: null,
       };
+      const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
       const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
       const update = {
         sys: {
@@ -110,7 +111,7 @@ describe('Update GraphQL Entry', () => {
               sys: {
                 type: 'Link',
                 linkType: 'Entry',
-                id: '18kDTlnJNnDIJf6PsXE5Mr',
+                id: testAddingEntryId,
               },
             },
           },
@@ -136,6 +137,8 @@ describe('Update GraphQL Entry', () => {
         },
         reference: null,
       };
+      const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
+      const testContentTypeId = 'testContentType';
       const update = {
         sys: {
           id: entry.sys.id,
@@ -146,7 +149,7 @@ describe('Update GraphQL Entry', () => {
               sys: {
                 type: 'Link',
                 linkType: 'Entry',
-                id: '18kDTlnJNnDIJf6PsXE5Mr',
+                id: testAddingEntryId,
               },
             },
           },
@@ -154,11 +157,11 @@ describe('Update GraphQL Entry', () => {
       } as unknown as EntryProps<KeyValueMap>;
 
       const entityReferenceMap = new Map<string, EntryProps | AssetProps>();
-      entityReferenceMap.set('18kDTlnJNnDIJf6PsXE5Mr', {
+      entityReferenceMap.set(testAddingEntryId, {
         sys: {
           contentType: {
             sys: {
-              id: 'testContentType',
+              id: testContentTypeId,
               type: 'TestContentType',
               linkType: 'Entry',
             },
@@ -173,9 +176,10 @@ describe('Update GraphQL Entry', () => {
           id: entry.sys.id,
         },
         reference: {
+          // content type has been adjusted to have capital letter at the start
           __typename: 'TestContentType',
           sys: {
-            id: '18kDTlnJNnDIJf6PsXE5Mr',
+            id: testAddingEntryId,
             linkType: 'Entry',
             type: 'Link',
           },
@@ -191,6 +195,7 @@ describe('Update GraphQL Entry', () => {
         },
         reference: null,
       };
+      const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
       const update = {
         sys: {
           id: entry.sys.id,
@@ -202,7 +207,7 @@ describe('Update GraphQL Entry', () => {
               sys: {
                 type: 'Link',
                 linkType: 'Entry',
-                id: '18kDTlnJNnDIJf6PsXE5Mr',
+                id: testAddingEntryId,
               },
             },
           },
@@ -218,10 +223,173 @@ describe('Update GraphQL Entry', () => {
         reference: {
           __typename: 'TestContentType',
           sys: {
-            id: '18kDTlnJNnDIJf6PsXE5Mr',
+            id: testAddingEntryId,
             linkType: 'Entry',
             type: 'Link',
           },
+        },
+      });
+    });
+  });
+
+  describe('multi reference fields', () => {
+    it('calls sendMessageToEditor when entry being added is not in the entityReferenceMap', () => {
+      const data = {
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [],
+        },
+      };
+      const testAddingEntryId = '3JqLncpMbnZYrCPebujXhK';
+      const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
+      const update = {
+        sys: {
+          id: entry.sys.id,
+        },
+        fields: {
+          referenceMany: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: testAddingEntryId,
+                },
+              },
+            ],
+          },
+        },
+      } as unknown as EntryProps<KeyValueMap>;
+
+      // value has not changed, just sends message back to editor
+      expect(updateFn({ data, update })).toEqual({
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [],
+        },
+      });
+      expect(sendMessageToEditor).toHaveBeenCalled();
+    });
+
+    it('generates a __typename when entry being added is in the entityReferenceMap then adds this to the modified return value', () => {
+      const data = {
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [],
+        },
+      };
+      const testAddingEntryId = '3JqLncpMbnZYrCPebujXhK';
+      const testContentTypeId = 'testContentTypeForManyRef';
+      const update = {
+        sys: {
+          id: entry.sys.id,
+        },
+        fields: {
+          referenceMany: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: testAddingEntryId,
+                },
+              },
+            ],
+          },
+        },
+      } as unknown as EntryProps<KeyValueMap>;
+
+      const entityReferenceMap = new Map<string, EntryProps | AssetProps>();
+      entityReferenceMap.set(testAddingEntryId, {
+        sys: {
+          contentType: {
+            sys: {
+              id: testContentTypeId,
+              type: 'TestContentTypeForManyRef',
+              linkType: 'Entry',
+            },
+          },
+        },
+      } as EntryProps<KeyValueMap>);
+
+      // value has not changed, just sends message back to editor
+      expect(updateFn({ data, update, entityReferenceMap })).toEqual({
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [
+            {
+              __typename: 'TestContentTypeForManyRef',
+              sys: {
+                id: testAddingEntryId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+      });
+    });
+
+    it('if reference is not in entityReferenceMap but has a __typename it does not call sendMessageToEditor', () => {
+      const data = {
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [],
+        },
+      };
+      const testAddingEntryId = '3JqLncpMbnZYrCPebujXhK';
+      const update = {
+        sys: {
+          id: entry.sys.id,
+        },
+        fields: {
+          referenceMany: {
+            'en-US': [
+              {
+                __typename: 'TestContentTypeForManyRef',
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: testAddingEntryId,
+                },
+              },
+            ],
+          },
+        },
+      } as unknown as EntryProps<KeyValueMap>;
+
+      // value has not changed, just sends message back to editor
+      expect(updateFn({ data, update })).toEqual({
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [
+            {
+              __typename: 'TestContentTypeForManyRef',
+              sys: {
+                id: testAddingEntryId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
         },
       });
     });
