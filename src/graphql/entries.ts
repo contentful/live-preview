@@ -18,7 +18,7 @@ export function updateEntry(
   data: Record<string, unknown> & { sys: SysProps },
   update: EntryProps,
   locale: string,
-  entityReferenceMap: any
+  entityReferenceMap: Map<string, EntryProps | AssetProps>
 ): Record<string, unknown> & { sys: SysProps } {
   const modified = { ...data };
   const { fields } = contentType;
@@ -125,7 +125,7 @@ function updateSingleRefField(
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  entityReferenceMap: any
+  entityReferenceMap: Map<string, EntryProps | AssetProps>
 ) {
   if (name in dataFromPreviewApp) {
     const updatedReference = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
@@ -138,7 +138,7 @@ function updateMultiRefField(
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  entityReferenceMap: any
+  entityReferenceMap: Map<string, EntryProps | AssetProps>
 ) {
   const fieldName = `${name}Collection`;
   if (fieldName in dataFromPreviewApp) {
