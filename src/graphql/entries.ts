@@ -90,7 +90,7 @@ function getContentTypenameFromEntityReferenceMap(
 
 function updateReferenceField(
   updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: any
+  entityReferenceMap: Map<string, EntryProps | AssetProps>
 ) {
   // if the reference was deleted return null
   if (updatedReference === null) {
