@@ -88,6 +88,40 @@ function getContentTypenameFromEntityReferenceMap(
   }
 }
 
+function updateReferenceField(
+  updateFromEntryEditor: EntryProps,
+  fieldName: string,
+  locale: string,
+  entityReferenceMap: any
+) {
+  const updatedReference = updateFromEntryEditor?.fields?.[fieldName]?.[locale] ?? null;
+  // if the reference was deleted return null
+  if (updatedReference === null) {
+    return null;
+  }
+
+  // it's already in graphql format so we can return
+  if (updatedReference && updatedReference.__typename) {
+    return updatedReference;
+  }
+
+  const entityTypename = getContentTypenameFromEntityReferenceMap(
+    entityReferenceMap,
+    updatedReference.sys.id
+  );
+  // if we have the typename of the updated reference, we can return with it
+  if (entityTypename) {
+    return { ...updatedReference, __typename: entityTypename };
+  } else {
+    // if we don't have the typename we send a message back to the entry editor
+    // and it will then send the reference back in the entity reference map
+    // where we can calculate the typename on the next update message.
+    sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
+      referenceEntityId: updatedReference.sys.id,
+    });
+  }
+}
+
 function updateSingleRefField(
   dataFromPreviewApp: Record<string, unknown>,
   updateFromEntryEditor: EntryProps,
@@ -96,33 +130,12 @@ function updateSingleRefField(
   entityReferenceMap: any
 ) {
   if (name in dataFromPreviewApp) {
-    const updatedValue = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
-
-    if (updatedValue === null) {
-      dataFromPreviewApp[name] = null;
-      return;
-    }
-
-    // it's already in graphql format so we can return
-    if (updatedValue && updatedValue.__typename) {
-      dataFromPreviewApp[name] = updatedValue;
-      return;
-    }
-
-    const dataFromPreviewAppRef = { ...updatedValue };
-
-    const entityTypename = getContentTypenameFromEntityReferenceMap(
-      entityReferenceMap,
-      updatedValue.sys.id
+    dataFromPreviewApp[name] = updateReferenceField(
+      updateFromEntryEditor,
+      name,
+      locale,
+      entityReferenceMap
     );
-    if (entityTypename) {
-      dataFromPreviewAppRef.__typename = entityTypename;
-      dataFromPreviewApp[name] = dataFromPreviewAppRef;
-    } else {
-      sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
-        referenceEntityId: updatedValue.sys.id,
-      });
-    }
   }
 }
 
@@ -144,10 +157,6 @@ function updateMultiRefField(
             (item) => item.sys.id === dataFromPreviewAppItem.sys.id
           );
 
-          if (!currentItem) {
-            return;
-          }
-
           // it's already in graphql format so we can return
           if (currentItem && currentItem.__typename) {
             return currentItem;
@@ -159,8 +168,10 @@ function updateMultiRefField(
             entityReferenceMap,
             dataFromPreviewAppItem.sys.id
           );
+
           if (entityTypename) {
             dataFromPreviewAppRef.__typename = entityTypename;
+            return dataFromPreviewAppRef;
           } else {
             sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
               referenceEntityId: dataFromPreviewAppItem.sys.id,
