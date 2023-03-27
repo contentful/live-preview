@@ -39,6 +39,8 @@ export function updateEntry(
       updatePrimitiveField(modified, update, name, locale);
     } else if (field.type === 'RichText') {
       updateRichTextField(modified, update, name, locale);
+    } else if (field.type === 'Link') {
+      updateSingleRefField(modified, update, name, locale, entityReferenceMap);
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
       updateMultiRefField(modified, update, name, locale, entityReferenceMap);
     }
@@ -65,6 +67,9 @@ function updateRichTextField(
   locale: string
 ) {
   if (name in modified) {
+    if (!modified[name]) {
+      modified[name] = {};
+    }
     (modified[name] as { json: unknown }).json = update?.fields?.[name]?.[locale] ?? null;
   }
 }
@@ -83,6 +88,44 @@ function getContentTypenameFromEntityReferenceMap(
   }
 }
 
+function updateSingleRefField(
+  dataFromPreviewApp: Record<string, unknown>,
+  updateFromEntryEditor: EntryProps,
+  name: string,
+  locale: string,
+  entityReferenceMap: any
+) {
+  if (name in dataFromPreviewApp) {
+    const updatedValue = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+
+    if (updatedValue === null) {
+      dataFromPreviewApp[name] = null;
+      return;
+    }
+
+    // it's already in graphql format so we can return
+    if (updatedValue && updatedValue.__typename) {
+      dataFromPreviewApp[name] = updatedValue;
+      return;
+    }
+
+    const dataFromPreviewAppRef = { ...updatedValue };
+
+    const entityTypename = getContentTypenameFromEntityReferenceMap(
+      entityReferenceMap,
+      updatedValue.sys.id
+    );
+    if (entityTypename) {
+      dataFromPreviewAppRef.__typename = entityTypename;
+      dataFromPreviewApp[name] = dataFromPreviewAppRef;
+    } else {
+      sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
+        referenceEntityId: updatedValue.sys.id,
+      });
+    }
+  }
+}
+
 function updateMultiRefField(
   dataFromPreviewApp: Record<string, unknown>,
   updateFromEntryEditor: EntryProps,
@@ -94,35 +137,37 @@ function updateMultiRefField(
 
   if (fieldName in dataFromPreviewApp) {
     const originalCollection = dataFromPreviewApp[fieldName] as { items: CollectionItem[] };
-    const dataFromPreviewAppItems = updateFromEntryEditor?.fields?.[name]?.[locale].map(
-      (dataFromPreviewAppItem: any) => {
-        const currentItem = originalCollection.items.find(
-          (item) => item.sys.id === dataFromPreviewAppItem.sys.id
-        );
+    const dataFromPreviewAppItems =
+      updateFromEntryEditor?.fields?.[name]?.[locale]
+        .map((dataFromPreviewAppItem: any) => {
+          const currentItem = originalCollection.items.find(
+            (item) => item.sys.id === dataFromPreviewAppItem.sys.id
+          );
 
-        // it's already in graphql format so we can return
-        if (currentItem && currentItem.__typename) {
-          return currentItem;
-        }
+          if (!currentItem) {
+            return;
+          }
 
-        const dataFromPreviewAppRef = { ...dataFromPreviewAppItem };
+          // it's already in graphql format so we can return
+          if (currentItem && currentItem.__typename) {
+            return currentItem;
+          }
 
-        const entityTypename = getContentTypenameFromEntityReferenceMap(
-          entityReferenceMap,
-          dataFromPreviewAppItem.sys.id
-        );
-        if (entityTypename) {
-          dataFromPreviewAppRef.__typename = entityTypename;
-        } else {
-          // TODO: ask web app to fetch and message again
-          sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
-            referenceEntityId: dataFromPreviewAppItem.sys.id,
-          });
-        }
+          const dataFromPreviewAppRef = { ...dataFromPreviewAppItem };
 
-        return dataFromPreviewAppRef;
-      }
-    );
+          const entityTypename = getContentTypenameFromEntityReferenceMap(
+            entityReferenceMap,
+            dataFromPreviewAppItem.sys.id
+          );
+          if (entityTypename) {
+            dataFromPreviewAppRef.__typename = entityTypename;
+          } else {
+            sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
+              referenceEntityId: dataFromPreviewAppItem.sys.id,
+            });
+          }
+        })
+        .filter(Boolean) ?? [];
     (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items = dataFromPreviewAppItems;
   }
 }
