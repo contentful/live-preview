@@ -164,7 +164,6 @@ describe('Update GraphQL Entry', () => {
           contentType: {
             sys: {
               id: testContentTypeId,
-              type: 'TestContentType',
               linkType: 'Entry',
             },
           },
