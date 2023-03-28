@@ -1,7 +1,7 @@
 import { EntryProps, KeyValueMap } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
-import { SysProps, EntryReferenceMap } from '../../types';
+import { SysProps, EntryReferenceMap, MessageAction } from '../../types';
 import * as Utils from '../../utils';
 import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
@@ -126,7 +126,9 @@ describe('Update GraphQL Entry', () => {
         },
         reference: null,
       });
-      expect(sendMessageToEditor).toHaveBeenCalled();
+      expect(sendMessageToEditor).toHaveBeenCalledWith(MessageAction.ENTITY_NOT_KNOWN, {
+        referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
+      });
     });
 
     it('generates a __typename when entry being added is in the entityReferenceMap then adds this to the modified return value', () => {
