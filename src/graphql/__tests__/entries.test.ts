@@ -1,7 +1,7 @@
-import { EntryProps, KeyValueMap, AssetProps } from 'contentful-management/types';
+import { EntryProps, KeyValueMap } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
-import { SysProps } from '../../types';
+import { SysProps, EntryReferenceMap } from '../../types';
 import * as Utils from '../../utils';
 import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
@@ -19,12 +19,12 @@ describe('Update GraphQL Entry', () => {
     data,
     update = entry as EntryProps,
     locale = EN,
-    entityReferenceMap = new Map<string, EntryProps | AssetProps>(),
+    entityReferenceMap = new EntryReferenceMap(),
   }: {
     data: Record<string, unknown> & { sys: SysProps };
     update?: EntryProps;
     locale?: string;
-    entityReferenceMap?: Map<string, EntryProps | AssetProps>;
+    entityReferenceMap?: EntryReferenceMap;
   }) => {
     return updateEntry(contentType, data, update, locale, entityReferenceMap);
   };
@@ -156,7 +156,7 @@ describe('Update GraphQL Entry', () => {
         },
       } as unknown as EntryProps<KeyValueMap>;
 
-      const entityReferenceMap = new Map<string, EntryProps | AssetProps>();
+      const entityReferenceMap = new EntryReferenceMap();
       entityReferenceMap.set(testAddingEntryId, {
         sys: {
           contentType: {
@@ -308,7 +308,7 @@ describe('Update GraphQL Entry', () => {
         },
       } as unknown as EntryProps<KeyValueMap>;
 
-      const entityReferenceMap = new Map<string, EntryProps | AssetProps>();
+      const entityReferenceMap = new EntryReferenceMap();
       entityReferenceMap.set(testAddingEntryId, {
         sys: {
           contentType: {

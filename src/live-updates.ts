@@ -1,7 +1,5 @@
-import type { EntryProps, AssetProps } from 'contentful-management';
-
 import * as gql from './graphql';
-import { Argument, Entity, SubscribeCallback } from './types';
+import { Argument, Entity, EntryReferenceMap, SubscribeCallback } from './types';
 import { generateUID } from './utils';
 
 interface Subscription {
@@ -24,7 +22,7 @@ export class LiveUpdates {
     locale: string,
     updated: Entity,
     contentType: any,
-    entityReferenceMap: Map<string, EntryProps | AssetProps>
+    entityReferenceMap: EntryReferenceMap
   ): Argument {
     if ((initial as any).__typename === 'Asset') {
       return gql.updateAsset(initial as any, updated as any, locale, entityReferenceMap);
@@ -60,7 +58,7 @@ export class LiveUpdates {
     locale: string,
     updated: Entity,
     contentType: any,
-    entityReferenceMap: Map<string, EntryProps | AssetProps>
+    entityReferenceMap: EntryReferenceMap
   ): Argument {
     if ('__typename' in initial) {
       return this.mergeGraphQL(initial, locale, updated, contentType, entityReferenceMap);
@@ -82,7 +80,7 @@ export class LiveUpdates {
             s.locale,
             entity as Entity,
             contentType,
-            entityReferenceMap as Map<string, EntryProps | AssetProps>
+            entityReferenceMap as EntryReferenceMap
           )
         )
       );

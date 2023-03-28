@@ -1,6 +1,6 @@
-import { ContentTypeProps, EntryProps, AssetProps } from 'contentful-management/types';
+import { ContentTypeProps, EntryProps } from 'contentful-management/types';
 
-import { CollectionItem, SysProps, MessageAction } from '../types';
+import { CollectionItem, SysProps, MessageAction, EntryReferenceMap } from '../types';
 import { sendMessageToEditor } from '../utils';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
@@ -18,7 +18,7 @@ export function updateEntry(
   data: Record<string, unknown> & { sys: SysProps },
   update: EntryProps,
   locale: string,
-  entityReferenceMap: Map<string, EntryProps | AssetProps>
+  entityReferenceMap: EntryReferenceMap
 ): Record<string, unknown> & { sys: SysProps } {
   const modified = { ...data };
   const { fields } = contentType;
@@ -75,7 +75,7 @@ function updateRichTextField(
 }
 
 function getContentTypenameFromEntityReferenceMap(
-  referenceMap: Map<string, EntryProps | AssetProps>,
+  referenceMap: EntryReferenceMap,
   entityId?: string
 ) {
   if (referenceMap && entityId) {
@@ -90,7 +90,7 @@ function getContentTypenameFromEntityReferenceMap(
 
 function updateReferenceField(
   updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: Map<string, EntryProps | AssetProps>
+  entityReferenceMap: EntryReferenceMap
 ) {
   // if the reference was deleted return null
   if (updatedReference === null) {
@@ -125,7 +125,7 @@ function updateSingleRefField(
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  entityReferenceMap: Map<string, EntryProps | AssetProps>
+  entityReferenceMap: EntryReferenceMap
 ) {
   if (name in dataFromPreviewApp) {
     const updatedReference = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
@@ -138,7 +138,7 @@ function updateMultiRefField(
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  entityReferenceMap: Map<string, EntryProps | AssetProps>
+  entityReferenceMap: EntryReferenceMap
 ) {
   const fieldName = `${name}Collection`;
   if (fieldName in dataFromPreviewApp) {
