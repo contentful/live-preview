@@ -98,7 +98,7 @@ function updateReferenceField(
   }
 
   // it's already in graphql format so we can return
-  if (updatedReference && updatedReference.__typename) {
+  if (updatedReference.__typename) {
     return updatedReference;
   }
 
