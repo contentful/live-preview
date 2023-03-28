@@ -79,16 +79,21 @@ function getContentTypenameFromEntityReferenceMap(
 }
 
 function updateReferenceField(
-  updatedReference: EntryProps & { __typename?: string },
+  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
+  updatedReference: (EntryProps & { __typename?: string }) | null | undefined,
   entityReferenceMap: EntryReferenceMap
 ) {
   // if the reference was deleted return null
-  if (updatedReference === null) {
+  if (!updatedReference) {
     return null;
   }
 
   // it's already in graphql format so we can return
-  if (updatedReference.__typename) {
+  if (referenceFromPreviewApp && referenceFromPreviewApp.__typename) {
+    return referenceFromPreviewApp;
+  }
+
+  if (updatedReference && updatedReference.__typename) {
     return updatedReference;
   }
 
@@ -98,7 +103,7 @@ function updateReferenceField(
   );
   // if we have the typename of the updated reference, we can return with it
   if (entityTypename) {
-    return { ...updatedReference, __typename: entityTypename };
+    return { ...updatedReference, __typename: entityTypename, ...referenceFromPreviewApp };
   } else {
     // if we don't have the typename we send a message back to the entry editor
     // and it will then send the reference back in the entity reference map
@@ -119,7 +124,11 @@ function updateSingleRefField(
 ) {
   if (name in dataFromPreviewApp) {
     const updatedReference = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
-    dataFromPreviewApp[name] = updateReferenceField(updatedReference, entityReferenceMap);
+    dataFromPreviewApp[name] = updateReferenceField(
+      dataFromPreviewApp[name] as EntryProps & { __typename?: string },
+      updatedReference,
+      entityReferenceMap
+    );
   }
 }
 
@@ -134,9 +143,13 @@ function updateMultiRefField(
   if (fieldName in dataFromPreviewApp) {
     const dataFromPreviewAppItems =
       updateFromEntryEditor?.fields?.[name]?.[locale]
-        .map((dataFromPreviewAppItem: any) => {
+        .map((updatedItem: any) => {
+          const itemFromPreviewApp = (
+            dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
+          ).items.find((item) => item.sys.id === updatedItem.sys.id);
           return updateReferenceField(
-            dataFromPreviewAppItem as unknown as EntryProps,
+            itemFromPreviewApp as unknown as EntryProps & { __typename?: string },
+            updatedItem as unknown as EntryProps,
             entityReferenceMap
           );
         })
