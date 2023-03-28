@@ -214,8 +214,8 @@ describe('Update GraphQL Entry', () => {
           },
         },
       } as unknown as EntryProps<KeyValueMap>;
+      const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
 
-      // value has not changed, just sends message back to editor
       expect(updateFn({ data, update })).toEqual({
         __typename: 'Page',
         sys: {
@@ -230,6 +230,8 @@ describe('Update GraphQL Entry', () => {
           },
         },
       });
+
+      expect(sendMessageToEditor).not.toHaveBeenCalled();
     });
   });
 
