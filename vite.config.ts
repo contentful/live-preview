@@ -5,6 +5,7 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   build: {
+    sourcemap: true,
     outDir: './dist',
     lib: {
       entry: {

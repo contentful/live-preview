@@ -1,7 +1,13 @@
 import './styles.css';
 import { FieldTagging } from './field-tagging';
 import { LiveUpdates } from './live-updates';
-import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
+import {
+  Argument,
+  LivePreviewProps,
+  MessageAction,
+  SubscribeCallback,
+  TagAttributes,
+} from './types';
 import { sendMessageToEditor } from './utils';
 
 export class ContentfulLivePreview {
@@ -27,7 +33,7 @@ export class ContentfulLivePreview {
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
         });
 
-        sendMessageToEditor({
+        sendMessageToEditor(MessageAction.IFRAME_CONNECTED, {
           connected: true,
           tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
         });
