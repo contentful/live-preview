@@ -1,6 +1,6 @@
 import { ContentTypeProps, EntryProps } from 'contentful-management/types';
 
-import { CollectionItem, SysProps, MessageAction, EntryReferenceMap } from '../types';
+import { CollectionItem, SysProps, MessageAction, EntryReferenceMap, Entity } from '../types';
 import { sendMessageToEditor } from '../utils';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
@@ -8,18 +8,18 @@ import { isPrimitiveField, logUnrecognizedFields } from './utils';
  * Updates GraphQL response data based on CMA entry object
  *
  * @param contentType ContentTypeProps
- * @param data Record<string, unknown> - The GraphQL response to be updated
+ * @param data Entity - The GraphQL response to be updated
  * @param update EntryProps - CMA entry object containing the update
  * @param locale string - Locale code
- * @returns Record<string, unknown> - Updated GraphQL response data
+ * @returns Entity - Updated GraphQL response data
  */
 export function updateEntry(
   contentType: ContentTypeProps,
-  data: Record<string, unknown> & { sys: SysProps },
+  data: Entity & { sys: SysProps },
   update: EntryProps,
   locale: string,
   entityReferenceMap: EntryReferenceMap
-): Record<string, unknown> & { sys: SysProps } {
+): Entity & { sys: SysProps } {
   const modified = { ...data };
   const { fields } = contentType;
 
@@ -49,23 +49,13 @@ export function updateEntry(
   return modified;
 }
 
-function updatePrimitiveField(
-  modified: Record<string, unknown>,
-  update: EntryProps,
-  name: string,
-  locale: string
-) {
+function updatePrimitiveField(modified: Entity, update: EntryProps, name: string, locale: string) {
   if (name in modified) {
     modified[name] = update.fields?.[name]?.[locale] ?? null;
   }
 }
 
-function updateRichTextField(
-  modified: Record<string, unknown>,
-  update: EntryProps,
-  name: string,
-  locale: string
-) {
+function updateRichTextField(modified: Entity, update: EntryProps, name: string, locale: string) {
   if (name in modified) {
     if (!modified[name]) {
       modified[name] = {};
@@ -121,7 +111,7 @@ function updateReferenceField(
 }
 
 function updateSingleRefField(
-  dataFromPreviewApp: Record<string, unknown>,
+  dataFromPreviewApp: Entity,
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
@@ -134,7 +124,7 @@ function updateSingleRefField(
 }
 
 function updateMultiRefField(
-  dataFromPreviewApp: Record<string, unknown>,
+  dataFromPreviewApp: Entity,
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
