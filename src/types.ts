@@ -1,3 +1,5 @@
+import type { AssetProps, EntryProps } from 'contentful-management';
+
 export type LivePreviewProps = {
   fieldId: string | null | undefined;
   entryId: string | null | undefined;
@@ -21,4 +23,13 @@ export interface SysProps {
 
 export interface CollectionItem {
   sys: SysProps;
+  __typename?: string;
 }
+
+export const enum MessageAction {
+  IFRAME_CONNECTED = 'IFRAME_CONNECTED',
+  TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
+  ENTITY_NOT_KNOWN = 'ENTITY_NOT_KNOWN',
+}
+
+export class EntryReferenceMap extends Map<string, EntryProps | AssetProps> {}
