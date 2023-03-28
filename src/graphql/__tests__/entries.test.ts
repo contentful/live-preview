@@ -277,7 +277,9 @@ describe('Update GraphQL Entry', () => {
           items: [],
         },
       });
-      expect(sendMessageToEditor).toHaveBeenCalled();
+      expect(sendMessageToEditor).toHaveBeenCalledWith(MessageAction.ENTITY_NOT_KNOWN, {
+        referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
+      });
     });
 
     it('generates a __typename when entry being added is in the entityReferenceMap then adds this to the modified return value', () => {
