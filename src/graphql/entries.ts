@@ -1,6 +1,13 @@
-import { ContentTypeProps, EntryProps } from 'contentful-management/types';
+import type { EntryProps } from 'contentful-management/types';
 
-import { CollectionItem, SysProps, MessageAction, EntryReferenceMap, Entity } from '../types';
+import {
+  CollectionItem,
+  SysProps,
+  MessageAction,
+  EntryReferenceMap,
+  Entity,
+  ContentType,
+} from '../types';
 import { sendMessageToEditor } from '../utils';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
@@ -14,12 +21,16 @@ import { isPrimitiveField, logUnrecognizedFields } from './utils';
  * @returns Entity - Updated GraphQL response data
  */
 export function updateEntry(
-  contentType: ContentTypeProps,
+  contentType: ContentType,
   data: Entity & { sys: SysProps },
   update: EntryProps,
   locale: string,
   entityReferenceMap: EntryReferenceMap
 ): Entity & { sys: SysProps } {
+  if (data.sys.id !== update.sys.id) {
+    return data;
+  }
+
   const modified = { ...data };
   const { fields } = contentType;
 
@@ -27,10 +38,6 @@ export function updateEntry(
     fields.map((f) => f.apiName ?? f.name),
     data
   );
-
-  if (modified.sys.id !== update.sys.id) {
-    return modified;
-  }
 
   for (const field of fields) {
     const name = field.apiName ?? field.name;
@@ -108,8 +115,11 @@ function updateReferenceField(
     // if we don't have the typename we send a message back to the entry editor
     // and it will then send the reference back in the entity reference map
     // where we can calculate the typename on the next update message.
-    sendMessageToEditor(MessageAction.ENTITY_NOT_KNOWN, {
-      referenceEntityId: updatedReference.sys.id,
+    sendMessageToEditor({
+      action: MessageAction.ENTITY_NOT_KNOWN,
+      data: {
+        referenceEntityId: updatedReference.sys.id,
+      },
     });
     return null;
   }

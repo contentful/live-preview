@@ -11,7 +11,6 @@ It uses [Typescript](https://www.typescriptlang.org/), [React](https://reactjs.o
 ### Requirements
 
 - Node.js: `>=16.15.1`
-- Yarn: `>=1.21.1`
 
 To install live preview simply run one of the following commands.
 
@@ -57,7 +56,7 @@ import '@contentful/live-preview/style.css';
 
 ### Live Updates
 
-Live Updates from the editor to your applications are currently only supported for [React.js](https://reactjs.org/)
+Live Updates from the editor to your applications are currently only directed supported for [React.js](https://reactjs.org/)
 
 ```tsx
 import { useContentfulLiveUpdates } from "@contentful/live-preview/react";
@@ -67,7 +66,7 @@ const updated = useContentfulLiveUpdates(originalData, locale);
 // ...
 ```
 
-### Integrating with Gatsby
+#### Integrating with Gatsby
 
 To use the Contentful Live Preview SDK with Gatsby, you can start with the [gatsby starter contentful homepage](https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-contentful-homepage)
 

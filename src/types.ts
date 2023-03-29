@@ -1,4 +1,6 @@
-import type { AssetProps, EntryProps } from 'contentful-management';
+import type { AssetProps, EntryProps, ContentTypeProps } from 'contentful-management';
+
+export type ContentType = ContentTypeProps;
 
 export type LivePreviewProps = {
   fieldId: string | null | undefined;
@@ -12,6 +14,7 @@ export enum TagAttributes {
   LOCALE = 'data-contentful-locale',
 }
 
+// TODO: can we add sys and optional typename to the Entity?
 export type Entity = Record<string, unknown>;
 export type Argument = Entity | Entity[];
 export type SubscribeCallback = (data: Argument) => void;
@@ -26,7 +29,7 @@ export interface CollectionItem {
   __typename?: string;
 }
 
-export const enum MessageAction {
+export enum MessageAction {
   IFRAME_CONNECTED = 'IFRAME_CONNECTED',
   TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
   ENTITY_NOT_KNOWN = 'ENTITY_NOT_KNOWN',

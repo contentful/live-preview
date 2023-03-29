@@ -1,10 +1,20 @@
-import { ContentFields } from 'contentful-management/types';
+import type { ContentFields } from 'contentful-management/types';
 
-export function logUnrecognizedFields(
-  contentTypeFields: string[],
-  data: Record<string, unknown>
-): void {
-  const recognized = new Set(['sys', '__typename', 'contentfulMetadata', ...contentTypeFields]);
+import { Entity } from '../types';
+
+const DEFAULT_CONTENT_TYPE_FIELDS = ['sys', '__typename', 'contentfulMetadata'];
+const PRIMITIVE_FIELDS = new Set([
+  'Symbol',
+  'Text',
+  'Integer',
+  'Boolean',
+  'Date',
+  'Location',
+  'Object',
+]);
+
+export function logUnrecognizedFields(contentTypeFields: string[], data: Entity): void {
+  const recognized = new Set([...DEFAULT_CONTENT_TYPE_FIELDS, ...contentTypeFields]);
 
   for (const field of Object.keys(data)) {
     if (!recognized.has(field)) {
@@ -14,9 +24,7 @@ export function logUnrecognizedFields(
 }
 
 export function isPrimitiveField(field: ContentFields): boolean {
-  const types = new Set(['Symbol', 'Text', 'Integer', 'Boolean', 'Date', 'Location', 'Object']);
-
-  if (types.has(field.type)) {
+  if (PRIMITIVE_FIELDS.has(field.type)) {
     return true;
   }
 

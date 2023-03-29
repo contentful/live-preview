@@ -1,7 +1,7 @@
-import { EntryProps, KeyValueMap } from 'contentful-management/types';
+import type { EntryProps, KeyValueMap } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
-import { SysProps, EntryReferenceMap, MessageAction } from '../../types';
+import { SysProps, EntryReferenceMap, MessageAction, Entity } from '../../types';
 import * as Utils from '../../utils';
 import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
@@ -21,7 +21,7 @@ describe('Update GraphQL Entry', () => {
     locale = EN,
     entityReferenceMap = new EntryReferenceMap(),
   }: {
-    data: Record<string, unknown> & { sys: SysProps };
+    data: Entity & { sys: SysProps };
     update?: EntryProps;
     locale?: string;
     entityReferenceMap?: EntryReferenceMap;
@@ -126,8 +126,11 @@ describe('Update GraphQL Entry', () => {
         },
         reference: null,
       });
-      expect(sendMessageToEditor).toHaveBeenCalledWith(MessageAction.ENTITY_NOT_KNOWN, {
-        referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
+      expect(sendMessageToEditor).toHaveBeenCalledWith({
+        action: MessageAction.ENTITY_NOT_KNOWN,
+        data: {
+          referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
+        },
       });
     });
 
@@ -342,8 +345,11 @@ describe('Update GraphQL Entry', () => {
           items: [],
         },
       });
-      expect(sendMessageToEditor).toHaveBeenCalledWith(MessageAction.ENTITY_NOT_KNOWN, {
-        referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
+      expect(sendMessageToEditor).toHaveBeenCalledWith({
+        action: MessageAction.ENTITY_NOT_KNOWN,
+        data: {
+          referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
+        },
       });
     });
 

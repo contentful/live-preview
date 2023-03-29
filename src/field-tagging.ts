@@ -109,10 +109,15 @@ export class FieldTagging {
     const entryId = this.tooltip.getAttribute(DATA_CURR_ENTRY_ID);
     const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
 
-    sendMessageToEditor(MessageAction.TAGGED_FIELD_CLICKED, {
-      fieldId,
-      entryId,
-      locale,
-    });
+    if (fieldId && entryId && locale) {
+      sendMessageToEditor({
+        action: MessageAction.TAGGED_FIELD_CLICKED,
+        data: {
+          fieldId,
+          entryId,
+          locale,
+        },
+      });
+    }
   }
 }
