@@ -1,11 +1,11 @@
-import {
+import type {
   ContentTypeProps,
   EntryProps,
   AssetProps,
   ContentFields,
 } from 'contentful-management/types';
 
-import { EntryReferenceMap, SysProps } from '../types';
+import { Entity, EntryReferenceMap, SysProps } from '../types';
 import { updateEntry } from './entries';
 
 const field = (name: string, type = 'Symbol'): ContentFields => ({
@@ -45,11 +45,11 @@ const AssetContentType = {
  * @param locale locale code
  */
 export function updateAsset(
-  data: Record<string, unknown> & { sys: SysProps },
+  data: Entity & { sys: SysProps },
   update: AssetProps,
   locale: string,
   entityReferenceMap: EntryReferenceMap
-): Record<string, unknown> {
+): Entity {
   // FIXME: copy nested asset.fields.file values to root to match the
   // Content Type definition for GraphQL
   return updateEntry(

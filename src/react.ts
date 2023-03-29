@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect';
 
@@ -11,6 +11,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   locale: string
 ): T {
   const [state, setState] = useState(data);
+  const update = useRef(debounce(setState));
 
   useDeepCompareEffectNoCheck(() => {
     // update content from external
@@ -20,8 +21,9 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
       return;
     }
     // or update content through live updates
-    const update = debounce(setState);
-    return ContentfulLivePreview.subscribe(data, locale, (data) => update(data as T));
+    return ContentfulLivePreview.subscribe(data, locale, (data) => {
+      update.current(data as T);
+    });
   }, [data]);
 
   return state;

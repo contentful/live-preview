@@ -33,9 +33,12 @@ export class ContentfulLivePreview {
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
         });
 
-        sendMessageToEditor(MessageAction.IFRAME_CONNECTED, {
-          connected: true,
-          tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+        sendMessageToEditor({
+          action: MessageAction.IFRAME_CONNECTED,
+          data: {
+            connected: true,
+            tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+          },
         });
 
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
