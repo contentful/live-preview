@@ -233,6 +233,71 @@ describe('Update GraphQL Entry', () => {
 
       expect(sendMessageToEditor).not.toHaveBeenCalled();
     });
+
+    it('graphql properties are not lost with updates', () => {
+      const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
+      const data = {
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        reference: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: testAddingEntryId,
+          },
+          propertyShouldStay: 'value',
+        },
+      };
+      const testContentTypeId = 'testContentType';
+      const update = {
+        sys: {
+          id: entry.sys.id,
+        },
+        fields: {
+          reference: {
+            'en-US': {
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testAddingEntryId,
+              },
+            },
+          },
+        },
+      } as unknown as EntryProps<KeyValueMap>;
+
+      const entityReferenceMap = new EntryReferenceMap();
+      entityReferenceMap.set(testAddingEntryId, {
+        sys: {
+          contentType: {
+            sys: {
+              id: testContentTypeId,
+              linkType: 'Entry',
+            },
+          },
+        },
+      } as EntryProps<KeyValueMap>);
+
+      // value has not changed, just sends message back to editor
+      expect(updateFn({ data, update, entityReferenceMap })).toEqual({
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        reference: {
+          // content type has been adjusted to have capital letter at the start
+          __typename: 'TestContentType',
+          sys: {
+            id: testAddingEntryId,
+            linkType: 'Entry',
+            type: 'Link',
+          },
+          propertyShouldStay: 'value',
+        },
+      });
+    });
   });
 
   describe('multi reference fields', () => {
@@ -393,6 +458,70 @@ describe('Update GraphQL Entry', () => {
                 linkType: 'Entry',
                 type: 'Link',
               },
+            },
+          ],
+        },
+      });
+    });
+
+    it('graphql properties are not lost with updates', () => {
+      const testAddingEntryId = '3JqLncpMbnZYrCPebujXhK';
+      const data = {
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [
+            {
+              __typename: 'TestContentTypeForManyRef',
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testAddingEntryId,
+              },
+              propertyShouldStay: 'value',
+            },
+          ],
+        },
+      };
+
+      const update = {
+        sys: {
+          id: entry.sys.id,
+        },
+        fields: {
+          referenceMany: {
+            'en-US': [
+              {
+                __typename: 'TestContentTypeForManyRef',
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: testAddingEntryId,
+                },
+              },
+            ],
+          },
+        },
+      } as unknown as EntryProps<KeyValueMap>;
+
+      // value has not changed, just sends message back to editor
+      expect(updateFn({ data, update })).toEqual({
+        __typename: 'Page',
+        sys: {
+          id: entry.sys.id,
+        },
+        referenceManyCollection: {
+          items: [
+            {
+              __typename: 'TestContentTypeForManyRef',
+              sys: {
+                id: testAddingEntryId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+              propertyShouldStay: 'value',
             },
           ],
         },
