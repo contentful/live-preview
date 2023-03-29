@@ -103,7 +103,7 @@ function updateReferenceField(
   );
   // if we have the typename of the updated reference, we can return with it
   if (entityTypename) {
-    return { ...updatedReference, __typename: entityTypename, ...referenceFromPreviewApp };
+    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename, };
   } else {
     // if we don't have the typename we send a message back to the entry editor
     // and it will then send the reference back in the entity reference map
