@@ -22,6 +22,7 @@ export function sendMessageToEditor({ action, data }: EditorMessage): void {
   window.top?.postMessage(
     {
       from: 'live-preview',
+      location: window.location.href,
       action,
       ...data,
     },
