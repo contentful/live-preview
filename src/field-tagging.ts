@@ -6,7 +6,7 @@ import {
   TOOLTIP_HEIGHT,
   TOOLTIP_PADDING_LEFT,
 } from './constants';
-import { MessageAction, TagAttributes } from './types';
+import { TagAttributes } from './types';
 import { sendMessageToEditor } from './utils';
 
 export class FieldTagging {
@@ -111,7 +111,7 @@ export class FieldTagging {
 
     if (fieldId && entryId && locale) {
       sendMessageToEditor({
-        action: MessageAction.TAGGED_FIELD_CLICKED,
+        action: 'TAGGED_FIELD_CLICKED',
         data: {
           fieldId,
           entryId,

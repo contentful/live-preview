@@ -56,7 +56,7 @@ import '@contentful/live-preview/style.css';
 
 ### Live Updates
 
-Live Updates from the editor to your applications are currently only directed supported for [React.js](https://reactjs.org/)
+Live Updates from the editor to your applications are out of the box only supported for [React.js](https://reactjs.org/) at the moment.
 
 ```tsx
 import { useContentfulLiveUpdates } from "@contentful/live-preview/react";

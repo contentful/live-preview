@@ -29,10 +29,19 @@ export interface CollectionItem {
   __typename?: string;
 }
 
-export enum MessageAction {
-  IFRAME_CONNECTED = 'IFRAME_CONNECTED',
-  TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
-  ENTITY_NOT_KNOWN = 'ENTITY_NOT_KNOWN',
-}
+type IframeConnectedMessage = {
+  action: 'IFRAME_CONNECTED';
+  data: { connected: true; tags: number };
+};
+type TaggedFieldClickMessage = {
+  action: 'TAGGED_FIELD_CLICKED';
+  data: { fieldId: string; entryId: string; locale: string };
+};
+type UnknownEntityMessage = {
+  action: 'ENTITY_NOT_KNOWN';
+  data: { referenceEntityId: string };
+};
+
+export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage;
 
 export class EntryReferenceMap extends Map<string, EntryProps | AssetProps> {}

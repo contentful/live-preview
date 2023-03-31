@@ -1,13 +1,6 @@
 import type { EntryProps } from 'contentful-management/types';
 
-import {
-  CollectionItem,
-  SysProps,
-  MessageAction,
-  EntryReferenceMap,
-  Entity,
-  ContentType,
-} from '../types';
+import { CollectionItem, SysProps, EntryReferenceMap, Entity, ContentType } from '../types';
 import { sendMessageToEditor } from '../utils';
 import { isPrimitiveField, logUnrecognizedFields } from './utils';
 
@@ -110,13 +103,13 @@ function updateReferenceField(
   );
   // if we have the typename of the updated reference, we can return with it
   if (entityTypename) {
-    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename, };
+    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename };
   } else {
     // if we don't have the typename we send a message back to the entry editor
     // and it will then send the reference back in the entity reference map
     // where we can calculate the typename on the next update message.
     sendMessageToEditor({
-      action: MessageAction.ENTITY_NOT_KNOWN,
+      action: 'ENTITY_NOT_KNOWN',
       data: {
         referenceEntityId: updatedReference.sys.id,
       },
