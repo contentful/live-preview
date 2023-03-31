@@ -7,8 +7,6 @@ import { isPrimitiveField, updatePrimitiveField } from '../utils';
 const mergeFields = (fields: ContentFields[], initialObj: any, updatedObj: any, locale: string) => {
   const mergedObj = { ...initialObj };
 
-  console.log({ initialObj, updatedObj });
-
   for (const field of fields) {
     const name = field.apiName ?? field.name;
 
@@ -19,11 +17,31 @@ const mergeFields = (fields: ContentFields[], initialObj: any, updatedObj: any, 
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
       // updateMultiRefField(modified, update, name, locale, entityReferenceMap);
     }
-    // mergedObj.fields[field] = updatedObj.fields[field][locale];
   }
 
   return mergedObj;
 };
+
+type DataField = Entity & { sys: SysProps };
+
+function updateNestedRef(
+  fields: ContentFields[],
+  data: DataField,
+  updated: EntryProps,
+  locale: string
+) {
+  if (data.fields) {
+    for (const field of Object.values(data.fields)) {
+      if (field.sys?.id) {
+        if (field.sys.id === updated.sys.id) {
+          mergeFields(fields, field, updated, locale);
+        } else {
+          updateNestedRef(fields, field, updated, locale);
+        }
+      }
+    }
+  }
+}
 
 /**
  * Updates REST response data based on CMA entry object
@@ -41,6 +59,7 @@ export function updateEntry(
   locale: string
 ): (Entity & { sys: SysProps }) | Array<Entity & { sys: SysProps }> {
   const { fields } = contentType;
+  console.log({ data, update });
 
   // Check if 'data' is an array
   if (Array.isArray(data)) {
@@ -56,6 +75,8 @@ export function updateEntry(
       newArray[index] = mergeFields(fields, newArray[index], update, locale);
       return newArray;
     }
+    updateNestedRef(fields, newArray[0], update, locale);
+    return newArray;
   } else {
     // If 'initial' is an object, update its fields using the content from the 'updated' object
     if (data.sys.id === update.sys.id) {
