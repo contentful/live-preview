@@ -1,19 +1,5 @@
-import type { MessageAction } from './types';
+import type { EditorMessage } from './types';
 
-type IframeConnectedMessage = {
-  action: MessageAction.IFRAME_CONNECTED;
-  data: { connected: true; tags: number };
-};
-type TaggedFieldClickMessage = {
-  action: MessageAction.TAGGED_FIELD_CLICKED;
-  data: { fieldId: string; entryId: string; locale: string };
-};
-type UnknownEntityMessage = {
-  action: MessageAction.ENTITY_NOT_KNOWN;
-  data: { referenceEntityId: string };
-};
-
-type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage;
 /**
  * Sends the given message to the editor
  * enhances it with the information necessary to be accepted

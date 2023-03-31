@@ -1,7 +1,7 @@
 import type { EntryProps, KeyValueMap } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
-import { SysProps, EntryReferenceMap, MessageAction, Entity } from '../../types';
+import { SysProps, EntryReferenceMap, Entity } from '../../types';
 import * as Utils from '../../utils';
 import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
@@ -127,7 +127,7 @@ describe('Update GraphQL Entry', () => {
         reference: null,
       });
       expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: MessageAction.ENTITY_NOT_KNOWN,
+        action: 'ENTITY_NOT_KNOWN',
         data: {
           referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
         },
@@ -346,7 +346,7 @@ describe('Update GraphQL Entry', () => {
         },
       });
       expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: MessageAction.ENTITY_NOT_KNOWN,
+        action: 'ENTITY_NOT_KNOWN',
         data: {
           referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
         },
