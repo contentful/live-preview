@@ -1,14 +1,25 @@
 import { EntryProps, ContentTypeProps } from 'contentful-management/types';
+import { ContentFields } from 'contentful-management/types';
 
 import { SysProps, Entity } from '../types';
+import { isPrimitiveField, updatePrimitiveField } from '../utils';
 
-const mergeFields = (initialObj: any, updatedObj: any, locale: string) => {
+const mergeFields = (fields: ContentFields[], initialObj: any, updatedObj: any, locale: string) => {
   const mergedObj = { ...initialObj };
 
   console.log({ initialObj, updatedObj });
 
-  for (const field in updatedObj.fields) {
-    mergedObj.fields[field] = updatedObj.fields[field][locale];
+  for (const field of fields) {
+    const name = field.apiName ?? field.name;
+
+    if (isPrimitiveField(field) || field.type === 'RichText') {
+      updatePrimitiveField(initialObj.fields, updatedObj, name, locale);
+    } else if (field.type === 'Link') {
+      // updateSingleRefField(modified, update, name, locale, entityReferenceMap);
+    } else if (field.type === 'Array' && field.items?.type === 'Link') {
+      // updateMultiRefField(modified, update, name, locale, entityReferenceMap);
+    }
+    // mergedObj.fields[field] = updatedObj.fields[field][locale];
   }
 
   return mergedObj;
@@ -29,10 +40,7 @@ export function updateEntry(
   update: EntryProps,
   locale: string
 ): (Entity & { sys: SysProps }) | Array<Entity & { sys: SysProps }> {
-  const modified = { ...data };
   const { fields } = contentType;
-
-  console.log({ fields });
 
   // Check if 'data' is an array
   if (Array.isArray(data)) {
@@ -45,7 +53,7 @@ export function updateEntry(
     // check if an element with a matching sys.id was found in the initial array
     if (index !== -1) {
       // Update the fields of the object found in the 'newArray' using the content from the 'updated' object
-      newArray[index] = mergeFields(newArray[index], update, locale);
+      newArray[index] = mergeFields(fields, newArray[index], update, locale);
       return newArray;
     }
   } else {
@@ -53,22 +61,7 @@ export function updateEntry(
     if (data.sys.id === update.sys.id) {
       //update data
     }
-    return data;
   }
 
-  // for (const field of fields) {
-  //   const name = field.apiName ?? field.name;
-
-  //   if (isPrimitiveField(field)) {
-  //     updatePrimitiveField(modified, update, name, locale);
-  //   } else if (field.type === 'RichText') {
-  //     updateRichTextField(modified, update, name, locale);
-  //   } else if (field.type === 'Link') {
-  //     updateSingleRefField(modified, update, name, locale, entityReferenceMap);
-  //   } else if (field.type === 'Array' && field.items?.type === 'Link') {
-  //     updateMultiRefField(modified, update, name, locale, entityReferenceMap);
-  //   }
-  // }
-
-  return modified;
+  return data;
 }

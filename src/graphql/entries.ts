@@ -1,8 +1,8 @@
 import { ContentTypeProps, EntryProps } from 'contentful-management/types';
 
 import { CollectionItem, SysProps, MessageAction, EntryReferenceMap, Entity } from '../types';
-import { sendMessageToEditor } from '../utils';
-import { isPrimitiveField, logUnrecognizedFields } from './utils';
+import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../utils';
+import { logUnrecognizedFields } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -47,12 +47,6 @@ export function updateEntry(
   }
 
   return modified;
-}
-
-function updatePrimitiveField(modified: Entity, update: EntryProps, name: string, locale: string) {
-  if (name in modified) {
-    modified[name] = update.fields?.[name]?.[locale] ?? null;
-  }
 }
 
 function updateRichTextField(modified: Entity, update: EntryProps, name: string, locale: string) {
@@ -103,7 +97,7 @@ function updateReferenceField(
   );
   // if we have the typename of the updated reference, we can return with it
   if (entityTypename) {
-    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename, };
+    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename };
   } else {
     // if we don't have the typename we send a message back to the entry editor
     // and it will then send the reference back in the entity reference map

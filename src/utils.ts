@@ -1,4 +1,6 @@
-import type { MessageAction } from './types';
+import { ContentFields, EntryProps } from 'contentful-management/types';
+
+import type { Entity, MessageAction } from './types';
 
 /**
  * Sends the given message to the editor
@@ -37,4 +39,30 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
  */
 export function generateUID(): string {
   return `${performance.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+export function isPrimitiveField(field: ContentFields): boolean {
+  const types = new Set(['Symbol', 'Text', 'Integer', 'Boolean', 'Date', 'Location', 'Object']);
+
+  if (types.has(field.type)) {
+    return true;
+  }
+
+  // Array of Symbols
+  if (field.type === 'Array' && field.items?.type === 'Symbol') {
+    return true;
+  }
+
+  return false;
+}
+
+export function updatePrimitiveField(
+  modified: Entity,
+  update: EntryProps,
+  name: string,
+  locale: string
+): void {
+  if (name in modified) {
+    modified[name] = update.fields?.[name]?.[locale] ?? null;
+  }
 }

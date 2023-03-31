@@ -1,5 +1,3 @@
-import { ContentFields } from 'contentful-management/types';
-
 export function logUnrecognizedFields(
   contentTypeFields: string[],
   data: Record<string, unknown>
@@ -11,19 +9,4 @@ export function logUnrecognizedFields(
       console.warn(`Unrecognized field '${field}'. Note that GraphQL aliases are not supported`);
     }
   }
-}
-
-export function isPrimitiveField(field: ContentFields): boolean {
-  const types = new Set(['Symbol', 'Text', 'Integer', 'Boolean', 'Date', 'Location', 'Object']);
-
-  if (types.has(field.type)) {
-    return true;
-  }
-
-  // Array of Symbols
-  if (field.type === 'Array' && field.items?.type === 'Symbol') {
-    return true;
-  }
-
-  return false;
 }
