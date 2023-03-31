@@ -132,7 +132,8 @@ export class LiveUpdates {
   public subscribe(data: Argument, locale: string, cb: SubscribeCallback): VoidFunction {
     const id = generateUID();
     this.subscriptions.set(id, { data, locale, cb });
-    this.restore(data, cb);
+    // TODO: https://contentful.atlassian.net/browse/TOL-1080
+    // this.restore(data, cb);
 
     return () => {
       this.subscriptions.delete(id);
