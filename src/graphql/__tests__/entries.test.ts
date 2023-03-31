@@ -128,9 +128,7 @@ describe('Update GraphQL Entry', () => {
       });
       expect(sendMessageToEditor).toHaveBeenCalledWith({
         action: 'ENTITY_NOT_KNOWN',
-        data: {
-          referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
-        },
+        referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
       });
     });
 
@@ -347,9 +345,7 @@ describe('Update GraphQL Entry', () => {
       });
       expect(sendMessageToEditor).toHaveBeenCalledWith({
         action: 'ENTITY_NOT_KNOWN',
-        data: {
-          referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
-        },
+        referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
       });
     });
 

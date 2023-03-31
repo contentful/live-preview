@@ -110,9 +110,7 @@ function updateReferenceField(
     // where we can calculate the typename on the next update message.
     sendMessageToEditor({
       action: 'ENTITY_NOT_KNOWN',
-      data: {
-        referenceEntityId: updatedReference.sys.id,
-      },
+      referenceEntityId: updatedReference.sys.id,
     });
     return null;
   }

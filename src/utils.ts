@@ -1,19 +1,19 @@
-import type { EditorMessage } from './types';
+import type { EditorMessage, MessageFromSDK } from './types';
 
 /**
  * Sends the given message to the editor
  * enhances it with the information necessary to be accepted
  */
-export function sendMessageToEditor({ action, data }: EditorMessage): void {
+export function sendMessageToEditor(data: EditorMessage): void {
+  const message: MessageFromSDK = {
+    ...data,
+    from: 'live-preview',
+    location: window.location.href,
+  };
+
   window.top?.postMessage(
-    {
-      from: 'live-preview',
-      location: window.location.href,
-      action,
-      ...data,
-    },
-    // TODO: check if there is any security risk with this
-    '*'
+    message,
+    '*' // TODO: check if there is any security risk with this
   );
 }
 

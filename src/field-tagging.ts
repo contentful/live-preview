@@ -112,11 +112,9 @@ export class FieldTagging {
     if (fieldId && entryId && locale) {
       sendMessageToEditor({
         action: 'TAGGED_FIELD_CLICKED',
-        data: {
-          fieldId,
-          entryId,
-          locale,
-        },
+        fieldId,
+        entryId,
+        locale,
       });
     }
   }
