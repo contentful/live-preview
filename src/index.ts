@@ -29,10 +29,8 @@ export class ContentfulLivePreview {
 
         sendMessageToEditor({
           action: 'IFRAME_CONNECTED',
-          data: {
-            connected: true,
-            tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
-          },
+          connected: true,
+          tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
         });
 
         return Promise.resolve(ContentfulLivePreview.fieldTagging);

@@ -8,13 +8,13 @@ export type LivePreviewProps = {
   locale: string | null | undefined;
 };
 
-export enum TagAttributes {
+export const enum TagAttributes {
   FIELD_ID = 'data-contentful-field-id',
   ENTRY_ID = 'data-contentful-entry-id',
   LOCALE = 'data-contentful-locale',
 }
 
-// TODO: can we add sys and optional typename to the Entity?
+// TODO: this has kind of overlap with CollectionItem, can we combine them?
 export type Entity = Record<string, unknown>;
 export type Argument = Entity | Entity[];
 export type SubscribeCallback = (data: Argument) => void;
@@ -31,17 +31,23 @@ export interface CollectionItem {
 
 type IframeConnectedMessage = {
   action: 'IFRAME_CONNECTED';
-  data: { connected: true; tags: number };
+  connected: true;
+  tags: number;
 };
 type TaggedFieldClickMessage = {
   action: 'TAGGED_FIELD_CLICKED';
-  data: { fieldId: string; entryId: string; locale: string };
+  fieldId: string;
+  entryId: string;
+  locale: string;
 };
 type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';
-  data: { referenceEntityId: string };
+  referenceEntityId: string;
 };
-
 export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage;
+export type MessageFromSDK = EditorMessage & {
+  from: 'live-preview';
+  location: string;
+};
 
 export class EntryReferenceMap extends Map<string, EntryProps | AssetProps> {}
