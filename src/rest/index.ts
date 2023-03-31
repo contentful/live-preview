@@ -1,0 +1,1 @@
+export { updateEntry } from './entries';

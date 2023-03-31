@@ -1,4 +1,5 @@
 import * as gql from './graphql';
+import * as rest from './rest';
 import { Argument, Entity, EntryReferenceMap, SubscribeCallback } from './types';
 import { generateUID } from './utils';
 
@@ -24,6 +25,7 @@ export class LiveUpdates {
     contentType: any,
     entityReferenceMap: EntryReferenceMap
   ): Argument {
+    //TODO - initial could be an array
     if ((initial as any).__typename === 'Asset') {
       return gql.updateAsset(initial as any, updated as any, locale, entityReferenceMap);
     }
@@ -47,10 +49,19 @@ export class LiveUpdates {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private mergeRest(initial: Argument, locale: string, updated: Entity): Argument {
+  private mergeRest(
+    initial: Argument,
+    locale: string,
+    updated: Entity,
+    contentType: any
+  ): Argument {
     // TODO: https://contentful.atlassian.net/browse/TOL-1033
     // TODO: https://contentful.atlassian.net/browse/TOL-1025
-    return initial;
+
+    const updatedData = rest.updateEntry(contentType, initial, updated, locale);
+    // Cache the updated data for future updates
+    // this.updatedEntriesCache.set(entryId, updatedData);
+    return updatedData;
   }
 
   private merge(
@@ -63,7 +74,7 @@ export class LiveUpdates {
     if ('__typename' in initial) {
       return this.mergeGraphQL(initial, locale, updated, contentType, entityReferenceMap);
     }
-    return this.mergeRest(initial, locale, updated);
+    return this.mergeRest(initial, locale, updated, contentType);
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
