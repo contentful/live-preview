@@ -43,6 +43,7 @@ type TaggedFieldClickMessage = {
 type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';
   referenceEntityId: string;
+  referenceContentType?: string;
 };
 export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage;
 export type MessageFromSDK = EditorMessage & {

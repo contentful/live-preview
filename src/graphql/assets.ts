@@ -1,40 +1,7 @@
-import type {
-  ContentTypeProps,
-  EntryProps,
-  AssetProps,
-  ContentFields,
-} from 'contentful-management/types';
+import type { AssetProps } from 'contentful-management/types';
 
-import { Entity, EntryReferenceMap, SysProps } from '../types';
-import { updateEntry } from './entries';
-
-const field = (name: string, type = 'Symbol'): ContentFields => ({
-  id: name,
-  name,
-  type,
-  localized: true,
-  required: false,
-});
-
-/**
- * Hand-coded Asset Content Type to have consistent handling for Entries
- * and Assets.
- */
-const AssetContentType = {
-  name: 'Asset',
-  fields: [
-    field('title'),
-    field('description'),
-
-    // File attributes
-    field('fileName'),
-    field('contentType'),
-    field('url'),
-    field('size', 'Integer'),
-    field('width', 'Integer'),
-    field('height', 'Integer'),
-  ],
-} as ContentTypeProps;
+import { Entity, SysProps } from '../types';
+// import { updateEntry, updateReferenceAssetField } from './entries';
 
 /**
  * Updates GraphQL response data based on CMA Asset object
@@ -47,16 +14,28 @@ const AssetContentType = {
 export function updateAsset(
   data: Entity & { sys: SysProps },
   update: AssetProps,
-  locale: string,
-  entityReferenceMap: EntryReferenceMap
+  locale: string
 ): Entity {
-  // FIXME: copy nested asset.fields.file values to root to match the
-  // Content Type definition for GraphQL
-  return updateEntry(
-    AssetContentType,
-    data,
-    update as unknown as EntryProps,
-    locale,
-    entityReferenceMap
-  );
+  // TODO: reuse function from asset reference
+
+  try {
+    const file = update.fields.file[locale];
+
+    // Content Type definition for GraphQL
+    return {
+      ...data,
+      // GraphQL flattens some information
+      // and as the live updates are coming from the CMA, we need to transform them
+      title: update.fields.title[locale],
+      description: update.fields.description?.[locale],
+      contentType: file.contentType,
+      width: file.details?.image.width,
+      height: file.details?.image.height,
+      // GraphQL returns the URL with protocal, the CMA without, so we need to add the information in there
+      url: file.url ? (file.url?.startsWith('https:') ? file.url : `https:${file.url}`) : undefined,
+    };
+  } catch (err) {
+    // During file upload it will throw an error and return the original data in the meantime
+    return data;
+  }
 }
