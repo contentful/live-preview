@@ -1,7 +1,15 @@
 import * as gql from './graphql';
 import { generateUID, StorageMap } from './helpers';
+import { hasNestedReference } from './helpers/nestedReferences';
 import * as rest from './rest';
-import { Argument, ContentType, Entity, EntryReferenceMap, SubscribeCallback } from './types';
+import {
+  Argument,
+  ContentType,
+  Entity,
+  EntryReferenceMap,
+  SubscribeCallback,
+  SysProps,
+} from './types';
 
 interface Subscription {
   data: Argument;
@@ -42,12 +50,7 @@ export class LiveUpdates {
     contentType,
   }: MergeEntityProps): Entity {
     if ((dataFromPreviewApp as any).__typename === 'Asset') {
-      return gql.updateAsset(
-        dataFromPreviewApp as any,
-        updateFromEntryEditor as any,
-        locale,
-        entityReferenceMap
-      );
+      return gql.updateAsset(dataFromPreviewApp as any, updateFromEntryEditor as any, locale);
     }
 
     const entryId = (dataFromPreviewApp as any).sys.id;
@@ -92,22 +95,94 @@ export class LiveUpdates {
     return updatedData;
   }
 
-  // TODO: we currently expect the provided data to have the sys.id directly, but it could be also nested
-  // { items: [{ sys: { id }, ... }] }
-  // do we support this case or should it be provided like that: [{ sys: { id } }]
-  private mergeEntity(data: MergeEntityProps): Entity {
-    if ('__typename' in data.dataFromPreviewApp) {
-      return this.mergeGraphQL(data);
+  // TODO: only call the `cb` if there was an update
+  private mergeNestedReference(
+    dataFromPreviewApp: Entity,
+    updateFromEntryEditor: Entity,
+    mergeFn: (original: Entity, incomming: Entity) => Entity
+  ): { data: Entity; updated: boolean } {
+    let updated = false;
+
+    if (!('sys' in updateFromEntryEditor)) {
+      return { data: dataFromPreviewApp, updated: false };
     }
-    return this.mergeRest(data);
+
+    const updateFromEntryEditorId = (updateFromEntryEditor.sys as SysProps).id;
+
+    if (
+      'sys' in dataFromPreviewApp &&
+      (dataFromPreviewApp.sys as SysProps).id === updateFromEntryEditorId
+    ) {
+      return { data: mergeFn(dataFromPreviewApp, updateFromEntryEditor), updated: true };
+    }
+
+    if (hasNestedReference(dataFromPreviewApp, updateFromEntryEditorId)) {
+      const isArray = Array.isArray(dataFromPreviewApp);
+      const clone = { ...dataFromPreviewApp };
+
+      for (const k in clone) {
+        const value = clone[k];
+
+        if (!value) {
+          continue;
+        }
+
+        if (Array.isArray(value)) {
+          for (let i = 0; i < value.length; i++) {
+            const arrayValue = value[i];
+            if (
+              !arrayValue ||
+              typeof arrayValue !== 'object' ||
+              !hasNestedReference(arrayValue, updateFromEntryEditorId)
+            ) {
+              continue;
+            }
+
+            const match = this.mergeNestedReference(arrayValue, updateFromEntryEditor, mergeFn);
+
+            if (match.updated) {
+              value[i] = match.data;
+              updated = true;
+            }
+          }
+        }
+
+        if (
+          typeof value === 'object' &&
+          hasNestedReference(value as Entity, updateFromEntryEditorId)
+        ) {
+          const match = this.mergeNestedReference(value as Entity, updateFromEntryEditor, mergeFn);
+          if (match.updated) {
+            clone[k] = match.data;
+            updated = true;
+          }
+        }
+      }
+
+      return { data: isArray ? Object.values(clone) : clone, updated };
+    }
+
+    return { data: dataFromPreviewApp, updated };
   }
 
-  private merge({ dataFromPreviewApp, ...data }: MergeArgumentProps): Argument {
+  // TODO: handle updated from mergeNestedReference
+  private merge({
+    dataFromPreviewApp,
+    updateFromEntryEditor,
+    ...data
+  }: MergeArgumentProps): Argument {
+    const mergeFn = (dataFromPreviewApp: Entity, updateFromEntryEditor: Entity) =>
+      '__typename' in dataFromPreviewApp
+        ? this.mergeGraphQL({ ...data, dataFromPreviewApp, updateFromEntryEditor })
+        : this.mergeRest({ ...data, dataFromPreviewApp, updateFromEntryEditor });
+
     if (Array.isArray(dataFromPreviewApp)) {
-      return dataFromPreviewApp.map((d) => this.mergeEntity({ ...data, dataFromPreviewApp: d }));
+      return dataFromPreviewApp.map(
+        (i) => this.mergeNestedReference(i, updateFromEntryEditor, mergeFn).data
+      );
     }
 
-    return this.mergeEntity({ ...data, dataFromPreviewApp });
+    return this.mergeNestedReference(dataFromPreviewApp, updateFromEntryEditor, mergeFn).data;
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */

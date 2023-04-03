@@ -1,3 +1,4 @@
+import { AssetProps } from 'contentful-management';
 import type { EntryProps } from 'contentful-management/types';
 
 import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
@@ -83,19 +84,88 @@ function getContentTypenameFromEntityReferenceMap(
   if (referenceMap && entityId) {
     const entity = referenceMap.get(entityId);
     if (entity) {
-      const contentTypeId = entity.sys.contentType?.sys.id;
+      const contentTypeId = entity.sys.contentType.sys.id;
       const typename = contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
       return typename;
     }
   }
 }
 
+const ASSET_TYPENAME = 'Asset';
+function isAsset(entity: EntryProps): boolean {
+  return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
+}
+
+function updateReferenceAssetField(
+  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
+  updatedReference: EntryProps & { __typename?: string },
+  entityReferenceMap: EntryReferenceMap,
+  locale: string
+) {
+  const match = entityReferenceMap.get(updatedReference.sys.id) as AssetProps | undefined;
+
+  if (!match) {
+    // if we don't have the asset we send a message back to the entry editor
+    // and it will then send the asset back in the entity reference map
+    // where we can calculate the asset on the next update message.
+    sendMessageToEditor({
+      action: 'ENTITY_NOT_KNOWN',
+      referenceEntityId: updatedReference.sys.id,
+      referenceContentType: ASSET_TYPENAME,
+    });
+    return;
+  }
+
+  const file = match.fields.file[locale];
+
+  // TODO: reuse updateAsset
+  return {
+    ...referenceFromPreviewApp,
+    ...updatedReference,
+    // GraphQL flattens some information
+    // and as the live updates are coming from the CMA, we need to transform them
+    title: match.fields.title[locale],
+    description: match.fields.description?.[locale],
+    contentType: file.contentType,
+    width: file.details?.image.width,
+    height: file.details?.image.height,
+    // GraphQL returns the URL with protocal, the CMA without, so we need to add the information in there
+    url: file.url ? (file.url?.startsWith('https:') ? file.url : `https:${file.url}`) : undefined,
+    __typename: ASSET_TYPENAME,
+  };
+}
+
+function updateReferenceEntryField(
+  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
+  updatedReference: EntryProps & { __typename?: string },
+  entityReferenceMap: EntryReferenceMap
+) {
+  const entityTypename = getContentTypenameFromEntityReferenceMap(
+    entityReferenceMap,
+    updatedReference.sys.id
+  );
+
+  // if we have the typename of the updated reference, we can return with it
+  if (entityTypename) {
+    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename };
+  }
+
+  // if we don't have the typename we send a message back to the entry editor
+  // and it will then send the reference back in the entity reference map
+  // where we can calculate the typename on the next update message.
+  sendMessageToEditor({
+    action: 'ENTITY_NOT_KNOWN',
+    referenceEntityId: updatedReference.sys.id,
+  });
+  return null;
+}
+
 function updateReferenceField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
   updatedReference: (EntryProps & { __typename?: string }) | null | undefined,
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntryReferenceMap,
+  locale: string
 ) {
-  // if the reference was deleted return null
   if (!updatedReference) {
     return null;
   }
@@ -105,27 +175,20 @@ function updateReferenceField(
     return referenceFromPreviewApp;
   }
 
-  if (updatedReference && updatedReference.__typename) {
+  if (updatedReference.__typename) {
     return updatedReference;
   }
 
-  const entityTypename = getContentTypenameFromEntityReferenceMap(
-    entityReferenceMap,
-    updatedReference.sys.id
-  );
-  // if we have the typename of the updated reference, we can return with it
-  if (entityTypename) {
-    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename };
-  } else {
-    // if we don't have the typename we send a message back to the entry editor
-    // and it will then send the reference back in the entity reference map
-    // where we can calculate the typename on the next update message.
-    sendMessageToEditor({
-      action: 'ENTITY_NOT_KNOWN',
-      referenceEntityId: updatedReference.sys.id,
-    });
-    return null;
+  if (isAsset(updatedReference)) {
+    return updateReferenceAssetField(
+      referenceFromPreviewApp,
+      updatedReference,
+      entityReferenceMap,
+      locale
+    );
   }
+
+  return updateReferenceEntryField(referenceFromPreviewApp, updatedReference, entityReferenceMap);
 }
 
 function updateSingleRefField(
@@ -136,11 +199,11 @@ function updateSingleRefField(
   entityReferenceMap: EntryReferenceMap
 ) {
   if (name in dataFromPreviewApp) {
-    const updatedReference = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
     dataFromPreviewApp[name] = updateReferenceField(
       dataFromPreviewApp[name] as EntryProps & { __typename?: string },
-      updatedReference,
-      entityReferenceMap
+      updateFromEntryEditor?.fields?.[name]?.[locale],
+      entityReferenceMap,
+      locale
     );
   }
 }
@@ -160,10 +223,12 @@ function updateMultiRefField(
           const itemFromPreviewApp = (
             dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
           ).items.find((item) => item.sys.id === updatedItem.sys.id);
+
           return updateReferenceField(
             itemFromPreviewApp as unknown as EntryProps & { __typename?: string },
             updatedItem as unknown as EntryProps,
-            entityReferenceMap
+            entityReferenceMap,
+            locale
           );
         })
         .filter(Boolean) ?? [];
