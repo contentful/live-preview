@@ -39,7 +39,6 @@ type TaggedFieldClickMessage = {
   fieldId: string;
   entryId: string;
   locale: string;
-  shouldFocus: boolean;
 };
 type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';
@@ -51,8 +50,12 @@ type InlineEditingMessage = {
   entryId: string;
   locale: string;
   newContent: string;
-}
-export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage | InlineEditingMessage;
+};
+export type EditorMessage =
+  | IframeConnectedMessage
+  | TaggedFieldClickMessage
+  | UnknownEntityMessage
+  | InlineEditingMessage;
 export type MessageFromSDK = EditorMessage & {
   from: 'live-preview';
   location: string;

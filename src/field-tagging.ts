@@ -111,46 +111,61 @@ export class FieldTagging {
     const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
 
     if (fieldId && entryId && locale) {
-      // scroll to field (TODO: don't focus it)
-      sendMessageToEditor({
-        action: 'TAGGED_FIELD_CLICKED',
-        fieldId,
-        entryId,
-        locale,
-        shouldFocus: !this.inlineEditing,
-      });
       if (this.inlineEditing) {
-        const editableField = document
-          .querySelector(
-            `[${TagAttributes.ENTRY_ID}="${entryId}"][${TagAttributes.FIELD_ID}="${fieldId}"][${TagAttributes.LOCALE}="${locale}"]`
-          )
+        const editableField: HTMLInputElement | null = document.querySelector(
+          `[${TagAttributes.ENTRY_ID}="${entryId}"][${TagAttributes.FIELD_ID}="${fieldId}"][${TagAttributes.LOCALE}="${locale}"]`
+        );
 
         if (editableField) {
+          const initialContent = editableField.innerHTML;
           // make it editable
-          editableField.setAttribute('contenteditable', "true");
-          (editableField as HTMLInputElement).focus();
+          editableField.setAttribute('contenteditable', 'true');
+          editableField.focus();
           window.getSelection()?.selectAllChildren(editableField);
           window.getSelection()?.collapseToEnd();
 
           // add an event listener to receive the value
           editableField.addEventListener('input', () => {
-            console.log(editableField?.innerHTML)
+            console.log(editableField?.innerHTML);
           });
 
-          editableField.addEventListener('blur', () => {
-            editableField.removeAttribute('contenteditable');
-            sendMessageToEditor({
-              action: 'FIELD_EDITED_INLINE',
-              fieldId,
-              entryId,
-              locale,
-              newContent: editableField.innerHTML
-            });
-            // send it back to the editor
-          })
-        }
-      }
+          const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+              editableField.blur();
+              editableField.removeEventListener('keydown', onKeyDown);
+            }
+          };
 
+          editableField.addEventListener('keydown', onKeyDown);
+
+          editableField.addEventListener(
+            'blur',
+            () => {
+              editableField.removeAttribute('contenteditable');
+              const content = editableField.innerHTML;
+              if (content !== initialContent) {
+                // send it back to the editor
+                sendMessageToEditor({
+                  action: 'FIELD_EDITED_INLINE',
+                  fieldId,
+                  entryId,
+                  locale,
+                  newContent: content,
+                });
+              }
+            },
+            { once: true }
+          );
+        }
+      } else {
+        // scroll to field
+        sendMessageToEditor({
+          action: 'TAGGED_FIELD_CLICKED',
+          fieldId,
+          entryId,
+          locale,
+        });
+      }
     }
   }
 }
