@@ -1,10 +1,12 @@
 [data-contentful-field-id] {
   outline: 1px dashed rgba(64, 160, 255, 0) !important;
-  transition: outline-color 0.3s ease-in-out;
+  transition: outline-color, box-shadow 0.3s ease-in-out;
 }
 
 [data-contentful-field-id][contenteditable=true] {
-  outline: 1px dashed rgba(229, 0, 249, 0) !important;
+  z-index: 9999;
+  position: relative;
+  box-shadow: rgba(0,0,0,.2) 0 0 0 99999px;
 }
 
 .contentful-inspector--active [data-contentful-field-id] {

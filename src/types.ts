@@ -39,6 +39,7 @@ type TaggedFieldClickMessage = {
   fieldId: string;
   entryId: string;
   locale: string;
+  shouldFocus: boolean;
 };
 type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';

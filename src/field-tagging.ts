@@ -111,6 +111,14 @@ export class FieldTagging {
     const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
 
     if (fieldId && entryId && locale) {
+      // scroll to field (TODO: don't focus it)
+      sendMessageToEditor({
+        action: 'TAGGED_FIELD_CLICKED',
+        fieldId,
+        entryId,
+        locale,
+        shouldFocus: !this.inlineEditing,
+      });
       if (this.inlineEditing) {
         const editableField = document
           .querySelector(
@@ -120,7 +128,6 @@ export class FieldTagging {
         if (editableField) {
           // make it editable
           editableField.setAttribute('contenteditable', "true");
-          // focus field
           (editableField as HTMLInputElement).focus();
           window.getSelection()?.selectAllChildren(editableField);
           window.getSelection()?.collapseToEnd();
@@ -142,14 +149,8 @@ export class FieldTagging {
             // send it back to the editor
           })
         }
-      } else {
-        sendMessageToEditor({
-          action: 'TAGGED_FIELD_CLICKED',
-          fieldId,
-          entryId,
-          locale,
-        });
       }
+
     }
   }
 }
