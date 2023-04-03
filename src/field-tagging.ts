@@ -9,6 +9,8 @@ import {
 import { TagAttributes } from './types';
 import { sendMessageToEditor } from './utils';
 
+const INLINE_SUPPORTED = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
 export class FieldTagging {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
@@ -116,18 +118,13 @@ export class FieldTagging {
           `[${TagAttributes.ENTRY_ID}="${entryId}"][${TagAttributes.FIELD_ID}="${fieldId}"][${TagAttributes.LOCALE}="${locale}"]`
         );
 
-        if (editableField) {
-          const initialContent = editableField.innerHTML;
+        if (editableField && INLINE_SUPPORTED.includes(editableField.tagName.toLowerCase())) {
+          const initialContent = editableField.textContent;
           // make it editable
           editableField.setAttribute('contenteditable', 'true');
           editableField.focus();
           window.getSelection()?.selectAllChildren(editableField);
           window.getSelection()?.collapseToEnd();
-
-          // add an event listener to receive the value
-          editableField.addEventListener('input', () => {
-            console.log(editableField?.innerHTML);
-          });
 
           const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Enter') {
@@ -142,8 +139,8 @@ export class FieldTagging {
             'blur',
             () => {
               editableField.removeAttribute('contenteditable');
-              const content = editableField.innerHTML;
-              if (content !== initialContent) {
+              const content = editableField.textContent;
+              if (content && content !== initialContent) {
                 // send it back to the editor
                 sendMessageToEditor({
                   action: 'FIELD_EDITED_INLINE',
@@ -156,16 +153,19 @@ export class FieldTagging {
             },
             { once: true }
           );
+
+          return;
         }
-      } else {
-        // scroll to field
-        sendMessageToEditor({
-          action: 'TAGGED_FIELD_CLICKED',
-          fieldId,
-          entryId,
-          locale,
-        });
       }
+
+      // Fallback if not inline is disabled, the field is not support or no match found
+      // then scroll to field in the editor sidebar.
+      sendMessageToEditor({
+        action: 'TAGGED_FIELD_CLICKED',
+        fieldId,
+        entryId,
+        locale,
+      });
     }
   }
 }
