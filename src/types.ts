@@ -44,7 +44,14 @@ type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';
   referenceEntityId: string;
 };
-export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage;
+type InlineEditingMessage = {
+  action: 'FIELD_EDITED_INLINE';
+  fieldId: string;
+  entryId: string;
+  locale: string;
+  newContent: string;
+}
+export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage | InlineEditingMessage;
 export type MessageFromSDK = EditorMessage & {
   from: 'live-preview';
   location: string;

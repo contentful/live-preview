@@ -12,6 +12,7 @@ import { sendMessageToEditor } from './utils';
 export class FieldTagging {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
+  private inlineEditing = true;
 
   constructor() {
     this.tooltip = null;
@@ -110,12 +111,45 @@ export class FieldTagging {
     const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
 
     if (fieldId && entryId && locale) {
-      sendMessageToEditor({
-        action: 'TAGGED_FIELD_CLICKED',
-        fieldId,
-        entryId,
-        locale,
-      });
+      if (this.inlineEditing) {
+        const editableField = document
+          .querySelector(
+            `[${TagAttributes.ENTRY_ID}="${entryId}"][${TagAttributes.FIELD_ID}="${fieldId}"][${TagAttributes.LOCALE}="${locale}"]`
+          )
+
+        if (editableField) {
+          // make it editable
+          editableField.setAttribute('contenteditable', "true");
+          // focus field
+          (editableField as HTMLInputElement).focus();
+          window.getSelection()?.selectAllChildren(editableField);
+          window.getSelection()?.collapseToEnd();
+
+          // add an event listener to receive the value
+          editableField.addEventListener('input', () => {
+            console.log(editableField?.innerHTML)
+          });
+
+          editableField.addEventListener('blur', () => {
+            editableField.removeAttribute('contenteditable');
+            sendMessageToEditor({
+              action: 'FIELD_EDITED_INLINE',
+              fieldId,
+              entryId,
+              locale,
+              newContent: editableField.innerHTML
+            });
+            // send it back to the editor
+          })
+        }
+      } else {
+        sendMessageToEditor({
+          action: 'TAGGED_FIELD_CLICKED',
+          fieldId,
+          entryId,
+          locale,
+        });
+      }
     }
   }
 }

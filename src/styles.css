@@ -3,6 +3,10 @@
   transition: outline-color 0.3s ease-in-out;
 }
 
+[data-contentful-field-id][contenteditable=true] {
+  outline: 1px dashed rgba(229, 0, 249, 0) !important;
+}
+
 .contentful-inspector--active [data-contentful-field-id] {
   outline: 1px dashed rgba(64, 160, 255, 1) !important;
 }
