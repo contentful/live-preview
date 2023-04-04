@@ -121,6 +121,9 @@ export class FieldTagging {
       const currEntryId = element.getAttribute(TagAttributes.ENTRY_ID);
       const currLocale = element.getAttribute(TagAttributes.LOCALE);
       const currReference = element.getAttribute(TagAttributes.REFERENCE);
+
+      console.log('>> element', element);
+
       let tooltipToUpdate;
 
       if (currFieldId && currEntryId && currReference) {
@@ -149,6 +152,19 @@ export class FieldTagging {
           this.tooltips.edit?.setAttribute(DATA_CURR_LOCALE, currLocale);
         }
 
+        // if there is a parent with a reference, then read it
+        let parent = this.currentElementBesideTooltip.parentElement;
+        do {
+          const reference = parent?.getAttribute(TagAttributes.REFERENCE);
+          if (reference) {
+            this.tooltips.moveDown?.setAttribute(DATA_CURR_REF_ID, reference);
+            this.tooltips.moveUp?.setAttribute(DATA_CURR_REF_ID, reference);
+            this.tooltips.remove?.setAttribute(DATA_CURR_REF_ID, reference);
+            parent = null;
+          } else {
+            parent = parent?.parentElement || null;
+          }
+        } while (parent && parent.tagName !== 'BODY');
         break;
       }
     }
@@ -195,9 +211,39 @@ export class FieldTagging {
 
       window.addEventListener('scroll', () => this.updateTooltipPosition('all'));
       window.addEventListener('mouseover', this.addTooltipOnHover);
+      window.addEventListener('mouseout', this.removeTooltip);
     }
 
     this.updateTooltipPosition('all');
+  }
+
+  private removeTooltip(e: MouseEvent) {
+    let visible = false;
+    Object.values(this.tooltips || {}).forEach((element) => {
+      if (element && element.matches(':hover')) {
+        visible = true;
+      }
+    });
+
+    if (!visible) {
+      const eventTargets = e.composedPath();
+
+      for (const eventTarget of eventTargets) {
+        const element = eventTarget as HTMLElement;
+        if (element.nodeName === 'BODY') break;
+        if (typeof element?.getAttribute !== 'function') continue;
+
+        const currEntryId = element.getAttribute(TagAttributes.ENTRY_ID);
+
+        if (currEntryId) {
+          visible = true;
+        }
+      }
+    }
+
+    Object.values(this.tooltips || {}).forEach((element) => {
+      if (element) element.style.display = visible ? 'block' : 'none';
+    });
   }
 
   // responsible for handling the event when the user clicks on the edit button in the tooltip
