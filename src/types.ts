@@ -12,6 +12,7 @@ export const enum TagAttributes {
   FIELD_ID = 'data-contentful-field-id',
   ENTRY_ID = 'data-contentful-entry-id',
   LOCALE = 'data-contentful-locale',
+  REFERENCE = 'data-contentful-reference-id',
 }
 
 // TODO: this has kind of overlap with CollectionItem, can we combine them?

@@ -12,22 +12,31 @@ import { sendMessageToEditor } from './utils';
 const INLINE_SUPPORTED = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
 export class FieldTagging {
-  private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
+  private tooltips: {
+    edit: HTMLButtonElement | null;
+    remove: HTMLButtonElement | null;
+    moveUp: HTMLButtonElement | null;
+    moveDown: HTMLButtonElement | null;
+  } = {
+    edit: null,
+    remove: null,
+    moveUp: null,
+    moveDown: null,
+  };
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
   private inlineEditing = true;
 
   constructor() {
-    this.tooltip = null;
+    this.tooltips = { edit: null, remove: null, moveUp: null, moveDown: null };
     this.currentElementBesideTooltip = null;
 
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.addTooltipOnHover = this.addTooltipOnHover.bind(this);
-    this.createTooltip = this.createTooltip.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
+    this.createTooltips = this.createTooltips.bind(this);
+    this.clickEditHandler = this.clickEditHandler.bind(this);
+    this.createSingleTooltip = this.createSingleTooltip.bind(this);
 
-    this.createTooltip();
-    window.addEventListener('scroll', this.updateTooltipPosition);
-    window.addEventListener('mouseover', this.addTooltipOnHover);
+    this.createTooltips();
   }
 
   // Handles incoming messages from Contentful
@@ -38,24 +47,56 @@ export class FieldTagging {
     }
   }
 
+  // private handleRemoveReferenceClick(event: MouseEvent) {
+  //   const button = event.target as HTMLButtonElement;
+  //   const referenceId = button.getAttribute('data-reference-id') as string;
+  //   const entryId = button.getAttribute('data-entry-id') as string;
+  //   const fieldId = button.getAttribute('data-field-id') as string;
+
+  //   if (entryId) {
+  //     sendMessageToEditor({
+  //       action: 'REFERENCE_REMOVED',
+  //       referenceId,
+  //       entryId,
+  //       fieldId,
+  //     });
+  //   }
+  // }
+
   // Updates the position of the tooltip
   private updateTooltipPosition() {
-    if (!this.currentElementBesideTooltip || !this.tooltip) return false;
+    if (!this.currentElementBesideTooltip) return false;
 
     const currentRectOfElement = this.currentElementBesideTooltip.getBoundingClientRect();
-    const currentRectOfParentOfElement = this.tooltip.parentElement?.getBoundingClientRect();
+    const currentRectOfParentOfElement =
+      this.currentElementBesideTooltip.parentElement?.getBoundingClientRect();
 
     if (currentRectOfElement && currentRectOfParentOfElement) {
       let upperBoundOfTooltip = currentRectOfElement.top - TOOLTIP_HEIGHT;
       const left = currentRectOfElement.left - TOOLTIP_PADDING_LEFT;
+      const right = currentRectOfElement.right;
 
       if (upperBoundOfTooltip < 0) {
         if (currentRectOfElement.top < 0) upperBoundOfTooltip = currentRectOfElement.top;
         else upperBoundOfTooltip = 0;
       }
 
-      this.tooltip.style.top = upperBoundOfTooltip + 'px';
-      this.tooltip.style.left = left + 'px';
+      // Update position for the edit tooltip
+      this.tooltips.edit?.style.setProperty('top', `${upperBoundOfTooltip}px`);
+      this.tooltips.edit?.style.setProperty('left', `${left}px`);
+
+      // Update positions for new tooltips
+      this.tooltips.remove?.style.setProperty('top', `${upperBoundOfTooltip}px`);
+      this.tooltips.remove?.style.setProperty('left', `${right}px`);
+
+      this.tooltips.moveUp?.style.setProperty('top', `${upperBoundOfTooltip + TOOLTIP_HEIGHT}px`);
+      this.tooltips.moveUp?.style.setProperty('left', `${right}px`);
+
+      this.tooltips.moveDown?.style.setProperty(
+        'top',
+        `${upperBoundOfTooltip + 2 * TOOLTIP_HEIGHT}px`
+      );
+      this.tooltips.moveDown?.style.setProperty('left', `${right}px`);
 
       return true;
     }
@@ -79,9 +120,9 @@ export class FieldTagging {
         this.currentElementBesideTooltip = element;
 
         if (this.updateTooltipPosition()) {
-          this.tooltip?.setAttribute(DATA_CURR_FIELD_ID, currFieldId);
-          this.tooltip?.setAttribute(DATA_CURR_ENTRY_ID, currEntryId);
-          this.tooltip?.setAttribute(DATA_CURR_LOCALE, currLocale);
+          this.tooltips.edit?.setAttribute(DATA_CURR_FIELD_ID, currFieldId);
+          this.tooltips.edit?.setAttribute(DATA_CURR_ENTRY_ID, currEntryId);
+          this.tooltips.edit?.setAttribute(DATA_CURR_LOCALE, currLocale);
         }
 
         break;
@@ -89,28 +130,60 @@ export class FieldTagging {
     }
   }
 
-  private createTooltip() {
+  // Method to create a tooltip for a specific action
+  private createSingleTooltip(
+    action: string,
+    content: string,
+    clickHandler: (event: MouseEvent) => void
+  ): HTMLButtonElement {
+    const tooltip = document.createElement('button');
+    tooltip.classList.add(TOOLTIP_CLASS, `tooltip-${action}`);
+    tooltip.innerHTML = content;
+    tooltip.addEventListener('click', clickHandler);
+    return tooltip;
+  }
+
+  // Update the createTooltip method to create all four tooltips
+  private createTooltips() {
     if (!document.querySelector(`.${TOOLTIP_CLASS}`)) {
-      const tooltip = document.createElement('button');
-      tooltip.classList.add(TOOLTIP_CLASS);
-      tooltip.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5325 2.22242C13.825 2.51492 13.825 2.98742 13.5325 3.27992L12.16 4.65242L9.3475 1.83992L10.72 0.467422C11.0125 0.174922 11.485 0.174922 11.7775 0.467422L13.5325 2.22242ZM0.25 13.7499V10.9374L8.545 2.64243L11.3575 5.45493L3.0625 13.7499H0.25Z" fill="white"/>
-      </svg>Edit`;
-      window.document.body.insertAdjacentElement('beforeend', tooltip);
-      tooltip.addEventListener('click', this.clickHandler);
-      this.tooltip = tooltip;
+      this.tooltips.edit = this.createSingleTooltip(
+        'edit',
+        `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5325 2.22242C13.825 2.51492 13.825 2.98742 13.5325 3.27992L12.16 4.65242L9.3475 1.83992L10.72 0.467422C11.0125 0.174922 11.485 0.174922 11.7775 0.467422L13.5325 2.22242ZM0.25 13.7499V10.9374L8.545 2.64243L11.3575 5.45493L3.0625 13.7499H0.25Z" fill="white"/>
+        </svg>Edit`,
+        this.clickEditHandler
+      );
+      this.tooltips.remove = this.createSingleTooltip('newTooltip1', 'remove', () =>
+        console.log('remove click handler')
+      );
+      this.tooltips.moveUp = this.createSingleTooltip('newTooltip2', 'move up', () =>
+        console.log('move up click handler')
+      );
+      this.tooltips.moveDown = this.createSingleTooltip('newTooltip3', 'move down', () =>
+        console.log('move down click handler')
+      );
+
+      Object.values(this.tooltips).forEach((tooltip) => {
+        if (tooltip) {
+          window.document.body.insertAdjacentElement('beforeend', tooltip);
+        }
+      });
+
+      window.addEventListener('scroll', this.updateTooltipPosition);
+      window.addEventListener('mouseover', this.addTooltipOnHover);
     }
+
     this.updateTooltipPosition();
   }
 
   // responsible for handling the event when the user clicks on the edit button in the tooltip
-  private clickHandler() {
-    if (!this.tooltip) {
+  private clickEditHandler() {
+    if (!this.tooltips.edit) {
       return;
     }
-    const fieldId = this.tooltip.getAttribute(DATA_CURR_FIELD_ID);
-    const entryId = this.tooltip.getAttribute(DATA_CURR_ENTRY_ID);
-    const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
+    const fieldId = this.tooltips.edit.getAttribute(DATA_CURR_FIELD_ID);
+    const entryId = this.tooltips.edit.getAttribute(DATA_CURR_ENTRY_ID);
+    const locale = this.tooltips.edit.getAttribute(DATA_CURR_LOCALE);
 
     if (fieldId && entryId && locale) {
       if (this.inlineEditing) {
