@@ -3,14 +3,18 @@
   transition: outline-color, box-shadow 0.3s ease-in-out;
 }
 
-[data-contentful-field-id][contenteditable=true] {
+[data-contentful-field-id][contenteditable='true'] {
   z-index: 9999;
   position: relative;
-  box-shadow: rgba(0,0,0,.2) 0 0 0 99999px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 99999px;
 }
 
 .contentful-inspector--active [data-contentful-field-id] {
   outline: 1px dashed rgba(64, 160, 255, 1) !important;
+}
+
+.contentful-inspector--active [data-contentful-field-id][data-contentful-reference-id] {
+  border: 1px dashed rgb(223, 200, 21) !important;
 }
 
 button.contentful-tooltip {

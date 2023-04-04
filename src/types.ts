@@ -41,6 +41,16 @@ type TaggedFieldClickMessage = {
   entryId: string;
   locale: string;
 };
+
+type TaggedReferenceClickMessage = {
+  action: 'TAGGED_REFERENCE_CLICKED';
+  fieldId: string;
+  referenceId: string;
+  type: string;
+  entryId: string;
+  locale: string;
+};
+
 type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';
   referenceEntityId: string;
@@ -55,6 +65,7 @@ type InlineEditingMessage = {
 export type EditorMessage =
   | IframeConnectedMessage
   | TaggedFieldClickMessage
+  | TaggedReferenceClickMessage
   | UnknownEntityMessage
   | InlineEditingMessage;
 export type MessageFromSDK = EditorMessage & {
