@@ -17,17 +17,37 @@
   border: 1px dashed rgb(223, 200, 21) !important;
 }
 
-button.contentful-tooltip {
-  padding: 0;
+.contentful-tooltip {
   display: none;
-  outline: none;
-  border: none;
   z-index: 999999 !important;
   position: fixed;
+  gap: 6px;
+}
+
+.contentful-tooltip-move-up,
+.contentful-tooltip-move-down,
+.contentful-tooltip-remove,
+.contentful-tooltip-add {
+  display: none;
+}
+
+.contentful-tooltip-edit {
+  display: flex;
+}
+
+.contentful-tooltip--all .contentful-tooltip-move-up,
+.contentful-tooltip--all .contentful-tooltip-move-down,
+.contentful-tooltip--all .contentful-tooltip-remove,
+.contentful-tooltip--all .contentful-tooltip-add {
+  display: flex;
+}
+
+.contentful-tooltip button {
+  padding: 8px;
+  outline: none;
+  border: none;
   margin: 0;
   height: 32px;
-  width: 72px;
-  background: rgb(3, 111, 227);
   font-weight: 500 !important;
   color: #ffffff !important;
   transition: background 0.2s;
@@ -39,17 +59,25 @@ button.contentful-tooltip {
   box-shadow: 0px 1px 0px rgba(17, 27, 43, 0.05);
   box-sizing: border-box;
   cursor: pointer;
-  gap: 6px;
+  gap: 3px;
+  min-width: 72px;
 }
 
-button.contentful-tooltip:hover {
+.contentful-tooltip > button {
+  background: rgb(3, 111, 227);
+}
+.contentful-tooltip > button:hover {
   background: rgb(0, 89, 200);
 }
 
-button.contentful-tooltip:active:hover {
-  background: rgb(0, 65, 171);
+.contentful-tooltip--all > button {
+  background: purple;
 }
 
-.contentful-inspector--active button.contentful-tooltip {
+.contentful-tooltip--all > button:hover {
+  background: rebeccapurple;
+}
+
+.contentful-inspector--active .contentful-tooltip {
   display: flex;
 }
