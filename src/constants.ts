@@ -1,6 +1,8 @@
-export const DATA_CURR_FIELD_ID = 'current-data-contentful-field-id';
-export const DATA_CURR_ENTRY_ID = 'current-data-contentful-entry-id';
-export const DATA_CURR_LOCALE = 'current-data-contentful-locale';
+import { TagAttributes } from './types';
+
+export const DATA_CURR_FIELD_ID = `current-${TagAttributes.FIELD_ID}`;
+export const DATA_CURR_ENTRY_ID = `current-${TagAttributes.ENTRY_ID}`;
+export const DATA_CURR_LOCALE = `current-${TagAttributes.LOCALE}`;
 export const TOOLTIP_CLASS = 'contentful-tooltip';
 
 export const TOOLTIP_HEIGHT = 32;

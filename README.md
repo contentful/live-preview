@@ -11,7 +11,6 @@ It uses [Typescript](https://www.typescriptlang.org/), [React](https://reactjs.o
 ### Requirements
 
 - Node.js: `>=16.15.1`
-- Yarn: `>=1.21.1`
 
 To install live preview simply run one of the following commands.
 
@@ -43,11 +42,11 @@ ContentfulLivePreview.init();
 
 To tag fields you need to add the live preview data-attributes to the rendered HTML element output.
 You can do this in React via our helper function.
-The necessary styles for the live edit tags can be found in the '@contentful/live-preview/dist/style.css' file.
+The necessary styles for the live edit tags can be found in the '@contentful/live-preview/style.css' file.
 
 ```jsx
 import { ContentfulLivePreview } from '@contentful/live-preview';
-import '@contentful/live-preview/dist/style.css';
+import '@contentful/live-preview/style.css';
 ...
 
 <h1 {...ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title', locale })}>
@@ -57,17 +56,17 @@ import '@contentful/live-preview/dist/style.css';
 
 ### Live Updates
 
-Live Updates from the editor to your applications are currently only supported for [React.js](https://reactjs.org/)
+Live Updates from the editor to your applications are out of the box only supported for [React.js](https://reactjs.org/) at the moment.
 
 ```tsx
-import { useContentfulLiveUpdates } from '@contentful/live-preview/dist/react';
+import { useContentfulLiveUpdates } from "@contentful/live-preview/react";
 
 // ...
 const updated = useContentfulLiveUpdates(originalData, locale);
 // ...
 ```
 
-### Integrating with Gatsby
+#### Integrating with Gatsby
 
 To use the Contentful Live Preview SDK with Gatsby, you can start with the [gatsby starter contentful homepage](https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-contentful-homepage)
 

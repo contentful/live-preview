@@ -1,7 +1,7 @@
-import { EntryProps, ContentTypeProps } from 'contentful-management/types';
+import { EntryProps } from 'contentful-management/types';
 import { ContentFields } from 'contentful-management/types';
 
-import { SysProps, Entity } from '../types';
+import { SysProps, Entity, ContentType } from '../types';
 import { isPrimitiveField, updatePrimitiveField } from '../utils';
 
 const mergeFields = (fields: ContentFields[], initialObj: any, updatedObj: any, locale: string) => {
@@ -53,7 +53,7 @@ function updateNestedRef(
  * @returns Entity - Updated REST response data
  */
 export function updateEntry(
-  contentType: ContentTypeProps,
+  contentType: ContentType,
   data: (Entity & { sys: SysProps }) | Array<Entity & { sys: SysProps }>,
   update: EntryProps,
   locale: string

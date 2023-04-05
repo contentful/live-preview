@@ -1,8 +1,9 @@
-export function logUnrecognizedFields(
-  contentTypeFields: string[],
-  data: Record<string, unknown>
-): void {
-  const recognized = new Set(['sys', '__typename', 'contentfulMetadata', ...contentTypeFields]);
+import { Entity } from '../types';
+
+const DEFAULT_CONTENT_TYPE_FIELDS = ['sys', '__typename', 'contentfulMetadata'];
+
+export function logUnrecognizedFields(contentTypeFields: string[], data: Entity): void {
+  const recognized = new Set([...DEFAULT_CONTENT_TYPE_FIELDS, ...contentTypeFields]);
 
   for (const field of Object.keys(data)) {
     if (!recognized.has(field)) {

@@ -6,7 +6,7 @@ import {
   TOOLTIP_HEIGHT,
   TOOLTIP_PADDING_LEFT,
 } from './constants';
-import { MessageAction, TagAttributes } from './types';
+import { TagAttributes } from './types';
 import { sendMessageToEditor } from './utils';
 
 export class FieldTagging {
@@ -109,10 +109,13 @@ export class FieldTagging {
     const entryId = this.tooltip.getAttribute(DATA_CURR_ENTRY_ID);
     const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
 
-    sendMessageToEditor(MessageAction.TAGGED_FIELD_CLICKED, {
-      fieldId,
-      entryId,
-      locale,
-    });
+    if (fieldId && entryId && locale) {
+      sendMessageToEditor({
+        action: 'TAGGED_FIELD_CLICKED',
+        fieldId,
+        entryId,
+        locale,
+      });
+    }
   }
 }

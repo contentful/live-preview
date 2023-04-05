@@ -1,20 +1,32 @@
 import { ContentFields, EntryProps } from 'contentful-management/types';
 
-import type { Entity, MessageAction } from './types';
+import type { Entity } from './types';
+import type { EditorMessage, MessageFromSDK } from './types';
+
+const PRIMITIVE_FIELDS = new Set([
+  'Symbol',
+  'Text',
+  'Integer',
+  'Boolean',
+  'Date',
+  'Location',
+  'Object',
+]);
 
 /**
  * Sends the given message to the editor
  * enhances it with the information necessary to be accepted
  */
-export function sendMessageToEditor(action: MessageAction, data: Record<string, unknown>): void {
+export function sendMessageToEditor(data: EditorMessage): void {
+  const message: MessageFromSDK = {
+    ...data,
+    from: 'live-preview',
+    location: window.location.href,
+  };
+
   window.top?.postMessage(
-    {
-      from: 'live-preview',
-      action,
-      ...data,
-    },
-    // TODO: check if there is any security risk with this
-    '*'
+    message,
+    '*' // TODO: check if there is any security risk with this
   );
 }
 
@@ -42,9 +54,7 @@ export function generateUID(): string {
 }
 
 export function isPrimitiveField(field: ContentFields): boolean {
-  const types = new Set(['Symbol', 'Text', 'Integer', 'Boolean', 'Date', 'Location', 'Object']);
-
-  if (types.has(field.type)) {
+  if (PRIMITIVE_FIELDS.has(field.type)) {
     return true;
   }
 
@@ -64,5 +74,55 @@ export function updatePrimitiveField(
 ): void {
   if (name in modified) {
     modified[name] = update.fields?.[name]?.[locale] ?? null;
+  }
+}
+
+/**
+ * Map with integrated persistence layer to save/restore data during the session
+ */
+export class StorageMap<T extends unknown> {
+  private storageKey: string;
+  private value: Map<string, T>;
+  // TODO: https://contentful.atlassian.net/browse/TOL-1080
+  private persistence = false;
+
+  constructor(key: string, defaultValue: Map<string, T>, persistence = false) {
+    this.storageKey = key;
+    this.persistence = persistence;
+    this.value = this.restoreSessionData() || defaultValue;
+  }
+
+  private restoreSessionData() {
+    if (!this.persistence) {
+      return null;
+    }
+
+    try {
+      const item = window.sessionStorage.getItem(this.storageKey);
+      const parsed = item ? (JSON.parse(item) as T) : null;
+      return Array.isArray(parsed) ? new Map<string, T>(parsed) : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  public get(key: string): T | undefined {
+    return this.value.get(key);
+  }
+
+  public set(key: string, data: T): void {
+    this.value.set(key, data);
+
+    if (this.persistence) {
+      try {
+        // Attention: Map can not be `JSON.stringify`ed directly
+        window.sessionStorage.setItem(
+          this.storageKey,
+          JSON.stringify(Array.from(this.value.entries()))
+        );
+      } catch (err) {
+        // ignored
+      }
+    }
   }
 }
