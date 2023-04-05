@@ -67,13 +67,13 @@ export function isPrimitiveField(field: ContentFields): boolean {
 }
 
 export function updatePrimitiveField(
-  modified: Entity,
-  update: EntryProps,
+  dataFromPreviewApp: Entity,
+  updateFromEntryEditor: EntryProps,
   name: string,
   locale: string
 ): void {
-  if (name in modified) {
-    modified[name] = update.fields?.[name]?.[locale] ?? null;
+  if (name in dataFromPreviewApp) {
+    dataFromPreviewApp[name] = updateFromEntryEditor.fields?.[name]?.[locale] ?? null;
   }
 }
 
