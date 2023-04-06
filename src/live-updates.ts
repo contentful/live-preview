@@ -75,15 +75,19 @@ export class LiveUpdates {
     locale,
     contentType,
   }: MergeEntityProps): Entity {
-    // TODO: https://contentful.atlassian.net/browse/TOL-1033
-    // TODO: https://contentful.atlassian.net/browse/TOL-1025
+    const entryId = (dataFromPreviewApp as any).sys.id;
+    const cachedData = this.storage.get(entryId) || dataFromPreviewApp;
 
     const updatedData = rest.updateEntry(
       contentType,
-      dataFromPreviewApp as any,
+      //@ts-expect-error -- ..
+      cachedData,
       updateFromEntryEditor as any,
       locale
     );
+
+    // Cache the updated data for future updates
+    this.storage.set(entryId, updatedData);
 
     return updatedData;
   }

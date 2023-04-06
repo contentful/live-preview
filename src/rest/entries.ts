@@ -64,10 +64,9 @@ export function updateEntry(
   updateFromEntryEditor: EntryProps,
   locale: string
 ): Entity & { sys: SysProps } {
-  const { fields } = contentType;
   if (dataFromPreviewApp.sys.id === updateFromEntryEditor.sys.id) {
-    return mergeFields(fields, dataFromPreviewApp, updateFromEntryEditor, locale);
+    return mergeFields(contentType.fields, dataFromPreviewApp, updateFromEntryEditor, locale);
   } else {
-    return updateNestedRef(fields, dataFromPreviewApp, updateFromEntryEditor, locale);
+    return updateNestedRef(contentType.fields, dataFromPreviewApp, updateFromEntryEditor, locale);
   }
 }
