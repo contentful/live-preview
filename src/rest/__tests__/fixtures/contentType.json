@@ -1,0 +1,458 @@
+{
+  "sys": {
+    "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+    "id": "allFields",
+    "type": "ContentType",
+    "createdAt": "2023-02-22T08:26:34.918Z",
+    "updatedAt": "2023-03-28T08:47:01.070Z",
+    "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+    "revision": 59,
+    "version": 8
+  },
+  "displayField": "WHxL83oMXaLL53LK",
+  "name": "AllFields",
+  "description": "",
+  "fields": [
+    {
+      "id": "WHxL83oMXaLL53LK",
+      "apiName": "shortText",
+      "name": "shortText",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "xNZAMFjcyWGfwJcI",
+      "apiName": "shortTextUrl",
+      "name": "shortTextURL",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "HDOz1oFZ4jFn34IQ",
+      "apiName": "shortTextDropdown",
+      "name": "shortTextDropdown",
+      "type": "Symbol",
+      "localized": false,
+      "required": true,
+      "validations": [{ "unique": true }, { "in": ["short", "text", "dropdown"] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "O1pWXzheaO4OclIO",
+      "apiName": "shortTextRadio",
+      "name": "shortTextRadio",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": ["short", "text", "radio"] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "AiJhnJF2ZMpQ6Xok",
+      "apiName": "shortTextSlug",
+      "name": "shortTextSlug",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "lq4vQ9ylOOjAMh3P",
+      "apiName": "shortTextListTag",
+      "name": "shortTextListTag",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "Symbol", "validations": [] }
+    },
+    {
+      "id": "JjyYiZODx2PEXMlI",
+      "apiName": "shortTextListList",
+      "name": "shortTextListList",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "Symbol", "validations": [] }
+    },
+    {
+      "id": "FGHHBIkp5qdEDga9",
+      "apiName": "shortTextListCheckbox",
+      "name": "shortTextListCheckbox",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Symbol",
+        "validations": [{ "in": ["short", "text", "list", "checkbox"] }]
+      }
+    },
+    {
+      "id": "PbG5eJbdVvFd8m5g",
+      "apiName": "longTextSingle",
+      "name": "longTextSingle",
+      "type": "Text",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "LDvCDjYDpB8GVh7J",
+      "apiName": "longTextMultiple",
+      "name": "longTextMultiple",
+      "type": "Text",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "xBcQfICleIg4XzbM",
+      "apiName": "longTextMarkdown",
+      "name": "longTextMarkdown",
+      "type": "Text",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "eMfwObIcI2lE4kl8",
+      "apiName": "longTextDropdown",
+      "name": "longTextDropdown",
+      "type": "Text",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": ["long", "text", "dropdown"] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "LiaymcHqL2gVmbhq",
+      "apiName": "longTextRadio",
+      "name": "longTextRadio",
+      "type": "Text",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": ["long", "text", "radio"] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "okiPpOKqD56J2F3i",
+      "apiName": "richText",
+      "name": "richText",
+      "type": "RichText",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "enabledMarks": ["bold", "italic", "underline", "code", "superscript", "subscript"],
+          "message": "Only bold, italic, underline, code, superscript, and subscript marks are allowed"
+        },
+        {
+          "enabledNodeTypes": [
+            "heading-1",
+            "heading-2",
+            "heading-3",
+            "heading-4",
+            "heading-5",
+            "heading-6",
+            "ordered-list",
+            "unordered-list",
+            "hr",
+            "blockquote",
+            "embedded-entry-block",
+            "embedded-asset-block",
+            "table",
+            "hyperlink",
+            "entry-hyperlink",
+            "asset-hyperlink",
+            "embedded-entry-inline"
+          ],
+          "message": "Only heading 1, heading 2, heading 3, heading 4, heading 5, heading 6, ordered list, unordered list, horizontal rule, quote, block entry, asset, table, link to Url, link to entry, link to asset, and inline entry nodes are allowed"
+        },
+        { "nodes": {} }
+      ],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "dQPjja38a8kF7LIW",
+      "apiName": "numberInteger",
+      "name": "numberInteger",
+      "type": "Integer",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "DQ6VEawVWvY7yFYI",
+      "apiName": "numberIntegerDropdown",
+      "name": "numberIntegerDropdown",
+      "type": "Integer",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": [0, 1, 2] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "o33hB08PZXN3pJLG",
+      "apiName": "numberIntegerRadio",
+      "name": "numberIntegerRadio",
+      "type": "Integer",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": [0, 1, 2] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "H4NngnvOyD6edgfx",
+      "apiName": "numberIntegerRating",
+      "name": "numberIntegerRating",
+      "type": "Integer",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "blIoDAYWqxDNiIBf",
+      "apiName": "numberDecimal",
+      "name": "numberDecimal",
+      "type": "Number",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "AD7hZhxXhwbFjmQC",
+      "apiName": "numberDecimalDropdown",
+      "name": "numberDecimalDropdown",
+      "type": "Number",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": [0.5, 1.5, 2.5] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "Fh5zqie9kopKyoC9",
+      "apiName": "numberDecimalRadio",
+      "name": "numberDecimalRadio",
+      "type": "Number",
+      "localized": false,
+      "required": false,
+      "validations": [{ "in": [0.5, 1.5, 2.5] }],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "D9YXZdIkeQjI4MKq",
+      "apiName": "numberDecimalRating",
+      "name": "numberDecimalRating",
+      "type": "Number",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "mlpoBLdo32qjOVHY",
+      "apiName": "dateTime",
+      "name": "dateTime",
+      "type": "Date",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "J6BjIBnXEjdBLLjH",
+      "apiName": "location",
+      "name": "location",
+      "type": "Location",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "FdnfHgGeGIJcbYiy",
+      "apiName": "mediaOneFile",
+      "name": "mediaOneFile",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Asset"
+    },
+    {
+      "id": "WCbOkNPOCxBM511j",
+      "apiName": "mediaManyFiles",
+      "name": "mediaManyFiles",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "Link", "validations": [], "linkType": "Asset" }
+    },
+    {
+      "id": "PAW295053HNkXKDv",
+      "apiName": "mediaManyFilesGallery",
+      "name": "mediaManyFilesGallery",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "Link", "validations": [], "linkType": "Asset" }
+    },
+    {
+      "id": "J02VELK9Ngb85BNi",
+      "apiName": "boolean",
+      "name": "boolean",
+      "type": "Boolean",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "mMEYOA3p0pmoYiaJ",
+      "apiName": "json",
+      "name": "json",
+      "type": "Object",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "cx0K9dL4n1VJGC5g",
+      "apiName": "refOneSameSpace",
+      "name": "refOneSameSpace",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Entry"
+    },
+    {
+      "id": "x3gAB0v4bZLDDeCe",
+      "apiName": "refOneSameSpaceCard",
+      "name": "refOneSameSpaceCard",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Entry"
+    },
+    {
+      "id": "ZdawMaLQaXvk822J",
+      "apiName": "refManySameSpace",
+      "name": "refManySameSpace",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "Link", "validations": [], "linkType": "Entry" }
+    },
+    {
+      "id": "CwNkVaeY1644p6Wp",
+      "apiName": "refManySameSpaceCard",
+      "name": "refManySameSpaceCard",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "Link", "validations": [], "linkType": "Entry" }
+    },
+    {
+      "id": "VYzAvFLzW3aJeQ4y",
+      "apiName": "refOneDiffSpace",
+      "name": "refOneDiffSpace",
+      "type": "ResourceLink",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "allowedResources": [
+        {
+          "type": "Contentful:Entry",
+          "source": "crn:contentful:::content:spaces/3yzzz65gh9tw",
+          "contentTypes": ["crossSpaceContentType"]
+        }
+      ]
+    },
+    {
+      "id": "Na3zF5XhNn0xQFqE",
+      "apiName": "refManyDiffSpace",
+      "name": "refManyDiffSpace",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": { "type": "ResourceLink", "validations": [] },
+      "allowedResources": [
+        {
+          "type": "Contentful:Entry",
+          "source": "crn:contentful:::content:spaces/3yzzz65gh9tw",
+          "contentTypes": ["crossSpaceContentType"]
+        }
+      ]
+    }
+  ]
+}

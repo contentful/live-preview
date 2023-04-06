@@ -1,0 +1,87 @@
+{
+  "sys": {
+    "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+    "id": "acPJgSOWmOM71gB62iEi4",
+    "type": "Entry",
+    "createdAt": "2023-02-22T09:00:00.556Z",
+    "updatedAt": "2023-04-05T18:39:21.564Z",
+    "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+    "publishedVersion": 77,
+    "publishedAt": "2023-03-29T07:45:31.872Z",
+    "firstPublishedAt": "2023-02-22T09:00:31.638Z",
+    "createdBy": { "sys": { "type": "Link", "linkType": "User", "id": "5dRQELB3imx6EN5FvaeyO8" } },
+    "updatedBy": { "sys": { "type": "Link", "linkType": "User", "id": "5dRQELB3imx6EN5FvaeyO8" } },
+    "publishedCounter": 26,
+    "version": 183,
+    "automationTags": [],
+    "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "allFields" } }
+  },
+  "fields": {
+    "shortText": { "en-US": "test test test test test " },
+    "shortTextUrl": { "en-US": "https://example.com" },
+    "shortTextSlug": { "en-US": "all-fields-page" },
+    "shortTextList": { "en-US": ["short", "text", "list", "comma"] },
+    "longText": { "en-US": "long\ntext\nmultiple" },
+    "richText": {
+      "en-US": {
+        "data": {},
+        "content": [
+          {
+            "data": {},
+            "content": [
+              { "data": {}, "marks": [], "value": "rich text ", "nodeType": "text" },
+              { "data": {}, "marks": [{ "type": "bold" }], "value": "2 222223", "nodeType": "text" }
+            ],
+            "nodeType": "paragraph"
+          }
+        ],
+        "nodeType": "document"
+      }
+    },
+    "numberInteger": { "en-US": 0 },
+    "numberDecimal": { "en-US": 0.5 },
+    "dateTime": { "en-US": "2023-02-22T00:00+01:00" },
+    "location": { "en-US": { "lon": 13.38388, "lat": 52.53935 } },
+    "mediaOneFile": {
+      "en-US": { "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" } }
+    },
+    "mediaManyFiles": {
+      "en-US": [
+        { "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" } },
+        { "sys": { "type": "Link", "linkType": "Asset", "id": "4YRUBbjYKnVAU17retktzF" } }
+      ]
+    },
+    "boolean": { "en-US": true },
+    "json": { "en-US": { "test": "test" } },
+    "refOneSameSpace": {
+      "en-US": { "sys": { "type": "Link", "linkType": "Entry", "id": "2wx02IajQQMYggaxBT8CF3" } }
+    },
+    "refManySameSpace": {
+      "en-US": [
+        { "sys": { "type": "Link", "linkType": "Entry", "id": "422a9DU6Yb01C8Hh9ISq5c" } },
+        { "sys": { "type": "Link", "linkType": "Entry", "id": "1Gj746GwfYgQwFL0rcjmhE" } }
+      ]
+    },
+    "refOneDiffSpace": {
+      "en-US": {
+        "sys": {
+          "type": "ResourceLink",
+          "linkType": "Contentful:Entry",
+          "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+        }
+      }
+    },
+    "refManyDiffSpace": {
+      "en-US": [
+        {
+          "sys": {
+            "type": "ResourceLink",
+            "linkType": "Contentful:Entry",
+            "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+          }
+        }
+      ]
+    }
+  },
+  "metadata": { "tags": [] }
+}

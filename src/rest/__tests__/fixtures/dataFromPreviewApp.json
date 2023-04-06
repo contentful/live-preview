@@ -1,0 +1,409 @@
+{
+  "metadata": { "tags": [] },
+  "sys": {
+    "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+    "type": "Entry",
+    "id": "acPJgSOWmOM71gB62iEi4",
+    "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "allFields" } },
+    "revision": 26,
+    "createdAt": "2023-02-22T09:00:00.556Z",
+    "updatedAt": "2023-04-05T18:24:22.215Z",
+    "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+    "locale": "en-US"
+  },
+  "fields": {
+    "shortText": "test",
+    "shortTextUrl": "https://example.com",
+    "shortTextSlug": "all-fields-page",
+    "shortTextList": ["short", "text", "list", "comma"],
+    "longText": "long\ntext\nmultiple",
+    "richText": {
+      "data": {},
+      "content": [
+        {
+          "data": {},
+          "content": [
+            { "data": {}, "marks": [], "value": "rich text ", "nodeType": "text" },
+            { "data": {}, "marks": [{ "type": "bold" }], "value": "2 222223", "nodeType": "text" }
+          ],
+          "nodeType": "paragraph"
+        }
+      ],
+      "nodeType": "document"
+    },
+    "numberInteger": 0,
+    "numberDecimal": 0.5,
+    "dateTime": "2023-02-22T00:00+01:00",
+    "location": { "lon": 13.38388, "lat": 52.53935 },
+    "mediaOneFile": {
+      "metadata": { "tags": [] },
+      "sys": {
+        "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+        "type": "Asset",
+        "id": "2bGsPN0EuQMOCc6sx3adsn",
+        "revision": 1,
+        "createdAt": "2022-11-23T15:16:48.813Z",
+        "updatedAt": "2022-11-23T15:17:22.052Z",
+        "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Dinosaurs",
+        "description": "Dinosaurs",
+        "file": {
+          "url": "//images.ctfassets.net/80q6jb175og9/2bGsPN0EuQMOCc6sx3adsn/bbec6e5c0d553aee0c024727c84a5db6/Dinosaurs_toys.jpg",
+          "details": { "size": 54669, "image": { "width": 640, "height": 409 } },
+          "fileName": "Prowl",
+          "contentType": "image/jpeg"
+        }
+      }
+    },
+    "mediaManyFiles": [
+      {
+        "metadata": { "tags": [] },
+        "sys": {
+          "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+          "type": "Asset",
+          "id": "2bGsPN0EuQMOCc6sx3adsn",
+          "revision": 1,
+          "createdAt": "2022-11-23T15:16:48.813Z",
+          "updatedAt": "2022-11-23T15:17:22.052Z",
+          "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+          "locale": "en-US"
+        },
+        "fields": {
+          "title": "Dinosaurs",
+          "description": "Dinosaurs",
+          "file": {
+            "url": "//images.ctfassets.net/80q6jb175og9/2bGsPN0EuQMOCc6sx3adsn/bbec6e5c0d553aee0c024727c84a5db6/Dinosaurs_toys.jpg",
+            "details": { "size": 54669, "image": { "width": 640, "height": 409 } },
+            "fileName": "Prowl",
+            "contentType": "image/jpeg"
+          }
+        }
+      },
+      {
+        "metadata": { "tags": [] },
+        "sys": {
+          "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+          "type": "Asset",
+          "id": "4YRUBbjYKnVAU17retktzF",
+          "revision": 2,
+          "createdAt": "2022-11-23T15:18:42.078Z",
+          "updatedAt": "2023-03-29T07:45:45.999Z",
+          "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+          "locale": "en-US"
+        },
+        "fields": {
+          "title": "Dinos ",
+          "description": "Dinos",
+          "file": {
+            "url": "//images.ctfassets.net/80q6jb175og9/4YRUBbjYKnVAU17retktzF/942bf5d2faac00ab5782b2f3f1a820a7/dinos.jpg",
+            "details": { "size": 190230, "image": { "width": 640, "height": 480 } },
+            "fileName": "drinking_dino",
+            "contentType": "image/jpeg"
+          }
+        }
+      }
+    ],
+    "boolean": true,
+    "json": { "test": "test" },
+    "refOneSameSpace": {
+      "metadata": { "tags": [] },
+      "sys": {
+        "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+        "type": "Entry",
+        "id": "2wx02IajQQMYggaxBT8CF3",
+        "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "post" } },
+        "revision": 11,
+        "createdAt": "2022-11-23T15:17:37.591Z",
+        "updatedAt": "2023-04-05T18:21:17.898Z",
+        "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Rawr! Better ways on",
+        "slug": "rawr-ways-to-communicate-remotely",
+        "content": {
+          "data": {},
+          "content": [
+            {
+              "data": {},
+              "content": [
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "Become a Dino-mite co-worker with these tips on how to communicate better while working remotely ",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "paragraph"
+            }
+          ],
+          "nodeType": "document"
+        },
+        "excerpt": "Become a Dino-mite co-worker with these tips on how to communicate better while working remotely.",
+        "coverImage": {
+          "metadata": { "tags": [] },
+          "sys": {
+            "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+            "type": "Asset",
+            "id": "2bGsPN0EuQMOCc6sx3adsn",
+            "revision": 1,
+            "createdAt": "2022-11-23T15:16:48.813Z",
+            "updatedAt": "2022-11-23T15:17:22.052Z",
+            "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+            "locale": "en-US"
+          },
+          "fields": {
+            "title": "Dinosaurs",
+            "description": "Dinosaurs",
+            "file": {
+              "url": "//images.ctfassets.net/80q6jb175og9/2bGsPN0EuQMOCc6sx3adsn/bbec6e5c0d553aee0c024727c84a5db6/Dinosaurs_toys.jpg",
+              "details": { "size": 54669, "image": { "width": 640, "height": 409 } },
+              "fileName": "Prowl",
+              "contentType": "image/jpeg"
+            }
+          }
+        },
+        "date": "2022-11-03T00:00+00:00",
+        "author": {
+          "metadata": { "tags": [] },
+          "sys": {
+            "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+            "type": "Entry",
+            "id": "422a9DU6Yb01C8Hh9ISq5c",
+            "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "author" } },
+            "revision": 4,
+            "createdAt": "2022-11-23T15:13:02.150Z",
+            "updatedAt": "2023-03-29T07:46:01.396Z",
+            "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+            "locale": "en-US"
+          },
+          "fields": {
+            "name": "Tee Rex",
+            "picture": {
+              "metadata": { "tags": [] },
+              "sys": {
+                "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+                "type": "Asset",
+                "id": "Kb6YusLKioFeXsyMnt7bo",
+                "revision": 1,
+                "createdAt": "2022-11-23T15:13:11.629Z",
+                "updatedAt": "2022-11-23T15:13:39.595Z",
+                "environment": {
+                  "sys": { "id": "master", "type": "Link", "linkType": "Environment" }
+                },
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "Tee Rex headshot",
+                "description": "Tee Rex headshot",
+                "file": {
+                  "url": "//images.ctfassets.net/80q6jb175og9/Kb6YusLKioFeXsyMnt7bo/2792acb887e9a48f291a60a7420ad01b/trex.jpg",
+                  "details": { "size": 151392, "image": { "width": 640, "height": 480 } },
+                  "fileName": "T-Rex_on_the_Prowl",
+                  "contentType": "image/jpeg"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "refManySameSpace": [
+      {
+        "metadata": { "tags": [] },
+        "sys": {
+          "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+          "type": "Entry",
+          "id": "422a9DU6Yb01C8Hh9ISq5c",
+          "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "author" } },
+          "revision": 4,
+          "createdAt": "2022-11-23T15:13:02.150Z",
+          "updatedAt": "2023-03-29T07:46:01.396Z",
+          "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+          "locale": "en-US"
+        },
+        "fields": {
+          "name": "Tee Rex",
+          "picture": {
+            "metadata": { "tags": [] },
+            "sys": {
+              "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+              "type": "Asset",
+              "id": "Kb6YusLKioFeXsyMnt7bo",
+              "revision": 1,
+              "createdAt": "2022-11-23T15:13:11.629Z",
+              "updatedAt": "2022-11-23T15:13:39.595Z",
+              "environment": {
+                "sys": { "id": "master", "type": "Link", "linkType": "Environment" }
+              },
+              "locale": "en-US"
+            },
+            "fields": {
+              "title": "Tee Rex headshot",
+              "description": "Tee Rex headshot",
+              "file": {
+                "url": "//images.ctfassets.net/80q6jb175og9/Kb6YusLKioFeXsyMnt7bo/2792acb887e9a48f291a60a7420ad01b/trex.jpg",
+                "details": { "size": 151392, "image": { "width": 640, "height": 480 } },
+                "fileName": "T-Rex_on_the_Prowl",
+                "contentType": "image/jpeg"
+              }
+            }
+          }
+        }
+      },
+      {
+        "metadata": { "tags": [] },
+        "sys": {
+          "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+          "type": "Entry",
+          "id": "1Gj746GwfYgQwFL0rcjmhE",
+          "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "post" } },
+          "revision": 5,
+          "createdAt": "2022-11-23T15:15:58.704Z",
+          "updatedAt": "2023-03-29T07:46:09.438Z",
+          "environment": { "sys": { "id": "master", "type": "Link", "linkType": "Environment" } },
+          "locale": "en-US"
+        },
+        "fields": {
+          "title": "Jurassic times call for Jurassic measures",
+          "slug": "jurassic-times-call-for-jurassic-measures",
+          "content": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Dino-themed places to visit on your next trip to New York City.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [{ "nodeType": "text", "value": "", "marks": [], "data": {} }]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [{ "nodeType": "text", "value": "", "marks": [], "data": {} }]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [{ "nodeType": "text", "value": "", "marks": [], "data": {} }]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [{ "nodeType": "text", "value": "", "marks": [], "data": {} }]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [{ "nodeType": "text", "value": "", "marks": [], "data": {} }]
+              }
+            ]
+          },
+          "excerpt": "Dino-themed places to visit on your next trip to New York City.",
+          "coverImage": {
+            "metadata": { "tags": [] },
+            "sys": {
+              "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+              "type": "Asset",
+              "id": "2bGsPN0EuQMOCc6sx3adsn",
+              "revision": 1,
+              "createdAt": "2022-11-23T15:16:48.813Z",
+              "updatedAt": "2022-11-23T15:17:22.052Z",
+              "environment": {
+                "sys": { "id": "master", "type": "Link", "linkType": "Environment" }
+              },
+              "locale": "en-US"
+            },
+            "fields": {
+              "title": "Dinosaurs",
+              "description": "Dinosaurs",
+              "file": {
+                "url": "//images.ctfassets.net/80q6jb175og9/2bGsPN0EuQMOCc6sx3adsn/bbec6e5c0d553aee0c024727c84a5db6/Dinosaurs_toys.jpg",
+                "details": { "size": 54669, "image": { "width": 640, "height": 409 } },
+                "fileName": "Prowl",
+                "contentType": "image/jpeg"
+              }
+            }
+          },
+          "date": "2022-11-23T00:00+01:00",
+          "author": {
+            "metadata": { "tags": [] },
+            "sys": {
+              "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+              "type": "Entry",
+              "id": "422a9DU6Yb01C8Hh9ISq5c",
+              "contentType": {
+                "sys": { "type": "Link", "linkType": "ContentType", "id": "author" }
+              },
+              "revision": 4,
+              "createdAt": "2022-11-23T15:13:02.150Z",
+              "updatedAt": "2023-03-29T07:46:01.396Z",
+              "environment": {
+                "sys": { "id": "master", "type": "Link", "linkType": "Environment" }
+              },
+              "locale": "en-US"
+            },
+            "fields": {
+              "name": "Tee Rex",
+              "picture": {
+                "metadata": { "tags": [] },
+                "sys": {
+                  "space": { "sys": { "type": "Link", "linkType": "Space", "id": "80q6jb175og9" } },
+                  "type": "Asset",
+                  "id": "Kb6YusLKioFeXsyMnt7bo",
+                  "revision": 1,
+                  "createdAt": "2022-11-23T15:13:11.629Z",
+                  "updatedAt": "2022-11-23T15:13:39.595Z",
+                  "environment": {
+                    "sys": { "id": "master", "type": "Link", "linkType": "Environment" }
+                  },
+                  "locale": "en-US"
+                },
+                "fields": {
+                  "title": "Tee Rex headshot",
+                  "description": "Tee Rex headshot",
+                  "file": {
+                    "url": "//images.ctfassets.net/80q6jb175og9/Kb6YusLKioFeXsyMnt7bo/2792acb887e9a48f291a60a7420ad01b/trex.jpg",
+                    "details": { "size": 151392, "image": { "width": 640, "height": 480 } },
+                    "fileName": "T-Rex_on_the_Prowl",
+                    "contentType": "image/jpeg"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "refOneDiffSpace": {
+      "sys": {
+        "type": "ResourceLink",
+        "linkType": "Contentful:Entry",
+        "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+      }
+    },
+    "refManyDiffSpace": [
+      {
+        "sys": {
+          "type": "ResourceLink",
+          "linkType": "Contentful:Entry",
+          "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+        }
+      }
+    ]
+  }
+}
