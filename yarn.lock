@@ -6870,9 +6870,9 @@ vite-node@0.30.0:
     vite "^3.0.0 || ^4.0.0"
 
 vite-plugin-dts@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-2.1.0.tgz#40784ddad7a7be13176ed1da2c11352181f4891b"
-  integrity sha512-Vw0FdCuM3VLR4hTFHh0yMEzfwI7NyFvPIMFwvE+Q0t4qtoHIfYOP/JXs7nTnHuQk87FSjlhGeIJ1fLBcktgPgA==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-2.2.0.tgz#7af1481bcd66531bdb5b8f31babcdf776e4b44bb"
+  integrity sha512-XmZtv02I7eGWm3DrZbLo1AdJK5gCisk9GqJBpY4N63pDYR6AVUnlyjFP5FCBvSBUfgE0Ppl90bKgtJU9k3AzFw==
   dependencies:
     "@babel/parser" "^7.20.15"
     "@microsoft/api-extractor" "^7.33.5"
