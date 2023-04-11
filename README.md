@@ -57,6 +57,7 @@ import '@contentful/live-preview/style.css';
 ### Live Updates
 
 Live Updates from the editor to your applications are out of the box only supported for [React.js](https://reactjs.org/) at the moment.
+The updates are only happening on the **client-side** and in the Live preview environment of [contentful](https://app.contentful.com).
 
 ```tsx
 import { useContentfulLiveUpdates } from "@contentful/live-preview/react";
@@ -65,6 +66,71 @@ import { useContentfulLiveUpdates } from "@contentful/live-preview/react";
 const updated = useContentfulLiveUpdates(originalData, locale);
 // ...
 ```
+
+#### Integration with Next.js
+
+To use the Contentful LivePreivew SDK with [Next.js](https://nextjs.org), you can either use one of the contentful starter templates, or do the following steps to add it to an existing project.
+
+1. Add the @contentful/live-preview package to your project
+
+```bash
+yarn add @contentful/live-preview
+```
+
+or
+
+```bash
+npm install @contentful/live-preview
+```
+
+2. Initialize the SDK and add the stylesheet for field tagging inside `_app.tsx` or `_app.js`.
+
+```tsx
+import '@contentful/live-preview/style.css';
+import { ContentfulLivePreview } from '@contentful/live-preview';
+
+ContentfulLivePreview.init();
+```
+
+3. Add field tagging and live updates to your component
+
+```tsx
+export default function BlogPost: ({ blogPost }) {
+  // Live updates for this component
+  const data = useContentfulLiveUpdates(
+    blogPost,
+    locale
+  );
+
+  return (
+    <Section>
+      <Heading as="h1">{blogPost.heading}</Heading>
+      {/* Text is tagged and can be clicked to open the editor */}
+      <Text
+        as="p"
+        {...ContentfulLivePreview.getProps({
+          entryId: blogPost.sys.id,
+          fieldId: 'text',
+          locale,
+        })}>
+        {blogPost.text}
+      </Text>
+    </Section>
+  );
+}
+```
+
+> It doesn't matter if the data is loaded with getServerSideProps, getStaticProps or if you load it in any other way.<br>It's necessary that the provided information to `useContentfulLiveUpdate` contains the `sys.id` for identifation and only non-transformed fields can be updated.<br>(For GraphQL also the `__typename` needs to be provided)
+
+4. Enable preview mode
+
+We suggest using the [preview mode](https://nextjs.org/docs/advanced-features/preview-mode) and the [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/) for the best experience.
+
+For a full guide checkout this [free course](https://www.contentful.com/nextjs-starter-guide/)
+
+5. In Contentful, define the preview environment and configure the preview URL for your Next.js application. Once you open an entry with a configured preview URL, you can use the Live Preview and all its features.
+
+That's it! You should now be able to use the Contentful Live Preview SDK with Next.js.
 
 #### Integrating with Gatsby
 
@@ -85,7 +151,7 @@ npm install @contentful/live-preview
 2. In your gatsby-browser.js file, import the live preview styles and initialize the SDK:
 
 ```tsx
-import '@contentful/live-preview/dist/style.css';
+import '@contentful/live-preview/style.css';
 import { ContentfulLivePreview } from '@contentful/live-preview';
 
 ContentfulLivePreview.init();
