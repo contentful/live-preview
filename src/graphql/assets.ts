@@ -1,4 +1,4 @@
-import type { AssetProps } from 'contentful-management/types';
+import type { AssetProps, EntryProps } from 'contentful-management/types';
 
 import { Entity, SysProps } from '../types';
 // import { updateEntry, updateReferenceAssetField } from './entries';
@@ -11,13 +11,11 @@ import { Entity, SysProps } from '../types';
  * @param asset CMA Asset object containing the update
  * @param locale locale code
  */
-export function updateAsset(
-  data: Entity & { sys: SysProps },
+export function updateAsset<T extends (Entity & { sys: SysProps }) | EntryProps>(
+  data: T,
   update: AssetProps,
   locale: string
-): Entity {
-  // TODO: reuse function from asset reference
-
+): T {
   try {
     const file = update.fields.file[locale];
 

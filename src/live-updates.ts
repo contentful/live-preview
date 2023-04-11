@@ -53,20 +53,13 @@ export class LiveUpdates {
       return gql.updateAsset(dataFromPreviewApp as any, updateFromEntryEditor as any, locale);
     }
 
-    const entryId = (dataFromPreviewApp as any).sys.id;
-    const cachedData = this.storage.get(entryId) || dataFromPreviewApp;
-
     const updatedData = gql.updateEntry(
       contentType,
-      //@ts-expect-error -- ..
-      cachedData,
-      updateFromEntryEditor,
+      dataFromPreviewApp as any,
+      updateFromEntryEditor as any,
       locale,
       entityReferenceMap
     );
-
-    // Cache the updated data for future updates
-    this.storage.set(entryId, updatedData);
 
     return updatedData;
   }
@@ -78,19 +71,12 @@ export class LiveUpdates {
     locale,
     contentType,
   }: MergeEntityProps): Entity {
-    const entryId = (dataFromPreviewApp as any).sys.id;
-    const cachedData = this.storage.get(entryId) || dataFromPreviewApp;
-
     const updatedData = rest.updateEntry(
       contentType,
-      //@ts-expect-error -- ..
-      cachedData,
+      dataFromPreviewApp as any,
       updateFromEntryEditor as any,
       locale
     );
-
-    // Cache the updated data for future updates
-    this.storage.set(entryId, updatedData);
 
     return updatedData;
   }
@@ -99,29 +85,28 @@ export class LiveUpdates {
   private mergeNestedReference(
     dataFromPreviewApp: Entity,
     updateFromEntryEditor: Entity,
-    mergeFn: (original: Entity, incomming: Entity) => Entity
+    mergeFn: (original: Entity, incomming: Entity) => Entity,
+    useCache = true
   ): { data: Entity; updated: boolean } {
-    let updated = false;
-
     if (!('sys' in updateFromEntryEditor)) {
       return { data: dataFromPreviewApp, updated: false };
     }
 
     const updateFromEntryEditorId = (updateFromEntryEditor.sys as SysProps).id;
+    const dataFromPreviewappId =
+      'sys' in dataFromPreviewApp && (dataFromPreviewApp.sys as SysProps).id;
 
-    if (
-      'sys' in dataFromPreviewApp &&
-      (dataFromPreviewApp.sys as SysProps).id === updateFromEntryEditorId
-    ) {
-      return { data: mergeFn(dataFromPreviewApp, updateFromEntryEditor), updated: true };
-    }
+    const isCacheable = useCache && dataFromPreviewappId;
+    let updated = false;
+    let result: Entity =
+      (isCacheable ? this.storage.get(dataFromPreviewappId) : undefined) || dataFromPreviewApp;
 
-    if (hasNestedReference(dataFromPreviewApp, updateFromEntryEditorId)) {
-      const isArray = Array.isArray(dataFromPreviewApp);
-      const clone = { ...dataFromPreviewApp };
-
-      for (const k in clone) {
-        const value = clone[k];
+    if (dataFromPreviewappId === updateFromEntryEditorId) {
+      result = mergeFn(result, updateFromEntryEditor);
+      updated = true;
+    } else if (hasNestedReference(result, updateFromEntryEditorId)) {
+      for (const k in result) {
+        const value = result[k];
 
         if (!value) {
           continue;
@@ -138,7 +123,13 @@ export class LiveUpdates {
               continue;
             }
 
-            const match = this.mergeNestedReference(arrayValue, updateFromEntryEditor, mergeFn);
+            // TODO: pass true if the top level could not be cached
+            const match = this.mergeNestedReference(
+              arrayValue,
+              updateFromEntryEditor,
+              mergeFn,
+              false
+            );
 
             if (match.updated) {
               value[i] = match.data;
@@ -151,18 +142,27 @@ export class LiveUpdates {
           typeof value === 'object' &&
           hasNestedReference(value as Entity, updateFromEntryEditorId)
         ) {
-          const match = this.mergeNestedReference(value as Entity, updateFromEntryEditor, mergeFn);
+          // TODO: pass true if the top level could not be cached
+          const match = this.mergeNestedReference(
+            value as Entity,
+            updateFromEntryEditor,
+            mergeFn,
+            false
+          );
           if (match.updated) {
-            clone[k] = match.data;
+            result[k] = match.data;
             updated = true;
           }
         }
       }
-
-      return { data: isArray ? Object.values(clone) : clone, updated };
     }
 
-    return { data: dataFromPreviewApp, updated };
+    if (isCacheable) {
+      // Cache the updated data for future updates
+      this.storage.set(dataFromPreviewappId, result);
+    }
+
+    return { data: result, updated };
   }
 
   // TODO: handle updated from mergeNestedReference
@@ -178,11 +178,17 @@ export class LiveUpdates {
 
     if (Array.isArray(dataFromPreviewApp)) {
       return dataFromPreviewApp.map(
-        (i) => this.mergeNestedReference(i, updateFromEntryEditor, mergeFn).data
+        (i) => this.mergeNestedReference(i, { ...updateFromEntryEditor }, mergeFn).data
       );
     }
 
-    return this.mergeNestedReference(dataFromPreviewApp, updateFromEntryEditor, mergeFn).data;
+    const result = this.mergeNestedReference(
+      dataFromPreviewApp,
+      { ...updateFromEntryEditor },
+      mergeFn
+    );
+
+    return result.data;
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
