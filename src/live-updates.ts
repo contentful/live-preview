@@ -1,14 +1,16 @@
+import type { AssetProps, EntryProps } from 'contentful-management';
+
 import * as gql from './graphql';
 import { generateUID, StorageMap } from './helpers';
-import { hasNestedReference } from './helpers/nestedReferences';
 import * as rest from './rest';
 import {
   Argument,
   ContentType,
   Entity,
+  EntityWithSys,
   EntryReferenceMap,
+  hasSysInformation,
   SubscribeCallback,
-  SysProps,
 } from './types';
 
 interface Subscription {
@@ -20,7 +22,7 @@ interface Subscription {
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;
   locale: string;
-  updateFromEntryEditor: Entity;
+  updateFromEntryEditor: EntryProps | AssetProps;
   contentType: ContentType;
   entityReferenceMap: EntryReferenceMap;
 }
@@ -41,72 +43,65 @@ export class LiveUpdates {
     this.storage = new StorageMap<Entity>('live-updates', new Map());
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private mergeGraphQL({
-    dataFromPreviewApp,
-    updateFromEntryEditor,
-    locale,
-    entityReferenceMap,
+  private mergeEntity({
     contentType,
-  }: MergeEntityProps): Entity {
-    if ((dataFromPreviewApp as any).__typename === 'Asset') {
-      return gql.updateAsset(dataFromPreviewApp as any, updateFromEntryEditor as any, locale);
+    dataFromPreviewApp,
+    entityReferenceMap,
+    locale,
+    updateFromEntryEditor,
+  }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & { dataFromPreviewApp: EntityWithSys }) {
+    if ('__typename' in dataFromPreviewApp) {
+      // GraphQL
+      if (dataFromPreviewApp.__typename === 'Asset') {
+        return gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as AssetProps, locale);
+      }
+
+      return gql.updateEntry(
+        contentType,
+        dataFromPreviewApp,
+        updateFromEntryEditor as EntryProps,
+        locale,
+        entityReferenceMap
+      );
     }
 
-    const updatedData = gql.updateEntry(
+    // REST
+    return rest.updateEntry(
       contentType,
-      dataFromPreviewApp as any,
-      updateFromEntryEditor as any,
-      locale,
-      entityReferenceMap
-    );
-
-    return updatedData;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private mergeRest({
-    dataFromPreviewApp,
-    updateFromEntryEditor,
-    locale,
-    contentType,
-  }: MergeEntityProps): Entity {
-    const updatedData = rest.updateEntry(
-      contentType,
-      dataFromPreviewApp as any,
-      updateFromEntryEditor as any,
+      dataFromPreviewApp,
+      updateFromEntryEditor as EntryProps,
       locale
     );
-
-    return updatedData;
   }
 
-  // TODO: only call the `cb` if there was an update
+  /**
+   * Merges the `dataFromPreviewApp` together with the `updateFromEntryEditor`
+   * If there is not direct match, it will try to merge things together recursively
+   * Caches the result if cache is enabled and the entity has a `sys.id`
+   */
   private mergeNestedReference(
-    dataFromPreviewApp: Entity,
-    updateFromEntryEditor: Entity,
-    mergeFn: (original: Entity, incomming: Entity) => Entity,
+    { dataFromPreviewApp, ...params }: MergeEntityProps,
     useCache = true
   ): { data: Entity; updated: boolean } {
-    if (!('sys' in updateFromEntryEditor)) {
-      return { data: dataFromPreviewApp, updated: false };
-    }
-
-    const updateFromEntryEditorId = (updateFromEntryEditor.sys as SysProps).id;
-    const dataFromPreviewappId =
-      'sys' in dataFromPreviewApp && (dataFromPreviewApp.sys as SysProps).id;
-
+    const dataFromPreviewappId = hasSysInformation(dataFromPreviewApp) && dataFromPreviewApp.sys.id;
     const isCacheable = useCache && dataFromPreviewappId;
+
+    // Flag to detect if something got updated and trigger only the subscription's if necessary
+    // TODO: This is still not perfect as it doesn't check if anything got updated, only if something could have been merged.
     let updated = false;
+    // If the entity is cacheable and it was once proceeded we use this one as base
     let result: Entity =
       (isCacheable ? this.storage.get(dataFromPreviewappId) : undefined) || dataFromPreviewApp;
 
-    if (dataFromPreviewappId === updateFromEntryEditorId) {
-      result = mergeFn(result, updateFromEntryEditor);
+    if (hasSysInformation(result) && dataFromPreviewappId === params.updateFromEntryEditor.sys.id) {
+      // Happy path, direct match from received and provided data
+      // Let's update it
+      result = this.mergeEntity({ ...params, dataFromPreviewApp: result });
       updated = true;
-    } else if (hasNestedReference(result, updateFromEntryEditorId)) {
-      for (const k in result) {
-        const value = result[k];
+    } else {
+      // No direct match, let's check if there is a nested reference and then update it
+      for (const key in result) {
+        const value = result[key];
 
         if (!value) {
           continue;
@@ -114,45 +109,28 @@ export class LiveUpdates {
 
         if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {
-            const arrayValue = value[i];
-            if (
-              !arrayValue ||
-              typeof arrayValue !== 'object' ||
-              !hasNestedReference(arrayValue, updateFromEntryEditorId)
-            ) {
-              continue;
-            }
+            if (value[i] && typeof value[i] === 'object') {
+              // TODO: pass true if the top level could not be cached
+              const match = this.mergeNestedReference(
+                { ...params, dataFromPreviewApp: value[i] },
+                false
+              );
 
-            // TODO: pass true if the top level could not be cached
-            const match = this.mergeNestedReference(
-              arrayValue,
-              updateFromEntryEditor,
-              mergeFn,
-              false
-            );
-
-            if (match.updated) {
               value[i] = match.data;
-              updated = true;
+              updated = updated || match.updated;
             }
           }
         }
 
-        if (
-          typeof value === 'object' &&
-          hasNestedReference(value as Entity, updateFromEntryEditorId)
-        ) {
+        if (typeof value === 'object') {
           // TODO: pass true if the top level could not be cached
           const match = this.mergeNestedReference(
-            value as Entity,
-            updateFromEntryEditor,
-            mergeFn,
+            { ...params, dataFromPreviewApp: value as Entity },
             false
           );
-          if (match.updated) {
-            result[k] = match.data;
-            updated = true;
-          }
+
+          result[key] = match.data;
+          updated = updated || match.updated;
         }
       }
     }
@@ -165,30 +143,29 @@ export class LiveUpdates {
     return { data: result, updated };
   }
 
-  // TODO: handle updated from mergeNestedReference
-  private merge({
-    dataFromPreviewApp,
-    updateFromEntryEditor,
-    ...data
-  }: MergeArgumentProps): Argument {
-    const mergeFn = (dataFromPreviewApp: Entity, updateFromEntryEditor: Entity) =>
-      '__typename' in dataFromPreviewApp
-        ? this.mergeGraphQL({ ...data, dataFromPreviewApp, updateFromEntryEditor })
-        : this.mergeRest({ ...data, dataFromPreviewApp, updateFromEntryEditor });
-
+  private merge({ dataFromPreviewApp, ...params }: MergeArgumentProps): {
+    updated: boolean;
+    data: Argument;
+  } {
     if (Array.isArray(dataFromPreviewApp)) {
-      return dataFromPreviewApp.map(
-        (i) => this.mergeNestedReference(i, { ...updateFromEntryEditor }, mergeFn).data
-      );
+      const data: Entity[] = [];
+      let updated = false;
+
+      for (const d of dataFromPreviewApp) {
+        const result = this.mergeNestedReference({ ...params, dataFromPreviewApp: d });
+
+        data.push(result.data);
+        updated = updated || result.updated;
+      }
+
+      return { data, updated };
     }
 
-    const result = this.mergeNestedReference(
-      dataFromPreviewApp,
-      { ...updateFromEntryEditor },
-      mergeFn
-    );
+    return this.mergeNestedReference({ ...params, dataFromPreviewApp });
+  }
 
-    return result.data;
+  private isValidMessage(entity: unknown): entity is AssetProps | EntryProps {
+    return hasSysInformation(entity) && 'fields' in entity;
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
@@ -197,18 +174,20 @@ export class LiveUpdates {
     contentType,
     entityReferenceMap,
   }: Record<string, unknown>): void {
-    if (entity && typeof entity === 'object') {
+    if (this.isValidMessage(entity)) {
       this.subscriptions.forEach((s) => {
-        // TODO: only call merge and the cb if the incoming data is relevant and something did update
-        s.cb(
-          this.merge({
-            dataFromPreviewApp: s.data,
-            locale: s.locale,
-            updateFromEntryEditor: entity as Entity,
-            contentType: contentType as ContentType,
-            entityReferenceMap: entityReferenceMap as EntryReferenceMap,
-          })
-        );
+        const { updated, data } = this.merge({
+          dataFromPreviewApp: s.data,
+          locale: s.locale,
+          updateFromEntryEditor: entity,
+          contentType: contentType as ContentType,
+          entityReferenceMap: entityReferenceMap as EntryReferenceMap,
+        });
+
+        // Only if there was an update, trigger the callback to unnecessary re-renders
+        if (updated) {
+          s.cb(data);
+        }
       });
     }
   }

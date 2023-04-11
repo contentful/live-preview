@@ -14,15 +14,28 @@ export const enum TagAttributes {
   LOCALE = 'data-contentful-locale',
 }
 
-// TODO: this has kind of overlap with CollectionItem, can we combine them?
-export type Entity = Record<string, unknown>;
-export type Argument = Entity | Entity[];
-export type SubscribeCallback = (data: Argument) => void;
-
 export interface SysProps {
   id: string;
   [key: string]: unknown;
 }
+
+export type Entity = Record<string, unknown>;
+export interface EntityWithSys extends Entity {
+  sys: SysProps;
+  __typename?: string;
+}
+
+export function hasSysInformation(entity: unknown): entity is EntityWithSys {
+  return !!(
+    entity &&
+    typeof entity === 'object' &&
+    'sys' in entity &&
+    (entity as EntityWithSys).sys.id
+  );
+}
+
+export type Argument = Entity | Entity[];
+export type SubscribeCallback = (data: Argument) => void;
 
 export interface CollectionItem {
   sys: SysProps;

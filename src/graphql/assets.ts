@@ -1,7 +1,6 @@
 import type { AssetProps, EntryProps } from 'contentful-management/types';
 
 import { Entity, SysProps } from '../types';
-// import { updateEntry, updateReferenceAssetField } from './entries';
 
 /**
  * Updates GraphQL response data based on CMA Asset object

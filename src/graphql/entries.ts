@@ -1,5 +1,4 @@
-import { AssetProps } from 'contentful-management';
-import type { EntryProps } from 'contentful-management/types';
+import type { AssetProps, EntryProps } from 'contentful-management';
 
 import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
 import { CollectionItem, SysProps, EntryReferenceMap, Entity, ContentType } from '../types';
@@ -117,27 +116,11 @@ function updateReferenceAssetField(
     return;
   }
 
-  // TODO: reuse updateAsset
   return updateAsset(
     { ...referenceFromPreviewApp, ...updatedReference, __typename: ASSET_TYPENAME },
     match,
     locale
   );
-  // const file = match.fields.file[locale];
-  // return {
-  //   ...referenceFromPreviewApp,
-  //   ...updatedReference,
-  //   // GraphQL flattens some information
-  //   // and as the live updates are coming from the CMA, we need to transform them
-  //   title: match.fields.title[locale],
-  //   description: match.fields.description?.[locale],
-  //   contentType: file.contentType,
-  //   width: file.details?.image.width,
-  //   height: file.details?.image.height,
-  //   // GraphQL returns the URL with protocal, the CMA without, so we need to add the information in there
-  //   url: file.url ? (file.url?.startsWith('https:') ? file.url : `https:${file.url}`) : undefined,
-  //   __typename: ASSET_TYPENAME,
-  // };
 }
 
 function updateReferenceEntryField(
