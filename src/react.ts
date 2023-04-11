@@ -9,7 +9,7 @@ import { Argument } from './types';
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
   locale: string,
-  skip?: boolean
+  skip = false
 ): T {
   const [state, setState] = useState({ data, version: 1 });
   const update = useRef(debounce(setState));
