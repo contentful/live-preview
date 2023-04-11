@@ -6,8 +6,8 @@ import {
   TOOLTIP_HEIGHT,
   TOOLTIP_PADDING_LEFT,
 } from './constants';
+import { sendMessageToEditor } from './helpers';
 import { TagAttributes } from './types';
-import { sendMessageToEditor } from './utils';
 
 export class FieldTagging {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor

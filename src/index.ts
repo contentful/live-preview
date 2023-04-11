@@ -1,8 +1,8 @@
 import './styles.css';
 import { FieldTagging } from './field-tagging';
+import { sendMessageToEditor } from './helpers';
 import { LiveUpdates } from './live-updates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
-import { sendMessageToEditor } from './utils';
 
 export class ContentfulLivePreview {
   static fieldTagging: FieldTagging | null = null;

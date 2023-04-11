@@ -3,8 +3,8 @@ import { useRef, useState } from 'react';
 import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect';
 
 import { ContentfulLivePreview } from '.';
+import { debounce } from './helpers';
 import { Argument } from './types';
-import { debounce } from './utils';
 
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,

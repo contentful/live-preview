@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 
-import { generateUID } from '../utils';
+import { generateUID } from '../helpers';
 
 describe('generateUID', () => {
   test('generates unique IDs', () => {

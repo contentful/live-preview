@@ -1,4 +1,4 @@
-import type { EditorMessage, MessageFromSDK } from './types';
+import type { EditorMessage, MessageFromSDK } from '../types';
 
 /**
  * Sends the given message to the editor
@@ -31,13 +31,6 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
       func.apply(this, args);
     }, timeout);
   };
-}
-
-/**
- * Cheap solution to generate a unique ID
- */
-export function generateUID(): string {
-  return `${performance.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 /**

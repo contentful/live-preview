@@ -1,66 +1,78 @@
 import type { EntryProps } from 'contentful-management/types';
 
+import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
 import { CollectionItem, SysProps, EntryReferenceMap, Entity, ContentType } from '../types';
-import { sendMessageToEditor } from '../utils';
-import { isPrimitiveField, logUnrecognizedFields } from './utils';
+import { logUnrecognizedFields } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
  *
  * @param contentType ContentTypeProps
- * @param data Entity - The GraphQL response to be updated
- * @param update EntryProps - CMA entry object containing the update
+ * @param dataFromPreviewApp Entity - The GraphQL response to be updated
+ * @param updateFromEntryEditor EntryProps - CMA entry object containing the update
  * @param locale string - Locale code
  * @returns Entity - Updated GraphQL response data
  */
 export function updateEntry(
   contentType: ContentType,
-  data: Entity & { sys: SysProps },
-  update: EntryProps,
+  dataFromPreviewApp: Entity & { sys: SysProps },
+  updateFromEntryEditor: EntryProps,
   locale: string,
   entityReferenceMap: EntryReferenceMap
 ): Entity & { sys: SysProps } {
-  if (data.sys.id !== update.sys.id) {
-    return data;
+  if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
+    return dataFromPreviewApp;
   }
 
-  const modified = { ...data };
+  const copyOfDataFromPreviewApp = { ...dataFromPreviewApp };
   const { fields } = contentType;
 
   logUnrecognizedFields(
     fields.map((f) => f.apiName ?? f.name),
-    data
+    dataFromPreviewApp
   );
 
   for (const field of fields) {
     const name = field.apiName ?? field.name;
 
     if (isPrimitiveField(field)) {
-      updatePrimitiveField(modified, update, name, locale);
+      updatePrimitiveField(copyOfDataFromPreviewApp, updateFromEntryEditor, name, locale);
     } else if (field.type === 'RichText') {
-      updateRichTextField(modified, update, name, locale);
+      updateRichTextField(copyOfDataFromPreviewApp, updateFromEntryEditor, name, locale);
     } else if (field.type === 'Link') {
-      updateSingleRefField(modified, update, name, locale, entityReferenceMap);
+      updateSingleRefField(
+        copyOfDataFromPreviewApp,
+        updateFromEntryEditor,
+        name,
+        locale,
+        entityReferenceMap
+      );
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      updateMultiRefField(modified, update, name, locale, entityReferenceMap);
+      updateMultiRefField(
+        copyOfDataFromPreviewApp,
+        updateFromEntryEditor,
+        name,
+        locale,
+        entityReferenceMap
+      );
     }
   }
 
-  return modified;
+  return copyOfDataFromPreviewApp;
 }
 
-function updatePrimitiveField(modified: Entity, update: EntryProps, name: string, locale: string) {
-  if (name in modified) {
-    modified[name] = update.fields?.[name]?.[locale] ?? null;
-  }
-}
-
-function updateRichTextField(modified: Entity, update: EntryProps, name: string, locale: string) {
-  if (name in modified) {
-    if (!modified[name]) {
-      modified[name] = {};
+function updateRichTextField(
+  dataFromPreviewApp: Entity,
+  updateFromEntryEditor: EntryProps,
+  name: string,
+  locale: string
+) {
+  if (name in dataFromPreviewApp) {
+    if (!dataFromPreviewApp[name]) {
+      dataFromPreviewApp[name] = {};
     }
-    (modified[name] as { json: unknown }).json = update?.fields?.[name]?.[locale] ?? null;
+    (dataFromPreviewApp[name] as { json: unknown }).json =
+      updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
   }
 }
 
