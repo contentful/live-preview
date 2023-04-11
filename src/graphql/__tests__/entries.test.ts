@@ -1,8 +1,8 @@
 import type { EntryProps, KeyValueMap } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
+import * as Utils from '../../helpers';
 import { SysProps, EntryReferenceMap, Entity } from '../../types';
-import * as Utils from '../../utils';
 import { updateEntry } from '../entries';
 import contentType from './fixtures/contentType.json';
 import entry from './fixtures/entry.json';

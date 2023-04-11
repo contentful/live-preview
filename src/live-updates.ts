@@ -1,7 +1,7 @@
 import * as gql from './graphql';
+import { generateUID, StorageMap } from './helpers';
 import * as rest from './rest';
 import { Argument, ContentType, Entity, EntryReferenceMap, SubscribeCallback } from './types';
-import { generateUID, StorageMap } from './utils';
 
 interface Subscription {
   data: Argument;

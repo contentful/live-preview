@@ -1,17 +1,4 @@
-import { ContentFields, EntryProps } from 'contentful-management/types';
-
-import type { Entity } from './types';
-import type { EditorMessage, MessageFromSDK } from './types';
-
-const PRIMITIVE_FIELDS = new Set([
-  'Symbol',
-  'Text',
-  'Integer',
-  'Boolean',
-  'Date',
-  'Location',
-  'Object',
-]);
+import type { EditorMessage, MessageFromSDK } from '../types';
 
 /**
  * Sends the given message to the editor
@@ -44,37 +31,6 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
       func.apply(this, args);
     }, timeout);
   };
-}
-
-/**
- * Cheap solution to generate a unique ID
- */
-export function generateUID(): string {
-  return `${performance.now()}-${Math.random().toString(36).slice(2)}`;
-}
-
-export function isPrimitiveField(field: ContentFields): boolean {
-  if (PRIMITIVE_FIELDS.has(field.type)) {
-    return true;
-  }
-
-  // Array of Symbols
-  if (field.type === 'Array' && field.items?.type === 'Symbol') {
-    return true;
-  }
-
-  return false;
-}
-
-export function updatePrimitiveField(
-  dataFromPreviewApp: Entity,
-  updateFromEntryEditor: EntryProps,
-  name: string,
-  locale: string
-): void {
-  if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] = updateFromEntryEditor.fields?.[name]?.[locale] ?? null;
-  }
 }
 
 /**

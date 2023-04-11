@@ -1,7 +1,7 @@
 import type { EntryProps } from 'contentful-management/types';
 
+import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
 import { CollectionItem, SysProps, EntryReferenceMap, Entity, ContentType } from '../types';
-import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../utils';
 import { logUnrecognizedFields } from './utils';
 
 /**

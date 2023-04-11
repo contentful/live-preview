@@ -5,11 +5,11 @@ import { TagAttributes } from '../types';
 
 import { FieldTagging } from '../field-tagging';
 import { LiveUpdates } from '../live-updates';
-import { sendMessageToEditor } from '../utils';
+import { sendMessageToEditor } from '../helpers';
 
 vi.mock('../field-tagging');
 vi.mock('../live-updates');
-vi.mock('../utils');
+vi.mock('../helpers');
 
 describe('ContentfulLivePreview', () => {
   const receiveMessageTagging = vi.fn();

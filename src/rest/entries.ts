@@ -1,8 +1,8 @@
 import { EntryProps } from 'contentful-management/types';
 import { ContentFields } from 'contentful-management/types';
 
+import { isPrimitiveField, updatePrimitiveField } from '../helpers';
 import { SysProps, Entity, ContentType } from '../types';
-import { isPrimitiveField, updatePrimitiveField } from '../utils';
 
 const mergeFields = (
   fields: ContentFields[],
