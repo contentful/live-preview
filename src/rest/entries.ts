@@ -28,6 +28,7 @@ const mergeFields = (
   return mergedObj;
 };
 
+// TODO: is this still needed or already solved by `mergeNestedReference`
 function updateNestedRef(
   fields: ContentFields[],
   dataFromPreviewApp: Entity & { sys: SysProps },
@@ -35,7 +36,7 @@ function updateNestedRef(
   locale: string
 ): Entity & { sys: SysProps } {
   if (dataFromPreviewApp.fields) {
-    const updatedFields = { ...dataFromPreviewApp.fields };
+    const updatedFields = { ...dataFromPreviewApp.fields } as Record<string, unknown>;
 
     for (const [fieldName, field] of Object.entries(dataFromPreviewApp.fields)) {
       if (field.sys && field.sys.id === updateFromEntryEditor.sys.id) {
