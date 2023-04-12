@@ -49,29 +49,45 @@ export class LiveUpdates {
     entityReferenceMap,
     locale,
     updateFromEntryEditor,
-  }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & { dataFromPreviewApp: EntityWithSys }) {
+  }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & { dataFromPreviewApp: EntityWithSys }): {
+    data: Entity;
+    updated: boolean;
+  } {
     if ('__typename' in dataFromPreviewApp) {
       // GraphQL
       if (dataFromPreviewApp.__typename === 'Asset') {
-        return gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as AssetProps, locale);
+        return {
+          data: gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as AssetProps, locale),
+          updated: true,
+        };
       }
 
-      return gql.updateEntry(
-        contentType,
-        dataFromPreviewApp,
-        updateFromEntryEditor as EntryProps,
-        locale,
-        entityReferenceMap
-      );
+      return {
+        data: gql.updateEntry(
+          contentType,
+          dataFromPreviewApp,
+          updateFromEntryEditor as EntryProps,
+          locale,
+          entityReferenceMap
+        ),
+        updated: true,
+      };
     }
 
-    // REST
-    return rest.updateEntry(
-      contentType,
-      dataFromPreviewApp,
-      updateFromEntryEditor as EntryProps,
-      locale
-    );
+    if (this.isEntryOrAsset(dataFromPreviewApp)) {
+      // REST
+      return {
+        data: rest.updateEntry(
+          contentType,
+          dataFromPreviewApp as EntryProps,
+          updateFromEntryEditor as EntryProps,
+          locale
+        ),
+        updated: true,
+      };
+    }
+
+    return { updated: false, data: dataFromPreviewApp };
   }
 
   /**
@@ -96,8 +112,9 @@ export class LiveUpdates {
     if (hasSysInformation(result) && dataFromPreviewappId === params.updateFromEntryEditor.sys.id) {
       // Happy path, direct match from received and provided data
       // Let's update it
-      result = this.mergeEntity({ ...params, dataFromPreviewApp: result });
-      updated = true;
+      const merged = this.mergeEntity({ ...params, dataFromPreviewApp: result });
+      result = merged.data;
+      updated = merged.updated;
     } else {
       // No direct match, let's check if there is a nested reference and then update it
       for (const key in result) {
@@ -164,7 +181,7 @@ export class LiveUpdates {
     return this.mergeNestedReference({ ...params, dataFromPreviewApp });
   }
 
-  private isValidMessage(entity: unknown): entity is AssetProps | EntryProps {
+  private isEntryOrAsset(entity: unknown): entity is AssetProps | EntryProps {
     return hasSysInformation(entity) && 'fields' in entity;
   }
 
@@ -174,7 +191,7 @@ export class LiveUpdates {
     contentType,
     entityReferenceMap,
   }: Record<string, unknown>): void {
-    if (this.isValidMessage(entity)) {
+    if (this.isEntryOrAsset(entity)) {
       this.subscriptions.forEach((s) => {
         const { updated, data } = this.merge({
           dataFromPreviewApp: s.data,
