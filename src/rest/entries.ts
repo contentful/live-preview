@@ -1,4 +1,4 @@
-import { EntryProps } from 'contentful-management/types';
+import type { AssetProps, EntryProps } from 'contentful-management';
 
 import { isPrimitiveField, updatePrimitiveField } from '../helpers';
 import { ContentType } from '../types';
@@ -24,19 +24,17 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
  * @param locale string - Locale code
  * @returns Entity - Updated REST response data
  */
-export function updateEntry(
+export function updateEntity(
   contentType: ContentType,
   dataFromPreviewApp: EntryProps,
-  updateFromEntryEditor: EntryProps,
+  updateFromEntryEditor: EntryProps | AssetProps,
   locale: string
 ): EntryProps {
-  const mergedObj = { ...dataFromPreviewApp };
-
   for (const field of contentType.fields) {
     const name = getFieldName(contentType, field);
 
-    if (isPrimitiveField(field) || field.type === 'RichText') {
-      updatePrimitiveField(mergedObj.fields, updateFromEntryEditor, name, locale);
+    if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
+      updatePrimitiveField(dataFromPreviewApp.fields, updateFromEntryEditor, name, locale);
     } else if (field.type === 'Link') {
       // update single ref field
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
@@ -44,5 +42,5 @@ export function updateEntry(
     }
   }
 
-  return mergedObj;
+  return dataFromPreviewApp;
 }

@@ -1,0 +1,43 @@
+{
+  "__typename": "TopicProduct",
+  "sys": {
+    "id": "6wuDj6hgz4SOQuiq6f8UzX"
+  },
+  "name": "Testing",
+  "featuredImage": {
+    "__typename": "Asset",
+    "sys": {
+      "id": "bF3sZxYTHnAYJOFMNI3Vm"
+    },
+    "contentType": "image/jpeg",
+    "title": "Polarlights are marvelous",
+    "description": null,
+    "width": 3008,
+    "height": 1960,
+    "url": "https://images.ctfassets.net/c586i03gpxi9/bF3sZxYTHnAYJOFMNI3Vm/d32dd04a866df4511c701576022ac5fd/Polarlicht_2.jpg"
+  },
+  "description": {
+    "json": {
+      "nodeType": "document",
+      "data": {},
+      "content": [
+        {
+          "nodeType": "paragraph",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "text",
+              "value": "Testing Images and nested references.",
+              "marks": [],
+              "data": {}
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "price": null,
+  "featuresCollection": {
+    "items": []
+  }
+}

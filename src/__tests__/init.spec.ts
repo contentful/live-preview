@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { ContentfulLivePreview } from '../index';
+
 import { FieldTagging } from '../field-tagging';
+import { ContentfulLivePreview } from '../index';
 
 describe('init', () => {
   it('returns a Promise that resolves to a LivePreview instance when running in a browser environment', async () => {

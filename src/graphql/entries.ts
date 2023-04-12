@@ -1,7 +1,14 @@
 import type { AssetProps, EntryProps } from 'contentful-management';
 
 import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
-import { CollectionItem, SysProps, EntryReferenceMap, Entity, ContentType } from '../types';
+import {
+  CollectionItem,
+  SysProps,
+  EntryReferenceMap,
+  Entity,
+  ContentType,
+  ASSET_TYPENAME,
+} from '../types';
 import { updateAsset } from './assets';
 import { logUnrecognizedFields } from './utils';
 
@@ -92,7 +99,6 @@ function getContentTypenameFromEntityReferenceMap(
   }
 }
 
-const ASSET_TYPENAME = 'Asset';
 function isAsset(entity: EntryProps): boolean {
   return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }

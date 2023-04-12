@@ -104,16 +104,16 @@ export default function BlogPost: ({ blogPost }) {
 
   return (
     <Section>
-      <Heading as="h1">{blogPost.heading}</Heading>
+      <Heading as="h1">{data.heading}</Heading>
       {/* Text is tagged and can be clicked to open the editor */}
       <Text
         as="p"
         {...ContentfulLivePreview.getProps({
-          entryId: blogPost.sys.id,
+          entryId: data.sys.id,
           fieldId: 'text',
           locale,
         })}>
-        {blogPost.text}
+        {data.text}
       </Text>
     </Section>
   );

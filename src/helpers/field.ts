@@ -1,4 +1,4 @@
-import { ContentFields, EntryProps } from 'contentful-management/types';
+import type { AssetProps, ContentFields, EntryProps, KeyValueMap } from 'contentful-management';
 
 import type { Entity } from '../types';
 
@@ -14,12 +14,13 @@ const PRIMITIVE_FIELDS = new Set([
 
 export function updatePrimitiveField(
   dataFromPreviewApp: Entity,
-  updateFromEntryEditor: EntryProps,
+  updateFromEntryEditor: EntryProps | AssetProps,
   name: string,
   locale: string
 ): void {
   if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] = updateFromEntryEditor.fields?.[name]?.[locale] ?? null;
+    dataFromPreviewApp[name] =
+      (updateFromEntryEditor.fields as KeyValueMap | undefined)?.[name]?.[locale] ?? null;
   }
 }
 

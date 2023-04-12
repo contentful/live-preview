@@ -1,7 +1,7 @@
 import type { AssetProps, EntryProps } from 'contentful-management';
 
 import * as gql from './graphql';
-import { generateUID, StorageMap } from './helpers';
+import { clone, generateUID, StorageMap } from './helpers';
 import * as rest from './rest';
 import {
   Argument,
@@ -74,10 +74,10 @@ export class LiveUpdates {
       };
     }
 
-    if (this.isEntryOrAsset(dataFromPreviewApp)) {
+    if (this.isCfEntity(dataFromPreviewApp)) {
       // REST
       return {
-        data: rest.updateEntry(
+        data: rest.updateEntity(
           contentType,
           dataFromPreviewApp as EntryProps,
           updateFromEntryEditor as EntryProps,
@@ -164,7 +164,7 @@ export class LiveUpdates {
     return this.mergeNestedReference({ ...params, dataFromPreviewApp }, useCache);
   }
 
-  private isEntryOrAsset(entity: unknown): entity is AssetProps | EntryProps {
+  private isCfEntity(entity: unknown): entity is AssetProps | EntryProps {
     return hasSysInformation(entity) && 'fields' in entity;
   }
 
@@ -174,10 +174,13 @@ export class LiveUpdates {
     contentType,
     entityReferenceMap,
   }: Record<string, unknown>): void {
-    if (this.isEntryOrAsset(entity)) {
+    if (this.isCfEntity(entity)) {
       this.subscriptions.forEach((s) => {
         const { updated, data } = this.merge({
-          dataFromPreviewApp: s.data,
+          // Clone the original data on the top level,
+          // to prevent cloning multiple times (time)
+          // or modifieng the original data (failure potential)
+          dataFromPreviewApp: clone(s.data),
           locale: s.locale,
           updateFromEntryEditor: entity,
           contentType: contentType as ContentType,
