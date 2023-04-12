@@ -93,11 +93,13 @@ export class LiveUpdates {
   /**
    * Merges the `dataFromPreviewApp` together with the `updateFromEntryEditor`
    * If there is not direct match, it will try to merge things together recursively
-   * Caches the result if cache is enabled and the entity has a `sys.id`
+   * caches the result if cache is enabled and the entity has a `sys.id`.
+   * Caching should not be enabled for every entry,
+   * because nested references could be merged differently together and this could solve to data loss.
    */
   private mergeNestedReference(
     { dataFromPreviewApp, ...params }: MergeEntityProps,
-    useCache = true
+    useCache: boolean
   ): { data: Entity; updated: boolean } {
     const dataFromPreviewappId = hasSysInformation(dataFromPreviewApp) && dataFromPreviewApp.sys.id;
     const isCacheable = useCache && dataFromPreviewappId;
@@ -118,34 +120,12 @@ export class LiveUpdates {
     } else {
       // No direct match, let's check if there is a nested reference and then update it
       for (const key in result) {
-        const value = result[key];
-
-        if (!value) {
-          continue;
-        }
-
-        if (Array.isArray(value)) {
-          for (let i = 0; i < value.length; i++) {
-            if (value[i] && typeof value[i] === 'object') {
-              // TODO: pass true if the top level could not be cached
-              const match = this.mergeNestedReference(
-                { ...params, dataFromPreviewApp: value[i] },
-                false
-              );
-
-              value[i] = match.data;
-              updated = updated || match.updated;
-            }
-          }
-        }
-
-        if (typeof value === 'object') {
-          // TODO: pass true if the top level could not be cached
-          const match = this.mergeNestedReference(
-            { ...params, dataFromPreviewApp: value as Entity },
+        if (result[key] && typeof result[key] === 'object') {
+          // TODO: set `useCache` to true if none of the parents could be cached
+          const match = this.merge(
+            { ...params, dataFromPreviewApp: result[key] as Argument },
             false
           );
-
           result[key] = match.data;
           updated = updated || match.updated;
         }
@@ -160,7 +140,10 @@ export class LiveUpdates {
     return { data: result, updated };
   }
 
-  private merge({ dataFromPreviewApp, ...params }: MergeArgumentProps): {
+  private merge(
+    { dataFromPreviewApp, ...params }: MergeArgumentProps,
+    useCache = true
+  ): {
     updated: boolean;
     data: Argument;
   } {
@@ -169,7 +152,7 @@ export class LiveUpdates {
       let updated = false;
 
       for (const d of dataFromPreviewApp) {
-        const result = this.mergeNestedReference({ ...params, dataFromPreviewApp: d });
+        const result = this.mergeNestedReference({ ...params, dataFromPreviewApp: d }, useCache);
 
         data.push(result.data);
         updated = updated || result.updated;
@@ -178,7 +161,7 @@ export class LiveUpdates {
       return { data, updated };
     }
 
-    return this.mergeNestedReference({ ...params, dataFromPreviewApp });
+    return this.mergeNestedReference({ ...params, dataFromPreviewApp }, useCache);
   }
 
   private isEntryOrAsset(entity: unknown): entity is AssetProps | EntryProps {
