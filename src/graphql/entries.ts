@@ -28,6 +28,7 @@ export function updateEntry(
   const copyOfDataFromPreviewApp = { ...dataFromPreviewApp };
   const { fields } = contentType;
 
+  // TODO: On GraphQL the suffix `Collection` is added for multiple references
   logUnrecognizedFields(
     fields.map((f) => f.apiName ?? f.name),
     dataFromPreviewApp
