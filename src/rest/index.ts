@@ -1,1 +1,1 @@
-export { updateEntry } from './entries';
+export { updateEntity } from './entries';

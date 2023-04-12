@@ -1,5 +1,6 @@
-import type { AssetProps, EntryProps } from 'contentful-management/types';
+import type { AssetProps, EntryProps } from 'contentful-management';
 
+import { debug, setProtocolToHttps } from '../helpers';
 import { Entity, SysProps } from '../types';
 
 /**
@@ -27,11 +28,11 @@ export function updateAsset<T extends (Entity & { sys: SysProps }) | EntryProps>
       contentType: file.contentType,
       width: file.details?.image.width,
       height: file.details?.image.height,
-      // GraphQL returns the URL with protocol and the CMA without it, so we need to add the information in there manually
-      url: file.url ? (file.url?.startsWith('https:') ? file.url : `https:${file.url}`) : undefined,
+      url: setProtocolToHttps(file.url),
     };
   } catch (err) {
     // During file upload it will throw an error and return the original data in the meantime
+    debug.warn('Failed update asset', { dataFromPreviewApp, updateFromEntryEditor, locale }, err);
     return dataFromPreviewApp;
   }
 }

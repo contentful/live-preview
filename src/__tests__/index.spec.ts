@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, Mock, afterEach, beforeEach, beforeAll } from 'vitest';
-import { ContentfulLivePreview } from '../index';
-import { TagAttributes } from '../types';
+import { describe, it, expect, vi, Mock, afterEach, beforeAll } from 'vitest';
 
 import { FieldTagging } from '../field-tagging';
-import { LiveUpdates } from '../live-updates';
 import { sendMessageToEditor } from '../helpers';
+import { ContentfulLivePreview } from '../index';
+import { LiveUpdates } from '../live-updates';
+import { TagAttributes } from '../types';
 
 vi.mock('../field-tagging');
 vi.mock('../live-updates');

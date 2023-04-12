@@ -1,0 +1,52 @@
+{
+  "sys": {
+    "id": "contentful-builtin-asset-content-type",
+    "space": {
+      "sys": {
+        "id": "",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "environment": {
+      "sys": {
+        "id": "",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "type": "ContentType",
+    "version": 1,
+    "createdAt": "",
+    "updatedAt": ""
+  },
+  "name": "Asset",
+  "description": "",
+  "displayField": "title",
+  "fields": [
+    {
+      "id": "title",
+      "name": "Title",
+      "type": "Symbol",
+      "localized": true,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "id": "description",
+      "name": "Description",
+      "type": "Text",
+      "localized": true,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "id": "file",
+      "name": "File",
+      "type": "File",
+      "localized": true,
+      "disabled": false,
+      "required": true
+    }
+  ]
+}

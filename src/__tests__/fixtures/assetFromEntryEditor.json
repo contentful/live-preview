@@ -1,0 +1,63 @@
+{
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "c586i03gpxi9"
+      }
+    },
+    "id": "bF3sZxYTHnAYJOFMNI3Vm",
+    "type": "Asset",
+    "createdAt": "2023-04-11T08:52:38.857Z",
+    "updatedAt": "2023-04-13T12:57:12.408Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "5et6DcfSN7movZLX0rV8zZ"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "5et6DcfSN7movZLX0rV8zZ"
+      }
+    },
+    "publishedCounter": 0,
+    "version": 80
+  },
+  "fields": {
+    "title": {
+      "en-US": "Polarlights are marvelous!!"
+    },
+    "description": {
+      "en-US": "say hello!"
+    },
+    "file": {
+      "en-US": {
+        "url": "//images.ctfassets.net/c586i03gpxi9/bF3sZxYTHnAYJOFMNI3Vm/d32dd04a866df4511c701576022ac5fd/Polarlicht_2.jpg",
+        "details": {
+          "size": 1305911,
+          "image": {
+            "width": 3008,
+            "height": 1960
+          }
+        },
+        "fileName": "Polarlicht_2.jpg",
+        "contentType": "image/jpeg"
+      }
+    }
+  },
+  "metadata": {
+    "tags": []
+  }
+}

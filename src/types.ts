@@ -1,6 +1,7 @@
 import type { AssetProps, EntryProps, ContentTypeProps } from 'contentful-management';
 
 export type ContentType = ContentTypeProps;
+export const ASSET_TYPENAME = 'Asset';
 
 export type LivePreviewProps = {
   fieldId: string | null | undefined;

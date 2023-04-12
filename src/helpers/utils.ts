@@ -1,4 +1,5 @@
 import type { EditorMessage, MessageFromSDK } from '../types';
+import { debug } from './debug';
 
 /**
  * Sends the given message to the editor
@@ -80,5 +81,44 @@ export class StorageMap<T extends unknown> {
         // ignored
       }
     }
+  }
+}
+
+/**
+ * GraphQL returns the URL with protocol and the CMA without it,
+ * so we need to add the information in there manually.
+ */
+export function setProtocolToHttps(url: string | undefined): string | undefined {
+  if (!url) {
+    return url;
+  }
+
+  try {
+    // new URL('//images.ctfassets.net') is invalid, therefore we add it with protocol as `base`.
+    // This will merge it then correct together
+    const parsed = new URL(url, 'https://images.ctfassets.net');
+    parsed.protocol = 'https:';
+    return parsed.href;
+  } catch (err) {
+    debug.error(`Recevied invalid asset url "${url}"`, err);
+    return url;
+  }
+}
+
+/**
+ * Clones the incoming element into a new one, to prevent modification on the original object
+ * Hint: It uses the structuredClone which is only available in modern browsers,
+ * for older one it uses the JSON.parse(JSON.strinfify) hack.
+ */
+export function clone<T extends Record<string, unknown> | Array<unknown>>(incoming: T): T {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(incoming);
+  }
+
+  try {
+    return JSON.parse(JSON.stringify(incoming));
+  } catch (err) {
+    debug.warn('Failed to clone data, updates are done on the original one', incoming, err);
+    return incoming;
   }
 }

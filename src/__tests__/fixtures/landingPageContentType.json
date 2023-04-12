@@ -1,0 +1,169 @@
+{
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "c586i03gpxi9"
+      }
+    },
+    "id": "page",
+    "type": "ContentType",
+    "createdAt": "2023-01-25T16:21:52.298Z",
+    "updatedAt": "2023-04-04T13:18:41.923Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "revision": 9
+  },
+  "displayField": "scbz",
+  "name": "📜 Landing page",
+  "description": "Container that enables editors to publish a page, define its slug, select & arrange its content",
+  "fields": [
+    {
+      "id": "scbz",
+      "apiName": "internalName",
+      "name": "Internal name",
+      "type": "Symbol",
+      "localized": false,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "dnnz",
+      "apiName": "pageName",
+      "name": "Page name",
+      "type": "Symbol",
+      "localized": true,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "kynr",
+      "apiName": "slug",
+      "name": "Slug",
+      "type": "Symbol",
+      "localized": false,
+      "required": true,
+      "validations": [
+        {
+          "unique": true
+        },
+        {
+          "regexp": {
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        }
+      ],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "vprf",
+      "apiName": "seo",
+      "name": "SEO metadata",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "linkContentType": ["seo"]
+        }
+      ],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Entry"
+    },
+    {
+      "id": "zhhw",
+      "apiName": "topSection",
+      "name": "Top section (optional)",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [
+          {
+            "linkContentType": [
+              "componentCta",
+              "componentDuplex",
+              "componentHeroBanner",
+              "componentInfoBlock",
+              "componentQuote",
+              "componentTextBlock"
+            ]
+          }
+        ],
+        "linkType": "Entry"
+      }
+    },
+    {
+      "id": "dkdh",
+      "apiName": "pageContent",
+      "name": "Page content",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "linkContentType": ["topicBusinessInfo", "topicProduct", "componentProductTable"]
+        }
+      ],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Entry"
+    },
+    {
+      "id": "dsvq",
+      "apiName": "extraSection",
+      "name": "Extra section (optional)",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [
+          {
+            "linkContentType": [
+              "componentCta",
+              "componentDuplex",
+              "componentHeroBanner",
+              "componentInfoBlock",
+              "componentQuote",
+              "componentTextBlock"
+            ]
+          }
+        ],
+        "linkType": "Entry"
+      }
+    }
+  ],
+  "metadata": {
+    "annotations": {
+      "ContentType": [
+        {
+          "sys": {
+            "id": "Contentful:AggregateRoot",
+            "type": "Link",
+            "linkType": "Annotation"
+          }
+        }
+      ]
+    }
+  }
+}
