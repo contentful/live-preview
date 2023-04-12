@@ -1,7 +1,7 @@
 import './styles.css';
 
 import { FieldTagging } from './field-tagging';
-import { sendMessageToEditor, setDebugMode, debug } from './helpers';
+import { sendMessageToEditor, pollUrlChanges, setDebugMode, debug } from './helpers';
 import { LiveUpdates } from './live-updates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 
@@ -38,6 +38,8 @@ export class ContentfulLivePreview {
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
         });
 
+        pollUrlChanges(window.location.href, ContentfulLivePreview.handleUrlChange);
+
         sendMessageToEditor({
           action: 'IFRAME_CONNECTED',
           connected: true,
@@ -47,6 +49,13 @@ export class ContentfulLivePreview {
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
       }
     }
+  }
+
+  static handleUrlChange(newUrl: string): void {
+    sendMessageToEditor({
+      action: 'URL_CHANGED',
+      url: newUrl,
+    });
   }
 
   static subscribe(data: Argument, locale: string, callback: SubscribeCallback): VoidFunction {
