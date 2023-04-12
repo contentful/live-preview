@@ -44,6 +44,7 @@ export class ContentfulLivePreview {
           action: 'IFRAME_CONNECTED',
           connected: true,
           tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+          url: window.location.href,
         });
 
         return Promise.resolve(ContentfulLivePreview.fieldTagging);

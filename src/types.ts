@@ -47,6 +47,7 @@ type IframeConnectedMessage = {
   action: 'IFRAME_CONNECTED';
   connected: true;
   tags: number;
+  url: string;
 };
 
 type TaggedFieldClickMessage = {
