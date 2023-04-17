@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 
-import { FieldTagging } from '../field-tagging';
+import { FieldTagging } from '../fieldTagging';
 import { ContentfulLivePreview } from '../index';
 
 describe('init', () => {

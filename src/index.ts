@@ -1,8 +1,8 @@
 import './styles.css';
 
-import { FieldTagging } from './field-tagging';
-import { sendMessageToEditor, setDebugMode, debug } from './helpers';
-import { LiveUpdates } from './live-updates';
+import { FieldTagging } from './fieldTagging';
+import { sendMessageToEditor, pollUrlChanges, setDebugMode, debug } from './helpers';
+import { LiveUpdates } from './liveUpdates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 
 interface ContentfulLivePreviewInitConfig {
@@ -36,6 +36,10 @@ export class ContentfulLivePreview {
 
           ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
+        });
+
+        pollUrlChanges(() => {
+          sendMessageToEditor({ action: 'URL_CHANGED' });
         });
 
         sendMessageToEditor({

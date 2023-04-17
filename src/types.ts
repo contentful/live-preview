@@ -48,18 +48,30 @@ type IframeConnectedMessage = {
   connected: true;
   tags: number;
 };
+
 type TaggedFieldClickMessage = {
   action: 'TAGGED_FIELD_CLICKED';
   fieldId: string;
   entryId: string;
   locale: string;
 };
+
 type UnknownEntityMessage = {
   action: 'ENTITY_NOT_KNOWN';
   referenceEntityId: string;
   referenceContentType?: string;
 };
-export type EditorMessage = IframeConnectedMessage | TaggedFieldClickMessage | UnknownEntityMessage;
+
+type UrlChangedMessage = {
+  action: 'URL_CHANGED';
+};
+
+export type EditorMessage =
+  | IframeConnectedMessage
+  | TaggedFieldClickMessage
+  | UnknownEntityMessage
+  | UrlChangedMessage;
+
 export type MessageFromSDK = EditorMessage & {
   from: 'live-preview';
   location: string;

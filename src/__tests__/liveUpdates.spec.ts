@@ -1,7 +1,7 @@
 import { describe, it, vi, expect } from 'vitest';
 
 import { clone } from '../helpers';
-import { LiveUpdates } from '../live-updates';
+import { LiveUpdates } from '../liveUpdates';
 import assetFromEntryEditor from './fixtures/assetFromEntryEditor.json';
 import landingPageContentType from './fixtures/landingPageContentType.json';
 import nestedCollectionFromPreviewApp from './fixtures/nestedCollectionFromPreviewApp.json';
