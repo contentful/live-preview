@@ -1,8 +1,8 @@
 import './styles.css';
 
-import { FieldTagging } from './field-tagging';
+import { FieldTagging } from './fieldTagging';
 import { sendMessageToEditor, pollUrlChanges, setDebugMode, debug } from './helpers';
-import { LiveUpdates } from './live-updates';
+import { LiveUpdates } from './liveUpdates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 
 interface ContentfulLivePreviewInitConfig {
