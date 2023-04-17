@@ -47,7 +47,6 @@ type IframeConnectedMessage = {
   action: 'IFRAME_CONNECTED';
   connected: true;
   tags: number;
-  url: string;
 };
 
 type TaggedFieldClickMessage = {
@@ -65,7 +64,6 @@ type UnknownEntityMessage = {
 
 type UrlChangedMessage = {
   action: 'URL_CHANGED';
-  url: string;
 };
 
 export type EditorMessage =

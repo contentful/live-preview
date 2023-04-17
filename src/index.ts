@@ -38,25 +38,19 @@ export class ContentfulLivePreview {
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
         });
 
-        pollUrlChanges(window.location.href, ContentfulLivePreview.handleUrlChange);
+        pollUrlChanges(() => {
+          sendMessageToEditor({ action: 'URL_CHANGED' });
+        });
 
         sendMessageToEditor({
           action: 'IFRAME_CONNECTED',
           connected: true,
           tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
-          url: window.location.href,
         });
 
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
       }
     }
-  }
-
-  static handleUrlChange(newUrl: string): void {
-    sendMessageToEditor({
-      action: 'URL_CHANGED',
-      url: newUrl,
-    });
   }
 
   static subscribe(data: Argument, locale: string, callback: SubscribeCallback): VoidFunction {

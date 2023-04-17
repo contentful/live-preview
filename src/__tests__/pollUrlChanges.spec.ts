@@ -4,11 +4,8 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { pollUrlChanges } from '../helpers';
 
 describe('pollUrlChanges', () => {
-  let previousUrl: string;
-
   beforeEach(() => {
     vi.useFakeTimers();
-    previousUrl = window.location.href;
   });
 
   afterEach(() => {
@@ -18,7 +15,7 @@ describe('pollUrlChanges', () => {
 
   it('should call the callback function when the URL changes', () => {
     const callback = vi.fn();
-    pollUrlChanges(previousUrl, callback, 500);
+    pollUrlChanges(callback, 500);
 
     window.history.pushState({}, '', '/new-url');
 
@@ -29,7 +26,7 @@ describe('pollUrlChanges', () => {
 
   it('should not call the callback function when the URL does not change', () => {
     const callback = vi.fn();
-    pollUrlChanges(previousUrl, callback, 500);
+    pollUrlChanges(callback, 500);
 
     vi.advanceTimersByTime(500);
 
