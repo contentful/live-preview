@@ -1,6 +1,6 @@
-import { describe, it, vi, expect } from 'vitest';
+import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
-import { clone } from '../helpers';
+import * as helpers from '../helpers';
 import { LiveUpdates } from '../liveUpdates';
 import assetFromEntryEditor from './fixtures/assetFromEntryEditor.json';
 import landingPageContentType from './fixtures/landingPageContentType.json';
@@ -8,7 +8,21 @@ import nestedCollectionFromPreviewApp from './fixtures/nestedCollectionFromPrevi
 import nestedDataFromPreviewApp from './fixtures/nestedDataFromPreviewApp.json';
 import pageInsideCollectionFromEntryEditor from './fixtures/pageInsideCollectionFromEntryEditor.json';
 
+vi.mock('../helpers/debug');
+
 describe('LiveUpdates', () => {
+  const sendMessage = vi.spyOn(helpers, 'sendMessageToEditor');
+
+  beforeEach(() => {
+    sendMessage.mockImplementation(() => {
+      // noop
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   const contentType = {
     fields: [
       {
@@ -51,6 +65,34 @@ describe('LiveUpdates', () => {
     });
   });
 
+  describe('invalid subscription data', () => {
+    it('should notifiy because sys information is missing', () => {
+      const liveUpdates = new LiveUpdates();
+      const data = { title: 'Data 1', __typename: 'Demo' };
+      const cb = vi.fn();
+
+      liveUpdates.subscribe(data, locale, cb);
+
+      expect(helpers.debug.error).toHaveBeenCalledWith(
+        'Live Updates requires the "sys.id" to be present on the provided data',
+        data
+      );
+    });
+
+    it('should notifiy because we dont know if it is REST or GraphQL', () => {
+      const liveUpdates = new LiveUpdates();
+      const data = { sys: { id: '1' }, title: 'Data 1' };
+      const cb = vi.fn();
+
+      liveUpdates.subscribe(data, locale, cb);
+
+      expect(helpers.debug.error).toHaveBeenCalledWith(
+        'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates will not work.',
+        data
+      );
+    });
+  });
+
   it('no longer receives updates after unsubcribing', () => {
     const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
@@ -71,7 +113,7 @@ describe('LiveUpdates', () => {
 
   it('ignores invalid messages', () => {
     const liveUpdates = new LiveUpdates();
-    const data = { sys: { id: '1' }, title: 'Data 1' };
+    const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const cb = vi.fn();
     liveUpdates.subscribe(data, locale, cb);
 
@@ -97,7 +139,7 @@ describe('LiveUpdates', () => {
     liveUpdates.subscribe(nestedDataFromPreviewApp, locale, cb);
     liveUpdates.receiveMessage({ entity: assetFromEntryEditor });
 
-    const expected = clone(nestedDataFromPreviewApp);
+    const expected = helpers.clone(nestedDataFromPreviewApp);
     expected.featuredImage.title = assetFromEntryEditor.fields.title[locale];
     (expected.featuredImage.description as string | null) =
       assetFromEntryEditor.fields.description[locale];
@@ -114,12 +156,40 @@ describe('LiveUpdates', () => {
       contentType: landingPageContentType,
     });
 
-    const expected = clone(nestedCollectionFromPreviewApp);
+    const expected = helpers.clone(nestedCollectionFromPreviewApp);
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].pageName =
       pageInsideCollectionFromEntryEditor.fields.pageName[locale];
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].slug =
       pageInsideCollectionFromEntryEditor.fields.slug[locale];
 
     expect(cb).toHaveBeenCalledWith(expected);
+  });
+
+  describe('sendMessageToEditor', () => {
+    it('sends a message to the editor for a subscription with GQL data', () => {
+      const liveUpdates = new LiveUpdates();
+      const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
+      const cb = vi.fn();
+      liveUpdates.subscribe(data, locale, cb);
+
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+      expect(sendMessage).toHaveBeenCalledWith({
+        action: 'SUBSCRIBED',
+        type: 'GQL',
+      });
+    });
+
+    it('sends a message to the editor for a subscription with REST data', () => {
+      const liveUpdates = new LiveUpdates();
+      const data = { sys: { id: '1' }, fields: { title: 'Data 1' } };
+      const cb = vi.fn();
+      liveUpdates.subscribe(data, locale, cb);
+
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+      expect(sendMessage).toHaveBeenCalledWith({
+        action: 'SUBSCRIBED',
+        type: 'REST',
+      });
+    });
   });
 });

@@ -66,11 +66,17 @@ type UrlChangedMessage = {
   action: 'URL_CHANGED';
 };
 
+type SubscribedMessage = {
+  action: 'SUBSCRIBED';
+  type: 'GQL' | 'REST';
+};
+
 export type EditorMessage =
   | IframeConnectedMessage
   | TaggedFieldClickMessage
   | UnknownEntityMessage
-  | UrlChangedMessage;
+  | UrlChangedMessage
+  | SubscribedMessage;
 
 export type MessageFromSDK = EditorMessage & {
   from: 'live-preview';
