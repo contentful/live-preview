@@ -15,28 +15,21 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
   return field.apiName || field.name;
 }
 
-function updateSingleReference(
+function resolveSingleRef(
   dataFromPreviewApp: EntryProps,
-  updateFromEntryEditor: EntryProps | AssetProps,
+  updateFromEntryEditor: any,
+  name: string,
   locale: string,
-  name: string | number,
   entityReferenceMap: EntryReferenceMap
 ) {
-  const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
-
-  if (!matchUpdateFromEntryEditor) {
-    delete dataFromPreviewApp.fields[name];
-    return;
-  }
-
   // The information contains only the sys information, load the whole reference from entryReferenceMap
   // and then merge them togehter
-  const match = entityReferenceMap.get(matchUpdateFromEntryEditor.sys.id);
+  const match = entityReferenceMap.get(updateFromEntryEditor.sys.id);
   if (!match) {
     sendMessageToEditor({
       action: 'ENTITY_NOT_KNOWN',
-      referenceEntityId: matchUpdateFromEntryEditor.sys.id,
-      referenceContentType: matchUpdateFromEntryEditor.sys.linkType,
+      referenceEntityId: updateFromEntryEditor.sys.id,
+      referenceContentType: updateFromEntryEditor.sys.linkType,
     });
     return;
   }
@@ -61,6 +54,29 @@ function updateSingleReference(
   }
 }
 
+function updateSingleReference(
+  dataFromPreviewApp: EntryProps,
+  updateFromEntryEditor: EntryProps | AssetProps,
+  locale: string,
+  name: string | number,
+  entityReferenceMap: EntryReferenceMap
+) {
+  const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
+
+  if (!matchUpdateFromEntryEditor) {
+    delete dataFromPreviewApp.fields[name];
+    return;
+  }
+
+  resolveSingleRef(
+    dataFromPreviewApp,
+    matchUpdateFromEntryEditor,
+    name,
+    locale,
+    entityReferenceMap
+  );
+}
+
 function updateMultiRefField(
   dataFromPreviewApp: EntryProps,
   updateFromEntryEditor: EntryProps | AssetProps,
@@ -73,43 +89,8 @@ function updateMultiRefField(
     return;
   }
 
-  // TODO: re-use and share functionality with single ref
   updateFromEntryEditor.fields[name][locale].forEach((singleRef) => {
-    const match = entityReferenceMap.get(singleRef.sys.id);
-    if (!match) {
-      // TODO: performance, on multi ref we're sending it for every ref instead only once with multiple values
-      sendMessageToEditor({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: singleRef.sys.id,
-        referenceContentType: singleRef.sys.linkType,
-      });
-      return;
-    }
-
-    // Update or add
-    dataFromPreviewApp.fields[name] = clone(match);
-    for (const key in match.fields) {
-      const value = match.fields[key][locale];
-      if (typeof value === 'object' && value.sys) {
-        updateSingleReference(
-          dataFromPreviewApp.fields[name],
-          match,
-          locale,
-          key,
-          entityReferenceMap
-        );
-      } else if (Array.isArray(value) && value[0]?.sys) {
-        updateMultiRefField(
-          dataFromPreviewApp.fields[name],
-          match,
-          locale,
-          key,
-          entityReferenceMap
-        );
-      } else {
-        updatePrimitiveField(dataFromPreviewApp.fields[name].fields, match, key, locale);
-      }
-    }
+    resolveSingleRef(dataFromPreviewApp, singleRef, name, locale, entityReferenceMap);
   });
 }
 
@@ -135,6 +116,7 @@ export function updateEntity(
     if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
       updatePrimitiveField(dataFromPreviewApp.fields, updateFromEntryEditor, name, locale);
     } else if (field.type === 'Link') {
+      // TODO: adding an author doesnt show the name - error in merging?
       updateSingleReference(
         dataFromPreviewApp,
         updateFromEntryEditor,
@@ -143,6 +125,7 @@ export function updateEntity(
         entityReferenceMap
       );
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
+      // TODO: Adding two references, only one is applied
       updateMultiRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
