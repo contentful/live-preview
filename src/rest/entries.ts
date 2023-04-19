@@ -16,12 +16,10 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
 }
 
 function resolveSingleRef(
-  dataFromPreviewApp: EntryProps,
   updateFromEntryEditor: any,
-  name: string,
   locale: string,
   entityReferenceMap: EntryReferenceMap
-) {
+): EntryProps | null {
   // The information contains only the sys information, load the whole reference from entryReferenceMap
   // and then merge them togehter
   const match = entityReferenceMap.get(updateFromEntryEditor.sys.id);
@@ -31,50 +29,25 @@ function resolveSingleRef(
       referenceEntityId: updateFromEntryEditor.sys.id,
       referenceContentType: updateFromEntryEditor.sys.linkType,
     });
-    return;
+    return null;
   }
 
-  // Update or add
-  dataFromPreviewApp.fields[name] = clone(match);
+  const result = clone(match) as EntryProps;
+
+  // TODO: nested refs are not updated if they are not already in the entityReferenceMap
   for (const key in match.fields) {
     const value = match.fields[key][locale];
+
     if (typeof value === 'object' && value.sys) {
-      updateSingleReference(
-        dataFromPreviewApp.fields[name],
-        match,
-        locale,
-        key,
-        entityReferenceMap
-      );
+      updateSingleRef(result, match, locale, key, entityReferenceMap);
     } else if (Array.isArray(value) && value[0]?.sys) {
-      updateMultiRefField(dataFromPreviewApp.fields[name], match, locale, key, entityReferenceMap);
+      updateMultiRefField(result, match, locale, key, entityReferenceMap);
     } else {
-      updatePrimitiveField(dataFromPreviewApp.fields[name].fields, match, key, locale);
+      result.fields[key] = value;
     }
   }
-}
 
-function updateSingleReference(
-  dataFromPreviewApp: EntryProps,
-  updateFromEntryEditor: EntryProps | AssetProps,
-  locale: string,
-  name: string | number,
-  entityReferenceMap: EntryReferenceMap
-) {
-  const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
-
-  if (!matchUpdateFromEntryEditor) {
-    delete dataFromPreviewApp.fields[name];
-    return;
-  }
-
-  resolveSingleRef(
-    dataFromPreviewApp,
-    matchUpdateFromEntryEditor,
-    name,
-    locale,
-    entityReferenceMap
-  );
+  return result;
 }
 
 function updateMultiRefField(
@@ -89,9 +62,51 @@ function updateMultiRefField(
     return;
   }
 
-  updateFromEntryEditor.fields[name][locale].forEach((singleRef) => {
-    resolveSingleRef(dataFromPreviewApp, singleRef, name, locale, entityReferenceMap);
-  });
+  const originalData = dataFromPreviewApp.fields[name] || [];
+  const dataFromPreviewAppLength = originalData.length ?? 0;
+  const updateFromEntryEditorLength = updateFromEntryEditor.fields[name][locale].length;
+
+  // the next code block hurts, needs an urgent refactor
+  if (dataFromPreviewAppLength > updateFromEntryEditorLength) {
+    dataFromPreviewApp.fields[name] = dataFromPreviewApp.fields[name].filter((entry) =>
+      updateFromEntryEditor.fields[name][locale].some(
+        (updatedEntry) => updatedEntry.sys.id === entry.sys.id
+      )
+    );
+  } else {
+    const newList = [];
+    for (const updateFromEntryRefrence of updateFromEntryEditor.fields[name][locale]) {
+      const match = originalData.find((e) => e.sys.id === updateFromEntryRefrence.sys.id);
+      if (match) {
+        // already exist, keep the original one
+        newList.push(match);
+      } else {
+        newList.push(resolveSingleRef(updateFromEntryRefrence, locale, entityReferenceMap));
+      }
+    }
+    dataFromPreviewApp.fields[name] = newList.filter(Boolean);
+  }
+}
+
+function updateSingleRef(
+  dataFromPreviewApp: EntryProps,
+  updateFromEntryEditor: EntryProps | AssetProps,
+  locale: string,
+  name: string | number,
+  entityReferenceMap: EntryReferenceMap
+) {
+  const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
+
+  if (!matchUpdateFromEntryEditor) {
+    delete dataFromPreviewApp.fields[name];
+    return;
+  }
+
+  dataFromPreviewApp.fields[name] = resolveSingleRef(
+    matchUpdateFromEntryEditor,
+    locale,
+    entityReferenceMap
+  );
 }
 
 /**
@@ -110,6 +125,10 @@ export function updateEntity(
   locale: string,
   entityReferenceMap: EntryReferenceMap
 ): EntryProps {
+  if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
+    return dataFromPreviewApp;
+  }
+
   for (const field of contentType.fields) {
     const name = getFieldName(contentType, field);
 
@@ -117,13 +136,7 @@ export function updateEntity(
       updatePrimitiveField(dataFromPreviewApp.fields, updateFromEntryEditor, name, locale);
     } else if (field.type === 'Link') {
       // TODO: adding an author doesnt show the name - error in merging?
-      updateSingleReference(
-        dataFromPreviewApp,
-        updateFromEntryEditor,
-        locale,
-        name,
-        entityReferenceMap
-      );
+      updateSingleRef(dataFromPreviewApp, updateFromEntryEditor, locale, name, entityReferenceMap);
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
       // TODO: Adding two references, only one is applied
       updateMultiRefField(
