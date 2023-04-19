@@ -34,7 +34,6 @@ function resolveSingleRef(
 
   const result = clone(match) as EntryProps;
 
-  // TODO: nested refs are not updated if they are not already in the entityReferenceMap
   for (const key in match.fields) {
     const value = match.fields[key][locale];
 
@@ -76,13 +75,13 @@ function updateMultiRefField(
   } else {
     const newList = [];
     for (const updateFromEntryRefrence of updateFromEntryEditor.fields[name][locale]) {
-      const match = originalData.find((e) => e.sys.id === updateFromEntryRefrence.sys.id);
-      if (match) {
-        // already exist, keep the original one
-        newList.push(match);
-      } else {
-        newList.push(resolveSingleRef(updateFromEntryRefrence, locale, entityReferenceMap));
-      }
+      // const match = originalData.find((e) => e.sys.id === updateFromEntryRefrence.sys.id);
+      // if (match) {
+      //   // already exist, keep the original one
+      //   newList.push(match);
+      // } else {
+      newList.push(resolveSingleRef(updateFromEntryRefrence, locale, entityReferenceMap));
+      // }
     }
     dataFromPreviewApp.fields[name] = newList.filter(Boolean);
   }
@@ -135,10 +134,8 @@ export function updateEntity(
     if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
       updatePrimitiveField(dataFromPreviewApp.fields, updateFromEntryEditor, name, locale);
     } else if (field.type === 'Link') {
-      // TODO: adding an author doesnt show the name - error in merging?
       updateSingleRef(dataFromPreviewApp, updateFromEntryEditor, locale, name, entityReferenceMap);
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      // TODO: Adding two references, only one is applied
       updateMultiRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
