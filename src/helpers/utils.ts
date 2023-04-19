@@ -40,20 +40,13 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
 export class StorageMap<T extends unknown> {
   private storageKey: string;
   private value: Map<string, T>;
-  // TODO: https://contentful.atlassian.net/browse/TOL-1080
-  private persistence = false;
 
-  constructor(key: string, defaultValue: Map<string, T>, persistence = false) {
+  constructor(key: string, defaultValue: Map<string, T>) {
     this.storageKey = key;
-    this.persistence = persistence;
     this.value = this.restoreSessionData() || defaultValue;
   }
 
   private restoreSessionData() {
-    if (!this.persistence) {
-      return null;
-    }
-
     try {
       const item = window.sessionStorage.getItem(this.storageKey);
       const parsed = item ? (JSON.parse(item) as T) : null;
@@ -70,16 +63,23 @@ export class StorageMap<T extends unknown> {
   public set(key: string, data: T): void {
     this.value.set(key, data);
 
-    if (this.persistence) {
-      try {
-        // Attention: Map can not be `JSON.stringify`ed directly
-        window.sessionStorage.setItem(
-          this.storageKey,
-          JSON.stringify(Array.from(this.value.entries()))
-        );
-      } catch (err) {
-        // ignored
-      }
+    try {
+      // Attention: Map can not be `JSON.stringify`ed directly
+      window.sessionStorage.setItem(
+        this.storageKey,
+        JSON.stringify(Array.from(this.value.entries()))
+      );
+    } catch (err) {
+      // ignored
+    }
+  }
+
+  public clear(): void {
+    this.value.clear();
+    try {
+      window.sessionStorage.removeItem(this.storageKey);
+    } catch (err) {
+      // ignored
     }
   }
 }

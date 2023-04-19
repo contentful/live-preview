@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
 import * as helpers from '../helpers';
@@ -66,7 +67,7 @@ describe('LiveUpdates', () => {
   });
 
   describe('invalid subscription data', () => {
-    it('should notifiy because sys information is missing', () => {
+    it('should notify because sys information is missing', () => {
       const liveUpdates = new LiveUpdates();
       const data = { title: 'Data 1', __typename: 'Demo' };
       const cb = vi.fn();
@@ -79,7 +80,7 @@ describe('LiveUpdates', () => {
       );
     });
 
-    it('should notifiy because we dont know if it is REST or GraphQL', () => {
+    it('should notify because we dont know if it is REST or GraphQL', () => {
       const liveUpdates = new LiveUpdates();
       const data = { sys: { id: '1' }, title: 'Data 1' };
       const cb = vi.fn();
