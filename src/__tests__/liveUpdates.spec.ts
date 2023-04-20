@@ -193,4 +193,35 @@ describe('LiveUpdates', () => {
       });
     });
   });
+
+  describe('restore', () => {
+    const id = 'abc123';
+    const data = { sys: { id }, title: 'Title', __typename: 'Foo' };
+    const subscription = {
+      data,
+      locale: 'en-US',
+      cb: vi.fn(),
+    };
+    const liveUpdates = new LiveUpdates();
+
+    beforeEach(() => {
+      liveUpdates.subscribe(subscription.data, subscription.locale, subscription.cb);
+      vi.clearAllMocks();
+    });
+
+    it('should restore a single entity', () => {
+      liveUpdates['subscriptions'].set(id, subscription);
+      liveUpdates['storage'].set(id, { ...data, title: 'Title from storage' });
+      liveUpdates['restore'](data, id);
+      const restoredData = { ...data, title: 'Title from storage' };
+      expect(subscription.cb).toHaveBeenCalledTimes(1);
+      expect(subscription.cb).toHaveBeenCalledWith(restoredData);
+    });
+
+    it('should not call the callback if the data is not in storage', () => {
+      liveUpdates['restore'](subscription.data, '1');
+
+      expect(subscription.cb).not.toHaveBeenCalled();
+    });
+  });
 });
