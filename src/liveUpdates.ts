@@ -41,6 +41,7 @@ export class LiveUpdates {
 
   constructor() {
     this.storage = new StorageMap<Entity>('live-updates', new Map());
+    window.addEventListener('beforeunload', () => this.clearStorage());
   }
 
   private mergeEntity({
@@ -179,7 +180,7 @@ export class LiveUpdates {
         const { updated, data } = this.merge({
           // Clone the original data on the top level,
           // to prevent cloning multiple times (time)
-          // or modifieng the original data (failure potential)
+          // or modifying the original data (failure potential)
           dataFromPreviewApp: clone(s.data),
           locale: s.locale,
           updateFromEntryEditor: entity,
@@ -195,19 +196,40 @@ export class LiveUpdates {
     }
   }
 
-  // TODO: https://contentful.atlassian.net/browse/TOL-1080
-  private restore(data: Argument, cb: SubscribeCallback): void {
+  private restore(data: Argument, id: string): void {
     if (!data) return;
 
-    if (Array.isArray(data)) {
-      // TODO: implement for lists
-      return;
-    }
+    const restoreLogic = (item: Entity) => {
+      if (hasSysInformation(item)) {
+        const restoredItem = this.storage.get(item.sys.id);
+        if (restoredItem) {
+          return restoredItem;
+        }
+      }
+      return item;
+    };
 
-    const restored = this.storage.get((data as any).sys.id);
-    if (restored) {
-      cb(restored);
+    if (Array.isArray(data)) {
+      const restoredData: Entity[] = data.map(restoreLogic);
+      //ensure callback is only called for active subscriptions
+      const subscription = this.subscriptions.get(id);
+      if (subscription) {
+        subscription.cb(restoredData);
+      }
+    } else {
+      const restored = restoreLogic(data);
+      if (restored !== data) {
+        //ensure callback is only called for active subscriptions
+        const subscription = this.subscriptions.get(id);
+        if (subscription) {
+          subscription.cb(restored);
+        }
+      }
     }
+  }
+
+  private clearStorage(): void {
+    this.storage.clear();
   }
 
   /**
@@ -260,8 +282,14 @@ export class LiveUpdates {
 
     const id = generateUID();
     this.subscriptions.set(id, { data, locale, cb });
-    // TODO: https://contentful.atlassian.net/browse/TOL-1080
-    // this.restore(data, cb);
+    /*  Restore function is being called immediately after the subscription is added,
+        which might cause the callback to be called even if the subscription is removed immediately afterward.
+        To fix this, we wrap the restore call in a setTimeout,
+        allowing the unsubscribe function to be executed before the callback is called.
+    */
+    setTimeout(() => {
+      this.restore(data, id);
+    }, 0);
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.

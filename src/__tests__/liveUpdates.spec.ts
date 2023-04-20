@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
 import * as helpers from '../helpers';
@@ -66,7 +67,7 @@ describe('LiveUpdates', () => {
   });
 
   describe('invalid subscription data', () => {
-    it('should notifiy because sys information is missing', () => {
+    it('should notify because sys information is missing', () => {
       const liveUpdates = new LiveUpdates();
       const data = { title: 'Data 1', __typename: 'Demo' };
       const cb = vi.fn();
@@ -79,7 +80,7 @@ describe('LiveUpdates', () => {
       );
     });
 
-    it('should notifiy because we dont know if it is REST or GraphQL', () => {
+    it('should notify because we dont know if it is REST or GraphQL', () => {
       const liveUpdates = new LiveUpdates();
       const data = { sys: { id: '1' }, title: 'Data 1' };
       const cb = vi.fn();
@@ -190,6 +191,37 @@ describe('LiveUpdates', () => {
         action: 'SUBSCRIBED',
         type: 'REST',
       });
+    });
+  });
+
+  describe('restore', () => {
+    const id = 'abc123';
+    const data = { sys: { id }, title: 'Title', __typename: 'Foo' };
+    const subscription = {
+      data,
+      locale: 'en-US',
+      cb: vi.fn(),
+    };
+    const liveUpdates = new LiveUpdates();
+
+    beforeEach(() => {
+      liveUpdates.subscribe(subscription.data, subscription.locale, subscription.cb);
+      vi.clearAllMocks();
+    });
+
+    it('should restore a single entity', () => {
+      liveUpdates['subscriptions'].set(id, subscription);
+      liveUpdates['storage'].set(id, { ...data, title: 'Title from storage' });
+      liveUpdates['restore'](data, id);
+      const restoredData = { ...data, title: 'Title from storage' };
+      expect(subscription.cb).toHaveBeenCalledTimes(1);
+      expect(subscription.cb).toHaveBeenCalledWith(restoredData);
+    });
+
+    it('should not call the callback if the data is not in storage', () => {
+      liveUpdates['restore'](subscription.data, '1');
+
+      expect(subscription.cb).not.toHaveBeenCalled();
     });
   });
 });
