@@ -70,7 +70,7 @@ export class StorageMap<T extends unknown> {
         JSON.stringify(Array.from(this.value.entries()))
       );
     } catch (err) {
-      // ignored
+      debug.warn(`StorageMap: Failed to set data for key "${key}" in sessionStorage`);
     }
   }
 
@@ -79,7 +79,7 @@ export class StorageMap<T extends unknown> {
     try {
       window.sessionStorage.removeItem(this.storageKey);
     } catch (err) {
-      // ignored
+      debug.warn('StorageMap: Failed to clear data from sessionStorage');
     }
   }
 }
