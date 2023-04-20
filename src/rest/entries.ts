@@ -1,7 +1,9 @@
-import type { AssetProps, EntryProps } from 'contentful-management';
+import type { AssetProps, EntryProps, SysLink } from 'contentful-management';
 
 import { clone, isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
 import { ContentType, EntryReferenceMap } from '../types';
+
+type Reference = AssetProps | EntryProps;
 
 /**
  * Resolves the correct field name from the ContentType
@@ -15,45 +17,65 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
   return field.apiName || field.name;
 }
 
-function resolveSingleRef(
-  updateFromEntryEditor: any,
+/**
+ * Update the reference from the entry editor with the information from the entityReferenceMap.
+ * If the information is not yet available, it send a message to the editor to retrieve it.
+ */
+function updateRef<T extends Reference | SysLink>(
+  updateFromEntryEditor: T,
   locale: string,
   entityReferenceMap: EntryReferenceMap
-): EntryProps | null {
-  // The information contains only the sys information, load the whole reference from entryReferenceMap
-  // and then merge them togehter
+): Exclude<T, SysLink> | null {
+  // The information contains only the sys information,
+  // load the whole reference from entryReferenceMap
+  // and then merge them together
   const match = entityReferenceMap.get(updateFromEntryEditor.sys.id);
   if (!match) {
     sendMessageToEditor({
       action: 'ENTITY_NOT_KNOWN',
       referenceEntityId: updateFromEntryEditor.sys.id,
-      referenceContentType: updateFromEntryEditor.sys.linkType,
+      referenceContentType:
+        'linkType' in updateFromEntryEditor.sys ? updateFromEntryEditor.sys.linkType : undefined,
     });
     return null;
   }
 
-  const result = clone(match) as EntryProps;
+  // Entity is already in the reference map, so let's apply it on the data
+  const result = clone(match) as Exclude<T, SysLink>;
 
   for (const key in match.fields) {
-    const value = match.fields[key][locale];
+    const value = match.fields[key as keyof typeof match.fields][locale];
 
     if (typeof value === 'object' && value.sys) {
-      updateSingleRef(result, match, locale, key, entityReferenceMap);
+      updateSingleRefField(
+        result,
+        match,
+        locale,
+        key as keyof Reference['fields'],
+        entityReferenceMap
+      );
     } else if (Array.isArray(value) && value[0]?.sys) {
-      updateMultiRefField(result, match, locale, key, entityReferenceMap);
+      updateMultiRefField(
+        result,
+        match,
+        locale,
+        key as keyof Reference['fields'],
+        entityReferenceMap
+      );
     } else {
-      result.fields[key] = value;
+      updatePrimitiveField(result.fields, match, key, locale);
     }
   }
 
   return result;
 }
 
+/** Update multi reference fields, resolves depper nested references and fields */
 function updateMultiRefField(
-  dataFromPreviewApp: EntryProps,
-  updateFromEntryEditor: EntryProps | AssetProps,
+  dataFromPreviewApp: Reference,
+  updateFromEntryEditor: Reference,
   locale: string,
-  name: string,
+  name: keyof Reference['fields'],
   entityReferenceMap: EntryReferenceMap
 ) {
   if (!updateFromEntryEditor.fields?.[name]?.[locale]) {
@@ -61,47 +83,31 @@ function updateMultiRefField(
     return;
   }
 
-  const originalData = dataFromPreviewApp.fields[name] || [];
-  const dataFromPreviewAppLength = originalData.length ?? 0;
-  const updateFromEntryEditorLength = updateFromEntryEditor.fields[name][locale].length;
-
-  // the next code block hurts, needs an urgent refactor
-  if (dataFromPreviewAppLength > updateFromEntryEditorLength) {
-    dataFromPreviewApp.fields[name] = dataFromPreviewApp.fields[name].filter((entry) =>
-      updateFromEntryEditor.fields[name][locale].some(
-        (updatedEntry) => updatedEntry.sys.id === entry.sys.id
-      )
-    );
-  } else {
-    const newList = [];
-    for (const updateFromEntryRefrence of updateFromEntryEditor.fields[name][locale]) {
-      // const match = originalData.find((e) => e.sys.id === updateFromEntryRefrence.sys.id);
-      // if (match) {
-      //   // already exist, keep the original one
-      //   newList.push(match);
-      // } else {
-      newList.push(resolveSingleRef(updateFromEntryRefrence, locale, entityReferenceMap));
-      // }
-    }
-    dataFromPreviewApp.fields[name] = newList.filter(Boolean);
-  }
+  dataFromPreviewApp.fields[name] = updateFromEntryEditor.fields[name][locale]
+    .map((updateFromEntryReference: Reference) =>
+      updateRef(updateFromEntryReference, locale, entityReferenceMap)
+    )
+    .filter(Boolean);
 }
 
-function updateSingleRef(
-  dataFromPreviewApp: EntryProps,
-  updateFromEntryEditor: EntryProps | AssetProps,
+/** Update a single reference field, resolves also deeper references */
+function updateSingleRefField(
+  dataFromPreviewApp: Reference,
+  updateFromEntryEditor: Reference,
   locale: string,
-  name: string | number,
+  name: keyof Reference['fields'],
   entityReferenceMap: EntryReferenceMap
 ) {
   const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
 
+  // If it does no longer exist, remove it from the preview data
   if (!matchUpdateFromEntryEditor) {
     delete dataFromPreviewApp.fields[name];
     return;
   }
 
-  dataFromPreviewApp.fields[name] = resolveSingleRef(
+  // otherwise update it with the new reference
+  dataFromPreviewApp.fields[name] = updateRef(
     matchUpdateFromEntryEditor,
     locale,
     entityReferenceMap
@@ -111,11 +117,11 @@ function updateSingleRef(
 /**
  * Updates REST response data based on CMA entry object
  *
- * @param contentType ContentTypeProps
- * @param dataFromPreviewApp Entity - The REST response to be updated
- * @param updateFromEntryEditor EntryProps - CMA entry object containing the update
- * @param locale string - Locale code
- * @returns Entity - Updated REST response data
+ * @param contentType
+ * @param dataFromPreviewApp The REST response to be updated
+ * @param updateFromEntryEditor CMA entry object containing the update
+ * @param locale Locale code
+ * @returns Updated REST response data
  */
 export function updateEntity(
   contentType: ContentType,
@@ -134,13 +140,19 @@ export function updateEntity(
     if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
       updatePrimitiveField(dataFromPreviewApp.fields, updateFromEntryEditor, name, locale);
     } else if (field.type === 'Link') {
-      updateSingleRef(dataFromPreviewApp, updateFromEntryEditor, locale, name, entityReferenceMap);
+      updateSingleRefField(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        locale,
+        name as keyof Reference['fields'],
+        entityReferenceMap
+      );
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
       updateMultiRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
         locale,
-        name,
+        name as keyof Reference['fields'],
         entityReferenceMap
       );
     }

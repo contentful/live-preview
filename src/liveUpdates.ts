@@ -176,7 +176,6 @@ export class LiveUpdates {
     entityReferenceMap,
   }: Record<string, unknown>): void {
     if (this.isCfEntity(entity)) {
-      console.log('>> entityReferenceMap', entityReferenceMap);
       this.subscriptions.forEach((s) => {
         const { updated, data } = this.merge({
           // Clone the original data on the top level,
