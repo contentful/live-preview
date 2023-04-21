@@ -71,7 +71,7 @@ function updateRef(
   return result;
 }
 
-/** Update multi reference fields, resolves depper nested references and fields */
+/** Update multi reference fields, resolves deeper nested references and fields */
 function updateMultiRefField(
   dataFromPreviewApp: Reference,
   updateFromEntryEditor: Reference,
