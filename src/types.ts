@@ -83,4 +83,4 @@ export type MessageFromSDK = EditorMessage & {
   location: string;
 };
 
-export class EntryReferenceMap extends Map<string, EntryProps | AssetProps> {}
+export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}

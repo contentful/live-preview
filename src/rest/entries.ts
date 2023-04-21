@@ -1,7 +1,7 @@
 import type { AssetProps, EntryProps, SysLink } from 'contentful-management';
 
 import { clone, isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
-import { ContentType, EntryReferenceMap } from '../types';
+import { ContentType, EntityReferenceMap } from '../types';
 
 type Reference = AssetProps | EntryProps;
 
@@ -21,13 +21,14 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
  * Update the reference from the entry editor with the information from the entityReferenceMap.
  * If the information is not yet available, it send a message to the editor to retrieve it.
  */
-function updateRef<T extends Reference | SysLink>(
-  updateFromEntryEditor: T,
+function updateRef(
+  dataFromPreviewApp: Reference | undefined,
+  updateFromEntryEditor: Reference | SysLink,
   locale: string,
-  entityReferenceMap: EntryReferenceMap
-): Exclude<T, SysLink> | null {
+  entityReferenceMap: EntityReferenceMap
+): Reference | undefined | null {
   // The information contains only the sys information,
-  // load the whole reference from entryReferenceMap
+  // load the whole reference from EntityReferenceMap
   // and then merge them together
   const match = entityReferenceMap.get(updateFromEntryEditor.sys.id);
   if (!match) {
@@ -37,11 +38,11 @@ function updateRef<T extends Reference | SysLink>(
       referenceContentType:
         'linkType' in updateFromEntryEditor.sys ? updateFromEntryEditor.sys.linkType : undefined,
     });
-    return null;
+    return dataFromPreviewApp;
   }
 
   // Entity is already in the reference map, so let's apply it on the data
-  const result = clone(match) as Exclude<T, SysLink>;
+  const result = clone(match) as Reference;
 
   for (const key in match.fields) {
     const value = match.fields[key as keyof typeof match.fields][locale];
@@ -76,7 +77,7 @@ function updateMultiRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ) {
   if (!updateFromEntryEditor.fields?.[name]?.[locale]) {
     delete dataFromPreviewApp.fields[name];
@@ -84,8 +85,13 @@ function updateMultiRefField(
   }
 
   dataFromPreviewApp.fields[name] = updateFromEntryEditor.fields[name][locale]
-    .map((updateFromEntryReference: Reference) =>
-      updateRef(updateFromEntryReference, locale, entityReferenceMap)
+    .map((updateFromEntryReference: Reference, index: number) =>
+      updateRef(
+        dataFromPreviewApp.fields[name]?.[index],
+        updateFromEntryReference,
+        locale,
+        entityReferenceMap
+      )
     )
     .filter(Boolean);
 }
@@ -96,9 +102,10 @@ function updateSingleRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ) {
   const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
+  const matchDataFromPreviewApp = dataFromPreviewApp.fields[name];
 
   // If it does no longer exist, remove it from the preview data
   if (!matchUpdateFromEntryEditor) {
@@ -108,6 +115,7 @@ function updateSingleRefField(
 
   // otherwise update it with the new reference
   dataFromPreviewApp.fields[name] = updateRef(
+    matchDataFromPreviewApp,
     matchUpdateFromEntryEditor,
     locale,
     entityReferenceMap
@@ -128,7 +136,7 @@ export function updateEntity(
   dataFromPreviewApp: EntryProps,
   updateFromEntryEditor: EntryProps | AssetProps,
   locale: string,
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ): EntryProps {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;

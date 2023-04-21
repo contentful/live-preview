@@ -8,7 +8,7 @@ import {
   ContentType,
   Entity,
   EntityWithSys,
-  EntryReferenceMap,
+  EntityReferenceMap,
   hasSysInformation,
   SubscribeCallback,
 } from './types';
@@ -24,7 +24,7 @@ interface MergeEntityProps {
   locale: string;
   updateFromEntryEditor: EntryProps | AssetProps;
   contentType: ContentType;
-  entityReferenceMap: EntryReferenceMap;
+  entityReferenceMap: EntityReferenceMap;
 }
 
 interface MergeArgumentProps extends Omit<MergeEntityProps, 'dataFromPreviewApp'> {
@@ -185,7 +185,7 @@ export class LiveUpdates {
           locale: s.locale,
           updateFromEntryEditor: entity,
           contentType: contentType as ContentType,
-          entityReferenceMap: entityReferenceMap as EntryReferenceMap,
+          entityReferenceMap: entityReferenceMap as EntityReferenceMap,
         });
 
         // Only if there was an update, trigger the callback to unnecessary re-renders

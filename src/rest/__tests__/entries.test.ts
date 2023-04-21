@@ -1,8 +1,9 @@
 import type { AssetProps, ContentTypeProps, EntryProps } from 'contentful-management';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
-import { clone } from '../../helpers';
+import * as helpers from '../../helpers';
+import { EntityReferenceMap } from '../../types';
 import { updateEntity } from '../entries';
 import contentTypeEntry from './fixtures/contentType.json';
 import dataFromPreviewApp from './fixtures/dataFromPreviewApp.json';
@@ -12,18 +13,38 @@ import entry from './fixtures/updateFromEntryEditor.json';
 const EN = 'en-US';
 
 describe('Update REST entry', () => {
+  const sendMessageToEditor = vi.spyOn(helpers, 'sendMessageToEditor');
+
+  beforeEach(() => {
+    sendMessageToEditor.mockImplementation(() => {
+      /* noop */
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   const updateFn = ({
     contentType = contentTypeEntry,
     dataFromPreviewApp,
     updateFromEntryEditor = entry,
     locale = EN,
+    entityReferenceMap = new Map(),
   }: {
     contentType?: ContentTypeProps;
     dataFromPreviewApp: EntryProps;
     updateFromEntryEditor?: EntryProps | AssetProps;
     locale?: string;
+    entityReferenceMap?: EntityReferenceMap;
   }) => {
-    return updateEntity(contentType, clone(dataFromPreviewApp), updateFromEntryEditor, locale);
+    return updateEntity(
+      contentType,
+      helpers.clone(dataFromPreviewApp),
+      updateFromEntryEditor,
+      locale,
+      entityReferenceMap
+    );
   };
 
   it('updates primitive fields', () => {
