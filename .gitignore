@@ -18,6 +18,7 @@ cypress/videos
 cypress/reports
 cypress.env.json
 backstage_docs
+vite.config.d.ts
 
 
 # Logs

@@ -18,10 +18,10 @@
   },
   "fields": {
     "shortText": { "en-US": "test test test test test " },
-    "shortTextUrl": { "en-US": "https://example.com" },
-    "shortTextSlug": { "en-US": "all-fields-page" },
+    "shortTextUrl": { "en-US": "https://app.contentful.com" },
+    "shortTextSlug": { "en-US": "test-page" },
     "shortTextList": { "en-US": ["short", "text", "list", "comma"] },
-    "longText": { "en-US": "long\ntext\nmultiple" },
+    "longTextMultiple": { "en-US": "long\ntext\nmultiple\nlines" },
     "richText": {
       "en-US": {
         "data": {},
@@ -30,7 +30,18 @@
             "data": {},
             "content": [
               { "data": {}, "marks": [], "value": "rich text ", "nodeType": "text" },
-              { "data": {}, "marks": [{ "type": "bold" }], "value": "2 222223", "nodeType": "text" }
+              {
+                "data": {},
+                "marks": [{ "type": "bold" }],
+                "value": "2 222223",
+                "nodeType": "text"
+              },
+              {
+                "data": {},
+                "marks": [{ "type": "code" }],
+                "value": "Hello World!",
+                "nodeType": "text"
+              }
             ],
             "nodeType": "paragraph"
           }
@@ -38,10 +49,10 @@
         "nodeType": "document"
       }
     },
-    "numberInteger": { "en-US": 0 },
-    "numberDecimal": { "en-US": 0.5 },
-    "dateTime": { "en-US": "2023-02-22T00:00+01:00" },
-    "location": { "en-US": { "lon": 13.38388, "lat": 52.53935 } },
+    "numberInteger": { "en-US": 1 },
+    "numberDecimal": { "en-US": 1.5 },
+    "dateTime": { "en-US": "2023-04-01T00:00+01:00" },
+    "location": { "en-US": { "lon": 9.67388, "lat": 36.12335 } },
     "mediaOneFile": {
       "en-US": { "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" } }
     },
@@ -51,8 +62,8 @@
         { "sys": { "type": "Link", "linkType": "Asset", "id": "4YRUBbjYKnVAU17retktzF" } }
       ]
     },
-    "boolean": { "en-US": true },
-    "json": { "en-US": { "test": "test" } },
+    "boolean": { "en-US": false },
+    "json": { "en-US": { "Locale": "en-US" } },
     "refOneSameSpace": {
       "en-US": { "sys": { "type": "Link", "linkType": "Entry", "id": "2wx02IajQQMYggaxBT8CF3" } }
     },

@@ -4,7 +4,7 @@ import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../
 import {
   CollectionItem,
   SysProps,
-  EntryReferenceMap,
+  EntityReferenceMap,
   Entity,
   ContentType,
   ASSET_TYPENAME,
@@ -26,7 +26,7 @@ export function updateEntry(
   dataFromPreviewApp: Entity & { sys: SysProps },
   updateFromEntryEditor: EntryProps,
   locale: string,
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ): Entity & { sys: SysProps } {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;
@@ -86,7 +86,7 @@ function updateRichTextField(
 }
 
 function getContentTypenameFromEntityReferenceMap(
-  referenceMap: EntryReferenceMap,
+  referenceMap: EntityReferenceMap,
   entityId?: string
 ) {
   if (referenceMap && entityId) {
@@ -106,7 +106,7 @@ function isAsset(entity: EntryProps): boolean {
 function updateReferenceAssetField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
   updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: EntryReferenceMap,
+  entityReferenceMap: EntityReferenceMap,
   locale: string
 ) {
   const match = entityReferenceMap.get(updatedReference.sys.id) as AssetProps | undefined;
@@ -133,7 +133,7 @@ function updateReferenceAssetField(
 function updateReferenceEntryField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
   updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ) {
   const entityTypename = getContentTypenameFromEntityReferenceMap(
     entityReferenceMap,
@@ -158,7 +158,7 @@ function updateReferenceEntryField(
 function updateReferenceField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
   updatedReference: (EntryProps & { __typename?: string }) | null | undefined,
-  entityReferenceMap: EntryReferenceMap,
+  entityReferenceMap: EntityReferenceMap,
   locale: string
 ) {
   if (!updatedReference) {
@@ -191,7 +191,7 @@ function updateSingleRefField(
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ) {
   if (name in dataFromPreviewApp) {
     dataFromPreviewApp[name] = updateReferenceField(
@@ -208,7 +208,7 @@ function updateMultiRefField(
   updateFromEntryEditor: EntryProps,
   name: string,
   locale: string,
-  entityReferenceMap: EntryReferenceMap
+  entityReferenceMap: EntityReferenceMap
 ) {
   const fieldName = `${name}Collection`;
   if (fieldName in dataFromPreviewApp) {

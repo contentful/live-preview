@@ -18,7 +18,7 @@
     "shortTextUrl": "https://example.com",
     "shortTextSlug": "all-fields-page",
     "shortTextList": ["short", "text", "list", "comma"],
-    "longText": "long\ntext\nmultiple",
+    "longTextMultiple": "long\ntext\nmultiple",
     "richText": {
       "data": {},
       "content": [

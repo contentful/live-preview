@@ -6,6 +6,7 @@ const PRIMITIVE_FIELDS = new Set([
   'Symbol',
   'Text',
   'Integer',
+  'Number',
   'Boolean',
   'Date',
   'Location',
