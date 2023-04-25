@@ -135,4 +135,16 @@ describe('useContentfulLiveUpdates', () => {
 
     expect(subscribe).not.toHaveBeenCalled();
   });
+
+  it('shouldnt call subscribe if the isDisabled flag is true', () => {
+    const { rerender } = renderHook((data) => useContentfulLiveUpdates(data, locale, false, true), {
+      initialProps: undefined as Argument | null | undefined,
+    });
+
+    rerender(null);
+    rerender([]);
+    rerender({});
+
+    expect(subscribe).not.toHaveBeenCalled();
+  });
 });

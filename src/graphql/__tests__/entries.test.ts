@@ -27,7 +27,13 @@ describe('Update GraphQL Entry', () => {
     locale?: string;
     entityReferenceMap?: EntityReferenceMap;
   }) => {
-    return updateEntry(contentType, data, update, locale, entityReferenceMap);
+    return updateEntry({
+      contentType,
+      dataFromPreviewApp: data,
+      updateFromEntryEditor: update,
+      locale,
+      entityReferenceMap,
+    });
   };
 
   it('keeps __typename unchanged', () => {
