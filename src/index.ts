@@ -16,7 +16,10 @@ export class ContentfulLivePreview {
 
   // Static method to initialize the LivePreview SDK
   static init(
-    { debugMode, disableTagging }: ContentfulLivePreviewInitConfig = { disableTagging: false }
+    { debugMode, disableTagging }: ContentfulLivePreviewInitConfig = {
+      disableTagging: false,
+      debugMode: false,
+    }
   ): Promise<FieldTagging | null> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
