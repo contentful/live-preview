@@ -38,6 +38,22 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 ContentfulLivePreview.init();
 ```
 
+#### Init Configuration
+
+The init command also accepts a configuration object that allows you to customize your live preview SDK experience. The following options are available:
+
+```jsx
+import { ContentfulLivePreview } from '@contentful/live-preview';
+
+...
+
+ContentfulLivePreview.init({
+  enablefieldTagging: false, // This allows you to toggle the inspector mode which is on by default
+  enableLiveUpdates: false, // This allows you to toggle the live updates which is on by default
+  debugMode: false, // This allows you to toggle the debug mode which is off by default
+});
+```
+
 ### Field Tagging
 
 To tag fields you need to add the live preview data-attributes to the rendered HTML element output.
@@ -60,7 +76,7 @@ Live Updates from the editor to your applications are out of the box only suppor
 The updates are only happening on the **client-side** and in the Live preview environment of [contentful](https://app.contentful.com).
 
 ```tsx
-import { useContentfulLiveUpdates } from "@contentful/live-preview/react";
+import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
 // ...
 const updated = useContentfulLiveUpdates(originalData, locale);

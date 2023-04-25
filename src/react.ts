@@ -31,19 +31,13 @@ function shouldSubscribe(skip: boolean, data: Argument | null | undefined): bool
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
   locale: string,
-  skip = false,
-  isDisabled = false
+  skip = false
 ): T {
   const [state, setState] = useState({ data, version: 1 });
   const previous = useRef(data);
   const update = useRef(debounce(setState));
 
   useDeepCompareEffectNoCheck(() => {
-    // disable subscription if flag is passed
-    if (isDisabled) {
-      return;
-    }
-
     if (previous.current !== data) {
       // update content from external
       setState({ data, version: 1 });

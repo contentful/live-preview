@@ -25,7 +25,7 @@ describe('init', () => {
   });
 
   it('returns null when field tagging is disabled', async () => {
-    const result = await ContentfulLivePreview.init({ disableTagging: true });
+    const result = await ContentfulLivePreview.init({ enablefieldTagging: false });
     expect(result).toBeNull();
   });
 });

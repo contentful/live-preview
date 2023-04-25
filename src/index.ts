@@ -7,17 +7,21 @@ import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './
 
 interface ContentfulLivePreviewInitConfig {
   debugMode?: boolean;
-  disableTagging?: boolean;
+  enableFieldTagging?: boolean;
+  enableLiveUpdates?: boolean;
 }
 
 export class ContentfulLivePreview {
   static fieldTagging: FieldTagging | null = null;
   static liveUpdates: LiveUpdates | null = null;
+  static fieldTaggingEnabled = true;
+  static liveUpdatesEnabled = true;
 
   // Static method to initialize the LivePreview SDK
   static init(
-    { debugMode, disableTagging }: ContentfulLivePreviewInitConfig = {
-      disableTagging: false,
+    { debugMode, enableFieldTagging, enableLiveUpdates }: ContentfulLivePreviewInitConfig = {
+      enableFieldTagging: ContentfulLivePreview.fieldTaggingEnabled,
+      enableLiveUpdates: ContentfulLivePreview.liveUpdatesEnabled,
       debugMode: false,
     }
   ): Promise<FieldTagging | null> | undefined {
@@ -27,23 +31,26 @@ export class ContentfulLivePreview {
         setDebugMode(debugMode);
       }
 
+      // toggle inspector mode based on flag
+      if (!enableFieldTagging) {
+        this.togglefieldTagging();
+      }
+
+      // toggle live updates based on flag
+      if (!enableLiveUpdates) {
+        this.toggleLiveUpdatesMode();
+      }
+
       if (ContentfulLivePreview.fieldTagging) {
-        if (disableTagging) {
+        // disable field tagging if user specified in config
+        if (!ContentfulLivePreview.fieldTaggingEnabled) {
           return Promise.resolve(null);
         }
         debug.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
       } else {
-        if (!disableTagging) ContentfulLivePreview.fieldTagging = new FieldTagging();
-        ContentfulLivePreview.liveUpdates = new LiveUpdates();
-
-        window.addEventListener('message', (event) => {
-          if (typeof event.data !== 'object' || !event.data) return;
-          if (event.data.from !== 'live-preview') return;
-
-          if (!disableTagging) ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
-          ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
-        });
+        this.setupFieldTagging();
+        this.setupLiveUpdates();
 
         pollUrlChanges(() => {
           sendMessageToEditor({ action: 'URL_CHANGED' });
@@ -81,5 +88,38 @@ export class ContentfulLivePreview {
       [TagAttributes.ENTRY_ID]: entryId,
       [TagAttributes.LOCALE]: locale,
     };
+  }
+
+  static togglefieldTagging(): boolean {
+    return (this.fieldTaggingEnabled = !this.fieldTaggingEnabled);
+  }
+
+  static toggleLiveUpdatesMode(): boolean {
+    return (this.liveUpdatesEnabled = !this.liveUpdatesEnabled);
+  }
+
+  static setupFieldTagging(): void {
+    if (this.fieldTaggingEnabled) {
+      ContentfulLivePreview.fieldTagging = new FieldTagging();
+      window.addEventListener('message', (event) => {
+        if (typeof event.data !== 'object' || !event.data) return;
+        if (event.data.from !== 'live-preview') return;
+
+        ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
+      });
+    }
+  }
+
+  static setupLiveUpdates(): void {
+    if (this.liveUpdatesEnabled) {
+      ContentfulLivePreview.liveUpdates = new LiveUpdates();
+
+      window.addEventListener('message', (event) => {
+        if (typeof event.data !== 'object' || !event.data) return;
+        if (event.data.from !== 'live-preview') return;
+
+        ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
+      });
+    }
   }
 }
