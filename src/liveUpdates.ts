@@ -178,20 +178,28 @@ export class LiveUpdates {
   }: Record<string, unknown>): void {
     if (this.isCfEntity(entity)) {
       this.subscriptions.forEach((s) => {
-        const { updated, data } = this.merge({
-          // Clone the original data on the top level,
-          // to prevent cloning multiple times (time)
-          // or modifying the original data (failure potential)
-          dataFromPreviewApp: clone(s.data),
-          locale: s.locale,
-          updateFromEntryEditor: entity,
-          contentType: contentType as ContentType,
-          entityReferenceMap: entityReferenceMap as EntityReferenceMap,
-        });
+        try {
+          const { updated, data } = this.merge({
+            // Clone the original data on the top level,
+            // to prevent cloning multiple times (time)
+            // or modifying the original data (failure potential)
+            dataFromPreviewApp: clone(s.data),
+            locale: s.locale,
+            updateFromEntryEditor: entity,
+            contentType: contentType as ContentType,
+            entityReferenceMap: entityReferenceMap as EntityReferenceMap,
+          });
 
-        // Only if there was an update, trigger the callback to unnecessary re-renders
-        if (updated) {
-          s.cb(data);
+          // Only if there was an update, trigger the callback to unnecessary re-renders
+          if (updated) {
+            s.cb(data);
+          }
+        } catch (error) {
+          debug.error('Failed to apply live update', {
+            error,
+            subscribedData: s.data,
+            updateFromEditor: entity,
+          });
         }
       });
     }
