@@ -7,6 +7,7 @@ import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './
 
 interface ContentfulLivePreviewInitConfig {
   debugMode?: boolean;
+  disableTagging?: boolean;
 }
 
 export class ContentfulLivePreview {
@@ -14,9 +15,9 @@ export class ContentfulLivePreview {
   static liveUpdates: LiveUpdates | null = null;
 
   // Static method to initialize the LivePreview SDK
-  static init({ debugMode }: ContentfulLivePreviewInitConfig = {}):
-    | Promise<FieldTagging>
-    | undefined {
+  static init(
+    { debugMode, disableTagging }: ContentfulLivePreviewInitConfig = { disableTagging: false }
+  ): Promise<FieldTagging | null> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
       if (debugMode) {
@@ -24,17 +25,20 @@ export class ContentfulLivePreview {
       }
 
       if (ContentfulLivePreview.fieldTagging) {
+        if (disableTagging) {
+          return Promise.resolve(null);
+        }
         debug.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
       } else {
-        ContentfulLivePreview.fieldTagging = new FieldTagging();
+        if (!disableTagging) ContentfulLivePreview.fieldTagging = new FieldTagging();
         ContentfulLivePreview.liveUpdates = new LiveUpdates();
 
         window.addEventListener('message', (event) => {
           if (typeof event.data !== 'object' || !event.data) return;
           if (event.data.from !== 'live-preview') return;
 
-          ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
+          if (!disableTagging) ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
           ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
         });
 

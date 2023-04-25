@@ -64,13 +64,13 @@ export class LiveUpdates {
       }
 
       return {
-        data: gql.updateEntry(
+        data: gql.updateEntry({
           contentType,
           dataFromPreviewApp,
-          updateFromEntryEditor as EntryProps,
+          updateFromEntryEditor: updateFromEntryEditor as EntryProps,
           locale,
-          entityReferenceMap
-        ),
+          entityReferenceMap,
+        }),
         updated: true,
       };
     }
