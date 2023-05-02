@@ -49,8 +49,26 @@ export class ContentfulLivePreview {
         debug.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.fieldTagging);
       } else {
-        this.setupFieldTagging();
-        this.setupLiveUpdates();
+        if (this.fieldTaggingEnabled) {
+          ContentfulLivePreview.fieldTagging = new FieldTagging();
+        }
+
+        if (this.liveUpdatesEnabled) {
+          ContentfulLivePreview.liveUpdates = new LiveUpdates();
+        }
+
+        window.addEventListener('message', (event) => {
+          if (typeof event.data !== 'object' || !event.data) return;
+          if (event.data.from !== 'live-preview') return;
+
+          if (this.fieldTaggingEnabled) {
+            ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
+          }
+
+          if (this.liveUpdatesEnabled) {
+            ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
+          }
+        });
 
         pollUrlChanges(() => {
           sendMessageToEditor({ action: 'URL_CHANGED' });
@@ -91,35 +109,12 @@ export class ContentfulLivePreview {
   }
 
   static togglefieldTagging(): boolean {
-    return (this.fieldTaggingEnabled = !this.fieldTaggingEnabled);
+    this.fieldTaggingEnabled = !this.fieldTaggingEnabled;
+    return this.fieldTaggingEnabled;
   }
 
   static toggleLiveUpdatesMode(): boolean {
-    return (this.liveUpdatesEnabled = !this.liveUpdatesEnabled);
-  }
-
-  static setupFieldTagging(): void {
-    if (this.fieldTaggingEnabled) {
-      ContentfulLivePreview.fieldTagging = new FieldTagging();
-      window.addEventListener('message', (event) => {
-        if (typeof event.data !== 'object' || !event.data) return;
-        if (event.data.from !== 'live-preview') return;
-
-        ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
-      });
-    }
-  }
-
-  static setupLiveUpdates(): void {
-    if (this.liveUpdatesEnabled) {
-      ContentfulLivePreview.liveUpdates = new LiveUpdates();
-
-      window.addEventListener('message', (event) => {
-        if (typeof event.data !== 'object' || !event.data) return;
-        if (event.data.from !== 'live-preview') return;
-
-        ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
-      });
-    }
+    this.liveUpdatesEnabled = !this.liveUpdatesEnabled;
+    return this.liveUpdatesEnabled;
   }
 }
