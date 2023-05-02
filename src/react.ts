@@ -7,6 +7,10 @@ import { debounce } from './helpers';
 import { Argument } from './types';
 
 function shouldSubscribe(skip: boolean, data: Argument | null | undefined): boolean {
+  if (!ContentfulLivePreview.liveUpdatesEnabled) {
+    return false;
+  }
+
   if (skip) {
     return false;
   }

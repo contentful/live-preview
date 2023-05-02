@@ -84,3 +84,26 @@ export type MessageFromSDK = EditorMessage & {
 };
 
 export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}
+
+export type UpdateEntryProps = {
+  contentType: ContentType;
+  dataFromPreviewApp: Entity & { sys: SysProps };
+  updateFromEntryEditor: EntryProps;
+  locale: string;
+  entityReferenceMap: EntityReferenceMap;
+};
+
+export type UpdateFieldProps = {
+  dataFromPreviewApp: Entity;
+  updateFromEntryEditor: EntryProps;
+  name: string;
+  locale: string;
+  entityReferenceMap?: EntityReferenceMap;
+};
+
+export type UpdateReferenceFieldProps = {
+  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined;
+  updatedReference: EntryProps & { __typename?: string };
+  entityReferenceMap: EntityReferenceMap;
+  locale: string;
+};

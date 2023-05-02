@@ -6,8 +6,10 @@ import {
   SysProps,
   EntityReferenceMap,
   Entity,
-  ContentType,
   ASSET_TYPENAME,
+  UpdateFieldProps,
+  UpdateReferenceFieldProps,
+  UpdateEntryProps,
 } from '../types';
 import { updateAsset } from './assets';
 import { logUnrecognizedFields } from './utils';
@@ -21,13 +23,13 @@ import { logUnrecognizedFields } from './utils';
  * @param locale string - Locale code
  * @returns Entity - Updated GraphQL response data
  */
-export function updateEntry(
-  contentType: ContentType,
-  dataFromPreviewApp: Entity & { sys: SysProps },
-  updateFromEntryEditor: EntryProps,
-  locale: string,
-  entityReferenceMap: EntityReferenceMap
-): Entity & { sys: SysProps } {
+export function updateEntry({
+  contentType,
+  dataFromPreviewApp,
+  updateFromEntryEditor,
+  locale,
+  entityReferenceMap,
+}: UpdateEntryProps): Entity & { sys: SysProps } {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;
   }
@@ -47,35 +49,40 @@ export function updateEntry(
     if (isPrimitiveField(field)) {
       updatePrimitiveField(copyOfDataFromPreviewApp, updateFromEntryEditor, name, locale);
     } else if (field.type === 'RichText') {
-      updateRichTextField(copyOfDataFromPreviewApp, updateFromEntryEditor, name, locale);
+      updateRichTextField({
+        dataFromPreviewApp: copyOfDataFromPreviewApp,
+        updateFromEntryEditor,
+        name,
+        locale,
+      });
     } else if (field.type === 'Link') {
-      updateSingleRefField(
-        copyOfDataFromPreviewApp,
+      updateSingleRefField({
+        dataFromPreviewApp: copyOfDataFromPreviewApp,
         updateFromEntryEditor,
         name,
         locale,
-        entityReferenceMap
-      );
+        entityReferenceMap,
+      });
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      updateMultiRefField(
-        copyOfDataFromPreviewApp,
+      updateMultiRefField({
+        dataFromPreviewApp: copyOfDataFromPreviewApp,
         updateFromEntryEditor,
         name,
         locale,
-        entityReferenceMap
-      );
+        entityReferenceMap,
+      });
     }
   }
 
   return copyOfDataFromPreviewApp;
 }
 
-function updateRichTextField(
-  dataFromPreviewApp: Entity,
-  updateFromEntryEditor: EntryProps,
-  name: string,
-  locale: string
-) {
+function updateRichTextField({
+  dataFromPreviewApp,
+  updateFromEntryEditor,
+  name,
+  locale,
+}: UpdateFieldProps) {
   if (name in dataFromPreviewApp) {
     if (!dataFromPreviewApp[name]) {
       dataFromPreviewApp[name] = {};
@@ -103,12 +110,12 @@ function isAsset(entity: EntryProps): boolean {
   return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }
 
-function updateReferenceAssetField(
-  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
-  updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: EntityReferenceMap,
-  locale: string
-) {
+function updateReferenceAssetField({
+  referenceFromPreviewApp,
+  updatedReference,
+  entityReferenceMap,
+  locale,
+}: UpdateReferenceFieldProps) {
   const match = entityReferenceMap.get(updatedReference.sys.id) as AssetProps | undefined;
 
   if (!match) {
@@ -155,12 +162,12 @@ function updateReferenceEntryField(
   return null;
 }
 
-function updateReferenceField(
-  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
-  updatedReference: (EntryProps & { __typename?: string }) | null | undefined,
-  entityReferenceMap: EntityReferenceMap,
-  locale: string
-) {
+function updateReferenceField({
+  referenceFromPreviewApp,
+  updatedReference,
+  entityReferenceMap,
+  locale,
+}: UpdateReferenceFieldProps) {
   if (!updatedReference) {
     return null;
   }
@@ -175,41 +182,41 @@ function updateReferenceField(
   }
 
   if (isAsset(updatedReference)) {
-    return updateReferenceAssetField(
+    return updateReferenceAssetField({
       referenceFromPreviewApp,
       updatedReference,
       entityReferenceMap,
-      locale
-    );
+      locale,
+    });
   }
 
   return updateReferenceEntryField(referenceFromPreviewApp, updatedReference, entityReferenceMap);
 }
 
-function updateSingleRefField(
-  dataFromPreviewApp: Entity,
-  updateFromEntryEditor: EntryProps,
-  name: string,
-  locale: string,
-  entityReferenceMap: EntityReferenceMap
-) {
+function updateSingleRefField({
+  dataFromPreviewApp,
+  updateFromEntryEditor,
+  name,
+  locale,
+  entityReferenceMap,
+}: UpdateFieldProps) {
   if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] = updateReferenceField(
-      dataFromPreviewApp[name] as EntryProps & { __typename?: string },
-      updateFromEntryEditor?.fields?.[name]?.[locale],
-      entityReferenceMap,
-      locale
-    );
+    dataFromPreviewApp[name] = updateReferenceField({
+      referenceFromPreviewApp: dataFromPreviewApp[name] as EntryProps & { __typename?: string },
+      updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
+      entityReferenceMap: entityReferenceMap as EntityReferenceMap,
+      locale,
+    });
   }
 }
 
-function updateMultiRefField(
-  dataFromPreviewApp: Entity,
-  updateFromEntryEditor: EntryProps,
-  name: string,
-  locale: string,
-  entityReferenceMap: EntityReferenceMap
-) {
+function updateMultiRefField({
+  dataFromPreviewApp,
+  updateFromEntryEditor,
+  name,
+  locale,
+  entityReferenceMap,
+}: UpdateFieldProps) {
   const fieldName = `${name}Collection`;
   if (fieldName in dataFromPreviewApp) {
     const dataFromPreviewAppItems =
@@ -219,12 +226,14 @@ function updateMultiRefField(
             dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
           ).items.find((item) => item.sys.id === updatedItem.sys.id);
 
-          return updateReferenceField(
-            itemFromPreviewApp as unknown as EntryProps & { __typename?: string },
-            updatedItem as unknown as EntryProps,
-            entityReferenceMap,
-            locale
-          );
+          return updateReferenceField({
+            referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
+              __typename?: string;
+            },
+            updatedReference: updatedItem as unknown as EntryProps,
+            entityReferenceMap: entityReferenceMap as EntityReferenceMap,
+            locale,
+          });
         })
         .filter(Boolean) ?? [];
     (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items = dataFromPreviewAppItems;
