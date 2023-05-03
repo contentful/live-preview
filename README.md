@@ -1,7 +1,5 @@
 # @contentful/live-preview
 
-> **Warning:** This package is currently in an **ALPHA** state (i.e., not suitable for production use and subject to breaking changes).
-
 Preview SDK for both the field tagging connection + live content updates by [Contentful](https://www.contentful.com/).
 
 It uses [Typescript](https://www.typescriptlang.org/), [React](https://reactjs.org/) and is bundled using [Vite](https://vitejs.dev/guide/build.html#library-mode).
@@ -25,6 +23,8 @@ npm install @contentful/live-preview
 ```
 
 ## Documentation
+
+- [Developer Documentation](https://www.contentful.com/developers/docs/tutorials/general/live-preview/)
 
 ### Initializing the SDK
 
