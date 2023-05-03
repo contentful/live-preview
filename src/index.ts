@@ -7,7 +7,7 @@ import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './
 
 interface ContentfulLivePreviewInitConfig {
   debugMode?: boolean;
-  enableFieldTagging?: boolean;
+  enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
 }
 
@@ -19,8 +19,8 @@ export class ContentfulLivePreview {
 
   // Static method to initialize the LivePreview SDK
   static init(
-    { debugMode, enableFieldTagging, enableLiveUpdates }: ContentfulLivePreviewInitConfig = {
-      enableFieldTagging: ContentfulLivePreview.fieldTaggingEnabled,
+    { debugMode, enableInspectorMode, enableLiveUpdates }: ContentfulLivePreviewInitConfig = {
+      enableInspectorMode: ContentfulLivePreview.fieldTaggingEnabled,
       enableLiveUpdates: ContentfulLivePreview.liveUpdatesEnabled,
       debugMode: false,
     }
@@ -32,7 +32,7 @@ export class ContentfulLivePreview {
       }
 
       // toggle inspector mode based on flag
-      if (!enableFieldTagging) {
+      if (!enableInspectorMode) {
         this.togglefieldTagging();
       }
 
