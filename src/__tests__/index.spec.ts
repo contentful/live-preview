@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, Mock, afterEach, beforeAll } from 'vitest';
 
-import { sendMessageToEditor } from '../helpers';
+import { sendMessageToEditor, isInsideIframe } from '../helpers';
 import { ContentfulLivePreview } from '../index';
 import { InspectorMode } from '../inspectorMode';
 import { LiveUpdates } from '../liveUpdates';
@@ -25,6 +25,8 @@ describe('ContentfulLivePreview', () => {
   }));
 
   beforeAll(() => {
+    (isInsideIframe as Mock).mockReturnValue(true);
+
     ContentfulLivePreview.init();
     // establish the connection, needs to tested here, as we can only init the ContentfulLivePreview once
     expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
@@ -78,6 +80,17 @@ describe('ContentfulLivePreview', () => {
       expect(callback).toHaveBeenCalledTimes(1);
       expect(callback).toHaveBeenCalledWith({ entity: { title: 'Hello' } });
     });
+
+    it('should not subscribe to changes if it is disabled', () => {
+      ContentfulLivePreview.toggleLiveUpdatesMode();
+
+      const callback = vi.fn();
+      const data = { entity: {} };
+      ContentfulLivePreview.subscribe(data, 'en-US', callback);
+
+      // Check that the LiveUpdates.subscribe was called correctly
+      expect(subscribe).not.toHaveBeenCalled();
+    });
   });
 
   describe('getProps', () => {
@@ -97,6 +110,22 @@ describe('ContentfulLivePreview', () => {
         [TagAttributes.ENTRY_ID]: entryId,
         [TagAttributes.LOCALE]: locale,
       });
+    });
+
+    it('returns null if it is disabled', () => {
+      ContentfulLivePreview.toggleInspectorMode();
+
+      const entryId = 'test-entry-id';
+      const fieldId = 'test-field-id';
+      const locale = 'test-locale';
+
+      const result = ContentfulLivePreview.getProps({
+        entryId,
+        fieldId,
+        locale,
+      });
+
+      expect(result).toBeNull();
     });
   });
 });
