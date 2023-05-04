@@ -32,6 +32,13 @@ export class ContentfulLivePreview {
   }: ContentfulLivePreviewInitConfig = {}): Promise<InspectorMode | null> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
+      if (!isInsideIframe()) {
+        // If the SDK is used outside of the LivePreviewIframe it should do nothing
+        this.liveUpdatesEnabled = false;
+
+        return Promise.resolve(null);
+      }
+
       if (debugMode) {
         setDebugMode(debugMode);
       }
@@ -51,11 +58,7 @@ export class ContentfulLivePreview {
         return Promise.resolve(ContentfulLivePreview.inspectorMode);
       }
 
-      if (!isInsideIframe()) {
-        // If the SDK is used outside of the LivePreviewIframe it should do nothing
-        return Promise.resolve(null);
-      }
-
+      // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
         ContentfulLivePreview.inspectorMode = new InspectorMode();
       }
@@ -64,6 +67,7 @@ export class ContentfulLivePreview {
         ContentfulLivePreview.liveUpdates = new LiveUpdates();
       }
 
+      // bind event listeners for interactivity
       window.addEventListener('message', (event) => {
         if (typeof event.data !== 'object' || !event.data) return;
         if (event.data.from !== 'live-preview') return;
@@ -77,16 +81,19 @@ export class ContentfulLivePreview {
         }
       });
 
+      // navigation changes
       pollUrlChanges(() => {
         sendMessageToEditor({ action: 'URL_CHANGED' });
       });
 
+      // tell the editor that there's a SDK
       sendMessageToEditor({
         action: 'IFRAME_CONNECTED',
         connected: true,
         tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
       });
 
+      // all set up - ready to go
       this.initialized = true;
 
       return Promise.resolve(ContentfulLivePreview.inspectorMode);

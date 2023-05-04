@@ -126,7 +126,7 @@ export function clone<T extends Record<string, unknown> | Array<unknown>>(incomi
 /** Detects if the current page is shown inside an iframe */
 export function isInsideIframe(): boolean {
   try {
-    return window.top?.location.href === window.location.href;
+    return window.top?.location.href !== window.location.href;
   } catch (err) {
     // window.top.location.href is not accessable for non same origin iframes
     return true;
