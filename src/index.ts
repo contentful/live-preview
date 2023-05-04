@@ -1,7 +1,13 @@
 import './styles.css';
 
 import { FieldTagging } from './fieldTagging';
-import { sendMessageToEditor, pollUrlChanges, setDebugMode, debug } from './helpers';
+import {
+  sendMessageToEditor,
+  pollUrlChanges,
+  setDebugMode,
+  debug,
+  isInsideIframe,
+} from './helpers';
 import { LiveUpdates } from './liveUpdates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 
@@ -12,19 +18,18 @@ interface ContentfulLivePreviewInitConfig {
 }
 
 export class ContentfulLivePreview {
-  static fieldTagging: FieldTagging | null = null;
+  static initialized = false;
+  static inspectorMode: FieldTagging | null = null;
   static liveUpdates: LiveUpdates | null = null;
-  static fieldTaggingEnabled = true;
+  static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
 
   // Static method to initialize the LivePreview SDK
-  static init(
-    { debugMode, enableInspectorMode, enableLiveUpdates }: ContentfulLivePreviewInitConfig = {
-      enableInspectorMode: ContentfulLivePreview.fieldTaggingEnabled,
-      enableLiveUpdates: ContentfulLivePreview.liveUpdatesEnabled,
-      debugMode: false,
-    }
-  ): Promise<FieldTagging | null> | undefined {
+  static init({
+    debugMode,
+    enableInspectorMode,
+    enableLiveUpdates,
+  }: ContentfulLivePreviewInitConfig = {}): Promise<FieldTagging | null> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
       if (debugMode) {
@@ -32,60 +37,69 @@ export class ContentfulLivePreview {
       }
 
       // toggle inspector mode based on flag
-      if (!enableInspectorMode) {
-        this.togglefieldTagging();
+      if (typeof enableInspectorMode === 'boolean') {
+        this.inspectorModeEnabled = enableInspectorMode;
       }
 
       // toggle live updates based on flag
-      if (!enableLiveUpdates) {
-        this.toggleLiveUpdatesMode();
+      if (typeof enableLiveUpdates === 'boolean') {
+        this.liveUpdatesEnabled = enableLiveUpdates;
       }
 
-      if (ContentfulLivePreview.fieldTagging) {
-        // disable field tagging if user specified in config
-        if (!ContentfulLivePreview.fieldTaggingEnabled) {
-          return Promise.resolve(null);
-        }
+      if (ContentfulLivePreview.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
-        return Promise.resolve(ContentfulLivePreview.fieldTagging);
-      } else {
-        if (this.fieldTaggingEnabled) {
-          ContentfulLivePreview.fieldTagging = new FieldTagging();
+        return Promise.resolve(ContentfulLivePreview.inspectorMode);
+      }
+
+      if (!isInsideIframe()) {
+        // If the SDK is used outside of the LivePreviewIframe it should do nothing
+        return Promise.resolve(null);
+      }
+
+      if (this.inspectorModeEnabled) {
+        ContentfulLivePreview.inspectorMode = new FieldTagging();
+      }
+
+      if (this.liveUpdatesEnabled) {
+        ContentfulLivePreview.liveUpdates = new LiveUpdates();
+      }
+
+      window.addEventListener('message', (event) => {
+        if (typeof event.data !== 'object' || !event.data) return;
+        if (event.data.from !== 'live-preview') return;
+
+        if (this.inspectorModeEnabled) {
+          ContentfulLivePreview.inspectorMode?.receiveMessage(event.data);
         }
 
         if (this.liveUpdatesEnabled) {
-          ContentfulLivePreview.liveUpdates = new LiveUpdates();
+          ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
         }
+      });
 
-        window.addEventListener('message', (event) => {
-          if (typeof event.data !== 'object' || !event.data) return;
-          if (event.data.from !== 'live-preview') return;
+      pollUrlChanges(() => {
+        sendMessageToEditor({ action: 'URL_CHANGED' });
+      });
 
-          if (this.fieldTaggingEnabled) {
-            ContentfulLivePreview.fieldTagging?.receiveMessage(event.data);
-          }
+      sendMessageToEditor({
+        action: 'IFRAME_CONNECTED',
+        connected: true,
+        tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+      });
 
-          if (this.liveUpdatesEnabled) {
-            ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
-          }
-        });
+      this.initialized = true;
 
-        pollUrlChanges(() => {
-          sendMessageToEditor({ action: 'URL_CHANGED' });
-        });
-
-        sendMessageToEditor({
-          action: 'IFRAME_CONNECTED',
-          connected: true,
-          tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
-        });
-
-        return Promise.resolve(ContentfulLivePreview.fieldTagging);
-      }
+      return Promise.resolve(ContentfulLivePreview.inspectorMode);
     }
   }
 
   static subscribe(data: Argument, locale: string, callback: SubscribeCallback): VoidFunction {
+    if (!this.liveUpdatesEnabled) {
+      return () => {
+        /* noop */
+      };
+    }
+
     if (!this.liveUpdates) {
       throw new Error(
         'Live Updates are not initialized, please call `ContentfulLivePreview.init()` first.'
@@ -100,7 +114,16 @@ export class ContentfulLivePreview {
     fieldId,
     entryId,
     locale,
-  }: LivePreviewProps): Record<TagAttributes, string | null | undefined> {
+  }: LivePreviewProps): Record<TagAttributes, string | null | undefined> | null {
+    if (!this.inspectorModeEnabled) {
+      return null;
+    }
+
+    if (!fieldId || !entryId || !locale) {
+      debug.warn('Missing property for inspector mode', { fieldId, entryId, locale });
+      return null;
+    }
+
     return {
       [TagAttributes.FIELD_ID]: fieldId,
       [TagAttributes.ENTRY_ID]: entryId,
@@ -108,9 +131,9 @@ export class ContentfulLivePreview {
     };
   }
 
-  static togglefieldTagging(): boolean {
-    this.fieldTaggingEnabled = !this.fieldTaggingEnabled;
-    return this.fieldTaggingEnabled;
+  static toggleInspectorMode(): boolean {
+    this.inspectorModeEnabled = !this.inspectorModeEnabled;
+    return this.inspectorModeEnabled;
   }
 
   static toggleLiveUpdatesMode(): boolean {
