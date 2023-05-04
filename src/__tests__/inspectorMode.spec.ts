@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
-import { FieldTagging } from '../fieldTagging';
+import { FieldTagging } from '../inspectorMode';
 
 describe('FieldTagging', () => {
   let fieldTagging: FieldTagging;

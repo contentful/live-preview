@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, Mock, afterEach, beforeAll } from 'vitest';
 
-import { FieldTagging } from '../fieldTagging';
 import { sendMessageToEditor } from '../helpers';
 import { ContentfulLivePreview } from '../index';
+import { FieldTagging } from '../inspectorMode';
 import { LiveUpdates } from '../liveUpdates';
 import { TagAttributes } from '../types';
 
