@@ -2,12 +2,12 @@
 import { describe, it, expect } from 'vitest';
 
 import { ContentfulLivePreview } from '../index';
-import { FieldTagging } from '../inspectorMode';
+import { InspectorMode } from '../inspectorMode';
 
 describe('init', () => {
   it('returns a Promise that resolves to a LivePreview instance when running in a browser environment', async () => {
     const livePreviewInstance = await ContentfulLivePreview.init();
-    expect(livePreviewInstance).toBeInstanceOf(FieldTagging);
+    expect(livePreviewInstance).toBeInstanceOf(InspectorMode);
   });
 
   it('returns undefined when not running in a browser environment', () => {

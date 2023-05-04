@@ -3,11 +3,11 @@ import { describe, it, expect, vi, Mock, afterEach, beforeAll } from 'vitest';
 
 import { sendMessageToEditor } from '../helpers';
 import { ContentfulLivePreview } from '../index';
-import { FieldTagging } from '../inspectorMode';
+import { InspectorMode } from '../inspectorMode';
 import { LiveUpdates } from '../liveUpdates';
 import { TagAttributes } from '../types';
 
-vi.mock('../fieldTagging');
+vi.mock('../inspectorMode');
 vi.mock('../liveUpdates');
 vi.mock('../helpers');
 
@@ -16,7 +16,7 @@ describe('ContentfulLivePreview', () => {
   const receiveMessageUpdates = vi.fn();
   const subscribe = vi.fn();
 
-  (FieldTagging as Mock).mockImplementation(() => ({
+  (InspectorMode as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageTagging,
   }));
   (LiveUpdates as Mock).mockImplementation(() => ({
@@ -36,7 +36,7 @@ describe('ContentfulLivePreview', () => {
 
   describe('init', () => {
     describe('should bind the message listeners', () => {
-      it('provide the data to FieldTagging and LiveUpdates', () => {
+      it('provide the data to InspectorMode and LiveUpdates', () => {
         const data = { from: 'live-preview', value: 'any' };
         window.dispatchEvent(new MessageEvent('message', { data }));
 
@@ -46,7 +46,7 @@ describe('ContentfulLivePreview', () => {
         expect(receiveMessageUpdates).toHaveBeenCalledWith(data);
       });
 
-      it('doenst call the FieldTagging and LiveUpdates for invalid events', () => {
+      it('doenst call the InspectorMode and LiveUpdates for invalid events', () => {
         // Not from live-preview
         window.dispatchEvent(
           new MessageEvent('message', { data: { from: 'anywhere', value: 'any' } })

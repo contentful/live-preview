@@ -9,7 +9,7 @@ import {
 import { sendMessageToEditor } from './helpers';
 import { TagAttributes } from './types';
 
-export class FieldTagging {
+export class InspectorMode {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
 

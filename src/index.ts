@@ -7,7 +7,7 @@ import {
   debug,
   isInsideIframe,
 } from './helpers';
-import { FieldTagging } from './inspectorMode';
+import { InspectorMode } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 
@@ -19,7 +19,7 @@ interface ContentfulLivePreviewInitConfig {
 
 export class ContentfulLivePreview {
   static initialized = false;
-  static inspectorMode: FieldTagging | null = null;
+  static inspectorMode: InspectorMode | null = null;
   static liveUpdates: LiveUpdates | null = null;
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
@@ -29,7 +29,7 @@ export class ContentfulLivePreview {
     debugMode,
     enableInspectorMode,
     enableLiveUpdates,
-  }: ContentfulLivePreviewInitConfig = {}): Promise<FieldTagging | null> | undefined {
+  }: ContentfulLivePreviewInitConfig = {}): Promise<InspectorMode | null> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
       if (debugMode) {
@@ -57,7 +57,7 @@ export class ContentfulLivePreview {
       }
 
       if (this.inspectorModeEnabled) {
-        ContentfulLivePreview.inspectorMode = new FieldTagging();
+        ContentfulLivePreview.inspectorMode = new InspectorMode();
       }
 
       if (this.liveUpdatesEnabled) {
