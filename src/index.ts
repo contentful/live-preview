@@ -1,6 +1,5 @@
 import './styles.css';
 
-import { FieldTagging } from './fieldTagging';
 import {
   sendMessageToEditor,
   pollUrlChanges,
@@ -8,6 +7,7 @@ import {
   debug,
   isInsideIframe,
 } from './helpers';
+import { FieldTagging } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
 import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
 
