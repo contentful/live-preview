@@ -57,8 +57,10 @@ ContentfulLivePreview.init({
 ### Inspector Mode (field tagging)
 
 To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`, `data-contentful-locale`) to the rendered HTML element output.
+
 You can do this in React via our helper function.
-The necessary styles for the live edit tags can be found in the '@contentful/live-preview/style.css' file.
+
+The necessary styles for the live edit tags can be found in the `@contentful/live-preview/style.css` file.
 
 ```jsx
 import { ContentfulLivePreview } from '@contentful/live-preview';
