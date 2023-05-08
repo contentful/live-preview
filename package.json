@@ -60,7 +60,7 @@
     "@contentful/eslint-config-extension": "0.4.3",
     "@semantic-release/changelog": "^6.0.2",
     "@testing-library/react": "14.0.0",
-    "@types/node": "^18.14.0",
+    "@types/node": "^20.1.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "^3.0.0",
