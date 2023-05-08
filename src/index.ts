@@ -9,9 +9,15 @@ import {
 } from './helpers';
 import { InspectorMode } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
-import { Argument, LivePreviewProps, SubscribeCallback, TagAttributes } from './types';
+import {
+  Argument,
+  InspectorModeTags,
+  LivePreviewProps,
+  SubscribeCallback,
+  TagAttributes,
+} from './types';
 
-interface ContentfulLivePreviewInitConfig {
+export interface ContentfulLivePreviewInitConfig {
   debugMode?: boolean;
   enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
@@ -117,11 +123,7 @@ export class ContentfulLivePreview {
   }
 
   // Static method to render live preview data-attributes to HTML element output
-  static getProps({
-    fieldId,
-    entryId,
-    locale,
-  }: LivePreviewProps): Record<TagAttributes, string | null | undefined> | null {
+  static getProps({ fieldId, entryId, locale }: LivePreviewProps): InspectorModeTags {
     if (!this.inspectorModeEnabled) {
       return null;
     }

@@ -1,19 +1,29 @@
 // @vitest-environment jsdom
+import { PropsWithChildren } from 'react';
+
 import { act, renderHook } from '@testing-library/react';
 import { describe, it, vi, afterEach, expect, beforeEach } from 'vitest';
 
-import { useContentfulLiveUpdates } from '../react';
+import {
+  ContentfulLivePreviewProvider,
+  useContentfulLiveUpdates,
+  useContentfulInspectorMode,
+} from '../react';
 
 import { ContentfulLivePreview } from '..';
 
 import { Argument } from '../types';
 
+const locale = 'en-US';
+
 describe('useContentfulLiveUpdates', () => {
   const unsubscribe = vi.fn();
   const subscribe = vi.spyOn(ContentfulLivePreview, 'subscribe');
 
-  const locale = 'en-US';
   const createData = (id: string, title = 'Hello') => ({ sys: { id }, title });
+  const wrapper = ({ children }: PropsWithChildren) => (
+    <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+  );
 
   beforeEach(() => {
     subscribe.mockReturnValue(unsubscribe);
@@ -29,6 +39,7 @@ describe('useContentfulLiveUpdates', () => {
     const initialData = createData('1');
     const { result } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
+      wrapper,
     });
 
     expect(result.current).toEqual(initialData);
@@ -38,6 +49,7 @@ describe('useContentfulLiveUpdates', () => {
     const initialData = createData('2');
     const { unmount } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
+      wrapper,
     });
 
     expect(subscribe).toHaveBeenCalledTimes(1);
@@ -52,6 +64,7 @@ describe('useContentfulLiveUpdates', () => {
     const initialData = createData('3');
     const { result, rerender } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
+      wrapper,
     });
 
     expect(result.current).toEqual(initialData);
@@ -73,6 +86,7 @@ describe('useContentfulLiveUpdates', () => {
     const initialData = createData('4');
     const { result } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
+      wrapper,
     });
 
     expect(result.current).toEqual(initialData);
@@ -105,6 +119,7 @@ describe('useContentfulLiveUpdates', () => {
     const initialData = createData('5');
     const { result } = renderHook((data) => useTestHook(data, locale), {
       initialProps: initialData,
+      wrapper,
     });
 
     expect(result.current).toEqual(initialData);
@@ -127,6 +142,7 @@ describe('useContentfulLiveUpdates', () => {
   it('shouldnt listen to changes if the initial data is empty', () => {
     const { rerender } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: undefined as Argument | null | undefined,
+      wrapper,
     });
 
     rerender(null);
@@ -134,5 +150,94 @@ describe('useContentfulLiveUpdates', () => {
     rerender({});
 
     expect(subscribe).not.toHaveBeenCalled();
+  });
+
+  it('shouldnt listen if live updates are disabled', () => {
+    const initialData = createData('6');
+    renderHook((data) => useContentfulLiveUpdates(data, locale), {
+      initialProps: initialData,
+      wrapper: ({ children }) => (
+        <ContentfulLivePreviewProvider enableLiveUpdates={false}>
+          {children}
+        </ContentfulLivePreviewProvider>
+      ),
+    });
+
+    expect(subscribe).not.toBeCalled();
+  });
+});
+
+describe('useContentfulInspectorMode', () => {
+  it('should provide a helper function to generate the correct tags (no initial data)', () => {
+    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+      initialProps: undefined,
+      wrapper: ({ children }) => (
+        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+      ),
+    });
+
+    expect(result.current({ entryId: '1', locale, fieldId: 'title' })).toEqual({
+      'data-contentful-entry-id': '1',
+      'data-contentful-field-id': 'title',
+      'data-contentful-locale': 'en-US',
+    });
+  });
+
+  it('should provide a helper function to generate the correct tags (initial entryId)', () => {
+    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+      initialProps: { entryId: '1' },
+      wrapper: ({ children }) => (
+        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+      ),
+    });
+
+    expect(result.current({ locale, fieldId: 'title' })).toEqual({
+      'data-contentful-entry-id': '1',
+      'data-contentful-field-id': 'title',
+      'data-contentful-locale': 'en-US',
+    });
+  });
+
+  it('should provide a helper function to generate the correct tags (initial locale)', () => {
+    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+      initialProps: { locale },
+      wrapper: ({ children }) => (
+        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+      ),
+    });
+
+    expect(result.current({ entryId: '1', fieldId: 'title' })).toEqual({
+      'data-contentful-entry-id': '1',
+      'data-contentful-field-id': 'title',
+      'data-contentful-locale': 'en-US',
+    });
+  });
+
+  it('should provide a helper function to generate the correct tags (initial entryId & locale)', () => {
+    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+      initialProps: { entryId: '1', locale },
+      wrapper: ({ children }) => (
+        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+      ),
+    });
+
+    expect(result.current({ fieldId: 'title' })).toEqual({
+      'data-contentful-entry-id': '1',
+      'data-contentful-field-id': 'title',
+      'data-contentful-locale': 'en-US',
+    });
+  });
+
+  it('should return null because the inspector mode is disabled', () => {
+    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+      initialProps: { locale, entryId: '1' },
+      wrapper: ({ children }) => (
+        <ContentfulLivePreviewProvider enableInspectorMode={false}>
+          {children}
+        </ContentfulLivePreviewProvider>
+      ),
+    });
+
+    expect(result.current({ fieldId: 'title' })).toBeNull();
   });
 });
