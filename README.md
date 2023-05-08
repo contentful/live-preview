@@ -101,19 +101,37 @@ or
 npm install @contentful/live-preview
 ```
 
-2. Initialize the SDK and add the stylesheet for field tagging inside `_app.tsx` or `_app.js`.
+2. Initialize the SDK with the `ContentfulLivePreviewProvider` and add the stylesheet for field tagging inside `_app.tsx` or `_app.js`.
+The `ContentfulLivePreviewProvider` accepts the same arguments as the [init function](#init-configuration).
 
 ```tsx
 import '@contentful/live-preview/style.css';
-import { ContentfulLivePreview } from '@contentful/live-preview';
+import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
-ContentfulLivePreview.init();
+const CustomApp = ({ Component, pageProps }) => (
+  <ContentfulLivePreviewProvider>
+    <Component {...pageProps}>
+  </ContentfulLivePreviewProvider>
+)
+```
+
+This provides the posibility to only enable live updates and the inspector mode inside the preview mode:
+```tsx
+import '@contentful/live-preview/style.css';
+import { ContentfulLivePreview } from '@contentful/live-preview/react';
+
+const CustomApp = ({ Component, pageProps }) => (
+  <ContentfulLivePreviewProvider enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
+    <Component {...pageProps}>
+  </ContentfulLivePreviewProvider>
+)
 ```
 
 3. Add field tagging and live updates to your component
 
 ```tsx
 export default function BlogPost: ({ blogPost }) {
+  const inspectorProps = useContentfulInspectorMode()
   // Live updates for this component
   const data = useContentfulLiveUpdates(
     blogPost,
@@ -126,7 +144,7 @@ export default function BlogPost: ({ blogPost }) {
       {/* Text is tagged and can be clicked to open the editor */}
       <Text
         as="p"
-        {...ContentfulLivePreview.getProps({
+        {...inspectorProps({
           entryId: data.sys.id,
           fieldId: 'text',
           locale,
@@ -139,6 +157,22 @@ export default function BlogPost: ({ blogPost }) {
 ```
 
 > It doesn't matter if the data is loaded with getServerSideProps, getStaticProps or if you load it in any other way.<br>It's necessary that the provided information to `useContentfulLiveUpdate` contains the `sys.id` for identifation and only non-transformed fields can be updated.<br>(For GraphQL also the `__typename` needs to be provided)
+
+**Tip:** If you want to tag multiple fields of an entry, you can also provide initial arguments to the hook:
+
+```tsx
+export default function BlogPost: ({ blogPost }) {
+  const inspectorProps = useContentfulInspectorMode({ entryId: data.sys.id, locale })
+
+  return (
+    <Section>
+      <Heading as="h1" {...inspectorProps({ fieldId: 'heading' })}>{data.heading}</Heading>
+      <Text as="p" {...inspectorProps({ fieldId: 'text' })}>
+        {data.text}
+      </Text>
+    </Section>
+  )
+```
 
 4. Enable preview mode
 
@@ -170,9 +204,13 @@ npm install @contentful/live-preview
 
 ```tsx
 import '@contentful/live-preview/style.css';
-import { ContentfulLivePreview } from '@contentful/live-preview';
 
-ContentfulLivePreview.init();
+import React from "react";
+import { ContentfulLivePreview } from '@contentful/live-preview/react';
+
+export const wrapRootElement = ({ element }) => (
+  <ContentfulLivePreviewProvider>{element}</ContentfulLivePreviewProvider>
+)
 ```
 
 3. In order to tag fields and use live updates, you need to add the contentful_id property to the GraphQL schema. For example, to extend the HomepageHero interface:
@@ -211,6 +249,7 @@ export const query = graphql`
 
 ```jsx
 export default function Hero({ contentful_id, ...props }) {
+  const inspectorProps = useContentfulInspectorMode()
   // Live updates for this component
   const data = useContentfulLiveUpdates(
     {
@@ -226,7 +265,7 @@ export default function Hero({ contentful_id, ...props }) {
       {/* Text is tagged and can be clicked to open the editor */}
       <Text
         as="p"
-        {...ContentfulLivePreview.getProps({
+        {...inspectorProps({
           entryId: contentful_id,
           fieldId: 'text',
           locale,

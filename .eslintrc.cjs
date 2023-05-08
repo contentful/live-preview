@@ -14,5 +14,6 @@ module.exports = {
         alphabetize: { order: 'asc', ignoreCase: true },
       },
     ],
+    'react/react-in-jsx-scope': 'off'
   },
 };
