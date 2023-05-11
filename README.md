@@ -1,8 +1,6 @@
 # @contentful/live-preview
 
-Preview SDK for both the field tagging connection + live content updates by [Contentful](https://www.contentful.com/).
-
-It uses [Typescript](https://www.typescriptlang.org/), [React](https://reactjs.org/) and is bundled using [Vite](https://vitejs.dev/guide/build.html#library-mode).
+Live preview SDK for both the inspector mode connection + live content updates by [Contentful](https://www.contentful.com/).
 
 ## Getting started
 
@@ -75,7 +73,7 @@ import '@contentful/live-preview/style.css';
 ### Live Updates
 
 Live Updates from the editor to your applications are out of the box only supported for [React.js](https://reactjs.org/) at the moment.
-The updates are only happening on the **client-side** and in the Live preview environment of [contentful](https://app.contentful.com).
+The updates are only happening on the **client-side** and in the live preview environment of [contentful](https://app.contentful.com).
 
 ```tsx
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
@@ -180,13 +178,13 @@ We suggest using the [preview mode](https://nextjs.org/docs/advanced-features/pr
 
 For a full guide checkout this [free course](https://www.contentful.com/nextjs-starter-guide/)
 
-5. In Contentful, define the preview environment and configure the preview URL for your Next.js application. Once you open an entry with a configured preview URL, you can use the Live Preview and all its features.
+5. In Contentful, define the preview environment and configure the preview URL for your Next.js application. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
 
-That's it! You should now be able to use the Contentful Live Preview SDK with Next.js.
+That's it! You should now be able to use the Contentful live preview SDK with Next.js.
 
 #### Integrating with Gatsby
 
-To use the Contentful Live Preview SDK with Gatsby, you can start with the [gatsby starter contentful homepage](https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-contentful-homepage)
+To use the Contentful live preview SDK with Gatsby, you can start with the [gatsby starter contentful homepage](https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-contentful-homepage)
 
 1. Add the @contentful/live-preview package to your Gatsby project by running one of the following commands:
 
@@ -277,9 +275,9 @@ export default function Hero({ contentful_id, ...props }) {
 }
 ```
 
-6. In Contentful, define the preview environment and configure the preview URL for your Gatsby site. Once you open an entry with a configured preview URL, you can use the Live Preview and all its features.
+6. In Contentful, define the preview environment and configure the preview URL for your Gatsby site. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
 
-That's it! You should now be able to use the Contentful Live Preview SDK with Gatsby.
+That's it! You should now be able to use the Contentful live preview SDK with Gatsby.
 
 ## Code of Conduct
 
