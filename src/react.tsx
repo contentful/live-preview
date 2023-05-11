@@ -92,8 +92,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
     // or update content through live updates
     return ContentfulLivePreview.subscribe({
       data: data as Argument,
-      // override locale with user locale if passed otherwise use the local from the initialisation
-      locale: locale ? locale : ContentfulLivePreview.locale,
+      locale: locale as string,
       callback: (updatedData) => {
         // Update the state and adding a version number to it, as some deep nested updates
         // are not proceeded correctly otherwise

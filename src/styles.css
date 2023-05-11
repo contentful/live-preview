@@ -1,4 +1,4 @@
-[data-contentful-field-id][data-contentful-entry-id][data-contentful-locale] {
+[data-contentful-field-id][data-contentful-entry-id] {
   outline: 1px dashed rgba(64, 160, 255, 0) !important;
   transition: outline-color 0.3s ease-in-out;
 }

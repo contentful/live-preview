@@ -4,8 +4,8 @@ export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
 
 export type LivePreviewProps = {
-  fieldId: string | null | undefined;
-  entryId: string | null | undefined;
+  fieldId: string;
+  entryId: string;
   locale?: string;
 };
 
