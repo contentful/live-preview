@@ -46,21 +46,21 @@ describe('LiveUpdates', () => {
   it('should listen to changes and calls the subscribed handlers', () => {
     const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
-    const cb = vi.fn();
-    liveUpdates.subscribe(data, locale, cb);
+    const callback = vi.fn();
+    liveUpdates.subscribe({ data, locale, callback });
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
 
-    expect(cb).toHaveBeenCalledTimes(1);
-    expect(cb).toHaveBeenCalledWith({
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith({
       ...data,
       title: 'Data 2',
     });
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor2, contentType });
 
-    expect(cb).toHaveBeenCalledTimes(2);
-    expect(cb).toHaveBeenCalledWith({
+    expect(callback).toHaveBeenCalledTimes(2);
+    expect(callback).toHaveBeenCalledWith({
       ...data,
       title: 'Data 3',
     });
@@ -70,9 +70,9 @@ describe('LiveUpdates', () => {
     it('should notify because sys information is missing', () => {
       const liveUpdates = new LiveUpdates();
       const data = { title: 'Data 1', __typename: 'Demo' };
-      const cb = vi.fn();
+      const callback = vi.fn();
 
-      liveUpdates.subscribe(data, locale, cb);
+      liveUpdates.subscribe({ data, locale, callback });
 
       expect(helpers.debug.error).toHaveBeenCalledWith(
         'Live Updates requires the "sys.id" to be present on the provided data',
@@ -83,9 +83,9 @@ describe('LiveUpdates', () => {
     it('should notify because we dont know if it is REST or GraphQL', () => {
       const liveUpdates = new LiveUpdates();
       const data = { sys: { id: '1' }, title: 'Data 1' };
-      const cb = vi.fn();
+      const callback = vi.fn();
 
-      liveUpdates.subscribe(data, locale, cb);
+      liveUpdates.subscribe({ data, locale, callback });
 
       expect(helpers.debug.error).toHaveBeenCalledWith(
         'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates will not work.',
@@ -98,46 +98,46 @@ describe('LiveUpdates', () => {
     const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const contentType = { fields: [] };
-    const cb = vi.fn();
-    const unsubscribe = liveUpdates.subscribe(data, locale, cb);
+    const callback = vi.fn();
+    const unsubscribe = liveUpdates.subscribe({ data, locale, callback });
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
 
-    expect(cb).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledTimes(1);
 
     unsubscribe();
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor2, contentType });
 
-    expect(cb).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledTimes(1);
   });
 
   it('ignores invalid messages', () => {
     const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
-    const cb = vi.fn();
-    liveUpdates.subscribe(data, locale, cb);
+    const callback = vi.fn();
+    liveUpdates.subscribe({ data, locale, callback });
 
     liveUpdates.receiveMessage({ isInspectorActive: false });
 
-    expect(cb).not.toHaveBeenCalled();
+    expect(callback).not.toHaveBeenCalled();
   });
 
   it('doesnt call the subscribe handler if the data was not updated', () => {
     const liveUpdates = new LiveUpdates();
     const data = { sys: { id: '99' }, title: 'Data 1', __typename: 'Demo' };
-    const cb = vi.fn();
-    liveUpdates.subscribe(data, locale, cb);
+    const callback = vi.fn();
+    liveUpdates.subscribe({ data, locale, callback });
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
 
-    expect(cb).not.toHaveBeenCalled();
+    expect(callback).not.toHaveBeenCalled();
   });
 
   it('merges nested field updates', () => {
     const liveUpdates = new LiveUpdates();
-    const cb = vi.fn();
-    liveUpdates.subscribe(nestedDataFromPreviewApp, locale, cb);
+    const callback = vi.fn();
+    liveUpdates.subscribe({ data: nestedDataFromPreviewApp, locale, callback });
     liveUpdates.receiveMessage({ entity: assetFromEntryEditor });
 
     const expected = helpers.clone(nestedDataFromPreviewApp);
@@ -145,13 +145,13 @@ describe('LiveUpdates', () => {
     (expected.featuredImage.description as string | null) =
       assetFromEntryEditor.fields.description[locale];
 
-    expect(cb).toHaveBeenCalledWith(expected);
+    expect(callback).toHaveBeenCalledWith(expected);
   });
 
   it('merges nested collections', () => {
     const liveUpdates = new LiveUpdates();
-    const cb = vi.fn();
-    liveUpdates.subscribe(nestedCollectionFromPreviewApp, locale, cb);
+    const callback = vi.fn();
+    liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, locale, callback });
     liveUpdates.receiveMessage({
       entity: pageInsideCollectionFromEntryEditor,
       contentType: landingPageContentType,
@@ -163,15 +163,15 @@ describe('LiveUpdates', () => {
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].slug =
       pageInsideCollectionFromEntryEditor.fields.slug[locale];
 
-    expect(cb).toHaveBeenCalledWith(expected);
+    expect(callback).toHaveBeenCalledWith(expected);
   });
 
   describe('sendMessageToEditor', () => {
     it('sends a message to the editor for a subscription with GQL data', () => {
       const liveUpdates = new LiveUpdates();
       const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
-      const cb = vi.fn();
-      liveUpdates.subscribe(data, locale, cb);
+      const callback = vi.fn();
+      liveUpdates.subscribe({ data, locale, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
       expect(sendMessage).toHaveBeenCalledWith({
@@ -183,8 +183,8 @@ describe('LiveUpdates', () => {
     it('sends a message to the editor for a subscription with REST data', () => {
       const liveUpdates = new LiveUpdates();
       const data = { sys: { id: '1' }, fields: { title: 'Data 1' } };
-      const cb = vi.fn();
-      liveUpdates.subscribe(data, locale, cb);
+      const callback = vi.fn();
+      liveUpdates.subscribe({ data, locale, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
       expect(sendMessage).toHaveBeenCalledWith({
@@ -200,12 +200,12 @@ describe('LiveUpdates', () => {
     const subscription = {
       data,
       locale: 'en-US',
-      cb: vi.fn(),
+      callback: vi.fn(),
     };
     const liveUpdates = new LiveUpdates();
 
     beforeEach(() => {
-      liveUpdates.subscribe(subscription.data, subscription.locale, subscription.cb);
+      liveUpdates.subscribe(subscription);
       vi.clearAllMocks();
     });
 
@@ -214,14 +214,14 @@ describe('LiveUpdates', () => {
       liveUpdates['storage'].set(id, { ...data, title: 'Title from storage' });
       liveUpdates['restore'](data, id);
       const restoredData = { ...data, title: 'Title from storage' };
-      expect(subscription.cb).toHaveBeenCalledTimes(1);
-      expect(subscription.cb).toHaveBeenCalledWith(restoredData);
+      expect(subscription.callback).toHaveBeenCalledTimes(1);
+      expect(subscription.callback).toHaveBeenCalledWith(restoredData);
     });
 
     it('should not call the callback if the data is not in storage', () => {
       liveUpdates['restore'](subscription.data, '1');
 
-      expect(subscription.cb).not.toHaveBeenCalled();
+      expect(subscription.callback).not.toHaveBeenCalled();
     });
   });
 });

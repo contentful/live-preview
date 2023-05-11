@@ -6,7 +6,7 @@ export const ASSET_TYPENAME = 'Asset';
 export type LivePreviewProps = {
   fieldId: string | null | undefined;
   entryId: string | null | undefined;
-  locale: string | null | undefined;
+  locale?: string;
 };
 
 export const enum TagAttributes {
@@ -14,6 +14,8 @@ export const enum TagAttributes {
   ENTRY_ID = 'data-contentful-entry-id',
   LOCALE = 'data-contentful-locale',
 }
+
+export type InspectorModeTags = Record<TagAttributes, string> | null;
 
 export interface SysProps {
   id: string;
@@ -107,3 +109,9 @@ export type UpdateReferenceFieldProps = {
   entityReferenceMap: EntityReferenceMap;
   locale: string;
 };
+
+export interface Subscription {
+  data: Argument;
+  locale: string;
+  callback: SubscribeCallback;
+}
