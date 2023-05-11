@@ -1,3 +1,4 @@
+import { ContentfulLivePreview } from '.';
 import {
   DATA_CURR_ENTRY_ID,
   DATA_CURR_FIELD_ID,
@@ -70,7 +71,7 @@ export class InspectorMode {
 
       const currFieldId = element.getAttribute(TagAttributes.FIELD_ID);
       const currEntryId = element.getAttribute(TagAttributes.ENTRY_ID);
-      const currLocale = element.getAttribute(TagAttributes.LOCALE);
+      const currLocale = element.getAttribute(TagAttributes.LOCALE) ?? ContentfulLivePreview.locale;
 
       if (currFieldId && currEntryId && currLocale) {
         this.currentElementBesideTooltip = element;

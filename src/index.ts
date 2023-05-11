@@ -153,7 +153,7 @@ export class ContentfulLivePreview {
     return {
       [TagAttributes.FIELD_ID]: fieldId,
       [TagAttributes.ENTRY_ID]: entryId,
-      [TagAttributes.LOCALE]: locale ? locale : this.locale,
+      [TagAttributes.LOCALE]: locale as string,
     };
   }
 
