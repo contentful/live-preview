@@ -128,7 +128,7 @@ import '@contentful/live-preview/style.css';
 import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
-  <ContentfulLivePreviewProvider>
+  <ContentfulLivePreviewProvider locale="en-US">
     <Component {...pageProps}>
   </ContentfulLivePreviewProvider>
 )
@@ -141,7 +141,7 @@ import '@contentful/live-preview/style.css';
 import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
-  <ContentfulLivePreviewProvider enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
+  <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
     <Component {...pageProps}>
   </ContentfulLivePreviewProvider>
 )
@@ -180,7 +180,7 @@ export default function BlogPost: ({ blogPost }) {
 
 ```tsx
 export default function BlogPost: ({ blogPost }) {
-  const inspectorProps = useContentfulInspectorMode({ entryId: data.sys.id, locale })
+  const inspectorProps = useContentfulInspectorMode({ entryId: data.sys.id })
 
   return (
     <Section>
@@ -227,7 +227,7 @@ import React from 'react';
 import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
 export const wrapRootElement = ({ element }) => (
-  <ContentfulLivePreviewProvider>{element}</ContentfulLivePreviewProvider>
+  <ContentfulLivePreviewProvider locale="en-US">{element}</ContentfulLivePreviewProvider>
 );
 ```
 
