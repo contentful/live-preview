@@ -26,9 +26,10 @@ export function updateAsset<T extends (Entity & { sys: SysProps }) | EntryProps>
       title: updateFromEntryEditor.fields.title[locale],
       description: updateFromEntryEditor.fields.description?.[locale],
       contentType: file.contentType,
-      width: file.details?.image.width,
-      height: file.details?.image.height,
       url: setProtocolToHttps(file.url),
+      // Note: video has no `width` and `height`
+      width: file.details?.image?.width,
+      height: file.details?.image?.height,
     };
   } catch (err) {
     // During file upload it will throw an error and return the original data in the meantime
