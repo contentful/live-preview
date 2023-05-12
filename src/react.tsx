@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useCallback,
   useContext,
@@ -11,8 +11,8 @@ import {
 
 import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect';
 
-import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from '.';
 import { debounce } from './helpers';
+import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index';
 import { Argument, InspectorModeTags, LivePreviewProps } from './types';
 
 const ContentfulLivePreviewContext = createContext<ContentfulLivePreviewInitConfig | null>(null);
@@ -23,16 +23,20 @@ const ContentfulLivePreviewContext = createContext<ContentfulLivePreviewInitConf
  */
 export function ContentfulLivePreviewProvider({
   children,
+  locale,
   debugMode = false,
   enableInspectorMode = true,
   enableLiveUpdates = true,
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>): ReactElement {
-  ContentfulLivePreview.init({ debugMode, enableInspectorMode, enableLiveUpdates });
+  ContentfulLivePreview.init({ locale, debugMode, enableInspectorMode, enableLiveUpdates });
+
+  const props = useMemo(
+    () => ({ locale, debugMode, enableInspectorMode, enableLiveUpdates }),
+    [locale, debugMode, enableInspectorMode, enableLiveUpdates]
+  );
 
   return (
-    <ContentfulLivePreviewContext.Provider
-      value={{ debugMode, enableInspectorMode, enableLiveUpdates }}
-    >
+    <ContentfulLivePreviewContext.Provider value={props}>
       {children}
     </ContentfulLivePreviewContext.Provider>
   );
@@ -46,7 +50,7 @@ export function ContentfulLivePreviewProvider({
  */
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
-  locale: string,
+  locale?: string,
   skip = false
 ): T {
   const [state, setState] = useState({ data, version: 1 });
@@ -86,10 +90,14 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
       return;
     }
     // or update content through live updates
-    return ContentfulLivePreview.subscribe(data as Argument, locale, (updatedData) => {
-      // Update the state and adding a version number to it, as some deep nested updates
-      // are not proceeded correctly otherwise
-      update.current((prevState) => ({ data: updatedData as T, version: prevState.version++ }));
+    return ContentfulLivePreview.subscribe({
+      data: data as Argument,
+      locale: locale as string,
+      callback: (updatedData) => {
+        // Update the state and adding a version number to it, as some deep nested updates
+        // are not proceeded correctly otherwise
+        update.current((prevState) => ({ data: updatedData as T, version: prevState.version++ }));
+      },
     });
   }, [data, shouldSubscribe]);
 

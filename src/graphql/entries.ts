@@ -221,7 +221,7 @@ function updateMultiRefField({
   if (fieldName in dataFromPreviewApp) {
     const dataFromPreviewAppItems =
       updateFromEntryEditor?.fields?.[name]?.[locale]
-        .map((updatedItem: any) => {
+        .map((updatedItem: EntryProps) => {
           const itemFromPreviewApp = (
             dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
           ).items.find((item) => item.sys.id === updatedItem.sys.id);
@@ -230,7 +230,7 @@ function updateMultiRefField({
             referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
               __typename?: string;
             },
-            updatedReference: updatedItem as unknown as EntryProps,
+            updatedReference: updatedItem,
             entityReferenceMap: entityReferenceMap as EntityReferenceMap,
             locale,
           });

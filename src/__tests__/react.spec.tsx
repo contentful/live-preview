@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 
 import { act, renderHook } from '@testing-library/react';
 import { describe, it, vi, afterEach, expect, beforeEach } from 'vitest';
@@ -22,7 +22,7 @@ describe('useContentfulLiveUpdates', () => {
 
   const createData = (id: string, title = 'Hello') => ({ sys: { id }, title });
   const wrapper = ({ children }: PropsWithChildren) => (
-    <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+    <ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>
   );
 
   beforeEach(() => {
@@ -53,7 +53,11 @@ describe('useContentfulLiveUpdates', () => {
     });
 
     expect(subscribe).toHaveBeenCalledTimes(1);
-    expect(subscribe).toHaveBeenCalledWith(initialData, locale, expect.any(Function));
+    expect(subscribe).toHaveBeenCalledWith({
+      data: initialData,
+      locale,
+      callback: expect.any(Function),
+    });
 
     unmount();
 
@@ -93,7 +97,7 @@ describe('useContentfulLiveUpdates', () => {
 
     const updatedData1 = createData('4', 'Hello World');
     act(() => {
-      subscribe.mock.calls[0][2](updatedData1);
+      subscribe.mock.calls[0][0].callback(updatedData1);
       vi.advanceTimersToNextTimer();
     });
 
@@ -101,7 +105,7 @@ describe('useContentfulLiveUpdates', () => {
 
     const updatedData2 = createData('4', 'Hello World!');
     act(() => {
-      subscribe.mock.calls[0][2](updatedData2);
+      subscribe.mock.calls[0][0].callback(updatedData2);
       vi.advanceTimersToNextTimer();
     });
 
@@ -110,7 +114,7 @@ describe('useContentfulLiveUpdates', () => {
 
   it('should debounce updates', () => {
     let counter = 0;
-    const useTestHook = (data: any, locale: string) => {
+    const useTestHook = (data: Record<string, unknown>, locale: string) => {
       const value = useContentfulLiveUpdates(data, locale);
       counter++;
       return value;
@@ -127,11 +131,11 @@ describe('useContentfulLiveUpdates', () => {
 
     const updatedData = createData('5', 'Hello World');
     act(() => {
-      subscribe.mock.calls[0][2](createData('5', 'Hello W'));
-      subscribe.mock.calls[0][2](createData('5', 'Hello Wo'));
-      subscribe.mock.calls[0][2](createData('5', 'Hello Wor'));
-      subscribe.mock.calls[0][2](createData('5', 'Hello Worl'));
-      subscribe.mock.calls[0][2](updatedData);
+      subscribe.mock.calls[0][0].callback(createData('5', 'Hello W'));
+      subscribe.mock.calls[0][0].callback(createData('5', 'Hello Wo'));
+      subscribe.mock.calls[0][0].callback(createData('5', 'Hello Wor'));
+      subscribe.mock.calls[0][0].callback(createData('5', 'Hello Worl'));
+      subscribe.mock.calls[0][0].callback(updatedData);
       vi.advanceTimersToNextTimer();
     });
 
@@ -157,7 +161,7 @@ describe('useContentfulLiveUpdates', () => {
     renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
       wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider enableLiveUpdates={false}>
+        <ContentfulLivePreviewProvider locale={locale} enableLiveUpdates={false}>
           {children}
         </ContentfulLivePreviewProvider>
       ),
@@ -172,7 +176,7 @@ describe('useContentfulInspectorMode', () => {
     const { result } = renderHook((data) => useContentfulInspectorMode(data), {
       initialProps: undefined,
       wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
       ),
     });
 
@@ -187,7 +191,7 @@ describe('useContentfulInspectorMode', () => {
     const { result } = renderHook((data) => useContentfulInspectorMode(data), {
       initialProps: { entryId: '1' },
       wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
       ),
     });
 
@@ -202,7 +206,7 @@ describe('useContentfulInspectorMode', () => {
     const { result } = renderHook((data) => useContentfulInspectorMode(data), {
       initialProps: { locale },
       wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
       ),
     });
 
@@ -217,7 +221,7 @@ describe('useContentfulInspectorMode', () => {
     const { result } = renderHook((data) => useContentfulInspectorMode(data), {
       initialProps: { entryId: '1', locale },
       wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider>{children}</ContentfulLivePreviewProvider>
+        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
       ),
     });
 
@@ -232,7 +236,7 @@ describe('useContentfulInspectorMode', () => {
     const { result } = renderHook((data) => useContentfulInspectorMode(data), {
       initialProps: { locale, entryId: '1' },
       wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider enableInspectorMode={false}>
+        <ContentfulLivePreviewProvider locale={locale} enableInspectorMode={false}>
           {children}
         </ContentfulLivePreviewProvider>
       ),

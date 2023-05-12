@@ -14,13 +14,21 @@ import {
   InspectorModeTags,
   LivePreviewProps,
   SubscribeCallback,
+  Subscription,
   TagAttributes,
 } from './types';
 
 export interface ContentfulLivePreviewInitConfig {
+  locale: string;
   debugMode?: boolean;
   enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
+}
+
+export interface ContentfulSubscribeConfig {
+  data: Argument;
+  locale: string;
+  callback: SubscribeCallback;
 }
 
 export class ContentfulLivePreview {
@@ -29,13 +37,15 @@ export class ContentfulLivePreview {
   static liveUpdates: LiveUpdates | null = null;
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
+  static locale: string;
 
   // Static method to initialize the LivePreview SDK
   static init({
+    locale,
     debugMode,
     enableInspectorMode,
     enableLiveUpdates,
-  }: ContentfulLivePreviewInitConfig = {}): Promise<InspectorMode | null> | undefined {
+  }: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
       if (!isInsideIframe()) {
@@ -58,6 +68,8 @@ export class ContentfulLivePreview {
       if (typeof enableLiveUpdates === 'boolean') {
         this.liveUpdatesEnabled = enableLiveUpdates;
       }
+
+      this.locale = locale;
 
       if (ContentfulLivePreview.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
@@ -106,7 +118,7 @@ export class ContentfulLivePreview {
     }
   }
 
-  static subscribe(data: Argument, locale: string, callback: SubscribeCallback): VoidFunction {
+  static subscribe(config: Subscription): VoidFunction {
     if (!this.liveUpdatesEnabled) {
       return () => {
         /* noop */
@@ -119,7 +131,12 @@ export class ContentfulLivePreview {
       );
     }
 
-    return this.liveUpdates.subscribe(data, locale, callback);
+    // override locale if passed by user
+    if (config.locale) {
+      return this.liveUpdates.subscribe(config);
+    }
+
+    return this.liveUpdates.subscribe({ ...config, locale: this.locale });
   }
 
   // Static method to render live preview data-attributes to HTML element output
@@ -128,15 +145,15 @@ export class ContentfulLivePreview {
       return null;
     }
 
-    if (!fieldId || !entryId || !locale) {
-      debug.warn('Missing property for inspector mode', { fieldId, entryId, locale });
+    if (!fieldId || !entryId) {
+      debug.warn('Missing property for inspector mode', { fieldId, entryId });
       return null;
     }
 
     return {
       [TagAttributes.FIELD_ID]: fieldId,
       [TagAttributes.ENTRY_ID]: entryId,
-      [TagAttributes.LOCALE]: locale,
+      [TagAttributes.LOCALE]: locale as string,
     };
   }
 

@@ -33,7 +33,7 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 
 ...
 
-ContentfulLivePreview.init();
+ContentfulLivePreview.init({ locale: 'en-US'});
 ```
 
 #### Init Configuration
@@ -46,15 +46,34 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 ...
 
 ContentfulLivePreview.init({
+  locale: 'set-your-locale-here' // This is required and allows you to set the locale once and have it reused throughout the preview
   enableInspectorMode: false, // This allows you to toggle the inspector mode which is on by default
   enableLiveUpdates: false, // This allows you to toggle the live updates which is on by default
   debugMode: false, // This allows you to toggle the debug mode which is off by default
 });
 ```
 
+#### Overriding Locale
+
+It is possible to override the locale you set in the init command for a more flexible workflow. If you need to override the locale you can do so either in the getProps command like below:
+
+```jsx
+ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title', locale: 'fr' });
+```
+
+You can also override it when using our useContentfulLiveUpdates hook like below:
+
+```tsx
+import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+
+// ...
+const updated = useContentfulLiveUpdates(originalData, locale);
+// ...
+```
+
 ### Inspector Mode (field tagging)
 
-To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`, `data-contentful-locale`) to the rendered HTML element output.
+To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`) to the rendered HTML element output.
 
 You can do this in React via our helper function.
 
@@ -65,7 +84,7 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 import '@contentful/live-preview/style.css';
 ...
 
-<h1 {...ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title', locale })}>
+<h1 {...ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title' })}>
   {title}
 </h1>
 ```
@@ -79,7 +98,7 @@ The updates are only happening on the **client-side** and in the live preview en
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
 // ...
-const updated = useContentfulLiveUpdates(originalData, locale);
+const updated = useContentfulLiveUpdates(originalData);
 // ...
 ```
 
@@ -100,26 +119,27 @@ npm install @contentful/live-preview
 ```
 
 2. Initialize the SDK with the `ContentfulLivePreviewProvider` and add the stylesheet for field tagging inside `_app.tsx` or `_app.js`.
-The `ContentfulLivePreviewProvider` accepts the same arguments as the [init function](#init-configuration).
+   The `ContentfulLivePreviewProvider` accepts the same arguments as the [init function](#init-configuration).
 
 ```tsx
 import '@contentful/live-preview/style.css';
 import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
-  <ContentfulLivePreviewProvider>
+  <ContentfulLivePreviewProvider locale="en-US">
     <Component {...pageProps}>
   </ContentfulLivePreviewProvider>
 )
 ```
 
 This provides the posibility to only enable live updates and the inspector mode inside the preview mode:
+
 ```tsx
 import '@contentful/live-preview/style.css';
 import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
-  <ContentfulLivePreviewProvider enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
+  <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
     <Component {...pageProps}>
   </ContentfulLivePreviewProvider>
 )
@@ -132,8 +152,7 @@ export default function BlogPost: ({ blogPost }) {
   const inspectorProps = useContentfulInspectorMode()
   // Live updates for this component
   const data = useContentfulLiveUpdates(
-    blogPost,
-    locale
+    blogPost
   );
 
   return (
@@ -145,7 +164,6 @@ export default function BlogPost: ({ blogPost }) {
         {...inspectorProps({
           entryId: data.sys.id,
           fieldId: 'text',
-          locale,
         })}>
         {data.text}
       </Text>
@@ -160,7 +178,7 @@ export default function BlogPost: ({ blogPost }) {
 
 ```tsx
 export default function BlogPost: ({ blogPost }) {
-  const inspectorProps = useContentfulInspectorMode({ entryId: data.sys.id, locale })
+  const inspectorProps = useContentfulInspectorMode({ entryId: data.sys.id })
 
   return (
     <Section>
@@ -203,12 +221,12 @@ npm install @contentful/live-preview
 ```tsx
 import '@contentful/live-preview/style.css';
 
-import React from "react";
+import React from 'react';
 import { ContentfulLivePreview } from '@contentful/live-preview/react';
 
 export const wrapRootElement = ({ element }) => (
-  <ContentfulLivePreviewProvider>{element}</ContentfulLivePreviewProvider>
-)
+  <ContentfulLivePreviewProvider locale="en-US">{element}</ContentfulLivePreviewProvider>
+);
 ```
 
 3. In order to tag fields and use live updates, you need to add the contentful_id property to the GraphQL schema. For example, to extend the HomepageHero interface:
@@ -247,15 +265,12 @@ export const query = graphql`
 
 ```jsx
 export default function Hero({ contentful_id, ...props }) {
-  const inspectorProps = useContentfulInspectorMode()
+  const inspectorProps = useContentfulInspectorMode();
   // Live updates for this component
-  const data = useContentfulLiveUpdates(
-    {
-      ...props,
-      sys: { id: props.contentful_id },
-    },
-    locale
-  );
+  const data = useContentfulLiveUpdates({
+    ...props,
+    sys: { id: props.contentful_id },
+  });
 
   return (
     <Section>
@@ -266,7 +281,6 @@ export default function Hero({ contentful_id, ...props }) {
         {...inspectorProps({
           entryId: contentful_id,
           fieldId: 'text',
-          locale,
         })}>
         {data.text}
       </Text>

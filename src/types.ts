@@ -6,7 +6,7 @@ export const ASSET_TYPENAME = 'Asset';
 export type LivePreviewProps = {
   fieldId: string;
   entryId: string;
-  locale: string;
+  locale?: string;
 };
 
 export const enum TagAttributes {
@@ -109,3 +109,9 @@ export type UpdateReferenceFieldProps = {
   entityReferenceMap: EntityReferenceMap;
   locale: string;
 };
+
+export interface Subscription {
+  data: Argument;
+  locale: string;
+  callback: SubscribeCallback;
+}

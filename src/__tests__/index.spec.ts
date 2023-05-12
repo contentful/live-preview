@@ -27,7 +27,7 @@ describe('ContentfulLivePreview', () => {
   beforeAll(() => {
     (isInsideIframe as Mock).mockReturnValue(true);
 
-    ContentfulLivePreview.init();
+    ContentfulLivePreview.init({ locale: 'en-US' });
     // establish the connection, needs to tested here, as we can only init the ContentfulLivePreview once
     expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
   });
@@ -68,14 +68,14 @@ describe('ContentfulLivePreview', () => {
     it('should subscribe to changes from LiveUpdates', () => {
       const callback = vi.fn();
       const data = { entity: {} };
-      ContentfulLivePreview.subscribe(data, 'en-US', callback);
+      ContentfulLivePreview.subscribe({ data, locale: 'en-US', callback });
 
       // Check that the LiveUpdates.subscribe was called correctly
       expect(subscribe).toHaveBeenCalledOnce();
-      expect(subscribe).toHaveBeenCalledWith(data, 'en-US', callback);
+      expect(subscribe).toHaveBeenCalledWith({ data, locale: 'en-US', callback });
 
       // Updates from the subscribe fn will trigger the callback
-      subscribe.mock.lastCall?.at(-1)({ entity: { title: 'Hello' } });
+      subscribe.mock.lastCall?.[0].callback({ entity: { title: 'Hello' } });
 
       expect(callback).toHaveBeenCalledTimes(1);
       expect(callback).toHaveBeenCalledWith({ entity: { title: 'Hello' } });
@@ -86,7 +86,7 @@ describe('ContentfulLivePreview', () => {
 
       const callback = vi.fn();
       const data = { entity: {} };
-      ContentfulLivePreview.subscribe(data, 'en-US', callback);
+      ContentfulLivePreview.subscribe({ data, locale: 'en-US', callback });
 
       // Check that the LiveUpdates.subscribe was called correctly
       expect(subscribe).not.toHaveBeenCalled();

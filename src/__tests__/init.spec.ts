@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // @vitest-environment jsdom
 import { describe, it, expect, vi, Mock, beforeEach } from 'vitest';
 
@@ -18,31 +19,32 @@ describe('init', () => {
     ContentfulLivePreview.inspectorModeEnabled = true;
     ContentfulLivePreview.liveUpdates = null;
     ContentfulLivePreview.liveUpdatesEnabled = true;
+    ContentfulLivePreview.locale = '';
   });
 
   it('returns a Promise that resolves to a LivePreview instance when running in a browser environment', async () => {
-    const livePreviewInstance = await ContentfulLivePreview.init();
+    const livePreviewInstance = await ContentfulLivePreview.init({ locale: 'en-US' });
     expect(livePreviewInstance).toBeInstanceOf(InspectorMode);
   });
 
   it('returns undefined when not running in a browser environment', () => {
     const windowBackup = global.window;
     (global as any).window = undefined;
-    const result = ContentfulLivePreview.init();
+    const result = ContentfulLivePreview.init({ locale: 'en-US' });
     expect(result).toBeUndefined();
     global.window = windowBackup;
   });
 
   it('returns a Promise that resolves to the same LivePreview instance when called multiple times', async () => {
-    const livePreviewInstance1 = await ContentfulLivePreview.init();
-    const livePreviewInstance2 = await ContentfulLivePreview.init();
+    const livePreviewInstance1 = await ContentfulLivePreview.init({ locale: 'en-US' });
+    const livePreviewInstance2 = await ContentfulLivePreview.init({ locale: 'en-US' });
     expect(livePreviewInstance1).toBe(livePreviewInstance2);
   });
 
   it('returns null when not inside an iframe', async () => {
     (isInsideIframe as Mock).mockReturnValue(false);
 
-    const result = await ContentfulLivePreview.init();
+    const result = await ContentfulLivePreview.init({ locale: 'en-US' });
 
     expect(result).toBeNull();
     expect(ContentfulLivePreview.liveUpdatesEnabled).toBeFalsy();
@@ -51,7 +53,7 @@ describe('init', () => {
 
   describe('flags', () => {
     it('should use enableInspectorMode with false to disable the inspectorMode', async () => {
-      await ContentfulLivePreview.init({ enableInspectorMode: false });
+      await ContentfulLivePreview.init({ enableInspectorMode: false, locale: 'en-US' });
 
       expect(ContentfulLivePreview.inspectorModeEnabled).toBeFalsy();
       expect(ContentfulLivePreview.inspectorMode).toBeNull();
@@ -61,7 +63,7 @@ describe('init', () => {
     });
 
     it('should use enableLiveUpdates with false to disable the live updates', async () => {
-      await ContentfulLivePreview.init({ enableLiveUpdates: false });
+      await ContentfulLivePreview.init({ enableLiveUpdates: false, locale: 'en-US' });
 
       expect(ContentfulLivePreview.inspectorModeEnabled).toBeTruthy();
       expect(ContentfulLivePreview.inspectorMode).toBeInstanceOf(InspectorMode);

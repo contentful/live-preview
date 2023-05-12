@@ -1,5 +1,6 @@
 import type { AssetProps, EntryProps } from 'contentful-management';
 
+import { ContentfulSubscribeConfig } from '.';
 import * as gql from './graphql';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
 import * as rest from './rest';
@@ -10,14 +11,8 @@ import {
   EntityWithSys,
   EntityReferenceMap,
   hasSysInformation,
-  SubscribeCallback,
+  Subscription,
 } from './types';
-
-interface Subscription {
-  data: Argument;
-  locale: string;
-  cb: SubscribeCallback;
-}
 
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;
@@ -192,7 +187,7 @@ export class LiveUpdates {
 
           // Only if there was an update, trigger the callback to unnecessary re-renders
           if (updated) {
-            s.cb(data);
+            s.callback(data);
           }
         } catch (error) {
           debug.error('Failed to apply live update', {
@@ -223,7 +218,7 @@ export class LiveUpdates {
       //ensure callback is only called for active subscriptions
       const subscription = this.subscriptions.get(id);
       if (subscription) {
-        subscription.cb(restoredData);
+        subscription.callback(restoredData);
       }
     } else {
       const restored = restoreLogic(data);
@@ -231,7 +226,7 @@ export class LiveUpdates {
         //ensure callback is only called for active subscriptions
         const subscription = this.subscriptions.get(id);
         if (subscription) {
-          subscription.cb(restored);
+          subscription.callback(restored);
         }
       }
     }
@@ -280,7 +275,7 @@ export class LiveUpdates {
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
    */
-  public subscribe(data: Argument, locale: string, cb: SubscribeCallback): VoidFunction {
+  public subscribe({ data, locale, callback }: ContentfulSubscribeConfig): VoidFunction {
     const { isGQL, isValid } = this.validateDataFromPreview(data);
 
     if (!isValid) {
@@ -290,7 +285,7 @@ export class LiveUpdates {
     }
 
     const id = generateUID();
-    this.subscriptions.set(id, { data, locale, cb });
+    this.subscriptions.set(id, { data, locale, callback });
     /*  Restore function is being called immediately after the subscription is added,
         which might cause the callback to be called even if the subscription is removed immediately afterward.
         To fix this, we wrap the restore call in a setTimeout,
