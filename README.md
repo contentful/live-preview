@@ -91,8 +91,7 @@ import '@contentful/live-preview/style.css';
 
 ### Live Updates
 
-Live Updates from the editor to your applications are out of the box only supported for [React.js](https://reactjs.org/) at the moment.
-The updates are only happening on the **client-side** and in the live preview environment of [contentful](https://app.contentful.com).
+Live Updates allow you to make changes in your editor and see the updates in real time. The updates are only happening on the **client-side** and in the live preview environment of [Contentful](https://app.contentful.com).
 
 ```tsx
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
@@ -102,9 +101,115 @@ const updated = useContentfulLiveUpdates(originalData);
 // ...
 ```
 
+## Example Integrations
+
+### Vanilla Javascript
+
+To use the Contentful Live Preview SDK with [Javascript], you can use the following steps to add it to an existing project.
+
+1. Add the @contentful/live-preview package to your project
+
+```bash
+yarn add @contentful/live-preview
+```
+
+or
+
+```bash
+npm install @contentful/live-preview
+```
+
+2. Initialize the SDK with the `ContentfulLivePreview` class' [init function](#init-configuration) and add the stylesheet for field tagging as a stylesheet link.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Live Preview Example</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./node_modules/@contentful/live-preview/dist/style.css"
+    />
+    <script type="module">
+      import { ContentfulLivePreview } from './node_modules/@contentful/live-preview/dist/index.js';
+
+      ContentfulLivePreview.init({ locale: 'en-US' });
+    </script>
+  </head>
+  <body>
+    <p id="demo">Hi.</p>
+  </body>
+</html>
+```
+
+3. To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`, `data-contentful-locale`) to your HTML element output.
+
+You can do this via our helper function.
+
+The necessary styles for the live edit tags can be found in the `@contentful/live-preview/style.css` file.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Live Preview Example</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./node_modules/@contentful/live-preview/dist/style.css"
+    />
+    <script type="module">
+      import { ContentfulLivePreview } from './node_modules/@contentful/live-preview/dist/index.js';
+
+      ContentfulLivePreview.init({ locale: 'en-US' });
+
+      const heading = document.getElementById('demo');
+
+      /*
+       * Example response
+       *
+       * const props = {
+       *   'data-contentful-field-id': 'fieldId',
+       *   'data-contentful-entry-id': 'entryId',
+       *    'data-contentful-locale': 'en-US',
+       *   }
+       */
+      const props = ContentfulLivePreview.getProps({ entryId: id, fieldId: title });
+
+      for (const [key, value] of Object.entries(props)) {
+        // change from hyphen to camelCase
+        const formattedName = key.split('data-')[1].replace(/-([a-z])/g, function (m, w) {
+          return w.toUpperCase();
+        });
+
+        heading.dataset[formattedName] = value;
+      }
+    </script>
+  </head>
+  <body>
+    <h1 id="demo">Title</h1>
+  </body>
+</html>
+```
+
+4.
+
+```tsx
+import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+
+// ...
+const updated = useContentfulLiveUpdates(originalData);
+// ...
+```
+
+That's it! You should now be able to use the Contentful Live Preview SDK with vanilla JS.
+
+### React
+
 #### Integration with Next.js
 
-To use the Contentful LivePreivew SDK with [Next.js](https://nextjs.org), you can either use one of the contentful starter templates, or do the following steps to add it to an existing project.
+To use the Contentful Live Preview SDK with [Next.js](https://nextjs.org), you can either use one of the Contentful starter templates, or do the following steps to add it to an existing project.
 
 1. Add the @contentful/live-preview package to your project
 
@@ -123,7 +228,7 @@ npm install @contentful/live-preview
 
 ```tsx
 import '@contentful/live-preview/style.css';
-import { ContentfulLivePreview } from '@contentful/live-preview/react';
+import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
   <ContentfulLivePreviewProvider locale="en-US">
@@ -136,7 +241,7 @@ This provides the posibility to only enable live updates and the inspector mode 
 
 ```tsx
 import '@contentful/live-preview/style.css';
-import { ContentfulLivePreview } from '@contentful/live-preview/react';
+import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
   <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
@@ -222,7 +327,7 @@ npm install @contentful/live-preview
 import '@contentful/live-preview/style.css';
 
 import React from 'react';
-import { ContentfulLivePreview } from '@contentful/live-preview/react';
+import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 export const wrapRootElement = ({ element }) => (
   <ContentfulLivePreviewProvider locale="en-US">{element}</ContentfulLivePreviewProvider>
