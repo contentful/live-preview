@@ -33,8 +33,10 @@ interface MergeArgumentProps extends Omit<MergeEntityProps, 'dataFromPreviewApp'
 export class LiveUpdates {
   private subscriptions = new Map<string, Subscription>();
   private storage: StorageMap<Entity>;
+  private defaultLocale: string;
 
-  constructor() {
+  constructor({ locale }: { locale: string }) {
+    this.defaultLocale = locale;
     this.storage = new StorageMap<Entity>('live-updates', new Map());
     window.addEventListener('beforeunload', () => this.clearStorage());
   }
@@ -179,7 +181,7 @@ export class LiveUpdates {
             // to prevent cloning multiple times (time)
             // or modifying the original data (failure potential)
             dataFromPreviewApp: clone(s.data),
-            locale: s.locale,
+            locale: s.locale || this.defaultLocale,
             updateFromEntryEditor: entity,
             contentType: contentType as ContentType,
             entityReferenceMap: entityReferenceMap as EntityReferenceMap,

@@ -27,7 +27,7 @@ export interface ContentfulLivePreviewInitConfig {
 
 export interface ContentfulSubscribeConfig {
   data: Argument;
-  locale: string;
+  locale?: string;
   callback: SubscribeCallback;
 }
 
@@ -78,11 +78,11 @@ export class ContentfulLivePreview {
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        ContentfulLivePreview.inspectorMode = new InspectorMode();
+        ContentfulLivePreview.inspectorMode = new InspectorMode({ locale });
       }
 
       if (this.liveUpdatesEnabled) {
-        ContentfulLivePreview.liveUpdates = new LiveUpdates();
+        ContentfulLivePreview.liveUpdates = new LiveUpdates({ locale });
       }
 
       // bind event listeners for interactivity

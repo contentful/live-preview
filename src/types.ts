@@ -112,6 +112,6 @@ export type UpdateReferenceFieldProps = {
 
 export interface Subscription {
   data: Argument;
-  locale: string;
+  locale?: string;
   callback: SubscribeCallback;
 }
