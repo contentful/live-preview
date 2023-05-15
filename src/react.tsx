@@ -101,8 +101,6 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
     });
   }, [data, shouldSubscribe]);
 
-  console.log('>> state.data', state.data);
-
   return state.data;
 }
 

@@ -202,12 +202,6 @@ function updateReferenceField({
   entityReferenceMap,
   locale,
 }: UpdateReferenceFieldProps) {
-  console.log('>> updateReferenceField', {
-    referenceFromPreviewApp,
-    updatedReference,
-    entityReferenceMap,
-    locale,
-  });
   if (!updatedReference) {
     return null;
   }

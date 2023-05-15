@@ -44,7 +44,7 @@ describe('LiveUpdates', () => {
   const updateFromEntryEditor2 = { sys: { id: '1' }, fields: { title: { [locale]: 'Data 3' } } };
 
   it('should listen to changes and calls the subscribed handlers', () => {
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, locale, callback });
@@ -68,7 +68,7 @@ describe('LiveUpdates', () => {
 
   describe('invalid subscription data', () => {
     it('should notify because sys information is missing', () => {
-      const liveUpdates = new LiveUpdates();
+      const liveUpdates = new LiveUpdates({ locale });
       const data = { title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
 
@@ -81,7 +81,7 @@ describe('LiveUpdates', () => {
     });
 
     it('should notify because we dont know if it is REST or GraphQL', () => {
-      const liveUpdates = new LiveUpdates();
+      const liveUpdates = new LiveUpdates({ locale });
       const data = { sys: { id: '1' }, title: 'Data 1' };
       const callback = vi.fn();
 
@@ -95,7 +95,7 @@ describe('LiveUpdates', () => {
   });
 
   it('no longer receives updates after unsubcribing', () => {
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const contentType = { fields: [] };
     const callback = vi.fn();
@@ -113,7 +113,7 @@ describe('LiveUpdates', () => {
   });
 
   it('ignores invalid messages', () => {
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, locale, callback });
@@ -124,7 +124,7 @@ describe('LiveUpdates', () => {
   });
 
   it('doesnt call the subscribe handler if the data was not updated', () => {
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '99' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, locale, callback });
@@ -135,7 +135,7 @@ describe('LiveUpdates', () => {
   });
 
   it('merges nested field updates', () => {
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedDataFromPreviewApp, locale, callback });
     liveUpdates.receiveMessage({ entity: assetFromEntryEditor });
@@ -149,7 +149,7 @@ describe('LiveUpdates', () => {
   });
 
   it('merges nested collections', () => {
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, locale, callback });
     liveUpdates.receiveMessage({
@@ -168,7 +168,7 @@ describe('LiveUpdates', () => {
 
   describe('sendMessageToEditor', () => {
     it('sends a message to the editor for a subscription with GQL data', () => {
-      const liveUpdates = new LiveUpdates();
+      const liveUpdates = new LiveUpdates({ locale });
       const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
       liveUpdates.subscribe({ data, locale, callback });
@@ -181,7 +181,7 @@ describe('LiveUpdates', () => {
     });
 
     it('sends a message to the editor for a subscription with REST data', () => {
-      const liveUpdates = new LiveUpdates();
+      const liveUpdates = new LiveUpdates({ locale });
       const data = { sys: { id: '1' }, fields: { title: 'Data 1' } };
       const callback = vi.fn();
       liveUpdates.subscribe({ data, locale, callback });
@@ -202,7 +202,7 @@ describe('LiveUpdates', () => {
       locale: 'en-US',
       callback: vi.fn(),
     };
-    const liveUpdates = new LiveUpdates();
+    const liveUpdates = new LiveUpdates({ locale });
 
     beforeEach(() => {
       liveUpdates.subscribe(subscription);
