@@ -112,7 +112,7 @@ type GetInspectorModeProps<T> = (props: {
  * Generates the function to build the required properties for the inspector mode (field tagging)
  */
 export function useContentfulInspectorMode<
-  T = undefined | Pick<LivePreviewProps, 'entryId'> | Pick<LivePreviewProps, 'entryId' | 'locale'>
+  T = undefined | Pick<LivePreviewProps, 'entryId'> | Pick<LivePreviewProps, 'entryId' | 'fieldId'>
 >(sharedProps?: T): GetInspectorModeProps<T> {
   const config = useContext(ContentfulLivePreviewContext);
 
