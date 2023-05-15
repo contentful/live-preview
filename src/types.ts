@@ -105,7 +105,7 @@ export type UpdateFieldProps = {
 
 export type UpdateReferenceFieldProps = {
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined;
-  updatedReference: EntryProps & { __typename?: string };
+  updatedReference: Entity & CollectionItem;
   entityReferenceMap: EntityReferenceMap;
   locale: string;
 };

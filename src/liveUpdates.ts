@@ -174,6 +174,8 @@ export class LiveUpdates {
     entityReferenceMap,
   }: Record<string, unknown>): void {
     if (this.isCfEntity(entity)) {
+      console.log('>>> incomming message', entity, entityReferenceMap);
+
       this.subscriptions.forEach((s) => {
         try {
           const { updated, data } = this.merge({

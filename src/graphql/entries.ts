@@ -106,7 +106,7 @@ function getContentTypenameFromEntityReferenceMap(
   }
 }
 
-function isAsset(entity: EntryProps): boolean {
+function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {
   return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }
 
@@ -139,17 +139,51 @@ function updateReferenceAssetField({
 
 function updateReferenceEntryField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
-  updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: EntityReferenceMap
+  updatedReference: Entity & CollectionItem,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string
 ) {
   const entityTypename = getContentTypenameFromEntityReferenceMap(
     entityReferenceMap,
     updatedReference.sys.id
   );
+  const match = entityReferenceMap.get(updatedReference.sys.id);
 
   // if we have the typename of the updated reference, we can return with it
-  if (entityTypename) {
-    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename };
+  if (entityTypename && match) {
+    const merged = {
+      ...referenceFromPreviewApp,
+      ...updatedReference,
+      __typename: entityTypename,
+    } as Entity & CollectionItem;
+
+    for (const key in match.fields) {
+      const value = match.fields[key as keyof typeof match.fields][locale];
+
+      if (typeof value === 'object' && value.sys) {
+        // TODO: use graphql fn
+        // updateSingleRefField(
+        //   result,
+        //   match,
+        //   locale,
+        //   key as keyof Reference['fields'],
+        //   entityReferenceMap
+        // );
+      } else if (Array.isArray(value) && value[0]?.sys) {
+        // TODO: use graphql fn + `collection` for name
+        // updateMultiRefField(
+        //   result,
+        //   match,
+        //   locale,
+        //   key as keyof Reference['fields'],
+        //   entityReferenceMap
+        // );
+      } else {
+        merged[key] = value;
+      }
+    }
+
+    return merged;
   }
 
   // if we don't have the typename we send a message back to the entry editor
@@ -168,6 +202,12 @@ function updateReferenceField({
   entityReferenceMap,
   locale,
 }: UpdateReferenceFieldProps) {
+  console.log('>> updateReferenceField', {
+    referenceFromPreviewApp,
+    updatedReference,
+    entityReferenceMap,
+    locale,
+  });
   if (!updatedReference) {
     return null;
   }
@@ -190,7 +230,12 @@ function updateReferenceField({
     });
   }
 
-  return updateReferenceEntryField(referenceFromPreviewApp, updatedReference, entityReferenceMap);
+  return updateReferenceEntryField(
+    referenceFromPreviewApp,
+    updatedReference,
+    entityReferenceMap,
+    locale
+  );
 }
 
 function updateSingleRefField({
@@ -221,7 +266,7 @@ function updateMultiRefField({
   if (fieldName in dataFromPreviewApp) {
     const dataFromPreviewAppItems =
       updateFromEntryEditor?.fields?.[name]?.[locale]
-        .map((updatedItem: EntryProps) => {
+        .map((updatedItem: Entity & CollectionItem) => {
           const itemFromPreviewApp = (
             dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
           ).items.find((item) => item.sys.id === updatedItem.sys.id);

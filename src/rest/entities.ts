@@ -21,7 +21,7 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
  * Update the reference from the entry editor with the information from the entityReferenceMap.
  * If the information is not yet available, it send a message to the editor to retrieve it.
  */
-function updateRef(
+export function updateRef(
   dataFromPreviewApp: Reference | undefined,
   updateFromEntryEditor: Reference | SysLink,
   locale: string,
