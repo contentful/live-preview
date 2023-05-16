@@ -105,6 +105,7 @@ export type UpdateFieldProps = {
   name: string;
   locale: string;
   entityReferenceMap?: EntityReferenceMap;
+  depth?: number;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -112,6 +113,7 @@ export type UpdateReferenceFieldProps = {
   updatedReference: Entity & CollectionItem;
   entityReferenceMap: EntityReferenceMap;
   locale: string;
+  depth?: number;
 };
 
 export interface Subscription {

@@ -12,7 +12,7 @@ import {
   UpdateEntryProps,
 } from '../types';
 import { updateAsset } from './assets';
-import { logUnrecognizedFields } from './utils';
+import { buildCollectionName, logUnrecognizedFields } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -37,7 +37,6 @@ export function updateEntry({
   const copyOfDataFromPreviewApp = { ...dataFromPreviewApp };
   const { fields } = contentType;
 
-  // TODO: On GraphQL the suffix `Collection` is added for multiple references
   logUnrecognizedFields(
     fields.map((f) => f.apiName ?? f.name),
     dataFromPreviewApp
@@ -141,7 +140,8 @@ function updateReferenceEntryField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
   updatedReference: Entity & CollectionItem,
   entityReferenceMap: EntityReferenceMap,
-  locale: string
+  locale: string,
+  depth = 0
 ) {
   const entityTypename = getContentTypenameFromEntityReferenceMap(
     entityReferenceMap,
@@ -149,8 +149,11 @@ function updateReferenceEntryField(
   );
   const match = entityReferenceMap.get(updatedReference.sys.id);
 
-  // if we have the typename of the updated reference, we can return with it
-  if (entityTypename && match) {
+  // If we have the typename of the updated reference, we can work with it
+  // Performance: We try to resolve here also deep recursive references,
+  // to don't do it forever we have a depth limit of three.
+  // We can optimize this behavior once we use the GraphQL Document (depth, properties)
+  if (entityTypename && match && depth < 3) {
     const merged = {
       ...referenceFromPreviewApp,
       ...updatedReference,
@@ -161,23 +164,26 @@ function updateReferenceEntryField(
       const value = match.fields[key as keyof typeof match.fields][locale];
 
       if (typeof value === 'object' && value.sys) {
-        // TODO: use graphql fn
-        // updateSingleRefField(
-        //   result,
-        //   match,
-        //   locale,
-        //   key as keyof Reference['fields'],
-        //   entityReferenceMap
-        // );
+        merged[key] = value;
+        updateSingleRefField({
+          dataFromPreviewApp: merged,
+          updateFromEntryEditor: match as EntryProps,
+          locale,
+          entityReferenceMap,
+          name: key,
+          depth: depth + 1,
+        });
       } else if (Array.isArray(value) && value[0]?.sys) {
-        // TODO: use graphql fn + `collection` for name
-        // updateMultiRefField(
-        //   result,
-        //   match,
-        //   locale,
-        //   key as keyof Reference['fields'],
-        //   entityReferenceMap
-        // );
+        const name = buildCollectionName(key);
+        merged[name] = { items: value };
+        updateMultiRefField({
+          dataFromPreviewApp: merged,
+          updateFromEntryEditor: match as EntryProps,
+          locale,
+          entityReferenceMap,
+          name: key,
+          depth: depth + 1,
+        });
       } else {
         merged[key] = value;
       }
@@ -201,6 +207,7 @@ function updateReferenceField({
   updatedReference,
   entityReferenceMap,
   locale,
+  depth,
 }: UpdateReferenceFieldProps) {
   if (!updatedReference) {
     return null;
@@ -228,7 +235,8 @@ function updateReferenceField({
     referenceFromPreviewApp,
     updatedReference,
     entityReferenceMap,
-    locale
+    locale,
+    depth
   );
 }
 
@@ -238,6 +246,7 @@ function updateSingleRefField({
   name,
   locale,
   entityReferenceMap,
+  depth,
 }: UpdateFieldProps) {
   if (name in dataFromPreviewApp) {
     dataFromPreviewApp[name] = updateReferenceField({
@@ -245,6 +254,7 @@ function updateSingleRefField({
       updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
       entityReferenceMap: entityReferenceMap as EntityReferenceMap,
       locale,
+      depth,
     });
   }
 }
@@ -255,8 +265,9 @@ function updateMultiRefField({
   name,
   locale,
   entityReferenceMap,
+  depth,
 }: UpdateFieldProps) {
-  const fieldName = `${name}Collection`;
+  const fieldName = buildCollectionName(name);
   if (fieldName in dataFromPreviewApp) {
     const dataFromPreviewAppItems =
       updateFromEntryEditor?.fields?.[name]?.[locale]
@@ -272,6 +283,7 @@ function updateMultiRefField({
             updatedReference: updatedItem,
             entityReferenceMap: entityReferenceMap as EntityReferenceMap,
             locale,
+            depth,
           });
         })
         .filter(Boolean) ?? [];
