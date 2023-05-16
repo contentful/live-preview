@@ -15,7 +15,11 @@ export const enum TagAttributes {
   LOCALE = 'data-contentful-locale',
 }
 
-export type InspectorModeTags = Record<TagAttributes, string> | null;
+export type InspectorModeTags = {
+  [TagAttributes.ENTRY_ID]: string;
+  [TagAttributes.FIELD_ID]: string;
+  [TagAttributes.LOCALE]?: string;
+} | null;
 
 export interface SysProps {
   id: string;

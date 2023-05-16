@@ -47,7 +47,7 @@ describe('LiveUpdates', () => {
     const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
-    liveUpdates.subscribe({ data, locale, callback });
+    liveUpdates.subscribe({ data, callback });
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
 
@@ -72,7 +72,7 @@ describe('LiveUpdates', () => {
       const data = { title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
 
-      liveUpdates.subscribe({ data, locale, callback });
+      liveUpdates.subscribe({ data, callback });
 
       expect(helpers.debug.error).toHaveBeenCalledWith(
         'Live Updates requires the "sys.id" to be present on the provided data',
@@ -85,7 +85,7 @@ describe('LiveUpdates', () => {
       const data = { sys: { id: '1' }, title: 'Data 1' };
       const callback = vi.fn();
 
-      liveUpdates.subscribe({ data, locale, callback });
+      liveUpdates.subscribe({ data, callback });
 
       expect(helpers.debug.error).toHaveBeenCalledWith(
         'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates will not work.',
@@ -99,7 +99,7 @@ describe('LiveUpdates', () => {
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const contentType = { fields: [] };
     const callback = vi.fn();
-    const unsubscribe = liveUpdates.subscribe({ data, locale, callback });
+    const unsubscribe = liveUpdates.subscribe({ data, callback });
 
     liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
 
@@ -116,7 +116,7 @@ describe('LiveUpdates', () => {
     const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
-    liveUpdates.subscribe({ data, locale, callback });
+    liveUpdates.subscribe({ data, callback });
 
     liveUpdates.receiveMessage({ isInspectorActive: false });
 
@@ -137,7 +137,7 @@ describe('LiveUpdates', () => {
   it('merges nested field updates', () => {
     const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
-    liveUpdates.subscribe({ data: nestedDataFromPreviewApp, locale, callback });
+    liveUpdates.subscribe({ data: nestedDataFromPreviewApp, callback });
     liveUpdates.receiveMessage({ entity: assetFromEntryEditor });
 
     const expected = helpers.clone(nestedDataFromPreviewApp);
@@ -151,7 +151,7 @@ describe('LiveUpdates', () => {
   it('merges nested collections', () => {
     const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
-    liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, locale, callback });
+    liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, callback });
     liveUpdates.receiveMessage({
       entity: pageInsideCollectionFromEntryEditor,
       contentType: landingPageContentType,
@@ -171,7 +171,7 @@ describe('LiveUpdates', () => {
       const liveUpdates = new LiveUpdates({ locale });
       const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
-      liveUpdates.subscribe({ data, locale, callback });
+      liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
       expect(sendMessage).toHaveBeenCalledWith({
@@ -184,7 +184,7 @@ describe('LiveUpdates', () => {
       const liveUpdates = new LiveUpdates({ locale });
       const data = { sys: { id: '1' }, fields: { title: 'Data 1' } };
       const callback = vi.fn();
-      liveUpdates.subscribe({ data, locale, callback });
+      liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
       expect(sendMessage).toHaveBeenCalledWith({

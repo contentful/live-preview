@@ -51,6 +51,12 @@ describe('init', () => {
     expect(ContentfulLivePreview.liveUpdates).toBeNull();
   });
 
+  it('warns about invalid init call (missing locale)', () => {
+    expect(ContentfulLivePreview.init).toThrow(
+      "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)"
+    );
+  });
+
   describe('flags', () => {
     it('should use enableInspectorMode with false to disable the inspectorMode', async () => {
       await ContentfulLivePreview.init({ enableInspectorMode: false, locale: 'en-US' });

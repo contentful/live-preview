@@ -40,12 +40,15 @@ export class ContentfulLivePreview {
   static locale: string;
 
   // Static method to initialize the LivePreview SDK
-  static init({
-    locale,
-    debugMode,
-    enableInspectorMode,
-    enableLiveUpdates,
-  }: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
+  static init(config: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
+    if (typeof config !== 'object' || !config?.locale) {
+      throw new Error(
+        "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)"
+      );
+    }
+
+    const { debugMode, enableInspectorMode, enableLiveUpdates, locale } = config;
+
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
       if (!isInsideIframe()) {
@@ -153,7 +156,7 @@ export class ContentfulLivePreview {
     return {
       [TagAttributes.FIELD_ID]: fieldId,
       [TagAttributes.ENTRY_ID]: entryId,
-      [TagAttributes.LOCALE]: locale as string,
+      [TagAttributes.LOCALE]: locale,
     };
   }
 

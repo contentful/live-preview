@@ -28,6 +28,12 @@ export function ContentfulLivePreviewProvider({
   enableInspectorMode = true,
   enableLiveUpdates = true,
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>): ReactElement {
+  if (!locale) {
+    throw new Error(
+      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`'
+    );
+  }
+
   ContentfulLivePreview.init({ locale, debugMode, enableInspectorMode, enableLiveUpdates });
 
   const props = useMemo(
