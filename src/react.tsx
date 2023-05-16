@@ -104,9 +104,14 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   return state.data;
 }
 
-type GetInspectorModeProps<T> = (props: {
-  [K in Exclude<keyof LivePreviewProps, keyof T>]: LivePreviewProps[K];
-}) => InspectorModeTags;
+type GetInspectorModeProps<T> = (
+  props: {
+    [K in Exclude<
+      keyof Pick<LivePreviewProps, 'entryId' | 'fieldId'>,
+      keyof T
+    >]: LivePreviewProps[K];
+  } & { locale?: string }
+) => InspectorModeTags;
 
 /**
  * Generates the function to build the required properties for the inspector mode (field tagging)
