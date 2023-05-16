@@ -137,13 +137,11 @@ npm install @contentful/live-preview
       ContentfulLivePreview.init({ locale: 'en-US' });
     </script>
   </head>
-  <body>
-    <p id="demo">Hi.</p>
-  </body>
+  <body></body>
 </html>
 ```
 
-3. To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`, `data-contentful-locale`) to your HTML element output.
+3. To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`) to your HTML element output.
 
 You can do this via our helper function.
 
@@ -193,14 +191,38 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
 </html>
 ```
 
-4.
+4.To use the live updates feature you can make use of the subscribe function to listen to the data changes as shown below:
 
-```tsx
-import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Live Preview Example</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./node_modules/@contentful/live-preview/dist/style.css"
+    />
+    <script type="module">
+      import { ContentfulLivePreview } from './node_modules/@contentful/live-preview/dist/index.js';
 
-// ...
-const updated = useContentfulLiveUpdates(originalData);
-// ...
+      const locale = 'en-US';
+
+      ContentfulLivePreview.init({ locale });
+
+      /**
+       * Subscribe to data changes from the Editor, returns a function to unsubscribe
+       * Will be called once initially for the restored data
+       */
+      const unsubscribe = ContentfulLivePreview.subscribe({
+        data,
+        locale,
+        callback,
+      });
+    </script>
+  </head>
+  <body></body>
+</html>
 ```
 
 That's it! You should now be able to use the Contentful Live Preview SDK with vanilla JS.
