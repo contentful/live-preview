@@ -1,4 +1,3 @@
-import { ContentfulLivePreview } from '.';
 import {
   DATA_CURR_ENTRY_ID,
   DATA_CURR_FIELD_ID,
@@ -13,10 +12,12 @@ import { TagAttributes } from './types';
 export class InspectorMode {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
+  private defaultLocale: string;
 
-  constructor() {
+  constructor({ locale }: { locale: string }) {
     this.tooltip = null;
     this.currentElementBesideTooltip = null;
+    this.defaultLocale = locale;
 
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.addTooltipOnHover = this.addTooltipOnHover.bind(this);
@@ -71,7 +72,7 @@ export class InspectorMode {
 
       const currFieldId = element.getAttribute(TagAttributes.FIELD_ID);
       const currEntryId = element.getAttribute(TagAttributes.ENTRY_ID);
-      const currLocale = element.getAttribute(TagAttributes.LOCALE) ?? ContentfulLivePreview.locale;
+      const currLocale = element.getAttribute(TagAttributes.LOCALE) ?? this.defaultLocale;
 
       if (currFieldId && currEntryId && currLocale) {
         this.currentElementBesideTooltip = element;

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React, { PropsWithChildren } from 'react';
 
-import { act, renderHook } from '@testing-library/react';
+import { act, render, renderHook } from '@testing-library/react';
 import { describe, it, vi, afterEach, expect, beforeEach } from 'vitest';
 
 import {
@@ -15,6 +15,17 @@ import { ContentfulLivePreview } from '..';
 import { Argument } from '../types';
 
 const locale = 'en-US';
+
+describe('ContentfulLivePreviewProvider', () => {
+  it('should warn about the missing locale proeprty', () => {
+    expect(
+      // @ts-expect-error -- case locale not provided (e.g. JavaScript usage)
+      () => render(<ContentfulLivePreviewProvider>Hello World</ContentfulLivePreviewProvider>)
+    ).toThrowError(
+      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`'
+    );
+  });
+});
 
 describe('useContentfulLiveUpdates', () => {
   const unsubscribe = vi.fn();

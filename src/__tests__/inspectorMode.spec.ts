@@ -3,11 +3,13 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { InspectorMode } from '../inspectorMode';
 
+const locale = 'en-US';
+
 describe('InspectorMode', () => {
   let inspectorMode: InspectorMode;
 
   beforeEach(() => {
-    inspectorMode = new InspectorMode();
+    inspectorMode = new InspectorMode({ locale });
   });
 
   afterEach(() => {

@@ -28,6 +28,12 @@ export function ContentfulLivePreviewProvider({
   enableInspectorMode = true,
   enableLiveUpdates = true,
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>): ReactElement {
+  if (!locale) {
+    throw new Error(
+      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`'
+    );
+  }
+
   ContentfulLivePreview.init({ locale, debugMode, enableInspectorMode, enableLiveUpdates });
 
   const props = useMemo(
@@ -92,11 +98,11 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
     // or update content through live updates
     return ContentfulLivePreview.subscribe({
       data: data as Argument,
-      locale: locale as string,
+      locale,
       callback: (updatedData) => {
         // Update the state and adding a version number to it, as some deep nested updates
         // are not proceeded correctly otherwise
-        update.current((prevState) => ({ data: updatedData as T, version: prevState.version++ }));
+        update.current((prevState) => ({ data: updatedData as T, version: prevState.version + 1 }));
       },
     });
   }, [data, shouldSubscribe]);
@@ -106,11 +112,8 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
 
 type GetInspectorModeProps<T> = (
   props: {
-    [K in Exclude<
-      keyof Pick<LivePreviewProps, 'entryId' | 'fieldId'>,
-      keyof T
-    >]: LivePreviewProps[K];
-  } & { locale?: string }
+    [K in Exclude<keyof LivePreviewProps, keyof T | 'locale'>]: LivePreviewProps[K];
+  } & { locale?: LivePreviewProps['locale'] }
 ) => InspectorModeTags;
 
 /**

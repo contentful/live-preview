@@ -12,7 +12,7 @@ import {
   UpdateEntryProps,
 } from '../types';
 import { updateAsset } from './assets';
-import { logUnrecognizedFields } from './utils';
+import { buildCollectionName, logUnrecognizedFields } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -37,7 +37,6 @@ export function updateEntry({
   const copyOfDataFromPreviewApp = { ...dataFromPreviewApp };
   const { fields } = contentType;
 
-  // TODO: On GraphQL the suffix `Collection` is added for multiple references
   logUnrecognizedFields(
     fields.map((f) => f.apiName ?? f.name),
     dataFromPreviewApp
@@ -106,7 +105,7 @@ function getContentTypenameFromEntityReferenceMap(
   }
 }
 
-function isAsset(entity: EntryProps): boolean {
+function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {
   return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }
 
@@ -139,17 +138,58 @@ function updateReferenceAssetField({
 
 function updateReferenceEntryField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
-  updatedReference: EntryProps & { __typename?: string },
-  entityReferenceMap: EntityReferenceMap
+  updatedReference: Entity & CollectionItem,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string,
+  depth = 0
 ) {
   const entityTypename = getContentTypenameFromEntityReferenceMap(
     entityReferenceMap,
     updatedReference.sys.id
   );
+  const match = entityReferenceMap.get(updatedReference.sys.id);
 
-  // if we have the typename of the updated reference, we can return with it
-  if (entityTypename) {
-    return { ...referenceFromPreviewApp, ...updatedReference, __typename: entityTypename };
+  // If we have the typename of the updated reference, we can work with it
+  // Performance: We try to resolve here also deep recursive references,
+  // to don't do it forever we have a depth limit of three.
+  // We can optimize this behavior once we use the GraphQL Document (depth, properties)
+  if (entityTypename && match && depth < 3) {
+    const merged = {
+      ...referenceFromPreviewApp,
+      ...updatedReference,
+      __typename: entityTypename,
+    } as Entity & CollectionItem;
+
+    for (const key in match.fields) {
+      const value = match.fields[key as keyof typeof match.fields][locale];
+
+      if (typeof value === 'object' && value.sys) {
+        merged[key] = value;
+        updateSingleRefField({
+          dataFromPreviewApp: merged,
+          updateFromEntryEditor: match as EntryProps,
+          locale,
+          entityReferenceMap,
+          name: key,
+          depth: depth + 1,
+        });
+      } else if (Array.isArray(value) && value[0]?.sys) {
+        const name = buildCollectionName(key);
+        merged[name] = { items: value };
+        updateMultiRefField({
+          dataFromPreviewApp: merged,
+          updateFromEntryEditor: match as EntryProps,
+          locale,
+          entityReferenceMap,
+          name: key,
+          depth: depth + 1,
+        });
+      } else {
+        merged[key] = value;
+      }
+    }
+
+    return merged;
   }
 
   // if we don't have the typename we send a message back to the entry editor
@@ -167,6 +207,7 @@ function updateReferenceField({
   updatedReference,
   entityReferenceMap,
   locale,
+  depth,
 }: UpdateReferenceFieldProps) {
   if (!updatedReference) {
     return null;
@@ -190,7 +231,13 @@ function updateReferenceField({
     });
   }
 
-  return updateReferenceEntryField(referenceFromPreviewApp, updatedReference, entityReferenceMap);
+  return updateReferenceEntryField(
+    referenceFromPreviewApp,
+    updatedReference,
+    entityReferenceMap,
+    locale,
+    depth
+  );
 }
 
 function updateSingleRefField({
@@ -199,6 +246,7 @@ function updateSingleRefField({
   name,
   locale,
   entityReferenceMap,
+  depth,
 }: UpdateFieldProps) {
   if (name in dataFromPreviewApp) {
     dataFromPreviewApp[name] = updateReferenceField({
@@ -206,6 +254,7 @@ function updateSingleRefField({
       updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
       entityReferenceMap: entityReferenceMap as EntityReferenceMap,
       locale,
+      depth,
     });
   }
 }
@@ -216,12 +265,13 @@ function updateMultiRefField({
   name,
   locale,
   entityReferenceMap,
+  depth,
 }: UpdateFieldProps) {
-  const fieldName = `${name}Collection`;
+  const fieldName = buildCollectionName(name);
   if (fieldName in dataFromPreviewApp) {
     const dataFromPreviewAppItems =
       updateFromEntryEditor?.fields?.[name]?.[locale]
-        .map((updatedItem: EntryProps) => {
+        .map((updatedItem: Entity & CollectionItem) => {
           const itemFromPreviewApp = (
             dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
           ).items.find((item) => item.sys.id === updatedItem.sys.id);
@@ -233,6 +283,7 @@ function updateMultiRefField({
             updatedReference: updatedItem,
             entityReferenceMap: entityReferenceMap as EntityReferenceMap,
             locale,
+            depth,
           });
         })
         .filter(Boolean) ?? [];
