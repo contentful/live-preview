@@ -7,7 +7,7 @@ import Head from "next/head";
 import ErrorPage from "next/error";
 import { getAllPostsWithSlug, getPost } from "../../lib/api";
 
-export default function Post({ post, preview }) {
+export default function Post({ post }) {
   const router = useRouter();
   const updatedPost = useContentfulLiveUpdates(post);
   const inspectorProps = useContentfulInspectorMode({ entryId: post.sys.id });
@@ -30,13 +30,12 @@ export default function Post({ post, preview }) {
   );
 }
 
-export async function getStaticProps({ params, preview = false }) {
-  const data = await getPost(params.slug, preview);
+export async function getStaticProps({ params, draftMode = false }) {
+  const post = await getPost(params.slug, draftMode);
 
   return {
     props: {
-      preview,
-      post: data?.post ?? null,
+      post: post.post ?? null,
     },
   };
 }

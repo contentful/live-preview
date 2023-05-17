@@ -1,22 +1,24 @@
 import { getPreviewPostBySlug } from "../../lib/api";
 
-export default async function preview(req, res) {
+export default async function draft(req, res) {
   const { secret, slug } = req.query;
 
+  // Check the secret and next parameters
+  // This secret should only be known to this API route and Contentful
   if (secret !== process.env.CONTENTFUL_PREVIEW_SECRET || !slug) {
     return res.status(401).json({ message: "Invalid token" });
   }
 
-  // Fetch the headless CMS to check if the provided `slug` exists
+  // Fetch the post to check if the provided `slug` exists
   const post = await getPreviewPostBySlug(slug);
 
-  // If the slug doesn't exist prevent preview mode from being enabled
+  // If the slug doesn't exist prevent draft mode from being enabled
   if (!post) {
     return res.status(401).json({ message: "Invalid slug" });
   }
 
-  // Enable Preview Mode by setting the cookies
-  res.setPreviewData({});
+  // Enable Draft Mode by setting the cookie
+  res.setDraftMode({ enable: true });
 
   // Redirect to the path from the fetched post
   // We don't redirect to req.query.slug as that might lead to open redirect vulnerabilities

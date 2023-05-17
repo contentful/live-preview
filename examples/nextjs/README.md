@@ -17,7 +17,7 @@ To run this project, you will need to add the following environment variables to
 - `CONTENTFUL_SPACE_ID`: This is the Space ID from your Contentful space.
 - `CONTENTFUL_ACCESS_TOKEN`: This is the Content Delivery API - access token, which is used for fetching **published** data from your Contentful space.
 - `CONTENTFUL_PREVIEW_ACCESS_TOKEN`: This is the Content Preview API - access token, which is used for fetching **draft** data from your Contentful space.
-- `CONTENTFUL_PREVIEW_SECRET`: This can be any value you want. It must be URL friendly as it will be send as a query parameter to enable preview mode.
+- `CONTENTFUL_PREVIEW_SECRET`: This can be any value you want. It must be URL friendly as it will be send as a query parameter to enable draft mode.
 
 
 ## 3. Setting up the content model
@@ -34,7 +34,7 @@ Once you've set up the `Post` content model, you can populate it with some examp
 
 In order to enable the live preview feature in your local development environment, you need to set up the Content preview URL in your Contentful space.
 
-`http://localhost:3000/api/preview?secret=<CONTENTFUL_PREVIEW_SECRET>&slug={entry.fields.slug}`
+`http://localhost:3000/api/draft?secret=<CONTENTFUL_PREVIEW_SECRET>&slug={entry.fields.slug}`
 
 Replace `<CONTENTFUL_PREVIEW_SECRET>` with its respective value in `.env.local`.
 

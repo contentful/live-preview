@@ -15,8 +15,8 @@ export default function Index({ posts }) {
   );
 }
 
-export async function getStaticProps({ preview = false }) {
-  const posts = (await getAllPostsForHome(preview)) ?? [];
+export async function getStaticProps({ draftMode = false }) {
+  const posts = (await getAllPostsForHome(draftMode)) ?? [];
   return {
     props: { posts },
   };

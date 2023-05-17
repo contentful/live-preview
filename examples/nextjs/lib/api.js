@@ -8,7 +8,7 @@ title
 description
 `;
 
-async function fetchGraphQL(query, preview = false) {
+async function fetchGraphQL(query, draftMode = false) {
   return fetch(
     `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
     {
@@ -16,7 +16,7 @@ async function fetchGraphQL(query, preview = false) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${
-          preview
+          draftMode
             ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
             : process.env.CONTENTFUL_ACCESS_TOKEN
         }`,
@@ -61,32 +61,32 @@ export async function getAllPostsWithSlug() {
   return extractPostEntries(entries);
 }
 
-export async function getAllPostsForHome(preview) {
+export async function getAllPostsForHome(draftMode) {
   const entries = await fetchGraphQL(
     `query {
-      postCollection(preview: ${preview ? "true" : "false"}) {
+      postCollection(preview: ${draftMode ? "true" : "false"}) {
         items {
           ${POST_GRAPHQL_FIELDS}
         }
       }
     }`,
-    preview
+    draftMode
   );
   return extractPostEntries(entries);
 }
 
-export async function getPost(slug, preview) {
+export async function getPost(slug, draftMode) {
   const entry = await fetchGraphQL(
     `query {
       postCollection(where: { slug: "${slug}" }, preview: ${
-      preview ? "true" : "false"
+      draftMode ? "true" : "false"
     }, limit: 1) {
         items {
           ${POST_GRAPHQL_FIELDS}
         }
       }
     }`,
-    preview
+    draftMode
   );
   return {
     post: extractPost(entry),
