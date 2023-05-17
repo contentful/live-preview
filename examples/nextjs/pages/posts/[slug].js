@@ -18,14 +18,10 @@ export default function Post({ post }) {
 
   return (
     <>
-      {updatedPost.title && (
-        <h1 {...inspectorProps({ fieldId: "title" })}>{updatedPost.title}</h1>
-      )}
-      {updatedPost.description && (
-        <p {...inspectorProps({ fieldId: "description" })}>
-          {updatedPost.description}
-        </p>
-      )}
+      <h1 {...inspectorProps({ fieldId: "title" })}>{updatedPost?.title || ''}</h1>
+      <p {...inspectorProps({ fieldId: "description" })}>
+        {updatedPost?.description || ''}
+      </p>
     </>
   );
 }
