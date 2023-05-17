@@ -231,6 +231,8 @@ That's it! You should now be able to use the Contentful Live Preview SDK with va
 
 #### Integration with Next.js
 
+You can find an example implementation in the [examples/nextjs](./examples/nextjs/) folder.
+
 To use the Contentful Live Preview SDK with [Next.js](https://nextjs.org), you can either use one of the Contentful starter templates, or do the following steps to add it to an existing project.
 
 1. Add the @contentful/live-preview package to your project
@@ -259,14 +261,14 @@ const CustomApp = ({ Component, pageProps }) => (
 )
 ```
 
-This provides the posibility to only enable live updates and the inspector mode inside the preview mode:
+This provides the possibility to only enable live updates and inspector mode inside draft mode:
 
 ```tsx
 import '@contentful/live-preview/style.css';
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
-  <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={pageProps.previewActive} enableLiveUpdates={pageProps.previewActive}>
+  <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={pageProps.draftMode} enableLiveUpdates={pageProps.draftMode}>
     <Component {...pageProps}>
   </ContentfulLivePreviewProvider>
 )
@@ -299,7 +301,7 @@ export default function BlogPost: ({ blogPost }) {
 }
 ```
 
-> It doesn't matter if the data is loaded with getServerSideProps, getStaticProps or if you load it in any other way.<br>It's necessary that the provided information to `useContentfulLiveUpdate` contains the `sys.id` for identifation and only non-transformed fields can be updated.<br>(For GraphQL also the `__typename` needs to be provided)
+> It doesn't matter if the data is loaded with getServerSideProps, getStaticProps or if you load it in any other way.<br>It's necessary that the provided information to `useContentfulLiveUpdate` contains the `sys.id` for identification and only non-transformed fields can be updated.<br>(For GraphQL also the `__typename` needs to be provided)
 
 **Tip:** If you want to tag multiple fields of an entry, you can also provide initial arguments to the hook:
 
@@ -317,13 +319,13 @@ export default function BlogPost: ({ blogPost }) {
   )
 ```
 
-4. Enable preview mode
+4. Enable draft mode
 
-We suggest using the [preview mode](https://nextjs.org/docs/advanced-features/preview-mode) and the [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/) for the best experience.
+We suggest using the [draft mode](https://nextjs.org/docs/pages/building-your-application/configuring/draft-mode) and the [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/) for the best experience.
 
 For a full guide checkout this [free course](https://www.contentful.com/nextjs-starter-guide/)
 
-5. In Contentful, define the preview environment and configure the preview URL for your Next.js application. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
+5. In Contentful, configure the draft URL for your Next.js application in the Content preview settings. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
 
 That's it! You should now be able to use the Contentful live preview SDK with Next.js.
 
