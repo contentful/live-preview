@@ -7,6 +7,10 @@
   outline: 1px dashed rgba(64, 160, 255, 1) !important;
 }
 
+.contentful-inspector--active [data-contentful-field-id][data-contentful-entry-id]:hover {
+  outline: 2px solid rgba(64, 160, 255, 1) !important;
+}
+
 button.contentful-tooltip {
   padding: 0;
   display: none;
