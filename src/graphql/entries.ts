@@ -1,6 +1,6 @@
-import type { AssetProps, EntryProps } from 'contentful-management';
+import type { EntryProps } from 'contentful-management';
 
-import { isPrimitiveField, sendMessageToEditor, updatePrimitiveField } from '../helpers';
+import { isPrimitiveField, updatePrimitiveField, resolveReference } from '../helpers';
 import {
   CollectionItem,
   SysProps,
@@ -23,13 +23,13 @@ import { buildCollectionName, logUnrecognizedFields } from './utils';
  * @param locale string - Locale code
  * @returns Entity - Updated GraphQL response data
  */
-export function updateEntry({
+export async function updateEntry({
   contentType,
   dataFromPreviewApp,
   updateFromEntryEditor,
   locale,
   entityReferenceMap,
-}: UpdateEntryProps): Entity & { sys: SysProps } {
+}: UpdateEntryProps): Promise<Entity & { sys: SysProps }> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;
   }
@@ -55,7 +55,7 @@ export function updateEntry({
         locale,
       });
     } else if (field.type === 'Link') {
-      updateSingleRefField({
+      await updateSingleRefField({
         dataFromPreviewApp: copyOfDataFromPreviewApp,
         updateFromEntryEditor,
         name,
@@ -63,7 +63,7 @@ export function updateEntry({
         entityReferenceMap,
       });
     } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      updateMultiRefField({
+      await updateMultiRefField({
         dataFromPreviewApp: copyOfDataFromPreviewApp,
         updateFromEntryEditor,
         name,
@@ -91,123 +91,93 @@ function updateRichTextField({
   }
 }
 
-function getContentTypenameFromEntityReferenceMap(
-  referenceMap: EntityReferenceMap,
-  entityId?: string
-) {
-  if (referenceMap && entityId) {
-    const entity = referenceMap.get(entityId);
-    if (entity) {
-      const contentTypeId = entity.sys.contentType.sys.id;
-      const typename = contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
-      return typename;
-    }
-  }
-}
-
 function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {
   return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }
 
-function updateReferenceAssetField({
+async function updateReferenceAssetField({
   referenceFromPreviewApp,
   updatedReference,
   entityReferenceMap,
   locale,
 }: UpdateReferenceFieldProps) {
-  const match = entityReferenceMap.get(updatedReference.sys.id) as AssetProps | undefined;
-
-  if (!match) {
-    // if we don't have the asset we send a message back to the entry editor
-    // and it will then send the asset back in the entity reference map
-    // where we can calculate the asset on the next update message.
-    sendMessageToEditor({
-      action: 'ENTITY_NOT_KNOWN',
-      referenceEntityId: updatedReference.sys.id,
-      referenceContentType: ASSET_TYPENAME,
-    });
-    return;
-  }
+  const { reference } = await resolveReference({
+    entityReferenceMap,
+    referenceId: updatedReference.sys.id,
+    isAsset: true,
+  });
 
   return updateAsset(
     { ...referenceFromPreviewApp, ...updatedReference, __typename: ASSET_TYPENAME },
-    match,
+    reference,
     locale
   );
 }
 
-function updateReferenceEntryField(
+async function updateReferenceEntryField(
   referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
   updatedReference: Entity & CollectionItem,
   entityReferenceMap: EntityReferenceMap,
-  locale: string,
-  depth = 0
+  locale: string
 ) {
-  const entityTypename = getContentTypenameFromEntityReferenceMap(
+  const { reference, typeName } = await resolveReference({
     entityReferenceMap,
-    updatedReference.sys.id
-  );
-  const match = entityReferenceMap.get(updatedReference.sys.id);
+    referenceId: updatedReference.sys.id,
+  });
 
   // If we have the typename of the updated reference, we can work with it
-  // Performance: We try to resolve here also deep recursive references,
-  // to don't do it forever we have a depth limit of three.
-  // We can optimize this behavior once we use the GraphQL Document (depth, properties)
-  if (entityTypename && match && depth < 3) {
-    const merged = {
-      ...referenceFromPreviewApp,
-      ...updatedReference,
-      __typename: entityTypename,
-    } as Entity & CollectionItem;
+  const merged = {
+    ...referenceFromPreviewApp,
+    ...updatedReference,
+    __typename: typeName,
+  } as Entity & CollectionItem;
 
-    for (const key in match.fields) {
-      const value = match.fields[key as keyof typeof match.fields][locale];
+  // TODO: kind of duplication with line 46, check if we can combine them
+  for (const key in reference.fields) {
+    const value = reference.fields[key as keyof typeof reference.fields][locale];
 
-      if (typeof value === 'object' && value.sys) {
-        merged[key] = value;
-        updateSingleRefField({
-          dataFromPreviewApp: merged,
-          updateFromEntryEditor: match as EntryProps,
-          locale,
-          entityReferenceMap,
-          name: key,
-          depth: depth + 1,
-        });
-      } else if (Array.isArray(value) && value[0]?.sys) {
-        const name = buildCollectionName(key);
-        merged[name] = { items: value };
-        updateMultiRefField({
-          dataFromPreviewApp: merged,
-          updateFromEntryEditor: match as EntryProps,
-          locale,
-          entityReferenceMap,
-          name: key,
-          depth: depth + 1,
-        });
-      } else {
-        merged[key] = value;
+    if (typeof value === 'object') {
+      if (value.nodeType === 'document') {
+        // richtext
+        merged[key] = { json: value };
       }
-    }
 
-    return merged;
+      if (value.sys) {
+        // single reference
+        merged[key] = value;
+        await updateSingleRefField({
+          dataFromPreviewApp: merged,
+          updateFromEntryEditor: reference,
+          locale,
+          entityReferenceMap,
+          name: key,
+        });
+      }
+    } else if (Array.isArray(value) && value[0]?.sys) {
+      // multi references
+      const name = buildCollectionName(key);
+      merged[name] = { items: value };
+      await updateMultiRefField({
+        dataFromPreviewApp: merged,
+        updateFromEntryEditor: reference,
+        locale,
+        entityReferenceMap,
+        name: key,
+      });
+    } else {
+      // primitive fields
+      merged[key] = value;
+    }
   }
 
-  // if we don't have the typename we send a message back to the entry editor
-  // and it will then send the reference back in the entity reference map
-  // where we can calculate the typename on the next update message.
-  sendMessageToEditor({
-    action: 'ENTITY_NOT_KNOWN',
-    referenceEntityId: updatedReference.sys.id,
-  });
-  return null;
+  return merged;
 }
 
-function updateReferenceField({
+async function updateReferenceField({
   referenceFromPreviewApp,
   updatedReference,
   entityReferenceMap,
   locale,
-  depth,
 }: UpdateReferenceFieldProps) {
   if (!updatedReference) {
     return null;
@@ -235,58 +205,58 @@ function updateReferenceField({
     referenceFromPreviewApp,
     updatedReference,
     entityReferenceMap,
-    locale,
-    depth
+    locale
   );
 }
 
-function updateSingleRefField({
+async function updateSingleRefField({
   dataFromPreviewApp,
   updateFromEntryEditor,
   name,
   locale,
   entityReferenceMap,
-  depth,
 }: UpdateFieldProps) {
   if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] = updateReferenceField({
+    dataFromPreviewApp[name] = await updateReferenceField({
       referenceFromPreviewApp: dataFromPreviewApp[name] as EntryProps & { __typename?: string },
       updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
       entityReferenceMap: entityReferenceMap as EntityReferenceMap,
       locale,
-      depth,
     });
   }
 }
 
-function updateMultiRefField({
+async function updateMultiRefField({
   dataFromPreviewApp,
   updateFromEntryEditor,
   name,
   locale,
   entityReferenceMap,
-  depth,
 }: UpdateFieldProps) {
   const fieldName = buildCollectionName(name);
-  if (fieldName in dataFromPreviewApp) {
-    const dataFromPreviewAppItems =
-      updateFromEntryEditor?.fields?.[name]?.[locale]
-        .map((updatedItem: Entity & CollectionItem) => {
-          const itemFromPreviewApp = (
-            dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
-          ).items.find((item) => item.sys.id === updatedItem.sys.id);
 
-          return updateReferenceField({
-            referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
-              __typename?: string;
-            },
-            updatedReference: updatedItem,
-            entityReferenceMap: entityReferenceMap as EntityReferenceMap,
-            locale,
-            depth,
-          });
-        })
-        .filter(Boolean) ?? [];
-    (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items = dataFromPreviewAppItems;
+  if (fieldName in dataFromPreviewApp) {
+    const list = updateFromEntryEditor?.fields?.[name]?.[locale] ?? [];
+    const dataFromPreviewAppItems = await Promise.all(
+      list.map(async (updatedItem: Entity & CollectionItem) => {
+        const itemFromPreviewApp = (
+          dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
+        ).items.find((item) => item.sys.id === updatedItem.sys.id);
+
+        const result = await updateReferenceField({
+          referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
+            __typename?: string;
+          },
+          updatedReference: updatedItem,
+          entityReferenceMap: entityReferenceMap as EntityReferenceMap,
+          locale,
+        });
+
+        return result;
+      })
+    );
+
+    (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items =
+      dataFromPreviewAppItems.filter(Boolean);
   }
 }

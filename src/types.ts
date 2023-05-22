@@ -77,6 +77,8 @@ type SubscribedMessage = {
   type: 'GQL' | 'REST';
 };
 
+export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}
+
 export type EditorMessage =
   | IframeConnectedMessage
   | TaggedFieldClickMessage
@@ -87,9 +89,32 @@ export type EditorMessage =
 export type MessageFromSDK = EditorMessage & {
   from: 'live-preview';
   location: string;
+  version: string;
 };
 
-export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}
+export type EntryUpdatedMessage = {
+  action: 'ENTRY_UPDATED';
+  entity: EntryProps | AssetProps;
+  contentType: ContentType;
+  entityReferenceMap: EntityReferenceMap;
+};
+
+type UnknownReferenceLoaded = {
+  action: 'UNKNOWN_REFERENCE_LOADED';
+  reference: EntryProps | AssetProps;
+  contentType?: ContentType;
+  entityReferenceMap: EntityReferenceMap;
+};
+
+type InspectorModeChanged = { action: 'INSPECTOR_MODE_CHANGED'; isInspectorActive: boolean };
+
+export type MessageFromEditor = (
+  | EntryUpdatedMessage
+  | UnknownReferenceLoaded
+  | InspectorModeChanged
+) & {
+  from: 'live-preview';
+};
 
 export type UpdateEntryProps = {
   contentType: ContentType;
@@ -105,7 +130,6 @@ export type UpdateFieldProps = {
   name: string;
   locale: string;
   entityReferenceMap?: EntityReferenceMap;
-  depth?: number;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -113,7 +137,6 @@ export type UpdateReferenceFieldProps = {
   updatedReference: Entity & CollectionItem;
   entityReferenceMap: EntityReferenceMap;
   locale: string;
-  depth?: number;
 };
 
 export interface Subscription {

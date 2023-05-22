@@ -7,7 +7,7 @@ import {
   TOOLTIP_PADDING_LEFT,
 } from './constants';
 import { sendMessageToEditor } from './helpers';
-import { TagAttributes } from './types';
+import { MessageFromEditor, TagAttributes } from './types';
 
 export class InspectorMode {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
@@ -30,8 +30,8 @@ export class InspectorMode {
   }
 
   // Handles incoming messages from Contentful
-  public receiveMessage(data: Record<string, unknown>): void {
-    if (typeof data.isInspectorActive === 'boolean') {
+  public receiveMessage(data: MessageFromEditor): void {
+    if (data.action === 'INSPECTOR_MODE_CHANGED') {
       // Toggle the contentful-inspector--active class on the body element based on the isInspectorActive boolean
       document.body.classList.toggle('contentful-inspector--active', data.isInspectorActive);
     }
