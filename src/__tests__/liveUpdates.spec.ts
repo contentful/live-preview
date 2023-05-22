@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
+import { AssetProps, EntryProps } from 'contentful-management';
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
 import * as helpers from '../helpers';
 import { LiveUpdates } from '../liveUpdates';
+import { ContentType } from '../types';
 import assetFromEntryEditor from './fixtures/assetFromEntryEditor.json';
 import landingPageContentType from './fixtures/landingPageContentType.json';
 import nestedCollectionFromPreviewApp from './fixtures/nestedCollectionFromPreviewApp.json';
@@ -38,18 +40,30 @@ describe('LiveUpdates', () => {
         omitted: false,
       },
     ],
-  };
+  } as unknown as ContentType;
   const locale = 'en-US';
-  const updateFromEntryEditor1 = { sys: { id: '1' }, fields: { title: { [locale]: 'Data 2' } } };
-  const updateFromEntryEditor2 = { sys: { id: '1' }, fields: { title: { [locale]: 'Data 3' } } };
+  const updateFromEntryEditor1 = {
+    sys: { id: '1' },
+    fields: { title: { [locale]: 'Data 2' } },
+  } as unknown as EntryProps;
+  const updateFromEntryEditor2 = {
+    sys: { id: '1' },
+    fields: { title: { [locale]: 'Data 3' } },
+  } as unknown as EntryProps;
 
-  it('should listen to changes and calls the subscribed handlers', () => {
+  it('should listen to changes and calls the subscribed handlers', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, callback });
 
-    liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
+    await liveUpdates.receiveMessage({
+      entity: updateFromEntryEditor1,
+      contentType,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
+    });
 
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith({
@@ -57,7 +71,13 @@ describe('LiveUpdates', () => {
       title: 'Data 2',
     });
 
-    liveUpdates.receiveMessage({ entity: updateFromEntryEditor2, contentType });
+    await liveUpdates.receiveMessage({
+      entity: updateFromEntryEditor2,
+      contentType,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
+    });
 
     expect(callback).toHaveBeenCalledTimes(2);
     expect(callback).toHaveBeenCalledWith({
@@ -94,31 +114,47 @@ describe('LiveUpdates', () => {
     });
   });
 
-  it('no longer receives updates after unsubcribing', () => {
+  it('no longer receives updates after unsubcribing', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
-    const contentType = { fields: [] };
+    const contentType = { fields: [] } as unknown as ContentType;
     const callback = vi.fn();
     const unsubscribe = liveUpdates.subscribe({ data, callback });
 
-    liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
+    await liveUpdates.receiveMessage({
+      entity: updateFromEntryEditor1,
+      contentType,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
+    });
 
     expect(callback).toHaveBeenCalledTimes(1);
 
     unsubscribe();
 
-    liveUpdates.receiveMessage({ entity: updateFromEntryEditor2, contentType });
+    await liveUpdates.receiveMessage({
+      entity: updateFromEntryEditor2,
+      contentType,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
+    });
 
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  it('ignores invalid messages', () => {
+  it('ignores invalid messages', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, callback });
 
-    liveUpdates.receiveMessage({ isInspectorActive: false });
+    await liveUpdates.receiveMessage({
+      isInspectorActive: false,
+      action: 'INSPECTOR_MODE_CHANGED',
+      from: 'live-preview',
+    });
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -129,16 +165,28 @@ describe('LiveUpdates', () => {
     const callback = vi.fn();
     liveUpdates.subscribe({ data, locale, callback });
 
-    liveUpdates.receiveMessage({ entity: updateFromEntryEditor1, contentType });
+    liveUpdates.receiveMessage({
+      entity: updateFromEntryEditor1,
+      contentType,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
+    });
 
     expect(callback).not.toHaveBeenCalled();
   });
 
-  it('merges nested field updates', () => {
+  it('merges nested field updates', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedDataFromPreviewApp, callback });
-    liveUpdates.receiveMessage({ entity: assetFromEntryEditor });
+    await liveUpdates.receiveMessage({
+      entity: assetFromEntryEditor as unknown as AssetProps,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
+      contentType: {} as unknown as ContentType,
+    });
 
     const expected = helpers.clone(nestedDataFromPreviewApp);
     expected.featuredImage.title = assetFromEntryEditor.fields.title[locale];
@@ -148,13 +196,16 @@ describe('LiveUpdates', () => {
     expect(callback).toHaveBeenCalledWith(expected);
   });
 
-  it('merges nested collections', () => {
+  it('merges nested collections', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, callback });
-    liveUpdates.receiveMessage({
+    await liveUpdates.receiveMessage({
       entity: pageInsideCollectionFromEntryEditor,
-      contentType: landingPageContentType,
+      contentType: landingPageContentType as unknown as ContentType,
+      action: 'ENTRY_UPDATED',
+      from: 'live-preview',
+      entityReferenceMap: new Map(),
     });
 
     const expected = helpers.clone(nestedCollectionFromPreviewApp);

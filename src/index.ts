@@ -13,6 +13,7 @@ import {
   Argument,
   InspectorModeTags,
   LivePreviewProps,
+  MessageFromEditor,
   SubscribeCallback,
   Subscription,
   TagAttributes,
@@ -89,7 +90,7 @@ export class ContentfulLivePreview {
       }
 
       // bind event listeners for interactivity
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', (event: MessageEvent<MessageFromEditor>) => {
         if (typeof event.data !== 'object' || !event.data) return;
         if (event.data.from !== 'live-preview') return;
 

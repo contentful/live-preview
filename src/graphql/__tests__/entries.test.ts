@@ -1,7 +1,8 @@
-import type { AssetProps, EntryProps, KeyValueMap } from 'contentful-management/types';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import type { EntryProps, KeyValueMap } from 'contentful-management/types';
+import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import * as Utils from '../../helpers';
+import { resolveReference } from '../../helpers/resolveReference';
 import { SysProps, EntityReferenceMap, Entity, ContentType } from '../../types';
 import { updateEntry } from '../entries';
 import defaultContentType from './fixtures/contentType.json';
@@ -10,8 +11,27 @@ import entry from './fixtures/entry.json';
 const EN = 'en-US';
 
 vi.mock('../../helpers/debug');
+vi.mock('../../helpers/resolveReference');
 
 describe('Update GraphQL Entry', () => {
+  const testReferenceId = '18kDTlnJNnDIJf6PsXE5Mr';
+
+  beforeEach(() => {
+    (resolveReference as Mock).mockResolvedValue({
+      reference: {
+        sys: {
+          contentType: {
+            sys: {
+              id: testReferenceId,
+              linkType: 'Entry',
+            },
+          },
+        },
+      },
+      typeName: 'TestContentType',
+    });
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });
@@ -38,10 +58,10 @@ describe('Update GraphQL Entry', () => {
     });
   };
 
-  it('keeps __typename unchanged', () => {
+  it('keeps __typename unchanged', async () => {
     const data = { __typename: 'CT', shortText: 'text', sys: { id: 'abc' } };
 
-    const update = updateFn({ data });
+    const update = await updateFn({ data });
 
     expect(update).toEqual(
       expect.objectContaining({
@@ -51,10 +71,10 @@ describe('Update GraphQL Entry', () => {
     expect(Utils.debug.warn).not.toHaveBeenCalled();
   });
 
-  it('warns but keeps unknown fields', () => {
+  it('warns but keeps unknown fields', async () => {
     const data = { unknownField: 'text', sys: { id: entry.sys.id } };
 
-    const update = updateFn({ data });
+    const update = await updateFn({ data });
 
     expect(update).toEqual(data);
     expect(Utils.debug.warn).toHaveBeenCalledWith(
@@ -62,7 +82,7 @@ describe('Update GraphQL Entry', () => {
     );
   });
 
-  it('updates primitive fields', () => {
+  it('updates primitive fields', async () => {
     const data = {
       shortText: 'oldValue',
       shortTextList: ['oldValue'],
@@ -83,7 +103,9 @@ describe('Update GraphQL Entry', () => {
       },
     };
 
-    expect(updateFn({ data })).toEqual({
+    const result = await updateFn({ data });
+
+    expect(result).toEqual({
       shortText: entry.fields.shortText[EN],
       shortTextList: entry.fields.shortTextList[EN],
       longText: entry.fields.longText[EN],
@@ -101,7 +123,7 @@ describe('Update GraphQL Entry', () => {
 
   describe('single reference fields', () => {
     describe('entry', () => {
-      it('calls sendMessageToEditor when entry being added is not in the entityReferenceMap', () => {
+      it('resolves unknown references', async () => {
         const data = {
           __typename: 'Page',
           sys: {
@@ -109,8 +131,6 @@ describe('Update GraphQL Entry', () => {
           },
           reference: null,
         };
-        const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
-        const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
         const update = {
           sys: {
             id: entry.sys.id,
@@ -121,77 +141,24 @@ describe('Update GraphQL Entry', () => {
                 sys: {
                   type: 'Link',
                   linkType: 'Entry',
-                  id: testAddingEntryId,
+                  id: testReferenceId,
                 },
               },
             },
           },
         } as unknown as EntryProps<KeyValueMap>;
 
-        // value has not changed, just sends message back to editor
-        expect(updateFn({ data, update })).toEqual({
-          __typename: 'Page',
-          sys: {
-            id: entry.sys.id,
-          },
-          reference: null,
-        });
-        expect(sendMessageToEditor).toHaveBeenCalledWith({
-          action: 'ENTITY_NOT_KNOWN',
-          referenceEntityId: '18kDTlnJNnDIJf6PsXE5Mr',
-        });
-      });
+        const result = await updateFn({ data, update });
 
-      it('generates a __typename when entry being added is in the entityReferenceMap then adds this to the modified return value', () => {
-        const data = {
-          __typename: 'Page',
-          sys: {
-            id: entry.sys.id,
-          },
-          reference: null,
-        };
-        const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
-        const testContentTypeId = 'testContentType';
-        const update = {
-          sys: {
-            id: entry.sys.id,
-          },
-          fields: {
-            reference: {
-              'en-US': {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testAddingEntryId,
-                },
-              },
-            },
-          },
-        } as unknown as EntryProps<KeyValueMap>;
-
-        const entityReferenceMap = new EntityReferenceMap();
-        entityReferenceMap.set(testAddingEntryId, {
-          sys: {
-            contentType: {
-              sys: {
-                id: testContentTypeId,
-                linkType: 'Entry',
-              },
-            },
-          },
-        } as EntryProps<KeyValueMap>);
-
-        // value has not changed, just sends message back to editor
-        expect(updateFn({ data, update, entityReferenceMap })).toEqual({
+        expect(result).toEqual({
           __typename: 'Page',
           sys: {
             id: entry.sys.id,
           },
           reference: {
-            // content type has been adjusted to have capital letter at the start
             __typename: 'TestContentType',
             sys: {
-              id: testAddingEntryId,
+              id: testReferenceId,
               linkType: 'Entry',
               type: 'Link',
             },
@@ -199,7 +166,7 @@ describe('Update GraphQL Entry', () => {
         });
       });
 
-      it('if reference is not in entityReferenceMap but has a __typename it does not call sendMessageToEditor', () => {
+      it('if reference is not in entityReferenceMap but has a __typename it does not call resolveReference', async () => {
         const data = {
           __typename: 'Page',
           sys: {
@@ -225,9 +192,10 @@ describe('Update GraphQL Entry', () => {
             },
           },
         } as unknown as EntryProps<KeyValueMap>;
-        const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
 
-        expect(updateFn({ data, update })).toEqual({
+        const result = await updateFn({ data, update });
+
+        expect(result).toEqual({
           __typename: 'Page',
           sys: {
             id: entry.sys.id,
@@ -242,11 +210,10 @@ describe('Update GraphQL Entry', () => {
           },
         });
 
-        expect(sendMessageToEditor).not.toHaveBeenCalled();
+        expect(resolveReference).not.toHaveBeenCalled();
       });
 
-      it('graphql properties are not lost with updates', () => {
-        const testAddingEntryId = '18kDTlnJNnDIJf6PsXE5Mr';
+      it('graphql properties are not lost with updates', async () => {
         const data = {
           __typename: 'Page',
           sys: {
@@ -256,12 +223,11 @@ describe('Update GraphQL Entry', () => {
             sys: {
               type: 'Link',
               linkType: 'Entry',
-              id: testAddingEntryId,
+              id: testReferenceId,
             },
             propertyShouldStay: 'value',
           },
         };
-        const testContentTypeId = 'testContentType';
         const update = {
           sys: {
             id: entry.sys.id,
@@ -272,27 +238,16 @@ describe('Update GraphQL Entry', () => {
                 sys: {
                   type: 'Link',
                   linkType: 'Entry',
-                  id: testAddingEntryId,
+                  id: testReferenceId,
                 },
               },
             },
           },
         } as unknown as EntryProps<KeyValueMap>;
 
-        const entityReferenceMap = new EntityReferenceMap();
-        entityReferenceMap.set(testAddingEntryId, {
-          sys: {
-            contentType: {
-              sys: {
-                id: testContentTypeId,
-                linkType: 'Entry',
-              },
-            },
-          },
-        } as EntryProps<KeyValueMap>);
+        const result = await updateFn({ data, update });
 
-        // value has not changed, just sends message back to editor
-        expect(updateFn({ data, update, entityReferenceMap })).toEqual({
+        expect(result).toEqual({
           __typename: 'Page',
           sys: {
             id: entry.sys.id,
@@ -301,7 +256,7 @@ describe('Update GraphQL Entry', () => {
             // content type has been adjusted to have capital letter at the start
             __typename: 'TestContentType',
             sys: {
-              id: testAddingEntryId,
+              id: testReferenceId,
               linkType: 'Entry',
               type: 'Link',
             },
@@ -312,7 +267,7 @@ describe('Update GraphQL Entry', () => {
     });
 
     describe('asset', () => {
-      it('calls sendMessageToEditor when added entry is not in the entityReferenceMap', () => {
+      it('resolves unknown references', async () => {
         const data = {
           __typename: 'Page',
           sys: { id: '1' },
@@ -335,51 +290,23 @@ describe('Update GraphQL Entry', () => {
           fields: [{ apiName: 'hero', type: 'Link' }],
         } as unknown as ContentType;
 
-        const entityReferenceMap = new EntityReferenceMap();
-        const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
-
-        expect(updateFn({ data, update, entityReferenceMap, contentType })).toEqual(data);
-
-        expect(sendMessageToEditor).toHaveBeenCalled();
-      });
-
-      it('merges things correctly with the information from the entityReferenceMap', () => {
-        const data = {
-          __typename: 'Page',
-          sys: { id: '1' },
-          hero: undefined,
-        };
-
-        const update = {
-          sys: {
-            id: '1',
-          },
-          fields: {
-            hero: {
-              [EN]: { sys: { id: '1', linkType: 'Asset', type: 'Link' } },
-            },
-          },
-        } as unknown as EntryProps<KeyValueMap>;
-
-        const contentType = {
-          sys: { id: 'string' },
-          fields: [{ apiName: 'hero', type: 'Link' }],
-        } as unknown as ContentType;
-
-        const entityReferenceMap = new EntityReferenceMap();
-        entityReferenceMap.set('1', {
-          sys: {
-            contentType: {
-              sys: {
-                id: '1',
-                linkType: 'Asset',
+        (resolveReference as Mock).mockResolvedValue({
+          reference: {
+            sys: {
+              contentType: {
+                sys: {
+                  id: '1',
+                  linkType: 'Asset',
+                },
               },
             },
           },
-        } as unknown as AssetProps);
-        const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
+          typeName: 'Asset',
+        });
 
-        expect(updateFn({ data, update, entityReferenceMap, contentType })).toEqual({
+        const result = await updateFn({ data, update, contentType });
+
+        expect(result).toEqual({
           ...data,
           hero: {
             __typename: 'Asset',
@@ -390,60 +317,12 @@ describe('Update GraphQL Entry', () => {
             },
           },
         });
-        expect(sendMessageToEditor).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('multi reference fields', () => {
-    it('calls sendMessageToEditor when entry being added is not in the entityReferenceMap', () => {
-      const data = {
-        __typename: 'Page',
-        sys: {
-          id: entry.sys.id,
-        },
-        referenceManyCollection: {
-          items: [],
-        },
-      };
-      const testAddingEntryId = '3JqLncpMbnZYrCPebujXhK';
-      const sendMessageToEditor = vi.spyOn(Utils, 'sendMessageToEditor').mockReturnThis();
-      const update = {
-        sys: {
-          id: entry.sys.id,
-        },
-        fields: {
-          referenceMany: {
-            'en-US': [
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testAddingEntryId,
-                },
-              },
-            ],
-          },
-        },
-      } as unknown as EntryProps<KeyValueMap>;
-
-      // value has not changed, just sends message back to editor
-      expect(updateFn({ data, update })).toEqual({
-        __typename: 'Page',
-        sys: {
-          id: entry.sys.id,
-        },
-        referenceManyCollection: {
-          items: [],
-        },
-      });
-      expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: '3JqLncpMbnZYrCPebujXhK',
-      });
-    });
-
-    it('generates a __typename when entry being added is in the entityReferenceMap then adds this to the modified return value', () => {
+    it('resolves unknown references correctly', async () => {
       const data = {
         __typename: 'Page',
         sys: {
@@ -474,21 +353,24 @@ describe('Update GraphQL Entry', () => {
         },
       } as unknown as EntryProps<KeyValueMap>;
 
-      const entityReferenceMap = new EntityReferenceMap();
-      entityReferenceMap.set(testAddingEntryId, {
-        sys: {
-          contentType: {
-            sys: {
-              id: testContentTypeId,
-              type: 'TestContentTypeForManyRef',
-              linkType: 'Entry',
+      (resolveReference as Mock).mockResolvedValue({
+        reference: {
+          sys: {
+            contentType: {
+              sys: {
+                id: testContentTypeId,
+                type: 'TestContentTypeForManyRef',
+                linkType: 'Entry',
+              },
             },
           },
         },
-      } as EntryProps<KeyValueMap>);
+        typeName: 'TestContentTypeForManyRef',
+      });
 
-      // value has not changed, just sends message back to editor
-      expect(updateFn({ data, update, entityReferenceMap })).toEqual({
+      const result = await updateFn({ data, update });
+
+      expect(result).toEqual({
         __typename: 'Page',
         sys: {
           id: entry.sys.id,
@@ -508,7 +390,7 @@ describe('Update GraphQL Entry', () => {
       });
     });
 
-    it('if reference is not in entityReferenceMap but has a __typename it does not call sendMessageToEditor', () => {
+    it('if reference is not in entityReferenceMap but has a __typename it does not call resolveReference', async () => {
       const data = {
         __typename: 'Page',
         sys: {
@@ -539,8 +421,9 @@ describe('Update GraphQL Entry', () => {
         },
       } as unknown as EntryProps<KeyValueMap>;
 
-      // value has not changed, just sends message back to editor
-      expect(updateFn({ data, update })).toEqual({
+      const result = await updateFn({ data, update });
+
+      expect(result).toEqual({
         __typename: 'Page',
         sys: {
           id: entry.sys.id,
@@ -558,9 +441,11 @@ describe('Update GraphQL Entry', () => {
           ],
         },
       });
+
+      expect(resolveReference).not.toHaveBeenCalled();
     });
 
-    it('graphql properties are not lost with updates', () => {
+    it('graphql properties are not lost with updates', async () => {
       const testAddingEntryId = '3JqLncpMbnZYrCPebujXhK';
       const data = {
         __typename: 'Page',
@@ -602,8 +487,9 @@ describe('Update GraphQL Entry', () => {
         },
       } as unknown as EntryProps<KeyValueMap>;
 
-      // value has not changed, just sends message back to editor
-      expect(updateFn({ data, update })).toEqual({
+      const result = await updateFn({ data, update });
+
+      expect(result).toEqual({
         __typename: 'Page',
         sys: {
           id: entry.sys.id,
@@ -625,7 +511,7 @@ describe('Update GraphQL Entry', () => {
     });
   });
 
-  it('falls back to null for empty fields', () => {
+  it('falls back to null for empty fields', async () => {
     const data = {
       shortText: 'oldValue',
       sys: {
@@ -633,9 +519,9 @@ describe('Update GraphQL Entry', () => {
       },
     };
 
-    const updated = updateFn({ data, locale: 'n/a' });
+    const result = await updateFn({ data, locale: 'n/a' });
 
-    expect(updated).toEqual({
+    expect(result).toEqual({
       shortText: null,
       sys: {
         id: entry.sys.id,
@@ -644,7 +530,7 @@ describe('Update GraphQL Entry', () => {
   });
 
   describe('nested references', () => {
-    it('can be updated correctly', () => {
+    it('can be updated correctly', async () => {
       const data = {
         sys: { id: '1' },
         menuCollection: { items: [] },
@@ -669,26 +555,30 @@ describe('Update GraphQL Entry', () => {
         fields: [{ apiName: 'menu', type: 'Array', items: { type: 'Link', linkType: 'Entry' } }],
       } as ContentType;
 
-      const entityReferenceMap = new EntityReferenceMap();
-      entityReferenceMap.set('2', {
-        sys: {
-          id: '2',
-          contentType: {
-            sys: {
-              id: '2',
-              type: 'Link',
-              linkType: 'Entry',
+      (resolveReference as Mock).mockResolvedValue({
+        reference: {
+          sys: {
+            id: '2',
+            contentType: {
+              sys: {
+                id: '2',
+                type: 'Link',
+                linkType: 'Entry',
+              },
+            },
+          },
+          fields: {
+            title: {
+              [EN]: 'Hello World',
             },
           },
         },
-        fields: {
-          title: {
-            [EN]: 'Hello World',
-          },
-        },
-      } as unknown as EntryProps<KeyValueMap>);
+        typeName: '2',
+      });
 
-      expect(updateFn({ data, update, contentType, entityReferenceMap })).toEqual({
+      const result = await updateFn({ data, update, contentType });
+
+      expect(result).toEqual({
         __typename: 'Footer',
         menuCollection: {
           items: [

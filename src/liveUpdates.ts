@@ -12,6 +12,8 @@ import {
   EntityReferenceMap,
   hasSysInformation,
   Subscription,
+  MessageFromEditor,
+  EntryUpdatedMessage,
 } from './types';
 
 interface MergeEntityProps {
@@ -41,16 +43,18 @@ export class LiveUpdates {
     window.addEventListener('beforeunload', () => this.clearStorage());
   }
 
-  private mergeEntity({
+  private async mergeEntity({
     contentType,
     dataFromPreviewApp,
     entityReferenceMap,
     locale,
     updateFromEntryEditor,
-  }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & { dataFromPreviewApp: EntityWithSys }): {
+  }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & {
+    dataFromPreviewApp: EntityWithSys;
+  }): Promise<{
     data: Entity;
     updated: boolean;
-  } {
+  }> {
     if ('__typename' in dataFromPreviewApp) {
       // GraphQL
       if (dataFromPreviewApp.__typename === 'Asset') {
@@ -61,7 +65,7 @@ export class LiveUpdates {
       }
 
       return {
-        data: gql.updateEntry({
+        data: await gql.updateEntry({
           contentType,
           dataFromPreviewApp,
           updateFromEntryEditor: updateFromEntryEditor as EntryProps,
@@ -96,10 +100,10 @@ export class LiveUpdates {
    * Caching should not be enabled for every entry,
    * because nested references could be merged differently together and this could solve to data loss.
    */
-  private mergeNestedReference(
+  private async mergeNestedReference(
     { dataFromPreviewApp, ...params }: MergeEntityProps,
     useCache: boolean
-  ): { data: Entity; updated: boolean } {
+  ): Promise<{ data: Entity; updated: boolean }> {
     const dataFromPreviewappId = hasSysInformation(dataFromPreviewApp) && dataFromPreviewApp.sys.id;
     const isCacheable = useCache && dataFromPreviewappId;
 
@@ -113,7 +117,7 @@ export class LiveUpdates {
     if (hasSysInformation(result) && dataFromPreviewappId === params.updateFromEntryEditor.sys.id) {
       // Happy path, direct match from received and provided data
       // Let's update it
-      const merged = this.mergeEntity({ ...params, dataFromPreviewApp: result });
+      const merged = await this.mergeEntity({ ...params, dataFromPreviewApp: result });
       result = merged.data;
       updated = merged.updated;
     } else {
@@ -121,7 +125,7 @@ export class LiveUpdates {
       for (const key in result) {
         if (result[key] && typeof result[key] === 'object') {
           // TODO: set `useCache` to true if none of the parents could be cached
-          const match = this.merge(
+          const match = await this.merge(
             { ...params, dataFromPreviewApp: result[key] as Argument },
             false
           );
@@ -139,19 +143,22 @@ export class LiveUpdates {
     return { data: result, updated };
   }
 
-  private merge(
+  private async merge(
     { dataFromPreviewApp, ...params }: MergeArgumentProps,
     useCache = true
-  ): {
+  ): Promise<{
     updated: boolean;
     data: Argument;
-  } {
+  }> {
     if (Array.isArray(dataFromPreviewApp)) {
       const data: Entity[] = [];
       let updated = false;
 
       for (const d of dataFromPreviewApp) {
-        const result = this.mergeNestedReference({ ...params, dataFromPreviewApp: d }, useCache);
+        const result = await this.mergeNestedReference(
+          { ...params, dataFromPreviewApp: d },
+          useCache
+        );
 
         data.push(result.data);
         updated = updated || result.updated;
@@ -168,37 +175,37 @@ export class LiveUpdates {
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
-  public receiveMessage({
-    entity,
-    contentType,
-    entityReferenceMap,
-  }: Record<string, unknown>): void {
-    if (this.isCfEntity(entity)) {
-      this.subscriptions.forEach((s) => {
-        try {
-          const { updated, data } = this.merge({
-            // Clone the original data on the top level,
-            // to prevent cloning multiple times (time)
-            // or modifying the original data (failure potential)
-            dataFromPreviewApp: clone(s.data),
-            locale: s.locale || this.defaultLocale,
-            updateFromEntryEditor: entity,
-            contentType: contentType as ContentType,
-            entityReferenceMap: entityReferenceMap as EntityReferenceMap,
-          });
+  public async receiveMessage(message: MessageFromEditor): Promise<void> {
+    if (message.action === 'ENTRY_UPDATED') {
+      const { entity, contentType, entityReferenceMap } = message as EntryUpdatedMessage;
 
-          // Only if there was an update, trigger the callback to unnecessary re-renders
-          if (updated) {
-            s.callback(data);
+      await Promise.all(
+        [...this.subscriptions].map(async ([, s]) => {
+          try {
+            const { updated, data } = await this.merge({
+              // Clone the original data on the top level,
+              // to prevent cloning multiple times (time)
+              // or modifying the original data (failure potential)
+              dataFromPreviewApp: clone(s.data),
+              locale: s.locale || this.defaultLocale,
+              updateFromEntryEditor: entity,
+              contentType: contentType,
+              entityReferenceMap: entityReferenceMap,
+            });
+
+            // Only if there was an update, trigger the callback to unnecessary re-renders
+            if (updated) {
+              s.callback(data);
+            }
+          } catch (error) {
+            debug.error('Failed to apply live update', {
+              error,
+              subscribedData: s.data,
+              updateFromEditor: entity,
+            });
           }
-        } catch (error) {
-          debug.error('Failed to apply live update', {
-            error,
-            subscribedData: s.data,
-            updateFromEditor: entity,
-          });
-        }
-      });
+        })
+      );
     }
   }
 
@@ -244,6 +251,7 @@ export class LiveUpdates {
    * TODO: add more accurate checks
    */
   private validateDataFromPreview(data: Argument) {
+    // TODO: breaks on circular references, use loops
     const dataAsString = JSON.stringify(data);
 
     const isGQL = dataAsString.includes('__typename');
