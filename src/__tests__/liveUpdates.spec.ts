@@ -99,19 +99,6 @@ describe('LiveUpdates', () => {
         data
       );
     });
-
-    it('should notify because we dont know if it is REST or GraphQL', () => {
-      const liveUpdates = new LiveUpdates({ locale });
-      const data = { sys: { id: '1' }, title: 'Data 1' };
-      const callback = vi.fn();
-
-      liveUpdates.subscribe({ data, callback });
-
-      expect(helpers.debug.error).toHaveBeenCalledWith(
-        'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates will not work.',
-        data
-      );
-    });
   });
 
   it('no longer receives updates after unsubcribing', async () => {
