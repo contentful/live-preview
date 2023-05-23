@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "remix dev & esbuild node_modules/@contentful/live-preview/style.css --bundle --outfile=public/style.css --watch",
+    "build": "remix build && esbuild node_modules/@contentful/live-preview/style.css --bundle --outfile=public/style.css",
+    "start": "remix-serve build"
+  },
+  "dependencies": {
+    "@contentful/live-preview": "^2.1.1",
+    "@remix-run/node": "^1.16.1",
+    "@remix-run/react": "^1.16.1",
+    "@types/react-dom": "^18.2.4",
+    "graphql-request": "^6.0.0",
+    "isbot": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.16.1",
+    "@remix-run/eslint-config": "^1.16.1",
+    "@remix-run/serve": "^1.16.1",
+    "esbuild": "^0.17.19",
+    "eslint": "^8.41.0"
+  }
+}
