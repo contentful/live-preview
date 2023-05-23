@@ -3,6 +3,7 @@ import type { AssetProps, EntryProps } from 'contentful-management';
 import { ContentfulSubscribeConfig } from '.';
 import * as gql from './graphql';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
+import { validateDataForLiveUpdates } from './helpers/validation';
 import * as rest from './rest';
 import {
   Argument,
@@ -246,47 +247,11 @@ export class LiveUpdates {
   }
 
   /**
-   * **Basic** validating of the subscribed data
-   * Is it GraphQL or REST and does it contain the sys information
-   * TODO: add more accurate checks
-   */
-  private validateDataFromPreview(data: Argument) {
-    // TODO: breaks on circular references, use loops
-    const dataAsString = JSON.stringify(data);
-
-    const isGQL = dataAsString.includes('__typename');
-    const isREST = dataAsString.includes('fields":{');
-    const hasSys = dataAsString.includes('sys":{');
-
-    let isValid = true;
-
-    if (!hasSys) {
-      isValid = false;
-      debug.error('Live Updates requires the "sys.id" to be present on the provided data', data);
-    }
-
-    if (!isGQL && !isREST) {
-      isValid = false;
-      debug.error(
-        'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates will not work.',
-        data
-      );
-    }
-
-    return {
-      isGQL,
-      isREST,
-      hasSys,
-      isValid,
-    };
-  }
-
-  /**
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
    */
   public subscribe({ data, locale, callback }: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid } = this.validateDataFromPreview(data);
+    const { isGQL, isValid } = validateDataForLiveUpdates(data);
 
     if (!isValid) {
       return () => {
