@@ -1,4 +1,4 @@
-import type { AssetProps, EntryProps, ContentTypeProps } from 'contentful-management';
+import type { AssetProps, EntryProps, ContentTypeProps, SysLink } from 'contentful-management';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
@@ -26,7 +26,11 @@ export interface SysProps {
   [key: string]: unknown;
 }
 
-export type Entity = Record<string, unknown>;
+// We had Record<string, any> before, but this will not work with stricter typings
+// e.g. contentful client SDK - getEntry & getEntries
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Entity = Record<any, any>;
+
 export interface EntityWithSys extends Entity {
   sys: SysProps;
   __typename?: string;
@@ -102,7 +106,7 @@ export type EntryUpdatedMessage = {
 type UnknownReferenceLoaded = {
   action: 'UNKNOWN_REFERENCE_LOADED';
   reference: EntryProps | AssetProps;
-  contentType?: ContentType;
+  contentType?: SysLink;
   entityReferenceMap: EntityReferenceMap;
 };
 
