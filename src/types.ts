@@ -144,3 +144,7 @@ export interface Subscription {
   locale?: string;
   callback: SubscribeCallback;
 }
+
+export function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {
+  return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
+}

@@ -1,8 +1,8 @@
 import type { AssetProps, ContentTypeProps, EntryProps } from 'contentful-management';
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
-import * as helpers from '../../helpers';
+import { clone, resolveReference } from '../../helpers';
 import { EntityReferenceMap } from '../../types';
 import { updateEntity } from '../entities';
 import contentTypeEntry from './fixtures/contentType.json';
@@ -26,9 +26,9 @@ function patchField<T extends EntryProps | AssetProps>(
   };
 }
 
-describe('Update REST entry', () => {
-  const sendMessageToEditor = vi.spyOn(helpers, 'sendMessageToEditor');
+vi.mock('../../helpers/resolveReference');
 
+describe('Update REST entry', () => {
   const newEntryReference = {
     sys: { id: 'new-entry-id' },
     fields: {
@@ -79,8 +79,8 @@ describe('Update REST entry', () => {
   );
 
   beforeEach(() => {
-    sendMessageToEditor.mockImplementation(() => {
-      /* noop */
+    (resolveReference as Mock).mockImplementation(async ({ referenceId }) => {
+      return { reference: defaultEntityReferenceMap.get(referenceId) };
     });
   });
 
@@ -88,7 +88,7 @@ describe('Update REST entry', () => {
     vi.clearAllMocks();
   });
 
-  const updateFn = ({
+  const updateFn = async ({
     contentType = contentTypeEntry,
     dataFromPreviewApp,
     updateFromEntryEditor = entry,
@@ -103,21 +103,22 @@ describe('Update REST entry', () => {
   }) => {
     return updateEntity(
       contentType,
-      helpers.clone(dataFromPreviewApp),
-      helpers.clone(updateFromEntryEditor),
+      clone(dataFromPreviewApp),
+      clone(updateFromEntryEditor),
       locale,
       entityReferenceMap
     );
   };
 
-  it('updates primitive fields', () => {
-    expect(updateFn({ dataFromPreviewApp })).toEqual(defaultResult);
+  it('updates primitive fields', async () => {
+    const result = await updateFn({ dataFromPreviewApp });
+    expect(result).toEqual(defaultResult);
   });
 
-  it('updates primitive fields for assets', () => {
+  it('updates primitive fields for assets', async () => {
     const assetFromPreviewApp = dataFromPreviewApp.fields.mediaOneFile as unknown as EntryProps;
 
-    const result = updateFn({
+    const result = await updateFn({
       contentType: contentTypeAsset,
       dataFromPreviewApp: assetFromPreviewApp,
       updateFromEntryEditor: asset,
@@ -135,37 +136,8 @@ describe('Update REST entry', () => {
   });
 
   describe('references', () => {
-    it('sends a message to the editor for unknown entity', () => {
-      updateFn({
-        dataFromPreviewApp,
-        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
-          [EN]: { sys: { id: 'any-random-id' } },
-        }),
-      });
-
-      expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: 'any-random-id',
-      });
-    });
-
-    it('sends a message to the editor for unknown asset', () => {
-      updateFn({
-        dataFromPreviewApp,
-        updateFromEntryEditor: patchField(entry, 'mediaOneFile', {
-          [EN]: { sys: { id: 'any-random-asset-id', linkType: 'Asset' } },
-        }),
-      });
-
-      expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: 'any-random-asset-id',
-        referenceContentType: 'Asset',
-      });
-    });
-
-    it('removes a single reference', () => {
-      const result = updateFn({
+    it('removes a single reference', async () => {
+      const result = await updateFn({
         dataFromPreviewApp,
         updateFromEntryEditor: patchField(entry, 'refOneSameSpace', undefined),
       });
@@ -173,8 +145,8 @@ describe('Update REST entry', () => {
       expect(result).toEqual(patchField(defaultResult, 'refOneSameSpace', undefined));
     });
 
-    it('adds a single reference', () => {
-      const result = updateFn({
+    it('adds a single reference', async () => {
+      const result = await updateFn({
         dataFromPreviewApp: patchField(dataFromPreviewApp, 'refOneSameSpace', undefined),
         updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
           [EN]: { sys: newEntryReference.sys },
@@ -186,8 +158,8 @@ describe('Update REST entry', () => {
       );
     });
 
-    it('adds multi references', () => {
-      const result = updateFn({
+    it('adds multi references', async () => {
+      const result = await updateFn({
         dataFromPreviewApp: patchField(dataFromPreviewApp, 'refManySameSpace', undefined),
         updateFromEntryEditor: patchField(entry, 'refManySameSpace', {
           [EN]: [{ sys: newEntryReference.sys }, { sys: newAssetReference.sys }],
@@ -202,8 +174,8 @@ describe('Update REST entry', () => {
       );
     });
 
-    it('re-orders multi references', () => {
-      const result = updateFn({
+    it('re-orders multi references', async () => {
+      const result = await updateFn({
         dataFromPreviewApp: patchField(defaultResult, 'refManySameSpace', [
           newEntryReferenceTransformed,
           newAssetReferenceTransformed,
@@ -221,8 +193,8 @@ describe('Update REST entry', () => {
       );
     });
 
-    it('removes a reference from multi references', () => {
-      const result = updateFn({
+    it('removes a reference from multi references', async () => {
+      const result = await updateFn({
         dataFromPreviewApp: patchField(defaultResult, 'refManySameSpace', [
           newEntryReferenceTransformed,
           newAssetReferenceTransformed,
@@ -237,8 +209,8 @@ describe('Update REST entry', () => {
       );
     });
 
-    it('removes the last reference from multi references', () => {
-      const result = updateFn({
+    it('removes the last reference from multi references', async () => {
+      const result = await updateFn({
         dataFromPreviewApp: patchField(defaultResult, 'refManySameSpace', [
           newAssetReferenceTransformed,
         ]),

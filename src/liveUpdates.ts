@@ -80,7 +80,7 @@ export class LiveUpdates {
     if (this.isCfEntity(dataFromPreviewApp)) {
       // REST
       return {
-        data: rest.updateEntity(
+        data: await rest.updateEntity(
           contentType,
           dataFromPreviewApp as EntryProps,
           updateFromEntryEditor as EntryProps,
