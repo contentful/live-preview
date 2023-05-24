@@ -10,6 +10,7 @@ import {
   UpdateFieldProps,
   UpdateReferenceFieldProps,
   UpdateEntryProps,
+  isAsset,
 } from '../types';
 import { updateAsset } from './assets';
 import { buildCollectionName, logUnrecognizedFields } from './utils';
@@ -89,10 +90,6 @@ function updateRichTextField({
     (dataFromPreviewApp[name] as { json: unknown }).json =
       updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
   }
-}
-
-function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {
-  return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }
 
 async function updateReferenceAssetField({
