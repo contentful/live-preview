@@ -57,7 +57,7 @@ describe('resolveReference', () => {
     });
 
     it('resolves it from the editor', async () => {
-      const prom = resolveReference({
+      const promise = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
@@ -79,13 +79,13 @@ describe('resolveReference', () => {
         },
       } as MessageEvent);
 
-      const result = await prom;
+      const result = await promise;
 
       expect(result).toEqual(expected);
     });
 
     it('ignores different entries while waiting for the reference', async () => {
-      const prom = resolveReference({
+      const promise = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
@@ -123,19 +123,19 @@ describe('resolveReference', () => {
         },
       } as MessageEvent);
 
-      const result = await prom;
+      const result = await promise;
 
       expect(result).toEqual(expected);
     });
 
     it('dedupes requests', async () => {
-      const prom = resolveReference({
+      const promise = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
       });
 
-      const prom2 = resolveReference({
+      const promise2 = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
@@ -149,8 +149,8 @@ describe('resolveReference', () => {
         },
       } as MessageEvent);
 
-      const result = await prom;
-      const result2 = await prom2;
+      const result = await promise;
+      const result2 = await promise2;
 
       expect(result).toEqual(expected);
       expect(result2).toEqual(expected);
@@ -198,7 +198,7 @@ describe('resolveReference', () => {
     });
 
     it('resolves it from the editor', async () => {
-      const prom = resolveReference({
+      const promise = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
       });
@@ -219,7 +219,7 @@ describe('resolveReference', () => {
         },
       } as MessageEvent);
 
-      const result = await prom;
+      const result = await promise;
 
       expect(result).toEqual(expected);
     });
