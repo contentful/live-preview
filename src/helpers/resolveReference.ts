@@ -65,7 +65,6 @@ function loadReference(referenceId: string, isAsset?: boolean): ReferencePromise
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
-  isAsset?: false;
 }): Promise<{ reference: EntryProps; typeName: string }>;
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;

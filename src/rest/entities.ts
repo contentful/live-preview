@@ -30,8 +30,7 @@ async function updateRef(
   const { reference } = await resolveReference({
     entityReferenceMap,
     referenceId: updateFromEntryEditor.sys.id,
-    // @ts-expect-error -- true or false is not equal to boolean
-    isAsset: isAsset(updateFromEntryEditor as EntryProps),
+    ...(isAsset(updateFromEntryEditor as EntryProps) ? { isAsset: true } : undefined),
   });
 
   if (!reference) {
