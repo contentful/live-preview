@@ -1,13 +1,16 @@
 import React from 'react';
-import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { gql } from "graphql-request";
-import { useContentfulInspectorMode, useContentfulLiveUpdates } from "@contentful/live-preview/react";
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { gql } from 'graphql-request';
+import {
+  useContentfulInspectorMode,
+  useContentfulLiveUpdates,
+} from '@contentful/live-preview/react';
 
-import { PreviewBanner } from "../components/preview-banner";
-import { contentful } from "../../lib/contentful.server";
-import { isPreviewMode } from "../utils/preview-mode.server";
+import { PreviewBanner } from '../components/preview-banner';
+import { contentful } from '../../lib/contentful.server';
+import { isPreviewMode } from '../utils/preview-mode.server';
 
 type QueryResponse = {
   postCollection: {
@@ -19,8 +22,8 @@ type Post = {
   title: string;
   description: string;
   sys: {
-    id: string
-  }
+    id: string;
+  };
 };
 
 type LoaderData = {
@@ -44,7 +47,6 @@ const getPostQuery = gql`
   }
 `;
 
-
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { slug } = params;
 
@@ -54,23 +56,23 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
     : process.env.CONTENTFUL_ACCESS_TOKEN;
 
-    const data = (await contentful.request(
-      getPostQuery,
-      { slug, preview },
-      { authorization: `Bearer ${API_TOKEN}` }
-    )) as QueryResponse;
+  const data = (await contentful.request(
+    getPostQuery,
+    { slug, preview },
+    { authorization: `Bearer ${API_TOKEN}` }
+  )) as QueryResponse;
 
   const post = data.postCollection.items[0];
 
   return json({
     post,
-    preview
+    preview,
   });
 };
 
 export default function PostDetailPage() {
   const { post, preview } = useLoaderData<LoaderData>();
-  const inspectorProps = useContentfulInspectorMode({ entryId: post.sys.id })
+  const inspectorProps = useContentfulInspectorMode({ entryId: post.sys.id });
   const updatedPost = useContentfulLiveUpdates(post);
 
   return (

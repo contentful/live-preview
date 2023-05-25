@@ -1,12 +1,12 @@
 import React from 'react';
-import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { gql } from "graphql-request";
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { gql } from 'graphql-request';
 
-import { contentful } from "../../lib/contentful.server";
-import { isPreviewMode } from "../utils/preview-mode.server";
-import { PreviewBanner } from "../components/preview-banner";
+import { contentful } from '../../lib/contentful.server';
+import { isPreviewMode } from '../utils/preview-mode.server';
+import { PreviewBanner } from '../components/preview-banner';
 
 type QueryResponse = {
   postCollection: {
@@ -51,7 +51,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const data = (await contentful.request(
     getPostQuery,
-    {preview},
+    { preview },
     {
       authorization: `Bearer ${API_TOKEN}`,
     }
@@ -59,7 +59,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   return json({
     posts: data.postCollection.items,
-    preview
+    preview,
   });
 };
 
