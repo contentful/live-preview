@@ -4,8 +4,8 @@ import { parseCookie } from './parse-cookie.server';
 
 export const previewModeCookie = createCookie('stage', {
   path: '/',
-  sameSite: process.env.NODE_ENV !== 'development' ? 'none' : 'lax',
-  secure: process.env.NODE_ENV !== 'development',
+  sameSite: 'none',
+  secure: true,
   httpOnly: true,
   secrets: [process.env.CONTENTFUL_PREVIEW_SECRET as string],
 });
