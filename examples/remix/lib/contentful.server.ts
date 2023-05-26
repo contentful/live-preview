@@ -1,4 +1,4 @@
-import { GraphQLClient } from "graphql-request";
+import { GraphQLClient } from 'graphql-request';
 
 const SPACE = process.env.CONTENTFUL_SPACE_ID;
 

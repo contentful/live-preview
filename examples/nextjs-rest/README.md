@@ -1,6 +1,6 @@
-# Next.js Contentful live preview SDK example
+# Next.js REST Contentful live preview SDK example
 
-This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application. The SDK provides live preview functionality for content changes and the inspector mode for your Contentful space.
+This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that uses the REST API. The live preview SDK provides live updates functionality for content changes and the inspector mode for your Contentful space.
 
 ## 1. Installation
 
@@ -18,7 +18,6 @@ To run this project, you will need to add the following environment variables to
 - `CONTENTFUL_ACCESS_TOKEN`: This is the Content Delivery API - access token, which is used for fetching **published** data from your Contentful space.
 - `CONTENTFUL_PREVIEW_ACCESS_TOKEN`: This is the Content Preview API - access token, which is used for fetching **draft** data from your Contentful space.
 - `CONTENTFUL_PREVIEW_SECRET`: This can be any value you want. It must be URL friendly as it will be send as a query parameter to enable draft mode.
-
 
 ## 3. Setting up the content model
 

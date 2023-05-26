@@ -6,11 +6,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+} from '@remix-run/react';
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
-import { json } from "@remix-run/node";
-import { isPreviewMode } from "./utils/preview-mode.server";
-import type { LoaderFunction } from "@remix-run/node";
+import { json } from '@remix-run/node';
+import { isPreviewMode } from './utils/preview-mode.server';
+import type { LoaderFunction } from '@remix-run/node';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const preview = await isPreviewMode(request);
@@ -22,7 +22,11 @@ export default function App() {
   const { preview } = useLoaderData<{ preview: boolean }>();
 
   return (
-    <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={preview} enableLiveUpdates={preview}>
+    <ContentfulLivePreviewProvider
+      locale="en-US"
+      enableInspectorMode={preview}
+      enableLiveUpdates={preview}
+    >
       <html lang="en">
         <head>
           <Meta />
