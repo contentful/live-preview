@@ -59,6 +59,7 @@
     "@commitlint/config-conventional": "^17.4.4",
     "@contentful/eslint-config-extension": "0.4.3",
     "@semantic-release/changelog": "^6.0.2",
+    "@semantic-release/git": "^10.0.1",
     "@testing-library/react": "14.0.0",
     "@types/node": "^20.1.0",
     "@types/react": "^18.0.27",
@@ -118,7 +119,16 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
       "@semantic-release/npm",
-      "@semantic-release/github"
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
     ]
   }
 }
