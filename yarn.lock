@@ -2161,9 +2161,9 @@ console-control-strings@^1.1.0:
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
 contentful-management@^10.30.1:
-  version "10.35.3"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-10.35.3.tgz#feb25c93625da7478926f279eb6cac685d821d6c"
-  integrity sha512-kX/dIfIChAViTkjYZdTzj2Yf3PF7G1kXgLf44qwaE9rwv2tZ5/MjYrqZhDCDxaSBREhD9NZWpsXWPGDD5I2CLw==
+  version "10.35.4"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-10.35.4.tgz#519eeb9ec990862641a39ff6219e9dc29e5e83d9"
+  integrity sha512-yAgnwzyyT3kqvxKkM6iky9UiWs8n1EQH5n52rcBrjHM44Ext+Kjagzz1gRQC3maYSgp5UR3FwyUj8gX9Kd7uDQ==
   dependencies:
     "@contentful/rich-text-types" "^16.0.3"
     "@types/json-patch" "0.0.30"
@@ -6985,12 +6985,7 @@ type-fest@^2.0.0, type-fest@^2.12.2, type-fest@^2.5.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-2.19.0.tgz#88068015bb33036a598b952e55e9311a60fd3a9b"
   integrity sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==
 
-type-fest@^3.0.0:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-3.6.1.tgz#cf8025edeebfd6cf48de73573a5e1423350b9993"
-  integrity sha512-htXWckxlT6U4+ilVgweNliPqlsVSSucbxVexRYllyMVJDtf5rTjv6kF/s+qAd4QSL1BZcnJPEJavYBPQiWuZDA==
-
-type-fest@^3.8.0:
+type-fest@^3.0.0, type-fest@^3.8.0:
   version "3.11.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-3.11.0.tgz#e78ea6b50d6a6b1e4609035fb9ea8f1e3c328194"
   integrity sha512-JaPw5U9ixP0XcpUbQoVSbxSDcK/K4nww20C3kjm9yE6cDRRhptU28AH60VWf9ltXmCrIfIbtt9J+2OUk2Uqiaw==
