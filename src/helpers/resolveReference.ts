@@ -10,7 +10,7 @@ type ReferencePromise = Promise<{
 
 const PromiseMap = new Map<string, ReferencePromise>();
 
-function generateTypeName(contentTypeId: string): string {
+export function generateTypeName(contentTypeId: string): string {
   return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
 }
 

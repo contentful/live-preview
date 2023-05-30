@@ -53,6 +53,7 @@ describe('Update REST entry', () => {
     ...dataFromPreviewApp,
     fields: {
       ...dataFromPreviewApp.fields,
+      // updated data:
       shortText: entry.fields.shortText[EN],
       shortTextUrl: entry.fields.shortTextUrl[EN],
       shortTextSlug: entry.fields.shortTextSlug[EN],

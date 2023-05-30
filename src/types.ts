@@ -126,6 +126,7 @@ export type UpdateEntryProps = {
   updateFromEntryEditor: EntryProps;
   locale: string;
   entityReferenceMap: EntityReferenceMap;
+  gqlParams?: GraphQLParams;
 };
 
 export type UpdateFieldProps = {
@@ -134,6 +135,7 @@ export type UpdateFieldProps = {
   name: string;
   locale: string;
   entityReferenceMap: EntityReferenceMap;
+  gqlParams?: GraphQLParams;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -141,12 +143,30 @@ export type UpdateReferenceFieldProps = {
   updatedReference: Entity & CollectionItem;
   entityReferenceMap: EntityReferenceMap;
   locale: string;
+  gqlParams?: GraphQLParams;
 };
+
+/**
+ * Generated params based on the DocumentNode of the query
+ */
+export interface GraphQLParam {
+  /** Map with aliases (name, alias) */
+  alias: Map<string, string>;
+  /** Set with all requested fields for this __typename */
+  fields: Set<string>;
+}
+
+/**
+ * Map with the aliases for GraphQL fields
+ * clustered by `__typename`
+ */
+export type GraphQLParams = Map<string, GraphQLParam>;
 
 export interface Subscription {
   data: Argument;
   locale?: string;
   callback: SubscribeCallback;
+  gqlParams?: GraphQLParams;
 }
 
 export function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {

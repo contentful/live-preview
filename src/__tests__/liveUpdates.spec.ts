@@ -27,6 +27,7 @@ describe('LiveUpdates', () => {
   });
 
   const contentType = {
+    sys: { id: 'Test' },
     fields: [
       {
         id: 'WHxL83oMXaLL53LK',
@@ -104,7 +105,6 @@ describe('LiveUpdates', () => {
   it('no longer receives updates after unsubcribing', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
-    const contentType = { fields: [] } as unknown as ContentType;
     const callback = vi.fn();
     const unsubscribe = liveUpdates.subscribe({ data, callback });
 
