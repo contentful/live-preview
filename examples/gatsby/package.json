@@ -1,0 +1,29 @@
+{
+  "name": "my-gatsby-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@contentful/live-preview": "^2.2.1",
+    "gatsby": "^5.10.0",
+    "gatsby-plugin-image": "^3.10.0",
+    "gatsby-plugin-sharp": "^5.10.0",
+    "gatsby-source-contentful": "^8.10.0",
+    "gatsby-transformer-sharp": "^5.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.13",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "typescript": "^5.0.4"
+  }
+}
