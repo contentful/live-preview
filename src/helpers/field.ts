@@ -13,16 +13,21 @@ const PRIMITIVE_FIELDS = new Set([
   'Object',
 ]);
 
-export function updatePrimitiveField(
-  dataFromPreviewApp: Entity,
-  updateFromEntryEditor: EntryProps | AssetProps,
-  name: string,
-  locale: string
-): void {
-  if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] =
-      (updateFromEntryEditor.fields as KeyValueMap | undefined)?.[name]?.[locale] ?? null;
-  }
+interface PrimitiveFieldArgs {
+  dataFromPreviewApp: Entity;
+  updateFromEntryEditor: EntryProps | AssetProps;
+  name: string;
+  locale: string;
+}
+
+export function updatePrimitiveField({
+  dataFromPreviewApp,
+  updateFromEntryEditor,
+  name,
+  locale,
+}: PrimitiveFieldArgs): void {
+  dataFromPreviewApp[name] =
+    (updateFromEntryEditor.fields as KeyValueMap | undefined)?.[name]?.[locale] ?? null;
 }
 
 export function isPrimitiveField(field: ContentFields): boolean {

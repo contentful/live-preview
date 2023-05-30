@@ -60,7 +60,12 @@ async function updateRef(
         entityReferenceMap
       );
     } else {
-      updatePrimitiveField(result.fields, reference, key, locale);
+      updatePrimitiveField({
+        dataFromPreviewApp: result.fields,
+        updateFromEntryEditor: reference,
+        name: key,
+        locale,
+      });
     }
   }
 
@@ -142,32 +147,34 @@ export async function updateEntity(
     return dataFromPreviewApp;
   }
 
-  try {
-    for (const field of contentType.fields) {
-      const name = getFieldName(contentType, field);
+  for (const field of contentType.fields) {
+    const name = getFieldName(contentType, field);
 
-      if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
-        updatePrimitiveField(dataFromPreviewApp.fields, updateFromEntryEditor, name, locale);
-      } else if (field.type === 'Link') {
-        await updateSingleRefField(
-          dataFromPreviewApp,
-          updateFromEntryEditor,
-          locale,
-          name as keyof Reference['fields'],
-          entityReferenceMap
-        );
-      } else if (field.type === 'Array' && field.items?.type === 'Link') {
-        await updateMultiRefField(
-          dataFromPreviewApp,
-          updateFromEntryEditor,
-          locale,
-          name as keyof Reference['fields'],
-          entityReferenceMap
-        );
-      }
+    if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
+      updatePrimitiveField({
+        dataFromPreviewApp: dataFromPreviewApp.fields,
+        updateFromEntryEditor,
+        name,
+        locale,
+      });
+    } else if (field.type === 'Link') {
+      await updateSingleRefField(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        locale,
+        name as keyof Reference['fields'],
+        entityReferenceMap
+      );
+    } else if (field.type === 'Array' && field.items?.type === 'Link') {
+      await updateMultiRefField(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        locale,
+        name as keyof Reference['fields'],
+        entityReferenceMap
+      );
     }
-  } catch (err) {
-    console.error('>> error', err);
   }
+
   return dataFromPreviewApp;
 }

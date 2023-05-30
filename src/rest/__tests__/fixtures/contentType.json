@@ -36,82 +36,10 @@
       "omitted": false
     },
     {
-      "id": "HDOz1oFZ4jFn34IQ",
-      "apiName": "shortTextDropdown",
-      "name": "shortTextDropdown",
-      "type": "Symbol",
-      "localized": false,
-      "required": true,
-      "validations": [{ "unique": true }, { "in": ["short", "text", "dropdown"] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "O1pWXzheaO4OclIO",
-      "apiName": "shortTextRadio",
-      "name": "shortTextRadio",
-      "type": "Symbol",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": ["short", "text", "radio"] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
       "id": "AiJhnJF2ZMpQ6Xok",
       "apiName": "shortTextSlug",
       "name": "shortTextSlug",
       "type": "Symbol",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "lq4vQ9ylOOjAMh3P",
-      "apiName": "shortTextListTag",
-      "name": "shortTextListTag",
-      "type": "Array",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false,
-      "items": { "type": "Symbol", "validations": [] }
-    },
-    {
-      "id": "JjyYiZODx2PEXMlI",
-      "apiName": "shortTextListList",
-      "name": "shortTextListList",
-      "type": "Array",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false,
-      "items": { "type": "Symbol", "validations": [] }
-    },
-    {
-      "id": "FGHHBIkp5qdEDga9",
-      "apiName": "shortTextListCheckbox",
-      "name": "shortTextListCheckbox",
-      "type": "Array",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false,
-      "items": {
-        "type": "Symbol",
-        "validations": [{ "in": ["short", "text", "list", "checkbox"] }]
-      }
-    },
-    {
-      "id": "PbG5eJbdVvFd8m5g",
-      "apiName": "longTextSingle",
-      "name": "longTextSingle",
-      "type": "Text",
       "localized": false,
       "required": false,
       "validations": [],
@@ -126,39 +54,6 @@
       "localized": false,
       "required": false,
       "validations": [],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "xBcQfICleIg4XzbM",
-      "apiName": "longTextMarkdown",
-      "name": "longTextMarkdown",
-      "type": "Text",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "eMfwObIcI2lE4kl8",
-      "apiName": "longTextDropdown",
-      "name": "longTextDropdown",
-      "type": "Text",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": ["long", "text", "dropdown"] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "LiaymcHqL2gVmbhq",
-      "apiName": "longTextRadio",
-      "name": "longTextRadio",
-      "type": "Text",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": ["long", "text", "radio"] }],
       "disabled": false,
       "omitted": false
     },
@@ -213,75 +108,9 @@
       "omitted": false
     },
     {
-      "id": "DQ6VEawVWvY7yFYI",
-      "apiName": "numberIntegerDropdown",
-      "name": "numberIntegerDropdown",
-      "type": "Integer",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": [0, 1, 2] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "o33hB08PZXN3pJLG",
-      "apiName": "numberIntegerRadio",
-      "name": "numberIntegerRadio",
-      "type": "Integer",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": [0, 1, 2] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "H4NngnvOyD6edgfx",
-      "apiName": "numberIntegerRating",
-      "name": "numberIntegerRating",
-      "type": "Integer",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false
-    },
-    {
       "id": "blIoDAYWqxDNiIBf",
       "apiName": "numberDecimal",
       "name": "numberDecimal",
-      "type": "Number",
-      "localized": false,
-      "required": false,
-      "validations": [],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "AD7hZhxXhwbFjmQC",
-      "apiName": "numberDecimalDropdown",
-      "name": "numberDecimalDropdown",
-      "type": "Number",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": [0.5, 1.5, 2.5] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "Fh5zqie9kopKyoC9",
-      "apiName": "numberDecimalRadio",
-      "name": "numberDecimalRadio",
-      "type": "Number",
-      "localized": false,
-      "required": false,
-      "validations": [{ "in": [0.5, 1.5, 2.5] }],
-      "disabled": false,
-      "omitted": false
-    },
-    {
-      "id": "D9YXZdIkeQjI4MKq",
-      "apiName": "numberDecimalRating",
-      "name": "numberDecimalRating",
       "type": "Number",
       "localized": false,
       "required": false,

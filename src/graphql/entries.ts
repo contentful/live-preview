@@ -1,6 +1,13 @@
 import type { EntryProps } from 'contentful-management';
 
-import { isPrimitiveField, updatePrimitiveField, resolveReference, debug } from '../helpers';
+import {
+  isPrimitiveField,
+  updatePrimitiveField,
+  resolveReference,
+  clone,
+  debug,
+  generateTypeName,
+} from '../helpers';
 import {
   CollectionItem,
   SysProps,
@@ -11,9 +18,11 @@ import {
   UpdateReferenceFieldProps,
   UpdateEntryProps,
   isAsset,
+  GraphQLParams,
 } from '../types';
 import { updateAsset } from './assets';
-import { buildCollectionName, logUnrecognizedFields } from './utils';
+import { isRelevantField, updateAliasedInformation } from './queryUtils';
+import { buildCollectionName } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -30,52 +39,57 @@ export async function updateEntry({
   updateFromEntryEditor,
   locale,
   entityReferenceMap,
+  gqlParams,
 }: UpdateEntryProps): Promise<Entity & { sys: SysProps }> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;
   }
+  const copyOfDataFromPreviewApp = clone(dataFromPreviewApp);
+  const typename = generateTypeName(contentType.sys.id);
 
-  const copyOfDataFromPreviewApp = { ...dataFromPreviewApp };
-  const { fields } = contentType;
-
-  logUnrecognizedFields(
-    fields.map((f) => f.apiName ?? f.name),
-    dataFromPreviewApp
-  );
-
-  for (const field of fields) {
+  for (const field of contentType.fields) {
     const name = field.apiName ?? field.name;
 
-    if (isPrimitiveField(field)) {
-      updatePrimitiveField(copyOfDataFromPreviewApp, updateFromEntryEditor, name, locale);
-    } else if (field.type === 'RichText') {
-      await updateRichTextField({
-        dataFromPreviewApp: copyOfDataFromPreviewApp,
-        updateFromEntryEditor,
-        name,
-        locale,
-        entityReferenceMap,
-      });
-    } else if (field.type === 'Link') {
-      await updateSingleRefField({
-        dataFromPreviewApp: copyOfDataFromPreviewApp,
-        updateFromEntryEditor,
-        name,
-        locale,
-        entityReferenceMap,
-      });
-    } else if (field.type === 'Array' && field.items?.type === 'Link') {
-      await updateMultiRefField({
-        dataFromPreviewApp: copyOfDataFromPreviewApp,
-        updateFromEntryEditor,
-        name,
-        locale,
-        entityReferenceMap,
-      });
+    if (isRelevantField(name, typename, copyOfDataFromPreviewApp, gqlParams)) {
+      if (isPrimitiveField(field)) {
+        updatePrimitiveField({
+          dataFromPreviewApp: copyOfDataFromPreviewApp,
+          updateFromEntryEditor,
+          name,
+          locale,
+        });
+      } else if (field.type === 'RichText') {
+        await updateRichTextField({
+          dataFromPreviewApp: copyOfDataFromPreviewApp,
+          updateFromEntryEditor,
+          entityReferenceMap,
+          name,
+          locale,
+          gqlParams,
+        });
+      } else if (field.type === 'Link') {
+        await updateSingleRefField({
+          dataFromPreviewApp: copyOfDataFromPreviewApp,
+          updateFromEntryEditor,
+          name,
+          locale,
+          entityReferenceMap,
+          gqlParams,
+        });
+      } else if (field.type === 'Array' && field.items?.type === 'Link') {
+        await updateMultiRefField({
+          dataFromPreviewApp: copyOfDataFromPreviewApp,
+          updateFromEntryEditor,
+          name,
+          locale,
+          entityReferenceMap,
+          gqlParams,
+        });
+      }
     }
   }
 
-  return copyOfDataFromPreviewApp;
+  return updateAliasedInformation(copyOfDataFromPreviewApp, typename, gqlParams);
 }
 
 interface RichTextLink {
@@ -92,7 +106,8 @@ async function processNode(
   entries: RichTextLink,
   assets: RichTextLink,
   entityReferenceMap: EntityReferenceMap,
-  locale: string
+  locale: string,
+  gqlParams?: GraphQLParams
 ) {
   // Check if the node is an embedded entity
   if (node.nodeType.includes('embedded')) {
@@ -105,13 +120,20 @@ async function processNode(
 
       // Use the updateReferenceEntryField or updateReferenceAssetField function to resolve the entity reference
       if (node.data.target.sys.linkType === 'Entry') {
-        ref = await updateReferenceEntryField(null, updatedReference, entityReferenceMap, locale);
+        ref = await updateReferenceEntryField({
+          referenceFromPreviewApp: null,
+          updatedReference,
+          entityReferenceMap,
+          locale,
+          gqlParams,
+        });
       } else if (node.data.target.sys.linkType === 'Asset') {
         ref = await updateReferenceAssetField({
           referenceFromPreviewApp: null,
           updatedReference,
           entityReferenceMap,
           locale,
+          gqlParams,
         });
       }
 
@@ -139,7 +161,7 @@ async function processNode(
     // since embedded entries can be part of other rich text content (e.g. embedded inline entries)
     // we need to recursively check for these entries to display them
     for (const contentNode of node.content) {
-      await processNode(contentNode, entries, assets, entityReferenceMap, locale);
+      await processNode(contentNode, entries, assets, entityReferenceMap, locale, gqlParams);
     }
   }
 }
@@ -147,13 +169,14 @@ async function processNode(
 async function processRichTextField(
   richTextNode: any,
   entityReferenceMap: EntityReferenceMap,
-  locale: string
+  locale: string,
+  gqlParams?: GraphQLParams
 ): Promise<{ entries: RichTextLink; assets: RichTextLink }> {
   const entries: RichTextLink = { block: [], inline: [] };
   const assets: RichTextLink = { block: [], inline: [] };
 
   for (const node of richTextNode.content) {
-    await processNode(node, entries, assets, entityReferenceMap, locale);
+    await processNode(node, entries, assets, entityReferenceMap, locale, gqlParams);
   }
 
   return {
@@ -168,23 +191,23 @@ async function updateRichTextField({
   name,
   locale,
   entityReferenceMap,
+  gqlParams,
 }: UpdateFieldProps) {
-  if (name in dataFromPreviewApp) {
-    if (!dataFromPreviewApp[name]) {
-      dataFromPreviewApp[name] = {};
-    }
-
-    // Update the rich text JSON data
-    (dataFromPreviewApp[name] as { json: unknown }).json =
-      updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
-
-    // Update the rich text embedded entries
-    dataFromPreviewApp[name].links = await processRichTextField(
-      dataFromPreviewApp[name].json,
-      entityReferenceMap,
-      locale
-    );
+  if (!dataFromPreviewApp[name]) {
+    dataFromPreviewApp[name] = {};
   }
+
+  // Update the rich text JSON data
+  (dataFromPreviewApp[name] as { json: unknown }).json =
+    updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+
+  // Update the rich text embedded entries
+  dataFromPreviewApp[name].links = await processRichTextField(
+    dataFromPreviewApp[name].json,
+    entityReferenceMap,
+    locale,
+    gqlParams
+  );
 }
 
 async function updateReferenceAssetField({
@@ -192,6 +215,7 @@ async function updateReferenceAssetField({
   updatedReference,
   entityReferenceMap,
   locale,
+  gqlParams,
 }: UpdateReferenceFieldProps) {
   const { reference } = await resolveReference({
     entityReferenceMap,
@@ -202,16 +226,18 @@ async function updateReferenceAssetField({
   return updateAsset(
     { ...referenceFromPreviewApp, ...updatedReference, __typename: ASSET_TYPENAME },
     reference,
-    locale
+    locale,
+    gqlParams
   );
 }
 
-async function updateReferenceEntryField(
-  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined,
-  updatedReference: Entity & CollectionItem,
-  entityReferenceMap: EntityReferenceMap,
-  locale: string
-) {
+async function updateReferenceEntryField({
+  referenceFromPreviewApp,
+  updatedReference,
+  entityReferenceMap,
+  locale,
+  gqlParams,
+}: UpdateReferenceFieldProps) {
   const { reference, typeName } = await resolveReference({
     entityReferenceMap,
     referenceId: updatedReference.sys.id,
@@ -226,8 +252,11 @@ async function updateReferenceEntryField(
 
   // TODO: kind of duplication with line 46, check if we can combine them
   for (const key in reference.fields) {
-    const value = reference.fields[key as keyof typeof reference.fields][locale];
+    if (!isRelevantField(key, typeName, reference.fields, gqlParams)) {
+      continue;
+    }
 
+    const value = reference.fields[key as keyof typeof reference.fields][locale];
     if (typeof value === 'object') {
       if (value.nodeType === 'document') {
         // richtext
@@ -244,6 +273,7 @@ async function updateReferenceEntryField(
           locale,
           entityReferenceMap,
           name: key,
+          gqlParams,
         });
       }
     } else if (Array.isArray(value) && value[0]?.sys) {
@@ -256,6 +286,7 @@ async function updateReferenceEntryField(
         locale,
         entityReferenceMap,
         name: key,
+        gqlParams,
       });
     } else {
       // primitive fields
@@ -263,7 +294,7 @@ async function updateReferenceEntryField(
     }
   }
 
-  return merged;
+  return updateAliasedInformation(merged, typeName, gqlParams);
 }
 
 async function updateReferenceField({
@@ -271,6 +302,7 @@ async function updateReferenceField({
   updatedReference,
   entityReferenceMap,
   locale,
+  gqlParams,
 }: UpdateReferenceFieldProps) {
   if (!updatedReference) {
     return null;
@@ -291,15 +323,17 @@ async function updateReferenceField({
       updatedReference,
       entityReferenceMap,
       locale,
+      gqlParams,
     });
   }
 
-  return updateReferenceEntryField(
+  return updateReferenceEntryField({
     referenceFromPreviewApp,
     updatedReference,
     entityReferenceMap,
-    locale
-  );
+    locale,
+    gqlParams,
+  });
 }
 
 async function updateSingleRefField({
@@ -308,15 +342,17 @@ async function updateSingleRefField({
   name,
   locale,
   entityReferenceMap,
+  gqlParams,
 }: UpdateFieldProps) {
-  if (name in dataFromPreviewApp) {
-    dataFromPreviewApp[name] = await updateReferenceField({
-      referenceFromPreviewApp: dataFromPreviewApp[name] as EntryProps & { __typename?: string },
-      updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
-      entityReferenceMap: entityReferenceMap as EntityReferenceMap,
-      locale,
-    });
-  }
+  dataFromPreviewApp[name] = await updateReferenceField({
+    referenceFromPreviewApp: dataFromPreviewApp[name] as EntryProps & {
+      __typename?: string;
+    },
+    updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
+    entityReferenceMap: entityReferenceMap as EntityReferenceMap,
+    locale,
+    gqlParams,
+  });
 }
 
 async function updateMultiRefField({
@@ -325,31 +361,35 @@ async function updateMultiRefField({
   name,
   locale,
   entityReferenceMap,
+  gqlParams,
 }: UpdateFieldProps) {
   const fieldName = buildCollectionName(name);
 
-  if (fieldName in dataFromPreviewApp) {
-    const list = updateFromEntryEditor?.fields?.[name]?.[locale] ?? [];
-    const dataFromPreviewAppItems = await Promise.all(
-      list.map(async (updatedItem: Entity & CollectionItem) => {
-        const itemFromPreviewApp = (
-          dataFromPreviewApp[fieldName] as { items: CollectionItem[] }
-        ).items.find((item) => item.sys.id === updatedItem.sys.id);
+  const list = updateFromEntryEditor?.fields?.[name]?.[locale] ?? [];
+  const dataFromPreviewAppItems = await Promise.all(
+    list.map(async (updatedItem: Entity & CollectionItem) => {
+      const itemFromPreviewApp = (
+        dataFromPreviewApp[fieldName] as { items: CollectionItem[] } | undefined
+      )?.items?.find((item) => item.sys.id === updatedItem.sys.id);
 
-        const result = await updateReferenceField({
-          referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
-            __typename?: string;
-          },
-          updatedReference: updatedItem,
-          entityReferenceMap: entityReferenceMap as EntityReferenceMap,
-          locale,
-        });
+      const result = await updateReferenceField({
+        referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
+          __typename?: string;
+        },
+        updatedReference: updatedItem,
+        entityReferenceMap: entityReferenceMap as EntityReferenceMap,
+        locale,
+        gqlParams,
+      });
 
-        return result;
-      })
-    );
+      return result;
+    })
+  );
 
-    (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items =
-      dataFromPreviewAppItems.filter(Boolean);
+  if (!dataFromPreviewApp[fieldName]) {
+    dataFromPreviewApp[fieldName] = { items: [] };
   }
+
+  (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items =
+    dataFromPreviewAppItems.filter(Boolean);
 }

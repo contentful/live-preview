@@ -1,5 +1,7 @@
 import './styles.css';
 
+import type { DocumentNode } from 'graphql';
+
 import {
   sendMessageToEditor,
   pollUrlChanges,
@@ -15,7 +17,6 @@ import {
   LivePreviewProps,
   MessageFromEditor,
   SubscribeCallback,
-  Subscription,
   TagAttributes,
 } from './types';
 
@@ -30,6 +31,7 @@ export interface ContentfulSubscribeConfig {
   data: Argument;
   locale?: string;
   callback: SubscribeCallback;
+  query?: DocumentNode
 }
 
 export class ContentfulLivePreview {
@@ -122,7 +124,7 @@ export class ContentfulLivePreview {
     }
   }
 
-  static subscribe(config: Subscription): VoidFunction {
+  static subscribe(config: ContentfulSubscribeConfig): VoidFunction {
     if (!this.liveUpdatesEnabled) {
       return () => {
         /* noop */
@@ -135,12 +137,7 @@ export class ContentfulLivePreview {
       );
     }
 
-    // override locale if passed by user
-    if (config.locale) {
-      return this.liveUpdates.subscribe(config);
-    }
-
-    return this.liveUpdates.subscribe({ ...config, locale: this.locale });
+    return this.liveUpdates.subscribe(config);
   }
 
   // Static method to render live preview data-attributes to HTML element output

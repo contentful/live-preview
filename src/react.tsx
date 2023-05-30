@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
@@ -9,6 +9,7 @@ import React, {
   type ReactElement,
 } from 'react';
 
+import { DocumentNode } from 'graphql';
 import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect';
 
 import { debounce } from './helpers';
@@ -48,6 +49,26 @@ export function ContentfulLivePreviewProvider({
   );
 }
 
+interface Options {
+  locale?: string;
+  /** GraphQL query related to the provided data */
+  query?: DocumentNode;
+
+  skip?: boolean;
+}
+
+export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
+  data: T,
+  options?: Options
+): T;
+/**
+ * @deprecated in favor of `options`
+ */
+export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
+  data: T,
+  locale?: string,
+  skip?: boolean
+): T;
 /**
  * Receives updates directly from the Contentful Editor inside the LivePreview
  * Attention: For this to work, the provided data should contain a `sys.id` information
@@ -56,7 +77,7 @@ export function ContentfulLivePreviewProvider({
  */
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
-  locale?: string,
+  optionsOrLocale?: Options | string,
   skip = false
 ): T {
   const [state, setState] = useState({ data, version: 1 });
@@ -64,12 +85,15 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   const update = useRef(debounce(setState));
   const config = useContext(ContentfulLivePreviewContext);
 
+  const options =
+    typeof optionsOrLocale === 'object' ? optionsOrLocale : { locale: optionsOrLocale, skip };
+
   const shouldSubscribe = useMemo(() => {
     if (config && !config.enableLiveUpdates) {
       return false;
     }
 
-    if (skip) {
+    if (options.skip) {
       return false;
     }
 
@@ -82,7 +106,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
     }
 
     return false;
-  }, [config, skip, data]);
+  }, [config, options.skip, data]);
 
   useDeepCompareEffectNoCheck(() => {
     if (previous.current !== data) {
@@ -95,17 +119,19 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
     if (!shouldSubscribe) {
       return;
     }
+
     // or update content through live updates
     return ContentfulLivePreview.subscribe({
       data: data as Argument,
-      locale,
+      locale: options.locale,
+      query: options.query,
       callback: (updatedData) => {
         // Update the state and adding a version number to it, as some deep nested updates
         // are not proceeded correctly otherwise
         update.current((prevState) => ({ data: updatedData as T, version: prevState.version + 1 }));
       },
     });
-  }, [data, shouldSubscribe]);
+  }, [data, shouldSubscribe, options.locale, options.query]);
 
   return state.data;
 }

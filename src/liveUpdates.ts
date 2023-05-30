@@ -2,6 +2,7 @@ import type { AssetProps, EntryProps } from 'contentful-management';
 
 import { ContentfulSubscribeConfig } from '.';
 import * as gql from './graphql';
+import { parseGraphQLParams } from './graphql/queryUtils';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
 import { validateDataForLiveUpdates } from './helpers/validation';
 import * as rest from './rest';
@@ -15,6 +16,7 @@ import {
   Subscription,
   MessageFromEditor,
   EntryUpdatedMessage,
+  GraphQLParams,
 } from './types';
 
 interface MergeEntityProps {
@@ -23,6 +25,7 @@ interface MergeEntityProps {
   updateFromEntryEditor: EntryProps | AssetProps;
   contentType: ContentType;
   entityReferenceMap: EntityReferenceMap;
+  gqlParams?: GraphQLParams;
 }
 
 interface MergeArgumentProps extends Omit<MergeEntityProps, 'dataFromPreviewApp'> {
@@ -50,6 +53,7 @@ export class LiveUpdates {
     entityReferenceMap,
     locale,
     updateFromEntryEditor,
+    gqlParams,
   }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & {
     dataFromPreviewApp: EntityWithSys;
   }): Promise<{
@@ -72,6 +76,7 @@ export class LiveUpdates {
           updateFromEntryEditor: updateFromEntryEditor as EntryProps,
           locale,
           entityReferenceMap,
+          gqlParams,
         }),
         updated: true,
       };
@@ -192,6 +197,7 @@ export class LiveUpdates {
               updateFromEntryEditor: entity,
               contentType: contentType,
               entityReferenceMap: entityReferenceMap,
+              gqlParams: s.gqlParams,
             });
 
             // Only if there was an update, trigger the callback to unnecessary re-renders
@@ -210,8 +216,10 @@ export class LiveUpdates {
     }
   }
 
-  private restore(data: Argument, id: string): void {
-    if (!data) return;
+  private async restore(data: Argument, id: string): Promise<void> {
+    if (!data) {
+      return;
+    }
 
     const restoreLogic = (item: Entity) => {
       if (hasSysInformation(item)) {
@@ -223,22 +231,20 @@ export class LiveUpdates {
       return item;
     };
 
+    let restoredData;
     if (Array.isArray(data)) {
-      const restoredData: Entity[] = data.map(restoreLogic);
-      //ensure callback is only called for active subscriptions
-      const subscription = this.subscriptions.get(id);
-      if (subscription) {
-        subscription.callback(restoredData);
-      }
+      restoredData = data.map(restoreLogic);
     } else {
       const restored = restoreLogic(data);
       if (restored !== data) {
-        //ensure callback is only called for active subscriptions
-        const subscription = this.subscriptions.get(id);
-        if (subscription) {
-          subscription.callback(restored);
-        }
+        restoredData = restored;
       }
+    }
+
+    // ensure callback is only called for active subscriptions
+    const subscription = this.subscriptions.get(id);
+    if (subscription && restoredData) {
+      subscription.callback(restoredData);
     }
   }
 
@@ -250,8 +256,8 @@ export class LiveUpdates {
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
    */
-  public subscribe({ data, locale, callback }: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid } = validateDataForLiveUpdates(data);
+  public subscribe(config: ContentfulSubscribeConfig): VoidFunction {
+    const { isGQL, isValid } = validateDataForLiveUpdates(config.data);
 
     if (!isValid) {
       return () => {
@@ -260,14 +266,17 @@ export class LiveUpdates {
     }
 
     const id = generateUID();
-    this.subscriptions.set(id, { data, locale, callback });
-    /*  Restore function is being called immediately after the subscription is added,
-        which might cause the callback to be called even if the subscription is removed immediately afterward.
-        To fix this, we wrap the restore call in a setTimeout,
-        allowing the unsubscribe function to be executed before the callback is called.
-    */
+    this.subscriptions.set(id, {
+      ...config,
+      gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
+    });
+
     setTimeout(() => {
-      this.restore(data, id);
+      // Restore function is being called immediately after the subscription is added,
+      // which might cause the callback to be called even if the subscription is removed immediately afterward.
+      // To fix this, we wrap the restore call in a setTimeout,
+      // allowing the unsubscribe function to be executed before the callback is called.
+      this.restore(config.data, id);
     }, 0);
 
     // Tell the editor that there is a subscription

@@ -71,17 +71,6 @@ describe('Update GraphQL Entry', () => {
     expect(Utils.debug.warn).not.toHaveBeenCalled();
   });
 
-  it('warns but keeps unknown fields', async () => {
-    const data = { unknownField: 'text', sys: { id: entry.sys.id } };
-
-    const update = await updateFn({ data });
-
-    expect(update).toEqual(data);
-    expect(Utils.debug.warn).toHaveBeenCalledWith(
-      expect.stringMatching(/Unrecognized field 'unknownField'/)
-    );
-  });
-
   it('updates primitive fields', async () => {
     const data = {
       shortText: 'oldValue',

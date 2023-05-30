@@ -2,6 +2,31 @@
 
 Live preview SDK for both the inspector mode connection + live content updates by [Contentful](https://www.contentful.com/).
 
+<details>
+<summary>Table of contents</summary>
+
+<!-- TOC -->
+- [Getting started](#getting-started)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Initializing the SDK](#initialize-the-sdk)
+    - [Init Configuration](#init-configuration)
+    - [Overriding Locale](#overriding-locale)
+  - [Inspector Mode](#inspector-mode-field-tagging)
+  - [Live Updates](#live-updates)
+    - [Live Updates with GraphQL](#live-updates-with-graphql)
+- [Example Integrations](#example-integrations)
+  - [JavaScript](#vanilla-javascript)
+  - [Next.js](#integration-with-nextjs)
+  - [Gatsby](#integrating-with-gatsby)
+  - [Further Examples](#further-examples)
+- [Documentation](#documentation)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
+<!-- /TOC -->
+
+</details>
+
 ## Getting started
 
 ### Requirements
@@ -9,6 +34,8 @@ Live preview SDK for both the inspector mode connection + live content updates b
 - Node.js: `>=16.15.1`
 
 To install live preview simply run one of the following commands.
+
+### Installation
 
 ```bash
 yarn add @contentful/live-preview
@@ -19,10 +46,6 @@ or
 ```bash
 npm install @contentful/live-preview
 ```
-
-## Documentation
-
-- [Developer Documentation](https://www.contentful.com/developers/docs/tutorials/general/live-preview/)
 
 ### Initializing the SDK
 
@@ -67,7 +90,7 @@ You can also override it when using our useContentfulLiveUpdates hook like below
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
 // ...
-const updated = useContentfulLiveUpdates(originalData, locale);
+const updated = useContentfulLiveUpdates(originalData, {locale});
 // ...
 ```
 
@@ -98,6 +121,35 @@ import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
 // ...
 const updated = useContentfulLiveUpdates(originalData);
+// ...
+```
+
+### Live updates with GraphQL
+
+For the best experience of live updates together with GraphQL, we recommend to provide your query information to `useContentfulLiveUpdates`.
+This will benefit the performance of updates and provides support for GraphQL features (e.g. `alias`).
+
+```tsx
+import gql from "graphql-tag"
+
+const query = gql`
+  query posts {
+    postCollection(where: { slug: "${slug}" }, preview: true, limit: 1) {
+      items {
+        __typename
+        sys {
+          id
+        }
+        slug
+        title
+        content: description
+      }
+    }
+  }
+`
+
+// ...
+const updated = useContentfulLiveUpdates(originalData, { query })
 // ...
 ```
 
@@ -421,6 +473,14 @@ export default function Hero({ contentful_id, ...props }) {
 6. In Contentful, define the preview environment and configure the preview URL for your Gatsby site. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
 
 That's it! You should now be able to use the Contentful live preview SDK with Gatsby.
+
+### Further Examples
+
+For further examples see the [./examples](./examples/) directory.
+
+## Documentation
+
+- [Developer Documentation](https://www.contentful.com/developers/docs/tutorials/general/live-preview/)
 
 ## Code of Conduct
 
