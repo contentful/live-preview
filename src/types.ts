@@ -133,7 +133,7 @@ export type UpdateFieldProps = {
   updateFromEntryEditor: EntryProps;
   name: string;
   locale: string;
-  entityReferenceMap?: EntityReferenceMap;
+  entityReferenceMap: EntityReferenceMap;
 };
 
 export type UpdateReferenceFieldProps = {
