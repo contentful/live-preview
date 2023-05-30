@@ -1,4 +1,4 @@
-import type { EntryProps } from 'contentful-management';
+import type { EntryProps, Link } from 'contentful-management';
 
 import { isPrimitiveField, updatePrimitiveField, resolveReference } from '../helpers';
 import {
@@ -54,6 +54,7 @@ export async function updateEntry({
         updateFromEntryEditor,
         name,
         locale,
+        entityReferenceMap,
       });
     } else if (field.type === 'Link') {
       await updateSingleRefField({
@@ -77,18 +78,108 @@ export async function updateEntry({
   return copyOfDataFromPreviewApp;
 }
 
-function updateRichTextField({
+type RichTextData = {
+  json: {
+    content: {
+      content: Record<string, unknown>[];
+      data: { target?: Link<'Entry'> | Link<'Asset'> };
+      nodeType: string;
+    }[];
+    data: Record<string, unknown>;
+    nodeType: string;
+  };
+  links?: {
+    entries?: {
+      block?: Record<string, unknown>[];
+      inline?: Record<string, unknown>[];
+    };
+    assets?: {
+      block?: Record<string, unknown>[];
+      inline?: Record<string, unknown>[];
+    };
+  };
+};
+
+function formatResolvedRef(ref: { reference: EntryProps; typeName: string }, locale: string) {
+  //TODO: also resolve nested references
+  return {
+    ...Object.entries(ref.reference.fields).map(([key, value]) => [key, value[locale]]),
+    ...Object.entries(ref.reference.sys),
+    __typename: ref.typeName,
+  };
+}
+
+async function updateRichTextField({
   dataFromPreviewApp,
   updateFromEntryEditor,
   name,
   locale,
+  entityReferenceMap,
 }: UpdateFieldProps) {
+  console.log({ dataFromPreviewApp, updateFromEntryEditor, name, entityReferenceMap });
   if (name in dataFromPreviewApp) {
     if (!dataFromPreviewApp[name]) {
       dataFromPreviewApp[name] = {};
     }
-    (dataFromPreviewApp[name] as { json: unknown }).json =
-      updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+    const data = dataFromPreviewApp[name] as RichTextData;
+    data.json = updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+    if (entityReferenceMap) {
+      const blockEntries = {} as Record<string, { reference: EntryProps; typeName: string }>;
+      const inlineEntries = {} as Record<string, unknown>;
+      const blockAssets = {} as Record<string, unknown>;
+      const inlineAssets = {} as Record<string, unknown>;
+      // const embeddedRefs = {
+      //   entries: {
+      //     block: {
+
+      //     },
+      //     inline: {
+
+      //     }
+      //   },
+      //   assets: {
+      //     block: {},
+      //     inline: {}
+      //   }
+      // } as any;
+      data.json.content.forEach(async (node) => {
+        switch (node.nodeType) {
+          case 'embedded-entry-block': {
+            const id = node.data.target?.sys.id || '';
+            blockEntries[id] = await resolveReference({ entityReferenceMap, referenceId: id });
+            break;
+          }
+          case 'embedded-entry-inline': {
+            const id = node.data.target?.sys.id || '';
+            inlineEntries[id] = await resolveReference({ entityReferenceMap, referenceId: id });
+            break;
+          }
+          case 'embedded-asset-block': {
+            const id = node.data.target?.sys.id || '';
+            blockAssets[id] = await resolveReference({ entityReferenceMap, referenceId: id });
+            break;
+          }
+          case 'embedded-asset-inline': {
+            const id = node.data.target?.sys.id || '';
+            inlineAssets[id] = await resolveReference({ entityReferenceMap, referenceId: id });
+            break;
+          }
+        }
+      });
+      data.links = {};
+      if (Object.keys(blockEntries).length) {
+        console.log('enter');
+        //TODO: not entering
+        data.links.entries = {
+          block: Object.values(blockEntries).map((ref) => formatResolvedRef(ref, locale)) as Record<
+            string,
+            unknown
+          >[],
+        };
+      }
+      console.log({ links: data.links, blockEntries });
+      console.log('v2');
+    }
   }
 }
 
