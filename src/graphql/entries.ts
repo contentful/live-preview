@@ -101,24 +101,30 @@ async function processNode(
       const updatedReference = {
         sys: { id: id, type: 'Link', linkType: node.data.target.sys.type },
       };
-      // Use the updateReferenceEntryField function to resolve the entity reference
-      const ref = await updateReferenceEntryField(
-        null,
-        updatedReference,
-        entityReferenceMap,
-        locale
-      );
+      let ref;
+
+      // Use the updateReferenceEntryField or updateReferenceAssetField function to resolve the entity reference
+      if (node.data.target.sys.linkType === 'Entry') {
+        ref = await updateReferenceEntryField(null, updatedReference, entityReferenceMap, locale);
+      } else if (node.data.target.sys.linkType === 'Asset') {
+        ref = await updateReferenceAssetField({
+          referenceFromPreviewApp: null,
+          updatedReference,
+          entityReferenceMap,
+          locale,
+        });
+      }
 
       // Depending on the node type, assign the resolved reference to the appropriate array
       switch (node.nodeType) {
         case 'embedded-entry-block':
-          entries.block.push(ref);
+          if (ref) entries.block.push(ref);
           break;
         case 'embedded-entry-inline':
-          entries.inline.push(ref);
+          if (ref) entries.inline.push(ref);
           break;
         case 'embedded-asset-block':
-          assets.block.push(ref);
+          if (ref) assets.block.push(ref);
           break;
       }
     }
