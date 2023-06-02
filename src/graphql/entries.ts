@@ -129,10 +129,30 @@ async function processNode(
       }
     }
   } else if (node.content) {
+    // since embedded entries can be part of other rich text content (e.g. embedded inline entries)
+    // we need to recursively check for these entries to display them
     for (const contentNode of node.content) {
       await processNode(contentNode, entries, assets, entityReferenceMap, locale);
     }
   }
+}
+
+async function processRichTextField(
+  richTextNode: any,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string
+): Promise<{ entries: RichTextLink; assets: RichTextLink }> {
+  const entries: RichTextLink = { block: [], inline: [] };
+  const assets: RichTextLink = { block: [], inline: [] };
+
+  for (const node of richTextNode.content) {
+    await processNode(node, entries, assets, entityReferenceMap, locale);
+  }
+
+  return {
+    entries: isEntityLinkEmpty(entries) ? { block: [], inline: [] } : entries,
+    assets: isEntityLinkEmpty(assets) ? { block: [], inline: [] } : assets,
+  };
 }
 
 async function updateRichTextField({
@@ -152,20 +172,11 @@ async function updateRichTextField({
       updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
 
     // Update the rich text embedded entries
-    // Initialize arrays to hold the resolved entries and assets, separated by block and inline
-    const entries: RichTextLink = { block: [], inline: [] };
-    const assets: RichTextLink = { block: [], inline: [] };
-
-    // Iterate over each node in the rich text content
-    for (const node of dataFromPreviewApp[name].json.content) {
-      await processNode(node, entries, assets, entityReferenceMap, locale);
-    }
-
-    // Finally, assign the arrays of resolved references to the 'links' property of the field in the preview app data
-    dataFromPreviewApp[name].links = {
-      entries: isEntityLinkEmpty(entries) ? undefined : entries,
-      assets: isEntityLinkEmpty(assets) ? undefined : assets,
-    };
+    dataFromPreviewApp[name].links = await processRichTextField(
+      dataFromPreviewApp[name].json,
+      entityReferenceMap,
+      locale
+    );
   }
 }
 
@@ -214,16 +225,7 @@ async function updateReferenceEntryField(
       if (value.nodeType === 'document') {
         // richtext
         merged[key] = { json: value };
-        // Process the Rich Text field
-        const entries: RichTextLink = { block: [], inline: [] };
-        const assets: RichTextLink = { block: [], inline: [] };
-        for (const node of value.content) {
-          await processNode(node, entries, assets, entityReferenceMap, locale);
-        }
-        merged[key].links = {
-          entries: isEntityLinkEmpty(entries) ? undefined : entries,
-          assets: isEntityLinkEmpty(assets) ? undefined : assets,
-        };
+        merged[key].links = await processRichTextField(value, entityReferenceMap, locale);
       }
 
       if (value.sys) {
