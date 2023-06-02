@@ -1,4 +1,4 @@
-import type { AssetProps, EntryProps, SysLink } from 'contentful-management';
+import type { AssetProps, EntryProps, KeyValueMap, SysLink } from 'contentful-management';
 
 import { clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
 import { ContentType, EntityReferenceMap, isAsset } from '../types';
@@ -127,6 +127,48 @@ async function updateSingleRefField(
   return dataFromPreviewApp;
 }
 
+async function resolveRichTextLinks(
+  node: any,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string
+) {
+  if (node.nodeType.includes('embedded')) {
+    if (node.data && node.data.target && node.data.target.sys) {
+      const id = node.data.target?.sys.id || '';
+      const updatedReference = {
+        sys: { id: id, type: 'Link', linkType: node.data.target.sys.linkType },
+      };
+      if (node.data.target.sys.linkType === 'Entry' || node.data.target.sys.linkType === 'Asset') {
+        node.data.target = await updateRef(undefined, updatedReference, locale, entityReferenceMap);
+      }
+    }
+  }
+  if (node.content) {
+    for (const childNode of node.content) {
+      await resolveRichTextLinks(childNode, entityReferenceMap, locale);
+    }
+  }
+}
+
+async function updateRichTextField(
+  dataFromPreviewApp: EntryProps,
+  updateFromEntryEditor: EntryProps | AssetProps,
+  name: string,
+  locale: string,
+  entityReferenceMap: EntityReferenceMap
+) {
+  const richText = (updateFromEntryEditor.fields as KeyValueMap | undefined)?.[name]?.[locale];
+
+  if (richText && richText.nodeType === 'document') {
+    // Update the rich text JSON data
+    dataFromPreviewApp.fields[name] = richText;
+    // Resolve the linked entries or assets within the rich text field
+    for (const node of richText.content) {
+      await resolveRichTextLinks(node, entityReferenceMap, locale);
+    }
+  }
+}
+
 /**
  * Updates REST response data based on CMA entry object
  *
@@ -150,7 +192,7 @@ export async function updateEntity(
   for (const field of contentType.fields) {
     const name = getFieldName(contentType, field);
 
-    if (isPrimitiveField(field) || field.type === 'RichText' || field.type === 'File') {
+    if (isPrimitiveField(field) || field.type === 'File') {
       updatePrimitiveField({
         dataFromPreviewApp: dataFromPreviewApp.fields,
         updateFromEntryEditor,
@@ -171,6 +213,14 @@ export async function updateEntity(
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
+        entityReferenceMap
+      );
+    } else if (field.type === 'RichText') {
+      await updateRichTextField(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        name,
+        locale,
         entityReferenceMap
       );
     }
