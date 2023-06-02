@@ -87,6 +87,48 @@ function isEntityLinkEmpty(obj: RichTextLink) {
   return Object.values(obj).every((arr) => arr.length === 0);
 }
 
+async function processNode(
+  node: any,
+  entries: RichTextLink,
+  assets: RichTextLink,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string
+) {
+  // Check if the node is an embedded entity
+  if (node.nodeType.includes('embedded')) {
+    if (node.data && node.data.target && node.data.target.sys) {
+      const id = node.data.target?.sys.id || '';
+      const updatedReference = {
+        sys: { id: id, type: 'Link', linkType: node.data.target.sys.type },
+      };
+      // Use the updateReferenceEntryField function to resolve the entity reference
+      const ref = await updateReferenceEntryField(
+        null,
+        updatedReference,
+        entityReferenceMap,
+        locale
+      );
+
+      // Depending on the node type, assign the resolved reference to the appropriate array
+      switch (node.nodeType) {
+        case 'embedded-entry-block':
+          entries.block.push(ref);
+          break;
+        case 'embedded-entry-inline':
+          entries.inline.push(ref);
+          break;
+        case 'embedded-asset-block':
+          assets.block.push(ref);
+          break;
+      }
+    }
+  } else if (node.content) {
+    for (const contentNode of node.content) {
+      await processNode(contentNode, entries, assets, entityReferenceMap, locale);
+    }
+  }
+}
+
 async function updateRichTextField({
   dataFromPreviewApp,
   updateFromEntryEditor,
@@ -110,37 +152,7 @@ async function updateRichTextField({
 
     // Iterate over each node in the rich text content
     for (const node of dataFromPreviewApp[name].json.content) {
-      // Check if the node is an embedded entity
-      if (node.nodeType.includes('embedded')) {
-        if (node.data && node.data.target && node.data.target.sys) {
-          const id = node.data.target?.sys.id || '';
-          const updatedReference = {
-            sys: { id: id, type: 'Link', linkType: node.data.target.sys.type },
-          };
-          // Use the updateReferenceEntryField function to resolve the entity reference
-          const ref = await updateReferenceEntryField(
-            null,
-            updatedReference,
-            entityReferenceMap,
-            locale
-          );
-          // Depending on the node type, assign the resolved reference to the appropriate array
-          switch (node.nodeType) {
-            case 'embedded-entry-block':
-              entries.block.push(ref);
-              break;
-            case 'embedded-entry-inline':
-              entries.inline.push(ref);
-              break;
-            case 'embedded-asset-block':
-              assets.block.push(ref);
-              break;
-            case 'embedded-asset-inline':
-              assets.inline.push(ref);
-              break;
-          }
-        }
-      }
+      await processNode(node, entries, assets, entityReferenceMap, locale);
     }
 
     // Finally, assign the arrays of resolved references to the 'links' property of the field in the preview app data
