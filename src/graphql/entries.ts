@@ -1,6 +1,6 @@
 import type { EntryProps } from 'contentful-management';
 
-import { isPrimitiveField, updatePrimitiveField, resolveReference } from '../helpers';
+import { isPrimitiveField, updatePrimitiveField, resolveReference, debug } from '../helpers';
 import {
   CollectionItem,
   SysProps,
@@ -115,17 +115,24 @@ async function processNode(
         });
       }
 
-      // Depending on the node type, assign the resolved reference to the appropriate array
-      switch (node.nodeType) {
-        case 'embedded-entry-block':
-          if (ref) entries.block.push(ref);
-          break;
-        case 'embedded-entry-inline':
-          if (ref) entries.inline.push(ref);
-          break;
-        case 'embedded-asset-block':
-          if (ref) assets.block.push(ref);
-          break;
+      if (ref) {
+        // Depending on the node type, assign the resolved reference to the appropriate array
+        switch (node.nodeType) {
+          case 'embedded-entry-block':
+            entries.block.push(ref);
+            break;
+          case 'embedded-entry-inline':
+            entries.inline.push(ref);
+            break;
+          case 'embedded-asset-block':
+            assets.block.push(ref);
+            break;
+          default:
+            debug.warn('Unhandled nodeType in embedded entries in rich text', {
+              nodeType: node.nodeType,
+              ref,
+            });
+        }
       }
     }
   } else if (node.content) {
