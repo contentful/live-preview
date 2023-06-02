@@ -214,6 +214,16 @@ async function updateReferenceEntryField(
       if (value.nodeType === 'document') {
         // richtext
         merged[key] = { json: value };
+        // Process the Rich Text field
+        const entries: RichTextLink = { block: [], inline: [] };
+        const assets: RichTextLink = { block: [], inline: [] };
+        for (const node of value.content) {
+          await processNode(node, entries, assets, entityReferenceMap, locale);
+        }
+        merged[key].links = {
+          entries: isEntityLinkEmpty(entries) ? undefined : entries,
+          assets: isEntityLinkEmpty(assets) ? undefined : assets,
+        };
       }
 
       if (value.sys) {
