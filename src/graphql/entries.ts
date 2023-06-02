@@ -1,6 +1,6 @@
 import type { EntryProps } from 'contentful-management';
 
-import { isPrimitiveField, updatePrimitiveField, resolveReference } from '../helpers';
+import { isPrimitiveField, updatePrimitiveField, resolveReference, debug } from '../helpers';
 import {
   CollectionItem,
   SysProps,
@@ -49,11 +49,12 @@ export async function updateEntry({
     if (isPrimitiveField(field)) {
       updatePrimitiveField(copyOfDataFromPreviewApp, updateFromEntryEditor, name, locale);
     } else if (field.type === 'RichText') {
-      updateRichTextField({
+      await updateRichTextField({
         dataFromPreviewApp: copyOfDataFromPreviewApp,
         updateFromEntryEditor,
         name,
         locale,
+        entityReferenceMap,
       });
     } else if (field.type === 'Link') {
       await updateSingleRefField({
@@ -77,18 +78,112 @@ export async function updateEntry({
   return copyOfDataFromPreviewApp;
 }
 
-function updateRichTextField({
+interface RichTextLink {
+  block: (Entity & CollectionItem)[];
+  inline: (Entity & CollectionItem)[];
+}
+
+function isEntityLinkEmpty(obj: RichTextLink) {
+  return Object.values(obj).every((arr) => arr.length === 0);
+}
+
+async function processNode(
+  node: any,
+  entries: RichTextLink,
+  assets: RichTextLink,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string
+) {
+  // Check if the node is an embedded entity
+  if (node.nodeType.includes('embedded')) {
+    if (node.data && node.data.target && node.data.target.sys) {
+      const id = node.data.target?.sys.id || '';
+      const updatedReference = {
+        sys: { id: id, type: 'Link', linkType: node.data.target.sys.type },
+      };
+      let ref;
+
+      // Use the updateReferenceEntryField or updateReferenceAssetField function to resolve the entity reference
+      if (node.data.target.sys.linkType === 'Entry') {
+        ref = await updateReferenceEntryField(null, updatedReference, entityReferenceMap, locale);
+      } else if (node.data.target.sys.linkType === 'Asset') {
+        ref = await updateReferenceAssetField({
+          referenceFromPreviewApp: null,
+          updatedReference,
+          entityReferenceMap,
+          locale,
+        });
+      }
+
+      if (ref) {
+        // Depending on the node type, assign the resolved reference to the appropriate array
+        switch (node.nodeType) {
+          case 'embedded-entry-block':
+            entries.block.push(ref);
+            break;
+          case 'embedded-entry-inline':
+            entries.inline.push(ref);
+            break;
+          case 'embedded-asset-block':
+            assets.block.push(ref);
+            break;
+          default:
+            debug.warn('Unhandled nodeType in embedded entries in rich text', {
+              nodeType: node.nodeType,
+              ref,
+            });
+        }
+      }
+    }
+  } else if (node.content) {
+    // since embedded entries can be part of other rich text content (e.g. embedded inline entries)
+    // we need to recursively check for these entries to display them
+    for (const contentNode of node.content) {
+      await processNode(contentNode, entries, assets, entityReferenceMap, locale);
+    }
+  }
+}
+
+async function processRichTextField(
+  richTextNode: any,
+  entityReferenceMap: EntityReferenceMap,
+  locale: string
+): Promise<{ entries: RichTextLink; assets: RichTextLink }> {
+  const entries: RichTextLink = { block: [], inline: [] };
+  const assets: RichTextLink = { block: [], inline: [] };
+
+  for (const node of richTextNode.content) {
+    await processNode(node, entries, assets, entityReferenceMap, locale);
+  }
+
+  return {
+    entries: isEntityLinkEmpty(entries) ? { block: [], inline: [] } : entries,
+    assets: isEntityLinkEmpty(assets) ? { block: [], inline: [] } : assets,
+  };
+}
+
+async function updateRichTextField({
   dataFromPreviewApp,
   updateFromEntryEditor,
   name,
   locale,
+  entityReferenceMap,
 }: UpdateFieldProps) {
   if (name in dataFromPreviewApp) {
     if (!dataFromPreviewApp[name]) {
       dataFromPreviewApp[name] = {};
     }
+
+    // Update the rich text JSON data
     (dataFromPreviewApp[name] as { json: unknown }).json =
       updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+
+    // Update the rich text embedded entries
+    dataFromPreviewApp[name].links = await processRichTextField(
+      dataFromPreviewApp[name].json,
+      entityReferenceMap,
+      locale
+    );
   }
 }
 
@@ -137,6 +232,7 @@ async function updateReferenceEntryField(
       if (value.nodeType === 'document') {
         // richtext
         merged[key] = { json: value };
+        merged[key].links = await processRichTextField(value, entityReferenceMap, locale);
       }
 
       if (value.sys) {
