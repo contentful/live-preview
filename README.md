@@ -377,6 +377,8 @@ We suggest using the [draft mode](https://nextjs.org/docs/pages/building-your-ap
 
 For a full guide checkout this [free course](https://www.contentful.com/nextjs-starter-guide/)
 
+> Due some security settings the draft mode is not always shared with the iframe.<br>You can find a workaround in our [examples](./examples/nextjs-graphql/pages/api/draft.ts#L25)
+
 5. In Contentful, configure the draft URL for your Next.js application in the Content preview settings. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
 
 That's it! You should now be able to use the Contentful live preview SDK with Next.js.
