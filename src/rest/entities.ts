@@ -43,7 +43,7 @@ async function updateRef(
   for (const key in reference.fields) {
     const value = reference.fields[key as keyof typeof reference.fields][locale];
 
-    if (typeof value === 'object' && value.sys) {
+    if (typeof value === 'object' && value?.sys) {
       await updateSingleRefField(
         result,
         reference,
