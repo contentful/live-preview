@@ -69,7 +69,7 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 ...
 
 ContentfulLivePreview.init({
-  locale: 'set-your-locale-here' // This is required and allows you to set the locale once and have it reused throughout the preview
+  locale: 'set-your-locale-here', // This is required and allows you to set the locale once and have it reused throughout the preview
   enableInspectorMode: false, // This allows you to toggle the inspector mode which is on by default
   enableLiveUpdates: false, // This allows you to toggle the live updates which is on by default
   debugMode: false, // This allows you to toggle the debug mode which is off by default
