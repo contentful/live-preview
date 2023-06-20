@@ -257,7 +257,7 @@ async function updateReferenceEntryField({
     }
 
     const value = reference.fields[key as keyof typeof reference.fields][locale];
-    if (typeof value === 'object') {
+    if (value && typeof value === 'object') {
       if (value.nodeType === 'document') {
         // richtext
         merged[key] = { json: value };
