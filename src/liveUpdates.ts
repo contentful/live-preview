@@ -62,22 +62,19 @@ export class LiveUpdates {
   }> {
     if ('__typename' in dataFromPreviewApp) {
       // GraphQL
-      if (dataFromPreviewApp.__typename === 'Asset') {
-        return {
-          data: gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as AssetProps, locale),
-          updated: true,
-        };
-      }
+      const data = await (dataFromPreviewApp.__typename === 'Asset'
+        ? gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as AssetProps, locale)
+        : gql.updateEntry({
+            contentType,
+            dataFromPreviewApp,
+            updateFromEntryEditor: updateFromEntryEditor as EntryProps,
+            locale,
+            entityReferenceMap,
+            gqlParams,
+          }));
 
       return {
-        data: await gql.updateEntry({
-          contentType,
-          dataFromPreviewApp,
-          updateFromEntryEditor: updateFromEntryEditor as EntryProps,
-          locale,
-          entityReferenceMap,
-          gqlParams,
-        }),
+        data,
         updated: true,
       };
     }

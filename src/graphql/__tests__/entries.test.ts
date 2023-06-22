@@ -13,6 +13,7 @@ const EN = 'en-US';
 vi.mock('../../helpers/debug');
 vi.mock('../../helpers/resolveReference');
 
+// Note: we can get rid of expect.objectContaining, if we iterate over the provided data instead of the ContentType.fields
 describe('Update GraphQL Entry', () => {
   const testReferenceId = '18kDTlnJNnDIJf6PsXE5Mr';
 
@@ -61,7 +62,13 @@ describe('Update GraphQL Entry', () => {
   it('keeps __typename unchanged', async () => {
     const data = { __typename: 'CT', shortText: 'text', sys: { id: 'abc' } };
 
-    const update = await updateFn({ data });
+    const update = await updateFn({
+      data,
+      contentType: {
+        sys: { id: 'abc' },
+        fields: [{ name: 'shortText', type: 'Symbol' }],
+      } as unknown as ContentType,
+    });
 
     expect(update).toEqual(
       expect.objectContaining({
@@ -94,20 +101,22 @@ describe('Update GraphQL Entry', () => {
 
     const result = await updateFn({ data });
 
-    expect(result).toEqual({
-      shortText: entry.fields.shortText[EN],
-      shortTextList: entry.fields.shortTextList[EN],
-      longText: entry.fields.longText[EN],
-      boolean: entry.fields.boolean[EN],
-      numberInteger: entry.fields.numberInteger[EN],
-      numberDecimal: entry.fields.numberDecimal[EN],
-      dateTime: entry.fields.dateTime[EN],
-      location: entry.fields.location[EN],
-      json: entry.fields.json[EN],
-      sys: {
-        id: entry.sys.id,
-      },
-    });
+    expect(result).toEqual(
+      expect.objectContaining({
+        shortText: entry.fields.shortText[EN],
+        shortTextList: entry.fields.shortTextList[EN],
+        longText: entry.fields.longText[EN],
+        boolean: entry.fields.boolean[EN],
+        numberInteger: entry.fields.numberInteger[EN],
+        numberDecimal: entry.fields.numberDecimal[EN],
+        dateTime: entry.fields.dateTime[EN],
+        location: entry.fields.location[EN],
+        json: entry.fields.json[EN],
+        sys: {
+          id: entry.sys.id,
+        },
+      })
+    );
   });
 
   describe('single reference fields', () => {
@@ -139,20 +148,22 @@ describe('Update GraphQL Entry', () => {
 
         const result = await updateFn({ data, update });
 
-        expect(result).toEqual({
-          __typename: 'Page',
-          sys: {
-            id: entry.sys.id,
-          },
-          reference: {
-            __typename: 'TestContentType',
+        expect(result).toEqual(
+          expect.objectContaining({
+            __typename: 'Page',
             sys: {
-              id: testReferenceId,
-              linkType: 'Entry',
-              type: 'Link',
+              id: entry.sys.id,
             },
-          },
-        });
+            reference: {
+              __typename: 'TestContentType',
+              sys: {
+                id: testReferenceId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          })
+        );
       });
 
       it('if reference is not in entityReferenceMap but has a __typename it does not call resolveReference', async () => {
@@ -184,20 +195,22 @@ describe('Update GraphQL Entry', () => {
 
         const result = await updateFn({ data, update });
 
-        expect(result).toEqual({
-          __typename: 'Page',
-          sys: {
-            id: entry.sys.id,
-          },
-          reference: {
-            __typename: 'TestContentType',
+        expect(result).toEqual(
+          expect.objectContaining({
+            __typename: 'Page',
             sys: {
-              id: testAddingEntryId,
-              linkType: 'Entry',
-              type: 'Link',
+              id: entry.sys.id,
             },
-          },
-        });
+            reference: {
+              __typename: 'TestContentType',
+              sys: {
+                id: testAddingEntryId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          })
+        );
 
         expect(resolveReference).not.toHaveBeenCalled();
       });
@@ -236,22 +249,24 @@ describe('Update GraphQL Entry', () => {
 
         const result = await updateFn({ data, update });
 
-        expect(result).toEqual({
-          __typename: 'Page',
-          sys: {
-            id: entry.sys.id,
-          },
-          reference: {
-            // content type has been adjusted to have capital letter at the start
-            __typename: 'TestContentType',
+        expect(result).toEqual(
+          expect.objectContaining({
+            __typename: 'Page',
             sys: {
-              id: testReferenceId,
-              linkType: 'Entry',
-              type: 'Link',
+              id: entry.sys.id,
             },
-            propertyShouldStay: 'value',
-          },
-        });
+            reference: {
+              // content type has been adjusted to have capital letter at the start
+              __typename: 'TestContentType',
+              sys: {
+                id: testReferenceId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+              propertyShouldStay: 'value',
+            },
+          })
+        );
       });
     });
 
@@ -359,24 +374,26 @@ describe('Update GraphQL Entry', () => {
 
       const result = await updateFn({ data, update });
 
-      expect(result).toEqual({
-        __typename: 'Page',
-        sys: {
-          id: entry.sys.id,
-        },
-        referenceManyCollection: {
-          items: [
-            {
-              __typename: 'TestContentTypeForManyRef',
-              sys: {
-                id: testAddingEntryId,
-                linkType: 'Entry',
-                type: 'Link',
+      expect(result).toEqual(
+        expect.objectContaining({
+          __typename: 'Page',
+          sys: {
+            id: entry.sys.id,
+          },
+          referenceManyCollection: {
+            items: [
+              {
+                __typename: 'TestContentTypeForManyRef',
+                sys: {
+                  id: testAddingEntryId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        })
+      );
     });
 
     it('if reference is not in entityReferenceMap but has a __typename it does not call resolveReference', async () => {
@@ -412,24 +429,26 @@ describe('Update GraphQL Entry', () => {
 
       const result = await updateFn({ data, update });
 
-      expect(result).toEqual({
-        __typename: 'Page',
-        sys: {
-          id: entry.sys.id,
-        },
-        referenceManyCollection: {
-          items: [
-            {
-              __typename: 'TestContentTypeForManyRef',
-              sys: {
-                id: testAddingEntryId,
-                linkType: 'Entry',
-                type: 'Link',
+      expect(result).toEqual(
+        expect.objectContaining({
+          __typename: 'Page',
+          sys: {
+            id: entry.sys.id,
+          },
+          referenceManyCollection: {
+            items: [
+              {
+                __typename: 'TestContentTypeForManyRef',
+                sys: {
+                  id: testAddingEntryId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        })
+      );
 
       expect(resolveReference).not.toHaveBeenCalled();
     });
@@ -476,27 +495,32 @@ describe('Update GraphQL Entry', () => {
         },
       } as unknown as EntryProps<KeyValueMap>;
 
-      const result = await updateFn({ data, update });
-
-      expect(result).toEqual({
-        __typename: 'Page',
-        sys: {
-          id: entry.sys.id,
-        },
-        referenceManyCollection: {
-          items: [
-            {
-              __typename: 'TestContentTypeForManyRef',
-              sys: {
-                id: testAddingEntryId,
-                linkType: 'Entry',
-                type: 'Link',
-              },
-              propertyShouldStay: 'value',
-            },
-          ],
-        },
+      const result = await updateFn({
+        data,
+        update,
       });
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          __typename: 'Page',
+          sys: {
+            id: entry.sys.id,
+          },
+          referenceManyCollection: {
+            items: [
+              {
+                __typename: 'TestContentTypeForManyRef',
+                sys: {
+                  id: testAddingEntryId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+                propertyShouldStay: 'value',
+              },
+            ],
+          },
+        })
+      );
     });
   });
 
@@ -508,7 +532,14 @@ describe('Update GraphQL Entry', () => {
       },
     };
 
-    const result = await updateFn({ data, locale: 'n/a' });
+    const result = await updateFn({
+      data,
+      locale: 'n/a',
+      contentType: {
+        sys: defaultContentType.sys,
+        fields: [{ name: 'shortText', type: 'Symbol' }],
+      } as unknown as ContentType,
+    });
 
     expect(result).toEqual({
       shortText: null,
