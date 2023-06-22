@@ -74,35 +74,20 @@ describe('updateAliasedInformation', () => {
 });
 
 describe('isRelevantField', () => {
-  it('validates the information based on the provided data', () => {
-    const data = {
-      sys: { id: '1' },
-      name: 'Test',
-      content: {},
-      topSectionCollection: { items: [] },
-    };
-
-    // direct match => true
-    expect(isRelevantField('content', 'pageCollection', data)).toBeTruthy();
-    // collection match => true
-    expect(isRelevantField('topSection', 'pageCollection', data)).toBeTruthy();
-    // unknown alias => false
-    expect(isRelevantField('internalName', 'pageCollection', data)).toBeFalsy();
-    // unknown field => false
-    expect(isRelevantField('header', 'pageCollection', data)).toBeFalsy();
+  it('returns true because no queryParams are provided', () => {
+    expect(isRelevantField('content', 'pageCollection')).toBeTruthy();
   });
 
   it('validates the information based on the provided queryParams', () => {
-    const data = {};
     const gqlParams = parseGraphQLParams(query);
 
     // direct match => true
-    expect(isRelevantField('content', 'pageCollection', data, gqlParams)).toBeTruthy();
+    expect(isRelevantField('content', 'pageCollection', gqlParams)).toBeTruthy();
     // collection match => true
-    expect(isRelevantField('topSection', 'pageCollection', data, gqlParams)).toBeTruthy();
+    expect(isRelevantField('topSection', 'pageCollection', gqlParams)).toBeTruthy();
     // unknown alias => false
-    expect(isRelevantField('internalName', 'pageCollection', data, gqlParams)).toBeTruthy();
+    expect(isRelevantField('internalName', 'pageCollection', gqlParams)).toBeTruthy();
     // unknown field => false
-    expect(isRelevantField('header', 'pageCollection', data, gqlParams)).toBeFalsy();
+    expect(isRelevantField('header', 'pageCollection', gqlParams)).toBeFalsy();
   });
 });

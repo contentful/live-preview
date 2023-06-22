@@ -49,8 +49,7 @@ export async function updateEntry({
 
   for (const field of contentType.fields) {
     const name = field.apiName ?? field.name;
-
-    if (isRelevantField(name, typename, copyOfDataFromPreviewApp, gqlParams)) {
+    if (isRelevantField(name, typename, gqlParams)) {
       if (isPrimitiveField(field)) {
         updatePrimitiveField({
           dataFromPreviewApp: copyOfDataFromPreviewApp,
@@ -167,7 +166,7 @@ async function processNode(
 }
 
 async function processRichTextField(
-  richTextNode: any,
+  richTextNode: any | null,
   entityReferenceMap: EntityReferenceMap,
   locale: string,
   gqlParams?: GraphQLParams
@@ -175,8 +174,10 @@ async function processRichTextField(
   const entries: RichTextLink = { block: [], inline: [] };
   const assets: RichTextLink = { block: [], inline: [] };
 
-  for (const node of richTextNode.content) {
-    await processNode(node, entries, assets, entityReferenceMap, locale, gqlParams);
+  if (richTextNode) {
+    for (const node of richTextNode.content) {
+      await processNode(node, entries, assets, entityReferenceMap, locale, gqlParams);
+    }
   }
 
   return {
@@ -252,7 +253,7 @@ async function updateReferenceEntryField({
 
   // TODO: kind of duplication with line 46, check if we can combine them
   for (const key in reference.fields) {
-    if (!isRelevantField(key, typeName, reference.fields, gqlParams)) {
+    if (!isRelevantField(key, typeName, gqlParams)) {
       continue;
     }
 

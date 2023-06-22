@@ -196,11 +196,25 @@ describe('LiveUpdates', () => {
     });
 
     const expected = helpers.clone(nestedCollectionFromPreviewApp);
+    // updated fields
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].pageName =
       pageInsideCollectionFromEntryEditor.fields.pageName[locale];
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].slug =
       pageInsideCollectionFromEntryEditor.fields.slug[locale];
+    // new fields
+    (
+      expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1] as any
+    ).internalName = 'Testing';
+    (
+      expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1] as any
+    ).extraSectionCollection = { items: [] };
+    (expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1] as any).seo =
+      null;
+    (
+      expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1] as any
+    ).topSectionCollection = { items: [] };
 
+    expect(callback).toHaveBeenCalled();
     expect(callback).toHaveBeenCalledWith(expected);
   });
 

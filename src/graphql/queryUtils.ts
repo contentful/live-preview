@@ -1,7 +1,7 @@
 import type { DocumentNode, SelectionNode } from 'graphql';
 
 import { debug } from '../helpers';
-import type { Entity, GraphQLParams } from '../types';
+import type { GraphQLParams } from '../types';
 import { buildCollectionName } from './utils';
 interface GeneratedGraphQLStructure {
   name: string;
@@ -84,18 +84,17 @@ export function parseGraphQLParams(query: DocumentNode): GraphQLParams {
 /**
  * Checks if the current field is relevant for the update processing.
  * This speeds up the update time especially for references and prevents wrong-positives when working with alias.
- * If used without the GraphQL query information, it checks only if the data is defined on the given data structure.
+ * If used without the GraphQL query information, it will always return `true`.
  */
 export function isRelevantField(
   name: string,
   typename: string,
-  data: Entity,
   gqlParams?: GraphQLParams
 ): boolean {
   const collectionName = buildCollectionName(name);
 
   if (!gqlParams) {
-    return name in data || collectionName in data;
+    return true;
   }
 
   const queryInformation = gqlParams.get(typename);
