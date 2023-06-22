@@ -74,7 +74,7 @@ describe('updateAliasedInformation', () => {
 });
 
 describe('isRelevantField', () => {
-  it('returns true because no are queryParams provided', () => {
+  it('returns true because no queryParams are provided', () => {
     expect(isRelevantField('content', 'pageCollection')).toBeTruthy();
   });
 
