@@ -6,6 +6,7 @@ Live preview SDK for both the inspector mode connection + live content updates b
 <summary>Table of contents</summary>
 
 <!-- TOC -->
+
 - [Getting started](#getting-started)
   - [Requirements](#requirements)
   - [Installation](#installation)
@@ -90,7 +91,7 @@ You can also override it when using our useContentfulLiveUpdates hook like below
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
 // ...
-const updated = useContentfulLiveUpdates(originalData, {locale});
+const updated = useContentfulLiveUpdates(originalData, { locale });
 // ...
 ```
 
@@ -130,7 +131,7 @@ For the best experience of live updates together with GraphQL, we recommend to p
 This will benefit the performance of updates and provides support for GraphQL features (e.g. `alias`).
 
 ```tsx
-import gql from "graphql-tag"
+import gql from 'graphql-tag';
 
 const query = gql`
   query posts {
@@ -146,10 +147,10 @@ const query = gql`
       }
     }
   }
-`
+`;
 
 // ...
-const updated = useContentfulLiveUpdates(originalData, { query })
+const updated = useContentfulLiveUpdates(originalData, { query });
 // ...
 ```
 
@@ -384,6 +385,8 @@ For a full guide checkout this [free course](https://www.contentful.com/nextjs-s
 That's it! You should now be able to use the Contentful live preview SDK with Next.js.
 
 #### Integrating with Gatsby
+
+🚧 **Gatsby support is currently under development. Inspector mode is already supported, but some fields with live updates might not be working correctly**
 
 To use the Contentful live preview SDK with Gatsby, you can start with the [gatsby starter contentful homepage](https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-contentful-homepage)
 
