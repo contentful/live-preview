@@ -6,7 +6,7 @@
     "start": "remix-serve build"
   },
   "dependencies": {
-    "@contentful/live-preview": "^2.1.1",
+    "@contentful/live-preview": "^2.4.3",
     "@remix-run/node": "^1.16.1",
     "@remix-run/react": "^1.16.1",
     "@types/react-dom": "^18.2.4",

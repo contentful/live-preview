@@ -1,3 +1,5 @@
+🚧 **Gatsby support is currently under development. Inspector mode is already supported, but some fields with live updates might not be working correctly**
+
 # Gatsby Contentful live preview SDK example
 
 This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Gatsby application. The SDK provides live preview functionality for content changes and the inspector mode for your Contentful space.
