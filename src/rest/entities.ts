@@ -59,6 +59,8 @@ async function updateRef(
         key as keyof Reference['fields'],
         entityReferenceMap
       );
+    } else if (value.content && value.nodeType === 'document') {
+      await updateRichTextField(result, reference, key, locale, entityReferenceMap);
     } else {
       updatePrimitiveField({
         dataFromPreviewApp: result.fields,
