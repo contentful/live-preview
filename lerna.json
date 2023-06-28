@@ -19,7 +19,6 @@
         ".eslintrc.js",
         ".eslintignore",
         ".prettierrc",
-        "tsconfig.json",
         "commitlist.config.js"
       ]
     }
