@@ -4,13 +4,35 @@ import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
 import { clone, resolveReference } from '../../helpers';
 import { EntityReferenceMap } from '../../types';
-import { updateEntity } from '../entities';
+import { updateEntity, updateRef } from '../entities';
 import contentTypeEntry from './fixtures/contentType.json';
 import dataFromPreviewApp from './fixtures/dataFromPreviewApp.json';
 import asset from './fixtures/updateAssetFromEntryEditor.json';
 import entry from './fixtures/updateFromEntryEditor.json';
 
 const EN = 'en-US';
+const referenceId = 'referenceId';
+const richTextFieldName = 'richTextFieldName';
+const richTextContent = {
+  nodeType: 'document',
+  content: [
+    {
+      nodeType: 'embedded-entry-block',
+      data: {
+        target: {
+          sys: {
+            id: 'foo',
+            type: 'Entry',
+          },
+          fields: {
+            headline: { [EN]: 'Headline' },
+          },
+        },
+      },
+    },
+  ],
+  data: {},
+};
 
 function patchField<T extends EntryProps | AssetProps>(
   originalData: T,
@@ -47,6 +69,17 @@ describe('Update REST entry', () => {
   const defaultEntityReferenceMap = new Map<string, EntryProps | AssetProps>([
     [newEntryReference.sys.id, newEntryReference],
     [newAssetReference.sys.id, newAssetReference],
+    [
+      referenceId,
+      {
+        sys: { id: referenceId },
+        fields: {
+          [richTextFieldName]: {
+            [EN]: richTextContent,
+          },
+        },
+      } as unknown as EntryProps,
+    ],
   ]);
 
   const defaultResult = {
@@ -219,6 +252,33 @@ describe('Update REST entry', () => {
       });
 
       expect(result).toEqual(patchField(defaultResult, 'refManySameSpace', undefined));
+    });
+
+    it('should update rich text field inside a reference', async () => {
+      const dataFromPreviewApp = {
+        fields: {
+          [richTextFieldName]: {
+            [EN]: {
+              content: [],
+              nodeType: 'document',
+            },
+          },
+        },
+      } as unknown as EntryProps;
+
+      const updateFromEntryEditor = {
+        sys: { id: referenceId, type: 'Link', linkType: 'Entry' },
+      } as unknown as EntryProps;
+
+      const result = (await updateRef(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        EN,
+        defaultEntityReferenceMap
+      )) as unknown as EntryProps;
+
+      expect(result).not.toBeNull();
+      expect(result.fields[richTextFieldName]).toEqual(richTextContent);
     });
   });
 });
