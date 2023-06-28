@@ -21,7 +21,7 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
  * Update the reference from the entry editor with the information from the entityReferenceMap.
  * If the information is not yet available, it send a message to the editor to retrieve it.
  */
-async function updateRef(
+export async function updateRef(
   dataFromPreviewApp: Reference | undefined,
   updateFromEntryEditor: Reference | SysLink,
   locale: string,
@@ -59,6 +59,8 @@ async function updateRef(
         key as keyof Reference['fields'],
         entityReferenceMap
       );
+    } else if (value.content && value.nodeType === 'document') {
+      await updateRichTextField(result, reference, key, locale, entityReferenceMap);
     } else {
       updatePrimitiveField({
         dataFromPreviewApp: result.fields,
