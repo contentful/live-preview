@@ -1,3 +1,4 @@
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { AssetProps, EntryProps, KeyValueMap, SysLink } from 'contentful-management';
 
 import { clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
@@ -135,9 +136,11 @@ async function resolveRichTextLinks(
   locale: string
 ) {
   if (
-    node.nodeType.includes('embedded') ||
-    node.nodeType === 'entry-hyperlink' ||
-    node.nodeType === 'asset-hyperlink'
+    node.nodeType === BLOCKS.EMBEDDED_ENTRY ||
+    node.nodeType === BLOCKS.EMBEDDED_ASSET ||
+    node.nodeType === INLINES.EMBEDDED_ENTRY ||
+    node.nodeType === INLINES.ENTRY_HYPERLINK ||
+    node.nodeType === INLINES.ASSET_HYPERLINK
   ) {
     if (node.data && node.data.target && node.data.target.sys) {
       const id = node.data.target?.sys.id || '';
