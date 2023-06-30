@@ -1,3 +1,4 @@
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { AssetProps, EntryProps, KeyValueMap, SysLink } from 'contentful-management';
 
 import { clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
@@ -21,7 +22,7 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
  * Update the reference from the entry editor with the information from the entityReferenceMap.
  * If the information is not yet available, it send a message to the editor to retrieve it.
  */
-export async function updateRef(
+async function updateRef(
   dataFromPreviewApp: Reference | undefined,
   updateFromEntryEditor: Reference | SysLink,
   locale: string,
@@ -134,7 +135,13 @@ async function resolveRichTextLinks(
   entityReferenceMap: EntityReferenceMap,
   locale: string
 ) {
-  if (node.nodeType.includes('embedded')) {
+  if (
+    node.nodeType === BLOCKS.EMBEDDED_ENTRY ||
+    node.nodeType === BLOCKS.EMBEDDED_ASSET ||
+    node.nodeType === INLINES.EMBEDDED_ENTRY ||
+    node.nodeType === INLINES.ENTRY_HYPERLINK ||
+    node.nodeType === INLINES.ASSET_HYPERLINK
+  ) {
     if (node.data && node.data.target && node.data.target.sys) {
       const id = node.data.target?.sys.id || '';
       const updatedReference = {

@@ -2,8 +2,17 @@ import react from '@vitejs/plugin-react-swc';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { configDefaults } from 'vitest/config';
 
 export default defineConfig({
+  test: {
+    exclude: [
+      ...configDefaults.exclude,
+      'src/rest/__tests__/constants.ts',
+      'src/rest/__tests__/utils.ts',
+      'src/rest/__tests__/fixtures/data.ts',
+    ],
+  },
   build: {
     sourcemap: true,
     outDir: './dist',

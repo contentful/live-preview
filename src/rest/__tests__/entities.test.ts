@@ -4,114 +4,41 @@ import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
 import { clone, resolveReference } from '../../helpers';
 import { EntityReferenceMap } from '../../types';
-import { updateEntity, updateRef } from '../entities';
+import { updateEntity } from '../entities';
+import { EN, referenceWithRichTextId } from './constants';
 import contentTypeEntry from './fixtures/contentType.json';
+import {
+  defaultResult,
+  newAssetReference,
+  newAssetReferenceTransformed,
+  newEntryReference,
+  newEntryReferenceTransformed,
+  resolvedRichTextLinks,
+  unresolvedRichTextLinks,
+} from './fixtures/data';
 import dataFromPreviewApp from './fixtures/dataFromPreviewApp.json';
 import asset from './fixtures/updateAssetFromEntryEditor.json';
 import entry from './fixtures/updateFromEntryEditor.json';
-
-const EN = 'en-US';
-const referenceId = 'referenceId';
-const richTextFieldName = 'richTextFieldName';
-const richTextContent = {
-  nodeType: 'document',
-  content: [
-    {
-      nodeType: 'embedded-entry-block',
-      data: {
-        target: {
-          sys: {
-            id: 'foo',
-            type: 'Entry',
-          },
-          fields: {
-            headline: { [EN]: 'Headline' },
-          },
-        },
-      },
-    },
-  ],
-  data: {},
-};
-
-function patchField<T extends EntryProps | AssetProps>(
-  originalData: T,
-  name: keyof T['fields'],
-  value: unknown
-) {
-  return {
-    ...originalData,
-    fields: {
-      ...originalData.fields,
-      [name]: value,
-    },
-  };
-}
+import { patchField } from './utils';
 
 vi.mock('../../helpers/resolveReference');
 
 describe('Update REST entry', () => {
-  const newEntryReference = {
-    sys: { id: 'new-entry-id' },
-    fields: {
-      headline: { [EN]: 'Hello' },
-    },
-  } as unknown as EntryProps;
-
-  const newAssetReference = {
-    sys: { id: 'new-asset-id', linkType: 'Asset' },
-    fields: {
-      title: { [EN]: 'New Asset' },
-      file: { [EN]: { url: 'https://app.contentful.com/newAsset.png' } },
-    },
-  } as unknown as AssetProps;
-
   const defaultEntityReferenceMap = new Map<string, EntryProps | AssetProps>([
     [newEntryReference.sys.id, newEntryReference],
     [newAssetReference.sys.id, newAssetReference],
     [
-      referenceId,
+      referenceWithRichTextId,
       {
-        sys: { id: referenceId },
+        sys: { id: referenceWithRichTextId },
         fields: {
-          [richTextFieldName]: {
-            [EN]: richTextContent,
+          richTextFieldName: {
+            [EN]: unresolvedRichTextLinks,
           },
         },
       } as unknown as EntryProps,
     ],
   ]);
-
-  const defaultResult = {
-    ...dataFromPreviewApp,
-    fields: {
-      ...dataFromPreviewApp.fields,
-      // updated data:
-      shortText: entry.fields.shortText[EN],
-      shortTextUrl: entry.fields.shortTextUrl[EN],
-      shortTextSlug: entry.fields.shortTextSlug[EN],
-      longTextMultiple: entry.fields.longTextMultiple[EN],
-      richText: entry.fields.richText[EN],
-      numberInteger: entry.fields.numberInteger[EN],
-      numberDecimal: entry.fields.numberDecimal[EN],
-      dateTime: entry.fields.dateTime[EN],
-      location: entry.fields.location[EN],
-      boolean: entry.fields.boolean[EN],
-      json: entry.fields.json[EN],
-    },
-  };
-
-  const newEntryReferenceTransformed = patchField(
-    newEntryReference,
-    'headline',
-    newEntryReference.fields.headline[EN]
-  );
-  const newAssetReferenceTransformed = patchField(
-    patchField(newAssetReference, 'title', newAssetReference.fields.title[EN]),
-    'file',
-    newAssetReference.fields.file[EN]
-  );
-
   beforeEach(() => {
     (resolveReference as Mock).mockImplementation(async ({ referenceId }) => {
       return { reference: defaultEntityReferenceMap.get(referenceId) };
@@ -254,31 +181,14 @@ describe('Update REST entry', () => {
       expect(result).toEqual(patchField(defaultResult, 'refManySameSpace', undefined));
     });
 
-    it('should update rich text field inside a reference', async () => {
-      const dataFromPreviewApp = {
-        fields: {
-          [richTextFieldName]: {
-            [EN]: {
-              content: [],
-              nodeType: 'document',
-            },
-          },
-        },
-      } as unknown as EntryProps;
-
-      const updateFromEntryEditor = {
-        sys: { id: referenceId, type: 'Link', linkType: 'Entry' },
-      } as unknown as EntryProps;
-
-      const result = (await updateRef(
-        dataFromPreviewApp,
-        updateFromEntryEditor,
-        EN,
-        defaultEntityReferenceMap
-      )) as unknown as EntryProps;
-
-      expect(result).not.toBeNull();
-      expect(result.fields[richTextFieldName]).toEqual(richTextContent);
+    it('resolves reference for rich text with embedded references', async () => {
+      const result = await updateFn({
+        dataFromPreviewApp: patchField(defaultResult, 'refOneSameSpace', undefined),
+        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
+          [EN]: { sys: { id: referenceWithRichTextId } },
+        }),
+      });
+      expect(result.fields.refOneSameSpace.fields.richTextFieldName).toEqual(resolvedRichTextLinks);
     });
   });
 });
