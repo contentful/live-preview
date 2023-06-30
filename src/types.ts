@@ -57,6 +57,7 @@ type IframeConnectedMessage = {
   action: 'IFRAME_CONNECTED';
   connected: true;
   tags: number;
+  locale: string;
 };
 
 type TaggedFieldClickMessage = {
@@ -79,6 +80,7 @@ type UrlChangedMessage = {
 type SubscribedMessage = {
   action: 'SUBSCRIBED';
   type: 'GQL' | 'REST';
+  locale: string;
 };
 
 export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}
@@ -112,10 +114,13 @@ type UnknownReferenceLoaded = {
 
 type InspectorModeChanged = { action: 'INSPECTOR_MODE_CHANGED'; isInspectorActive: boolean };
 
+type DebugModeEnabled = { action: 'DEBUG_MODE_ENABLED' };
+
 export type MessageFromEditor = (
   | EntryUpdatedMessage
   | UnknownReferenceLoaded
   | InspectorModeChanged
+  | DebugModeEnabled
 ) & {
   from: 'live-preview';
 };

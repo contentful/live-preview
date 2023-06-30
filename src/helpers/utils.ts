@@ -11,8 +11,10 @@ export function sendMessageToEditor(data: EditorMessage): void {
     ...data,
     from: 'live-preview',
     location: window.location.href,
-    version: packageJson.version || '2.2.0', // TODO: set this automatically during publish (TOL-1178)
+    version: packageJson.version || '2.2.0',
   };
+
+  debug.log('Send message', message);
 
   window.top?.postMessage(
     message,

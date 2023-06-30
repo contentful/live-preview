@@ -31,7 +31,7 @@ export interface ContentfulSubscribeConfig {
   data: Argument;
   locale?: string;
   callback: SubscribeCallback;
-  query?: DocumentNode
+  query?: DocumentNode;
 }
 
 export class ContentfulLivePreview {
@@ -96,6 +96,13 @@ export class ContentfulLivePreview {
         if (typeof event.data !== 'object' || !event.data) return;
         if (event.data.from !== 'live-preview') return;
 
+        debug.log('Received message', event.data);
+
+        if (event.data.action === 'DEBUG_MODE_ENABLED') {
+          setDebugMode(true);
+          return;
+        }
+
         if (this.inspectorModeEnabled) {
           ContentfulLivePreview.inspectorMode?.receiveMessage(event.data);
         }
@@ -115,6 +122,7 @@ export class ContentfulLivePreview {
         action: 'IFRAME_CONNECTED',
         connected: true,
         tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+        locale: this.locale,
       });
 
       // all set up - ready to go
