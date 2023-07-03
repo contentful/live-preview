@@ -321,12 +321,7 @@
     read-pkg-up "^7.0.1"
     semver "^7.3.2"
 
-"@contentful/rich-text-types@^16.0.3":
-  version "16.0.3"
-  resolved "https://registry.npmjs.org/@contentful/rich-text-types/-/rich-text-types-16.0.3.tgz"
-  integrity sha512-BsUtXj93jo5XUt0YeUwfCkMWRoZIzJDPUIY4vMy9SwGIO9olTsMoQKadjA2ktlmK+Gg6710WH3eFKZxj2q39Iw==
-
-"@contentful/rich-text-types@^16.2.0":
+"@contentful/rich-text-types@^16.0.3", "@contentful/rich-text-types@^16.2.0":
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.2.0.tgz#5a98cb119340f4da46555216913e96d7ce58df70"
   integrity sha512-4BHC+mfa50JB70epzpnas4EkiuB3mGdBZ5Rp8w7R5wXvswEf8TLg5yGau2FxmZeEjrAkDrt4vzBLVQ8v3Y//Jw==
@@ -2203,9 +2198,9 @@ console-control-strings@^1.1.0:
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
 contentful-management@^10.30.1:
-  version "10.38.0"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-10.38.0.tgz#0db0d14ebdad38e56c5ab7e7b01f6b66c49d6029"
-  integrity sha512-m6WwBdrEIaBnMDqPGIi1haVTsy3pwdDk8dYcnUjFO/LdikIh+/6fBKxfBBf08Pg1F/hrd+hvH12dXceysqO7dg==
+  version "10.38.3"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-10.38.3.tgz#e10ff0d67a0e79fcc3ba66a7fd86932b8cd4fd2b"
+  integrity sha512-hAuUSEfPYMQ6aplaENkZM5Zvhg9q+yiCsbm++pyHadUr5x+XKC9D85fASXuA4vI0hB/K66YHaqBiJ7CwAHT9bQ==
   dependencies:
     "@contentful/rich-text-types" "^16.0.3"
     "@types/json-patch" "0.0.30"
