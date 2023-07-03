@@ -81,7 +81,7 @@
     "semantic-release": "^21.0.2",
     "typescript": "^5.0.2",
     "vite": "^4.1.0",
-    "vite-plugin-dts": "^2.0.1",
+    "vite-plugin-dts": "^3.0.2",
     "vitest": "^0.32.0"
   },
   "peerDependencies": {
