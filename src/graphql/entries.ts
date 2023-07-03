@@ -1,3 +1,4 @@
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { EntryProps } from 'contentful-management';
 
 import {
@@ -94,6 +95,7 @@ export async function updateEntry({
 interface RichTextLink {
   block: (Entity & CollectionItem)[];
   inline: (Entity & CollectionItem)[];
+  hyperlink: (Entity & CollectionItem)[];
 }
 
 function isEntityLinkEmpty(obj: RichTextLink) {
@@ -109,7 +111,13 @@ async function processNode(
   gqlParams?: GraphQLParams
 ) {
   // Check if the node is an embedded entity
-  if (node.nodeType.includes('embedded')) {
+  if (
+    node.nodeType === BLOCKS.EMBEDDED_ENTRY ||
+    node.nodeType === BLOCKS.EMBEDDED_ASSET ||
+    node.nodeType === INLINES.EMBEDDED_ENTRY ||
+    node.nodeType === INLINES.ENTRY_HYPERLINK ||
+    node.nodeType === INLINES.ASSET_HYPERLINK
+  ) {
     if (node.data && node.data.target && node.data.target.sys) {
       const id = node.data.target?.sys.id || '';
       const updatedReference = {
@@ -139,14 +147,20 @@ async function processNode(
       if (ref) {
         // Depending on the node type, assign the resolved reference to the appropriate array
         switch (node.nodeType) {
-          case 'embedded-entry-block':
+          case BLOCKS.EMBEDDED_ENTRY:
             entries.block.push(ref);
             break;
-          case 'embedded-entry-inline':
+          case BLOCKS.EMBEDDED_ASSET:
+            assets.block.push(ref);
+            break;
+          case INLINES.EMBEDDED_ENTRY:
             entries.inline.push(ref);
             break;
-          case 'embedded-asset-block':
-            assets.block.push(ref);
+          case INLINES.ENTRY_HYPERLINK:
+            entries.hyperlink.push(ref);
+            break;
+          case INLINES.ASSET_HYPERLINK:
+            assets.hyperlink.push(ref);
             break;
           default:
             debug.warn('Unhandled nodeType in embedded entries in rich text', {
@@ -171,8 +185,8 @@ async function processRichTextField(
   locale: string,
   gqlParams?: GraphQLParams
 ): Promise<{ entries: RichTextLink; assets: RichTextLink }> {
-  const entries: RichTextLink = { block: [], inline: [] };
-  const assets: RichTextLink = { block: [], inline: [] };
+  const entries: RichTextLink = { block: [], inline: [], hyperlink: [] };
+  const assets: RichTextLink = { block: [], inline: [], hyperlink: [] };
 
   if (richTextNode) {
     for (const node of richTextNode.content) {
@@ -181,8 +195,8 @@ async function processRichTextField(
   }
 
   return {
-    entries: isEntityLinkEmpty(entries) ? { block: [], inline: [] } : entries,
-    assets: isEntityLinkEmpty(assets) ? { block: [], inline: [] } : assets,
+    entries: isEntityLinkEmpty(entries) ? { block: [], inline: [], hyperlink: [] } : entries,
+    assets: isEntityLinkEmpty(assets) ? { block: [], inline: [], hyperlink: [] } : assets,
   };
 }
 

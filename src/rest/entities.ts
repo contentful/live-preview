@@ -1,7 +1,7 @@
 import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { AssetProps, EntryProps, KeyValueMap, SysLink } from 'contentful-management';
 
-import { clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
+import { debug, clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
 import { ContentType, EntityReferenceMap, isAsset } from '../types';
 
 type Reference = AssetProps | EntryProps;
@@ -151,6 +151,10 @@ async function resolveRichTextLinks(
         node.data.target = await updateRef(undefined, updatedReference, locale, entityReferenceMap);
       }
     }
+  } else {
+    debug.warn('Unhandled nodeType in embedded entries in rich text', {
+      nodeType: node.nodeType,
+    });
   }
   if (node.content) {
     for (const childNode of node.content) {
