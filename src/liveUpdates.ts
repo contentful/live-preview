@@ -281,6 +281,7 @@ export class LiveUpdates {
     sendMessageToEditor({
       action: 'SUBSCRIBED',
       type: isGQL ? 'GQL' : 'REST',
+      locale: config.locale || this.defaultLocale,
     });
 
     return () => {

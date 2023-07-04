@@ -229,6 +229,7 @@ describe('LiveUpdates', () => {
       expect(sendMessage).toHaveBeenCalledWith({
         action: 'SUBSCRIBED',
         type: 'GQL',
+        locale,
       });
     });
 
@@ -242,6 +243,7 @@ describe('LiveUpdates', () => {
       expect(sendMessage).toHaveBeenCalledWith({
         action: 'SUBSCRIBED',
         type: 'REST',
+        locale,
       });
     });
   });
