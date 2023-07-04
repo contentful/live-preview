@@ -7,3 +7,5 @@ export const TOOLTIP_CLASS = 'contentful-tooltip';
 
 export const TOOLTIP_HEIGHT = 32;
 export const TOOLTIP_PADDING_LEFT = 5;
+
+export const MAX_DEPTH = 5;

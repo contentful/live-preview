@@ -1,10 +1,9 @@
 import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { AssetProps, EntryProps, KeyValueMap, SysLink } from 'contentful-management';
 
+import { MAX_DEPTH } from '../constants';
 import { debug, clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
 import { ContentType, EntityReferenceMap, isAsset } from '../types';
-
-const MAX_DEPTH = 10;
 
 type Reference = AssetProps | EntryProps;
 

@@ -2,6 +2,7 @@ import type { AssetProps, ContentTypeProps, EntryProps } from 'contentful-manage
 import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
+import { MAX_DEPTH } from '../../constants';
 import { clone, resolveReference } from '../../helpers';
 import { EntityReferenceMap } from '../../types';
 import { updateEntity } from '../entities';
@@ -189,6 +190,42 @@ describe('Update REST entry', () => {
         }),
       });
       expect(result.fields.refOneSameSpace.fields.richTextFieldName).toEqual(resolvedRichTextLinks);
+    });
+  });
+
+  describe('Circular references', () => {
+    it('does not resolve references deeper than MAX_DEPTH', async () => {
+      // Create circular reference
+      const circularReferenceId = 'circularReferenceId';
+      const circularReference = {
+        sys: { id: circularReferenceId },
+        fields: {
+          reference: {
+            [EN]: { sys: { id: circularReferenceId, linkType: 'Entry', type: 'Link' } },
+          },
+        },
+      } as unknown as EntryProps;
+
+      // Add circular reference to map
+      defaultEntityReferenceMap.set(circularReferenceId, circularReference);
+
+      // Update entry to contain the circular reference
+      const result = await updateFn({
+        dataFromPreviewApp,
+        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
+          [EN]: { sys: circularReference.sys },
+        }),
+      });
+
+      // Assert that the recursion stops at a certain depth
+      let depthCounter = 0;
+      let currentReference = result.fields.refOneSameSpace;
+      while (currentReference && currentReference.fields && currentReference.fields.reference) {
+        currentReference = currentReference.fields.reference;
+        depthCounter += 1;
+      }
+
+      expect(depthCounter).toBeLessThan(MAX_DEPTH);
     });
   });
 });
