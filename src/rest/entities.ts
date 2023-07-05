@@ -1,6 +1,7 @@
 import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { AssetProps, EntryProps, KeyValueMap, SysLink } from 'contentful-management';
 
+import { MAX_DEPTH } from '../constants';
 import { debug, clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
 import { ContentType, EntityReferenceMap, isAsset } from '../types';
 
@@ -26,7 +27,8 @@ async function updateRef(
   dataFromPreviewApp: Reference | undefined,
   updateFromEntryEditor: Reference | SysLink,
   locale: string,
-  entityReferenceMap: EntityReferenceMap
+  entityReferenceMap: EntityReferenceMap,
+  depth = 0
 ): Promise<Reference | undefined | null> {
   const { reference } = await resolveReference({
     entityReferenceMap,
@@ -44,21 +46,23 @@ async function updateRef(
   for (const key in reference.fields) {
     const value = reference.fields[key as keyof typeof reference.fields][locale];
 
-    if (typeof value === 'object' && value?.sys) {
+    if (typeof value === 'object' && value?.sys && depth < MAX_DEPTH) {
       await updateSingleRefField(
         result,
         reference,
         locale,
         key as keyof Reference['fields'],
-        entityReferenceMap
+        entityReferenceMap,
+        depth + 1
       );
-    } else if (Array.isArray(value) && value[0]?.sys) {
+    } else if (Array.isArray(value) && value[0]?.sys && depth < MAX_DEPTH) {
       await updateMultiRefField(
         result,
         reference,
         locale,
         key as keyof Reference['fields'],
-        entityReferenceMap
+        entityReferenceMap,
+        depth + 1
       );
     } else if (value.content && value.nodeType === 'document') {
       await updateRichTextField(result, reference, key, locale, entityReferenceMap);
@@ -81,7 +85,8 @@ async function updateMultiRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  entityReferenceMap: EntityReferenceMap
+  entityReferenceMap: EntityReferenceMap,
+  depth = 0
 ) {
   if (!updateFromEntryEditor.fields?.[name]?.[locale]) {
     delete dataFromPreviewApp.fields[name];
@@ -95,7 +100,8 @@ async function updateMultiRefField(
           dataFromPreviewApp.fields[name]?.[index],
           updateFromEntryReference,
           locale,
-          entityReferenceMap
+          entityReferenceMap,
+          depth + 1
         )
     )
   ).then((list) => list.filter(Boolean));
@@ -109,7 +115,8 @@ async function updateSingleRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  entityReferenceMap: EntityReferenceMap
+  entityReferenceMap: EntityReferenceMap,
+  depth = 0
 ) {
   const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name]?.[locale];
 
@@ -124,7 +131,8 @@ async function updateSingleRefField(
     dataFromPreviewApp.fields[name],
     matchUpdateFromEntryEditor,
     locale,
-    entityReferenceMap
+    entityReferenceMap,
+    depth + 1
   );
 
   return dataFromPreviewApp;
@@ -196,7 +204,8 @@ export async function updateEntity(
   dataFromPreviewApp: EntryProps,
   updateFromEntryEditor: EntryProps | AssetProps,
   locale: string,
-  entityReferenceMap: EntityReferenceMap
+  entityReferenceMap: EntityReferenceMap,
+  depth = 0
 ): Promise<EntryProps> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;
@@ -212,21 +221,23 @@ export async function updateEntity(
         name,
         locale,
       });
-    } else if (field.type === 'Link') {
+    } else if (field.type === 'Link' && depth < MAX_DEPTH) {
       await updateSingleRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
-        entityReferenceMap
+        entityReferenceMap,
+        depth + 1
       );
-    } else if (field.type === 'Array' && field.items?.type === 'Link') {
+    } else if (field.type === 'Array' && field.items?.type === 'Link' && depth < MAX_DEPTH) {
       await updateMultiRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
-        entityReferenceMap
+        entityReferenceMap,
+        depth + 1
       );
     } else if (field.type === 'RichText') {
       await updateRichTextField(
