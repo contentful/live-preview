@@ -7,7 +7,7 @@ import { clone, resolveReference } from '../../helpers';
 import { EntityReferenceMap } from '../../types';
 import { updateEntity } from '../entities';
 import { EN, referenceWithRichTextId } from './constants';
-import contentTypeEntry from './fixtures/contentType.json';
+import contentTypeEntryJSON from './fixtures/contentType.json';
 import {
   defaultResult,
   newAssetReference,
@@ -23,6 +23,8 @@ import entry from './fixtures/updateFromEntryEditor.json';
 import { patchField } from './utils';
 
 vi.mock('../../helpers/resolveReference');
+
+const contentTypeEntry = contentTypeEntryJSON as ContentTypeProps;
 
 describe('Update REST entry', () => {
   const defaultEntityReferenceMap = new Map<string, EntryProps | AssetProps>([

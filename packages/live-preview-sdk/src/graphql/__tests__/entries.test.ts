@@ -1,17 +1,19 @@
-import type { EntryProps, KeyValueMap } from 'contentful-management/types';
+import type { ContentTypeProps, EntryProps, KeyValueMap } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import * as Utils from '../../helpers';
 import { resolveReference } from '../../helpers/resolveReference';
 import { SysProps, EntityReferenceMap, Entity, ContentType } from '../../types';
 import { updateEntry } from '../entries';
-import defaultContentType from './fixtures/contentType.json';
+import defaultContentTypeJSON from './fixtures/contentType.json';
 import entry from './fixtures/entry.json';
 
 const EN = 'en-US';
 
 vi.mock('../../helpers/debug');
 vi.mock('../../helpers/resolveReference');
+
+const defaultContentType = defaultContentTypeJSON as ContentTypeProps;
 
 // Note: we can get rid of expect.objectContaining, if we iterate over the provided data instead of the ContentType.fields
 describe('Update GraphQL Entry', () => {

@@ -1,0 +1,76 @@
+{
+  "name": "@contentful/live-preview",
+  "version": "2.4.7",
+  "author": "Contentful GmbH",
+  "license": "MIT",
+  "description": "Preview SDK for both the field tagging connection + live content updates",
+  "source": "./src/index.tsx",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "react",
+    "style.css"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs",
+      "types": "./dist/react.d.ts"
+    },
+    "./style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/live-preview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/live-preview/issues"
+  },
+  "scripts": {
+    "start": "vite build --watch",
+    "build": "vite build",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "tsc": "tsc --noEmit",
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "coverage": "vitest run --coverage",
+    "presemantic-release": "yarn build"
+  },
+  "homepage": "https://github.com/contentful/live-preview#readme",
+  "dependencies": {
+    "use-deep-compare-effect": "^1.8.1"
+  },
+  "devDependencies": {
+    "@contentful/rich-text-types": "^16.2.0",
+    "@testing-library/react": "14.0.0",
+    "@types/node": "^20.1.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "contentful-management": "^10.30.1",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "jsdom": "^22.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.1.0",
+    "vite-plugin-dts": "^3.0.2",
+    "vitest": "^0.32.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

@@ -1,35 +1,10 @@
 {
-  "name": "@contentful/live-preview",
-  "version": "2.4.7",
+  "name": "@contentful/preview",
+  "private": true,
   "author": "Contentful GmbH",
   "license": "MIT",
-  "description": "Preview SDK for both the field tagging connection + live content updates",
-  "source": "./src/index.tsx",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
-  "type": "module",
-  "files": [
-    "dist",
-    "react",
-    "style.css"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    },
-    "./react": {
-      "import": "./dist/react.js",
-      "require": "./dist/react.cjs",
-      "types": "./dist/react.d.ts"
-    },
-    "./style.css": {
-      "import": "./dist/style.css",
-      "require": "./dist/style.css"
-    }
-  },
+  "description": "all around preview content in contentful",
+  "homepage": "https://github.com/contentful/live-preview#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/live-preview.git"
@@ -37,61 +12,37 @@
   "bugs": {
     "url": "https://github.com/contentful/live-preview/issues"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "vite build --watch",
-    "build": "vite build",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "tsc": "tsc --noEmit",
-    "test": "vitest",
-    "test:ci": "vitest run",
-    "coverage": "vitest run --coverage",
+    "lint": "lerna run lint",
+    "tsc": "lerna run tsc",
+    "test": "lerna run --stream test",
+    "test:ci": "lerna run test:ci",
+    "coverage": "lerna run coverage",
     "prepare": "husky install",
-    "presemantic-release": "yarn build",
+    "build": "lerna run build",
+    "presemantic-release": "lerna run build",
     "semantic-release": "semantic-release",
     "cm": "git-cz"
   },
-  "homepage": "https://github.com/contentful/live-preview#readme",
-  "dependencies": {
-    "use-deep-compare-effect": "^1.8.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@contentful/eslint-config-extension": "0.4.3",
-    "@contentful/rich-text-types": "^16.2.0",
-    "@semantic-release/changelog": "^6.0.2",
-    "@semantic-release/git": "^10.0.1",
-    "@testing-library/react": "14.0.0",
-    "@types/node": "^20.1.0",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react-swc": "^3.0.0",
     "commitizen": "4.3.0",
-    "contentful-management": "^10.30.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-import-helpers": "^1.2.1",
-    "graphql": "^16.6.0",
-    "graphql-tag": "^2.12.6",
     "husky": "^8.0.3",
-    "jsdom": "^22.0.0",
+    "lerna": "^7.1.1",
     "lint-staged": "^13.1.2",
-    "prettier": "^3.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "semantic-release": "^21.0.2",
-    "typescript": "^5.0.2",
-    "vite": "^4.1.0",
-    "vite-plugin-dts": "^3.0.2",
-    "vitest": "^0.33.0"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "prettier": "^3.0.0"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
-      "prettier --write",
-      "eslint --fix"
+      "prettier --write"
     ],
     "*.{json,yml,html}": [
       "prettier --write"
@@ -101,37 +52,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "release": {
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "releaseRules": [
-            {
-              "type": "build",
-              "scope": "deps",
-              "release": "patch"
-            }
-          ]
-        }
-      ],
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json"
-          ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]"
-        }
-      ],
-      "@semantic-release/github"
-    ]
   }
 }
