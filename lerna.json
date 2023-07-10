@@ -1,4 +1,27 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "version": "2.4.9"
+  "npmClient": "yarn",
+  "version": "independent",
+  "command": {
+    "version": {
+      "allowBranch": "master",
+      "conventionalCommits": true,
+      "message": "chore(release): updated release notes and package versions [ci skip]",
+      "ignoreChanges": [
+        "*.md",
+        "*.mdx",
+        "**/*.spec.*",
+        "**/*.stories.*",
+        "**/__fixtures__/**",
+        "**/__tests__/**",
+        "yarn.lock",
+        "lerna.json",
+        ".eslintrc.js",
+        ".eslintignore",
+        ".prettierrc",
+        "tsconfig.json",
+        "commitlist.config.js"
+      ]
+    }
+  }
 }
