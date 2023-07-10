@@ -65,12 +65,16 @@ describe('Update REST entry', () => {
     locale?: string;
     entityReferenceMap?: EntityReferenceMap;
   }) => {
+    const visitedReferences = new Set<string>();
+
     return updateEntity(
       contentType,
       clone(dataFromPreviewApp),
       clone(updateFromEntryEditor),
       locale,
-      entityReferenceMap
+      entityReferenceMap,
+      0,
+      visitedReferences,
     );
   };
 
@@ -118,7 +122,7 @@ describe('Update REST entry', () => {
       });
 
       expect(result).toEqual(
-        patchField(defaultResult, 'refOneSameSpace', newEntryReferenceTransformed)
+        patchField(defaultResult, 'refOneSameSpace', newEntryReferenceTransformed),
       );
     });
 
@@ -134,7 +138,7 @@ describe('Update REST entry', () => {
         patchField(defaultResult, 'refManySameSpace', [
           newEntryReferenceTransformed,
           newAssetReferenceTransformed,
-        ])
+        ]),
       );
     });
 
@@ -153,7 +157,7 @@ describe('Update REST entry', () => {
         patchField(defaultResult, 'refManySameSpace', [
           newAssetReferenceTransformed,
           newEntryReferenceTransformed,
-        ])
+        ]),
       );
     });
 
@@ -169,7 +173,7 @@ describe('Update REST entry', () => {
       });
 
       expect(result).toEqual(
-        patchField(defaultResult, 'refManySameSpace', [newEntryReferenceTransformed])
+        patchField(defaultResult, 'refManySameSpace', [newEntryReferenceTransformed]),
       );
     });
 

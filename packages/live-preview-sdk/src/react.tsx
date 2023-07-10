@@ -7,14 +7,39 @@ import {
   useState,
   type PropsWithChildren,
   type ReactElement,
+  useEffect,
 } from 'react';
 
 import { DocumentNode } from 'graphql';
-import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect';
+import isEqual from 'lodash.isequal';
 
 import { debounce } from './helpers';
 import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index';
 import { Argument, InspectorModeTags, LivePreviewProps } from './types';
+
+type UseEffectParams = Parameters<typeof useEffect>;
+type EffectCallback = UseEffectParams[0];
+type DependencyList = UseEffectParams[1];
+type UseEffectReturn = ReturnType<typeof useEffect>;
+
+export function useDeepCompareMemoize<T>(value: T) {
+  const ref = useRef<T>(value);
+  const signalRef = useRef<number>(0);
+
+  if (!isEqual(value, ref.current)) {
+    ref.current = value;
+    signalRef.current += 1;
+  }
+
+  return useMemo(() => ref.current, [signalRef.current]);
+}
+
+export function useDeepCompareEffectNoCheck(
+  callback: EffectCallback,
+  dependencies: DependencyList
+): UseEffectReturn {
+  return useEffect(callback, useDeepCompareMemoize(dependencies));
+}
 
 const ContentfulLivePreviewContext = createContext<ContentfulLivePreviewInitConfig | null>(null);
 
