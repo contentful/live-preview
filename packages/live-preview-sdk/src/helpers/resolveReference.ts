@@ -1,75 +1,67 @@
+import { EditorEntityStore, EditorEntityStoreReceivedMessage } from '@contentful/visual-sdk';
+import type { Asset, Entry } from 'contentful';
 import type { AssetProps, EntryProps } from 'contentful-management';
 
-import { ASSET_TYPENAME, EntityReferenceMap, MessageFromEditor } from '../types';
-import { sendMessageToEditor } from './utils';
+import { clone, sendMessageToEditor } from './utils';
+import { ContentfulLivePreview } from '..';
+import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
 
-type ReferencePromise = Promise<{
-  reference: EntryProps | AssetProps;
-  typeName: string;
-}>;
-
-const PromiseMap = new Map<string, ReferencePromise>();
+let store: EditorEntityStore | undefined = undefined;
 
 export function generateTypeName(contentTypeId: string): string {
   return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
 }
 
-function promiseCleanup(referenceId: string) {
-  setTimeout(() => {
-    PromiseMap.delete(referenceId);
-  }, 300);
-}
+function getStore() {
+  if (!store) {
+    store = new EditorEntityStore({
+      entities: [],
+      sendMessage: sendMessageToEditor,
+      subscribe: (action, cb) => {
+        // TODO: move this to a generic subscribe function on ContentfulLivePreview
+        const listeners = (
+          event: MessageEvent<EditorEntityStoreReceivedMessage & { from: 'live-preview' }>
+        ) => {
+          if (typeof event.data !== 'object' || !event.data) return;
+          if (event.data.from !== 'live-preview') return;
+          if (event.data.action === action) {
+            cb(event.data);
+          }
+        };
 
-function loadReference(referenceId: string, isAsset?: boolean): ReferencePromise {
-  const openPromise = PromiseMap.get(referenceId);
+        window.addEventListener('message', listeners);
 
-  if (openPromise) {
-    return openPromise;
+        return () => window.removeEventListener('message', listeners);
+      },
+      locale: ContentfulLivePreview.locale,
+    });
   }
 
-  const newPromise = new Promise<Awaited<ReferencePromise>>((resolve) => {
-    const fn = (event: MessageEvent<MessageFromEditor>) => {
-      if (typeof event.data !== 'object' || !event.data) return;
-      if (event.data.from !== 'live-preview') return;
+  return store;
+}
 
-      // Check if the correct event is received and it contains the correct data (there could be multiple unknown references)
-      if (
-        event.data.action === 'UNKNOWN_REFERENCE_LOADED' &&
-        event.data.reference.sys.id === referenceId
-      ) {
-        resolve({
-          reference: event.data.reference,
-          typeName: event.data.contentType
-            ? generateTypeName(event.data.contentType.sys.id)
-            : ASSET_TYPENAME,
-        });
-        promiseCleanup(referenceId);
-        window.removeEventListener('message', fn);
-      }
-    };
+function fallback(asset: Asset, locale: string): AssetProps;
+function fallback(entry: Entry, locale: string): EntryProps;
+function fallback(entity: Asset | Entry, locale: string): AssetProps | EntryProps {
+  const cloned = clone(entity as any);
 
-    window.addEventListener('message', fn);
+  for (const key in cloned.fields) {
+    cloned.fields[key] = { [locale]: cloned.fields[key] };
+  }
 
-    sendMessageToEditor({
-      action: 'ENTITY_NOT_KNOWN',
-      referenceEntityId: referenceId,
-      referenceContentType: isAsset ? ASSET_TYPENAME : undefined,
-    });
-  });
-
-  PromiseMap.set(referenceId, newPromise);
-
-  return newPromise;
+  return cloned;
 }
 
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
+  locale: string;
 }): Promise<{ reference: EntryProps; typeName: string }>;
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset: true;
+  locale: string;
 }): Promise<{ reference: AssetProps; typeName: string }>;
 /**
  * Returns the requested reference from
@@ -80,26 +72,35 @@ export async function resolveReference({
   entityReferenceMap,
   referenceId,
   isAsset,
+  locale,
 }: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset?: boolean;
+  locale: string;
 }): Promise<{ reference: EntryProps | AssetProps; typeName: string }> {
   const reference = entityReferenceMap.get(referenceId);
 
-  if (!reference) {
-    const result = await loadReference(referenceId, isAsset);
-
+  if (reference) {
     return {
-      reference: result.reference,
-      typeName: result.typeName,
+      reference,
+      typeName: reference.sys.contentType?.sys?.id
+        ? generateTypeName(reference.sys.contentType.sys.id)
+        : ASSET_TYPENAME,
     };
   }
 
+  if (isAsset) {
+    const result = await getStore().fetchAsset(referenceId);
+    return {
+      reference: fallback(result, locale),
+      typeName: ASSET_TYPENAME,
+    };
+  }
+
+  const result = await getStore().fetchEntry(referenceId);
   return {
-    reference,
-    typeName: reference.sys.contentType?.sys?.id
-      ? generateTypeName(reference.sys.contentType.sys.id)
-      : ASSET_TYPENAME,
+    reference: fallback(result, locale),
+    typeName: generateTypeName(result.sys.contentType.sys.id),
   };
 }

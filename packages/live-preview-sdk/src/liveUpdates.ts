@@ -1,6 +1,5 @@
 import type { AssetProps, EntryProps } from 'contentful-management';
 
-import { ContentfulSubscribeConfig } from '.';
 import * as gql from './graphql';
 import { parseGraphQLParams } from './graphql/queryUtils';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
@@ -18,6 +17,8 @@ import {
   EntryUpdatedMessage,
   GraphQLParams,
 } from './types';
+
+import { ContentfulSubscribeConfig } from '.';
 
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;

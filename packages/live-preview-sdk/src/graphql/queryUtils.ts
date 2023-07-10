@@ -91,8 +91,6 @@ export function isRelevantField(
   typename: string,
   gqlParams?: GraphQLParams
 ): boolean {
-  const collectionName = buildCollectionName(name);
-
   if (!gqlParams) {
     return true;
   }
@@ -102,7 +100,7 @@ export function isRelevantField(
     return false;
   }
 
-  return queryInformation.fields.has(name) || queryInformation.fields.has(collectionName);
+  return queryInformation.fields.has(name) || queryInformation.fields.has(buildCollectionName(name));
 }
 
 /**

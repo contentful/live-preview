@@ -34,6 +34,7 @@ async function updateRef(
     entityReferenceMap,
     referenceId: updateFromEntryEditor.sys.id,
     ...(isAsset(updateFromEntryEditor as EntryProps) ? { isAsset: true } : undefined),
+    locale,
   });
 
   if (!reference) {
