@@ -38,7 +38,7 @@
     "husky": "^8.0.3",
     "lerna": "^7.1.1",
     "lint-staged": "^13.1.2",
-    "prettier": "^3.0.0"
+    "prettier": "2.8.8"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
