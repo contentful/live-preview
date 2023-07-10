@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.11](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.4.10...@contentful/live-preview@2.4.11) (2023-07-10)
+
+
+### Bug Fixes
+
+* **sdk:** re-publish types ([7a7e711](https://github.com/contentful/live-preview/commit/7a7e711147b05ee31659d0dccadbe2b98a6f77d7))
+
+
+
+
+
 ## 2.4.10 (2023-07-10)
 
 
