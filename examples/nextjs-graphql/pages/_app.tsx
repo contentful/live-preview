@@ -7,8 +7,7 @@ function App({ Component, pageProps }: AppProps) {
     <ContentfulLivePreviewProvider
       locale="en-US"
       enableInspectorMode={pageProps.draftMode}
-      enableLiveUpdates={pageProps.draftMode}
-    >
+      enableLiveUpdates={pageProps.draftMode}>
       <Component {...pageProps} />
     </ContentfulLivePreviewProvider>
   );
