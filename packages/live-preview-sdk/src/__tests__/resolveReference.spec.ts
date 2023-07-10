@@ -10,6 +10,7 @@ vi.mock('../helpers/utils');
 
 describe('resolveReference', () => {
   const listener = vi.spyOn(window, 'addEventListener');
+  const locale = 'en-US'
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -24,7 +25,7 @@ describe('resolveReference', () => {
   describe('asset', () => {
     const asset = {
       fields: {
-        file: { 'en-US': { fileName: 'abc.jpg' } },
+        file: { [locale]: { fileName: 'abc.jpg' } },
       },
       sys: {
         id: '1',
@@ -35,7 +36,7 @@ describe('resolveReference', () => {
       reference: {
         fields: {
           file: {
-            'en-US': {
+            [locale]: {
               fileName: 'abc.jpg',
             },
           },
@@ -51,6 +52,7 @@ describe('resolveReference', () => {
       const result = await resolveReference({
         entityReferenceMap: new Map([['1', asset]]),
         referenceId: '1',
+        locale
       });
 
       expect(result).toEqual(expected);
@@ -61,6 +63,7 @@ describe('resolveReference', () => {
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
+        locale
       });
 
       expect(listener).toHaveBeenCalledTimes(1);
@@ -89,6 +92,7 @@ describe('resolveReference', () => {
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
+        locale
       });
 
       expect(listener).toHaveBeenCalledTimes(1);
@@ -133,12 +137,14 @@ describe('resolveReference', () => {
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
+        locale
       });
 
       const promise2 = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
         isAsset: true,
+        locale
       });
 
       (listener.mock.calls[0][1] as EventListener)({
@@ -192,6 +198,7 @@ describe('resolveReference', () => {
       const result = await resolveReference({
         entityReferenceMap: new Map([['1', entry]]),
         referenceId: '1',
+        locale
       });
 
       expect(result).toEqual(expected);
@@ -201,6 +208,7 @@ describe('resolveReference', () => {
       const promise = resolveReference({
         entityReferenceMap: new Map(),
         referenceId: '1',
+        locale
       });
 
       expect(listener).toHaveBeenCalledTimes(1);

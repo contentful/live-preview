@@ -1,4 +1,5 @@
 import type { AssetProps, EntryProps, ContentTypeProps, SysLink } from 'contentful-management';
+import type { EditorEntityStoreMessage, EditorEntityStoreReceivedMessage } from "@contentful/visual-sdk"
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
@@ -90,7 +91,8 @@ export type EditorMessage =
   | TaggedFieldClickMessage
   | UnknownEntityMessage
   | UrlChangedMessage
-  | SubscribedMessage;
+  | SubscribedMessage
+  | EditorEntityStoreMessage
 
 export type MessageFromSDK = EditorMessage & {
   from: 'live-preview';
@@ -121,6 +123,7 @@ export type MessageFromEditor = (
   | UnknownReferenceLoaded
   | InspectorModeChanged
   | DebugModeEnabled
+  | EditorEntityStoreReceivedMessage
 ) & {
   from: 'live-preview';
 };

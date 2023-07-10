@@ -45,11 +45,12 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "presemantic-release": "yarn build"
+    "prepublish": "yarn build"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.0",
+    "@contentful/visual-sdk": "^1.0.0-alpha.0",
     "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
@@ -58,6 +59,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "contentful": "^10.3.4",
     "contentful-management": "^10.30.1",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
