@@ -32,10 +32,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    react(),
-    dts({
-      outputDir: './dist',
-    }),
-  ],
+  plugins: [react(), dts()],
 });

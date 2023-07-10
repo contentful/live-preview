@@ -24,3 +24,4 @@ updates:
     ignore:
       # https://github.com/lerna/lerna/issues/3765
       - dependency-name: 'prettier'
+      - dependency-name: 'vite-plugin-dts'
