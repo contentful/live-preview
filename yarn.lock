@@ -7244,9 +7244,9 @@ vite-node@0.33.0:
     vite "^3.0.0 || ^4.0.0"
 
 vite-plugin-dts@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-3.0.2.tgz#5b96d69261a4ed32bc0a2bd75e224e21c2f5a2a5"
-  integrity sha512-NcBOWlP94B79uB8gR2Y3h8Go7nDozqpD8GYkPZ7zTmg4xG8H2H5ituSht8aL4jYMCPwKH0cmqMRtRa2lrsDa9A==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-3.2.0.tgz#1a339bec9374044febde48ad19691b7b05a0f63e"
+  integrity sha512-s+dwJvDcb/AWgb49oVbq9JiUSIMwaVpFfV4SVIaBZmv9OZyeyDGxujaq+z4HJ4LB4hUG5c4oRAJyLfV66c763Q==
   dependencies:
     "@microsoft/api-extractor" "^7.36.0"
     "@rollup/pluginutils" "^5.0.2"
