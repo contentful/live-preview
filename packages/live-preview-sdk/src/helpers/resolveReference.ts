@@ -1,10 +1,11 @@
-import { EditorEntityStore, EditorEntityStoreReceivedMessage } from '@contentful/visual-sdk';
+import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
 import type { AssetProps, EntryProps } from 'contentful-management';
 
-import { clone, sendMessageToEditor } from './utils';
-import { ContentfulLivePreview } from '..';
 import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
+import { clone, sendMessageToEditor } from './utils';
+
+import { ContentfulLivePreview } from '..';
 
 let store: EditorEntityStore | undefined = undefined;
 
@@ -17,14 +18,14 @@ function getStore() {
     store = new EditorEntityStore({
       entities: [],
       sendMessage: sendMessageToEditor,
-      subscribe: (action, cb) => {
+      subscribe: (method, cb) => {
         // TODO: move this to a generic subscribe function on ContentfulLivePreview
         const listeners = (
-          event: MessageEvent<EditorEntityStoreReceivedMessage & { from: 'live-preview' }>
+          event: MessageEvent<RequestedEntitiesMessage & { from: 'live-preview'; method: string }>
         ) => {
           if (typeof event.data !== 'object' || !event.data) return;
           if (event.data.from !== 'live-preview') return;
-          if (event.data.action === action) {
+          if (event.data.method === method) {
             cb(event.data);
           }
         };
@@ -92,6 +93,10 @@ export async function resolveReference({
 
   if (isAsset) {
     const result = await getStore().fetchAsset(referenceId);
+    if (!result) {
+      throw new Error(`Unknown reference ${referenceId}`);
+    }
+
     return {
       reference: fallback(result, locale),
       typeName: ASSET_TYPENAME,
@@ -99,6 +104,10 @@ export async function resolveReference({
   }
 
   const result = await getStore().fetchEntry(referenceId);
+  if (!result) {
+    throw new Error(`Unknown reference ${referenceId}`);
+  }
+
   return {
     reference: fallback(result, locale),
     typeName: generateTypeName(result.sys.contentType.sys.id),

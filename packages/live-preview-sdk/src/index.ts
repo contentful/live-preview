@@ -14,6 +14,7 @@ import { LiveUpdates } from './liveUpdates';
 import {
   Argument,
   InspectorModeTags,
+  LivePreviewPostMessageMethods,
   LivePreviewProps,
   MessageFromEditor,
   SubscribeCallback,
@@ -98,7 +99,10 @@ export class ContentfulLivePreview {
 
         debug.log('Received message', event.data);
 
-        if (event.data.action === 'DEBUG_MODE_ENABLED') {
+        if (
+          ('action' in event.data && event.data.action === 'DEBUG_MODE_ENABLED') ||
+          event.data.method === LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED
+        ) {
           setDebugMode(true);
           return;
         }
@@ -114,12 +118,14 @@ export class ContentfulLivePreview {
 
       // navigation changes
       pollUrlChanges(() => {
-        sendMessageToEditor({ action: 'URL_CHANGED' });
+        sendMessageToEditor(LivePreviewPostMessageMethods.URL_CHANGED, {
+          action: LivePreviewPostMessageMethods.URL_CHANGED,
+        });
       });
 
       // tell the editor that there's a SDK
-      sendMessageToEditor({
-        action: 'IFRAME_CONNECTED',
+      sendMessageToEditor(LivePreviewPostMessageMethods.IFRAME_CONNECTED, {
+        action: LivePreviewPostMessageMethods.IFRAME_CONNECTED,
         connected: true,
         tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
         locale: this.locale,

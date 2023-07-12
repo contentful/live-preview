@@ -4,7 +4,7 @@ import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
 import * as helpers from '../helpers';
 import { LiveUpdates } from '../liveUpdates';
-import { ContentType } from '../types';
+import { ContentType, LivePreviewPostMessageMethods } from '../types';
 import assetFromEntryEditor from './fixtures/assetFromEntryEditor.json';
 import landingPageContentType from './fixtures/landingPageContentType.json';
 import nestedCollectionFromPreviewApp from './fixtures/nestedCollectionFromPreviewApp.json';
@@ -61,8 +61,10 @@ describe('LiveUpdates', () => {
     await liveUpdates.receiveMessage({
       entity: updateFromEntryEditor1,
       contentType,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
     });
 
@@ -75,8 +77,10 @@ describe('LiveUpdates', () => {
     await liveUpdates.receiveMessage({
       entity: updateFromEntryEditor2,
       contentType,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
     });
 
@@ -111,8 +115,10 @@ describe('LiveUpdates', () => {
     await liveUpdates.receiveMessage({
       entity: updateFromEntryEditor1,
       contentType,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
     });
 
@@ -123,8 +129,10 @@ describe('LiveUpdates', () => {
     await liveUpdates.receiveMessage({
       entity: updateFromEntryEditor2,
       contentType,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
     });
 
@@ -139,8 +147,10 @@ describe('LiveUpdates', () => {
 
     await liveUpdates.receiveMessage({
       isInspectorActive: false,
-      action: 'INSPECTOR_MODE_CHANGED',
+      action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
+      method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
       from: 'live-preview',
+      source: 'live-preview-app',
     });
 
     expect(callback).not.toHaveBeenCalled();
@@ -155,8 +165,10 @@ describe('LiveUpdates', () => {
     liveUpdates.receiveMessage({
       entity: updateFromEntryEditor1,
       contentType,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
     });
 
@@ -169,8 +181,10 @@ describe('LiveUpdates', () => {
     liveUpdates.subscribe({ data: nestedDataFromPreviewApp, callback });
     await liveUpdates.receiveMessage({
       entity: assetFromEntryEditor as unknown as AssetProps,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
       contentType: {} as unknown as ContentType,
     });
@@ -190,8 +204,10 @@ describe('LiveUpdates', () => {
     await liveUpdates.receiveMessage({
       entity: pageInsideCollectionFromEntryEditor,
       contentType: landingPageContentType as unknown as ContentType,
-      action: 'ENTRY_UPDATED',
+      action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
+      method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
+      source: 'live-preview-app',
       entityReferenceMap: new Map(),
     });
 
@@ -226,8 +242,8 @@ describe('LiveUpdates', () => {
       liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
-      expect(sendMessage).toHaveBeenCalledWith({
-        action: 'SUBSCRIBED',
+      expect(sendMessage).toHaveBeenCalledWith(LivePreviewPostMessageMethods.SUBSCRIBED, {
+        action: LivePreviewPostMessageMethods.SUBSCRIBED,
         type: 'GQL',
         locale,
       });
@@ -240,8 +256,8 @@ describe('LiveUpdates', () => {
       liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
-      expect(sendMessage).toHaveBeenCalledWith({
-        action: 'SUBSCRIBED',
+      expect(sendMessage).toHaveBeenCalledWith(LivePreviewPostMessageMethods.SUBSCRIBED, {
+        action: LivePreviewPostMessageMethods.SUBSCRIBED,
         type: 'REST',
         locale,
       });

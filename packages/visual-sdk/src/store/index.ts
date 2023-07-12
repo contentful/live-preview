@@ -1,3 +1,3 @@
 export { EntityStore } from './EntityStore';
-export { EditorEntityStore } from './EditorEntityStore';
-export type { EditorEntityStoreMessage, EditorEntityStoreReceivedMessage } from "./EditorEntityStore"
+export { EditorEntityStore, PostMessageMethods } from './EditorEntityStore';
+export type { RequestEntitiesMessage, RequestedEntitiesMessage } from './EditorEntityStore';

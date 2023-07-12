@@ -45,7 +45,7 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "prepublish": "yarn build"
+    "prepublishOnly": "yarn build"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {

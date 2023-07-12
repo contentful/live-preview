@@ -1,24 +1,26 @@
 /* @vitest-environment jsdom */
+import { EditorEntityStore } from '@contentful/visual-sdk';
 import type { AssetProps, EntryProps } from 'contentful-management';
-import { beforeEach, describe, vi, it, afterEach, expect } from 'vitest';
+import { describe, vi, it, beforeEach, afterEach, expect, Mock } from 'vitest';
 
-import { sendMessageToEditor } from '../helpers';
 import { resolveReference } from '../helpers/resolveReference';
-import { ASSET_TYPENAME } from '../types';
+import cdaAsset from './fixtures/cdaAsset.json';
+import cdaEntry from './fixtures/cdaEntry.json';
 
-vi.mock('../helpers/utils');
+vi.mock('@contentful/visual-sdk');
 
 describe('resolveReference', () => {
-  const listener = vi.spyOn(window, 'addEventListener');
-  const locale = 'en-US'
+  const locale = 'en-US';
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    (EditorEntityStore as Mock).mockImplementation(() => ({
+      __mocked__: true,
+      fetchEntry: async () => cdaEntry,
+      fetchAsset: async () => cdaAsset,
+    }));
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
     vi.clearAllMocks();
   });
 
@@ -52,115 +54,25 @@ describe('resolveReference', () => {
       const result = await resolveReference({
         entityReferenceMap: new Map([['1', asset]]),
         referenceId: '1',
-        locale
+        locale,
       });
 
       expect(result).toEqual(expected);
     });
 
     it('resolves it from the editor', async () => {
-      const promise = resolveReference({
+      const result = await resolveReference({
         entityReferenceMap: new Map(),
-        referenceId: '1',
+        referenceId: cdaAsset.sys.id,
         isAsset: true,
-        locale
+        locale,
       });
 
-      expect(listener).toHaveBeenCalledTimes(1);
-      expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
-      expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: '1',
-        referenceContentType: ASSET_TYPENAME,
+      expect(result.typeName).toBe('Asset');
+      expect(result.reference.fields).toEqual({
+        title: { [locale]: cdaAsset.fields.title },
+        file: { [locale]: cdaAsset.fields.file },
       });
-
-      (listener.mock.calls[0][1] as EventListener)({
-        data: {
-          from: 'live-preview',
-          action: 'UNKNOWN_REFERENCE_LOADED',
-          reference: asset,
-        },
-      } as MessageEvent);
-
-      const result = await promise;
-
-      expect(result).toEqual(expected);
-    });
-
-    it('ignores different entries while waiting for the reference', async () => {
-      const promise = resolveReference({
-        entityReferenceMap: new Map(),
-        referenceId: '1',
-        isAsset: true,
-        locale
-      });
-
-      expect(listener).toHaveBeenCalledTimes(1);
-      expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
-      expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: '1',
-        referenceContentType: ASSET_TYPENAME,
-      });
-
-      (listener.mock.calls[0][1] as EventListener)({
-        data: {
-          from: 'live-preview',
-          action: 'UNKNOWN_REFERENCE_LOADED',
-          reference: { sys: { id: '2' } },
-        },
-      } as MessageEvent);
-
-      (listener.mock.calls[0][1] as EventListener)({
-        data: {
-          from: 'live-preview',
-          action: 'INSPECTOR_MODE_CHANGED',
-          isInspectorActive: false,
-        },
-      } as MessageEvent);
-
-      (listener.mock.calls[0][1] as EventListener)({
-        data: {
-          from: 'live-preview',
-          action: 'UNKNOWN_REFERENCE_LOADED',
-          reference: asset,
-        },
-      } as MessageEvent);
-
-      const result = await promise;
-
-      expect(result).toEqual(expected);
-    });
-
-    it('dedupes requests', async () => {
-      const promise = resolveReference({
-        entityReferenceMap: new Map(),
-        referenceId: '1',
-        isAsset: true,
-        locale
-      });
-
-      const promise2 = resolveReference({
-        entityReferenceMap: new Map(),
-        referenceId: '1',
-        isAsset: true,
-        locale
-      });
-
-      (listener.mock.calls[0][1] as EventListener)({
-        data: {
-          from: 'live-preview',
-          action: 'UNKNOWN_REFERENCE_LOADED',
-          reference: asset,
-        },
-      } as MessageEvent);
-
-      const result = await promise;
-      const result2 = await promise2;
-
-      expect(result).toEqual(expected);
-      expect(result2).toEqual(expected);
-      expect(listener).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -198,38 +110,26 @@ describe('resolveReference', () => {
       const result = await resolveReference({
         entityReferenceMap: new Map([['1', entry]]),
         referenceId: '1',
-        locale
+        locale,
       });
 
       expect(result).toEqual(expected);
     });
 
     it('resolves it from the editor', async () => {
-      const promise = resolveReference({
+      const result = await resolveReference({
         entityReferenceMap: new Map(),
-        referenceId: '1',
-        locale
+        referenceId: cdaEntry.sys.id,
+        locale,
       });
 
-      expect(listener).toHaveBeenCalledTimes(1);
-      expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
-      expect(sendMessageToEditor).toHaveBeenCalledWith({
-        action: 'ENTITY_NOT_KNOWN',
-        referenceEntityId: '1',
+      expect(result.typeName).toBe('TopicProductFeature');
+      expect(result.reference.fields).toEqual({
+        internalName: { [locale]: cdaEntry.fields.internalName },
+        longDescription: { [locale]: cdaEntry.fields.longDescription },
+        name: { [locale]: cdaEntry.fields.name },
+        shortDescription: { [locale]: cdaEntry.fields.shortDescription },
       });
-
-      (listener.mock.calls[0][1] as EventListener)({
-        data: {
-          from: 'live-preview',
-          action: 'UNKNOWN_REFERENCE_LOADED',
-          reference: entry,
-          contentType: entry.sys.contentType,
-        },
-      } as MessageEvent);
-
-      const result = await promise;
-
-      expect(result).toEqual(expected);
     });
   });
 });
