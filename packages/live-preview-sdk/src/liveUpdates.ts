@@ -1,5 +1,6 @@
 import type { AssetProps, EntryProps } from 'contentful-management';
 
+import { ContentfulSubscribeConfig } from '.';
 import * as gql from './graphql';
 import { parseGraphQLParams } from './graphql/queryUtils';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
@@ -16,9 +17,8 @@ import {
   MessageFromEditor,
   EntryUpdatedMessage,
   GraphQLParams,
+  LivePreviewPostMessageMethods,
 } from './types';
-
-import { ContentfulSubscribeConfig } from '.';
 
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;
@@ -180,7 +180,10 @@ export class LiveUpdates {
 
   /** Receives the data from the message event handler and calls the subscriptions */
   public async receiveMessage(message: MessageFromEditor): Promise<void> {
-    if (message.action === 'ENTRY_UPDATED') {
+    if (
+      ('action' in message && message.action === 'ENTRY_UPDATED') ||
+      message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED
+    ) {
       const { entity, contentType, entityReferenceMap } = message as EntryUpdatedMessage;
 
       await Promise.all(
@@ -279,8 +282,8 @@ export class LiveUpdates {
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.
-    sendMessageToEditor({
-      action: 'SUBSCRIBED',
+    sendMessageToEditor(LivePreviewPostMessageMethods.SUBSCRIBED, {
+      action: LivePreviewPostMessageMethods.SUBSCRIBED,
       type: isGQL ? 'GQL' : 'REST',
       locale: config.locale || this.defaultLocale,
     });

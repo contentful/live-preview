@@ -1,4 +1,5 @@
 import type { Asset, Entry, UnresolvedLink } from 'contentful';
+
 import { get } from './utils';
 
 /**
@@ -6,12 +7,12 @@ import { get } from './utils';
  * Can be extened for the different loading behaviours (editor, production, ..)
  */
 export class EntityStore {
-  protected locale: string
+  protected locale: string;
   protected entitiesMap: Map<string, Entry | Asset>;
 
-  constructor({ entities, locale }: { entities: Array<Entry | Asset>, locale: string }) {
+  constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
     this.entitiesMap = new Map(entities.map((entity) => [entity.sys.id, entity]));
-    this.locale = locale
+    this.locale = locale;
   }
 
   public get entities() {
@@ -29,7 +30,8 @@ export class EntityStore {
     const entity = this.entitiesMap.get(entityLink.sys.id);
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Composition references unresolved entity: ${entityLink}`);
+      // TODO: move to `debug` utils once it is extracted
+      console.warn(`Unresolved entity reference: ${entityLink}`);
       return;
     }
 
@@ -56,15 +58,27 @@ export class EntityStore {
     return entity as Array<Asset | Entry>;
   }
 
-  public async fetchAsset(id: string): Promise<Asset> {
-    return this.getEntitiesFromMap([id])[0] as Asset;
+  public async fetchAsset(id: string): Promise<Asset | undefined> {
+    try {
+      return this.getEntitiesFromMap([id])[0] as Asset;
+    } catch (err) {
+      // TODO: move to `debug` utils once it is extracted
+      console.warn(`Asset "${id}" is not in the store`);
+      return undefined;
+    }
   }
   public async fetchAssets(ids: string[]): Promise<Asset[]> {
     return this.getEntitiesFromMap(ids) as Asset[];
   }
 
-  public async fetchEntry(id: string): Promise<Entry> {
-    return this.getEntitiesFromMap([id])[0] as Entry;
+  public async fetchEntry(id: string): Promise<Entry | undefined> {
+    try {
+      return this.getEntitiesFromMap([id])[0] as Entry;
+    } catch (err) {
+      // TODO: move to `debug` utils once it is extracted
+      console.warn(`Entry "${id}" is not in the store`);
+      return undefined;
+    }
   }
 
   public async fetchEntries(ids: string[]): Promise<Entry[]> {

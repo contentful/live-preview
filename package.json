@@ -24,7 +24,7 @@
     "prepare": "husky install",
     "build": "lerna run build",
     "start": "lerna run --stream start",
-    "prepublish": "lerna run build",
+    "prepublishOnly": "lerna run build",
     "cm": "git-cz"
   },
   "dependencies": {},

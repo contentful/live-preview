@@ -1,15 +1,17 @@
 import * as packageJson from '../../package.json';
-import type { EditorMessage, MessageFromSDK } from '../types';
+import type { EditorMessage, PostMessageMethods, MessageFromSDK } from '../types';
 import { debug } from './debug';
 
 /**
  * Sends the given message to the editor
  * enhances it with the information necessary to be accepted
  */
-export function sendMessageToEditor(data: EditorMessage): void {
+export function sendMessageToEditor(method: PostMessageMethods, data: EditorMessage): void {
   const message: MessageFromSDK = {
     ...data,
+    method,
     from: 'live-preview',
+    source: 'live-preview-sdk',
     location: window.location.href,
     version: packageJson.version || '2.2.0',
   };

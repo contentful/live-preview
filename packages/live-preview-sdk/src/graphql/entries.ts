@@ -1,9 +1,6 @@
 import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { EntryProps } from 'contentful-management';
 
-import { updateAsset } from './assets';
-import { isRelevantField, updateAliasedInformation } from './queryUtils';
-import { buildCollectionName } from './utils';
 import {
   isPrimitiveField,
   updatePrimitiveField,
@@ -24,6 +21,9 @@ import {
   isAsset,
   GraphQLParams,
 } from '../types';
+import { updateAsset } from './assets';
+import { isRelevantField, updateAliasedInformation } from './queryUtils';
+import { buildCollectionName } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -236,7 +236,7 @@ async function updateReferenceAssetField({
     entityReferenceMap,
     referenceId: updatedReference.sys.id,
     isAsset: true,
-    locale
+    locale,
   });
 
   return updateAsset(
@@ -257,7 +257,7 @@ async function updateReferenceEntryField({
   const { reference, typeName } = await resolveReference({
     entityReferenceMap,
     referenceId: updatedReference.sys.id,
-    locale
+    locale,
   });
 
   // If we have the typename of the updated reference, we can work with it
