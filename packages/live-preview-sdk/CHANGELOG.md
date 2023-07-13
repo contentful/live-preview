@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.4.11...@contentful/live-preview@2.5.0) (2023-07-13)
+
+
+### Features
+
+* **sdk:** extract entity store for re-usability ([a8fbd76](https://github.com/contentful/live-preview/commit/a8fbd76d982c0a247ca84f51677b3250bc4d3e3c))
+
+
+
+
+
 ## [2.4.11](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.4.10...@contentful/live-preview@2.4.11) (2023-07-10)
 
 

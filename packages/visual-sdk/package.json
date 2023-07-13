@@ -1,7 +1,7 @@
 {
   "name": "@contentful/visual-sdk",
   "author": "Contentful GmbH",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Base SDK for building a visual SDK with contentful",
   "license": "MIT",
   "main": "dist/index.js",
@@ -47,10 +47,9 @@
     "coverage": "vitest --coverage",
     "prepublish": "yarn build"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@swc/core": "1.3.68",
     "@swc/cli": "0.1.62",
+    "@swc/core": "1.3.68",
     "@swc/jest": "0.2.26",
     "@types/jest": "29.5.3",
     "contentful": "10.3.3",
