@@ -33,6 +33,7 @@ Live preview SDK for both the inspector mode connection + live content updates b
 ### Requirements
 
 - Node.js: `>=16.15.1`
+- React.js `>=17`
 
 To install live preview simply run one of the following commands.
 

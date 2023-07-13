@@ -45,7 +45,7 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "prepublishOnly": "yarn build"
+    "prepublish": "yarn build"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
@@ -73,7 +73,7 @@
     "vitest": "^0.33.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   }
 }
