@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.5.0...@contentful/live-preview@2.5.1) (2023-07-14)
+
+
+### Bug Fixes
+
+* circular references call stack size ([4ca4bf5](https://github.com/contentful/live-preview/commit/4ca4bf5ff6db252aed898891e54a410729f0b9cc))
+
+
+
+
+
 # [2.5.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.4.11...@contentful/live-preview@2.5.0) (2023-07-13)
 
 
