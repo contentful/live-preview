@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
+import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
 import { InspectorMode } from '../inspectorMode';
-import { LivePreviewPostMessageMethods } from '../types';
+import { LivePreviewPostMessageMethods } from '../messages';
 
 const locale = 'en-US';
 
@@ -34,7 +35,7 @@ describe('InspectorMode', () => {
         action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
         from: 'live-preview',
         method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
-        source: 'live-preview-app',
+        source: LIVE_PREVIEW_EDITOR_SOURCE,
         isInspectorActive: true,
       });
       expect(spy).toHaveBeenCalledWith('contentful-inspector--active', true);

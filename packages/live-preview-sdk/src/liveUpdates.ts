@@ -1,10 +1,11 @@
 import type { AssetProps, EntryProps } from 'contentful-management';
 
-import { ContentfulSubscribeConfig } from '.';
+import type { ContentfulSubscribeConfig, EntryUpdatedMessage, MessageFromEditor } from '.';
 import * as gql from './graphql';
 import { parseGraphQLParams } from './graphql/queryUtils';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
 import { validateDataForLiveUpdates } from './helpers/validation';
+import { LivePreviewPostMessageMethods } from './messages';
 import * as rest from './rest';
 import {
   Argument,
@@ -14,10 +15,7 @@ import {
   EntityReferenceMap,
   hasSysInformation,
   Subscription,
-  MessageFromEditor,
-  EntryUpdatedMessage,
   GraphQLParams,
-  LivePreviewPostMessageMethods,
 } from './types';
 
 interface MergeEntityProps {

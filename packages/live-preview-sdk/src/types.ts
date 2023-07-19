@@ -1,6 +1,4 @@
-import type { RequestEntitiesMessage, RequestedEntitiesMessage } from '@contentful/visual-sdk';
-import { PostMessageMethods as StorePostMessageMethods } from '@contentful/visual-sdk';
-import type { AssetProps, EntryProps, ContentTypeProps, SysLink } from 'contentful-management';
+import type { AssetProps, EntryProps, ContentTypeProps } from 'contentful-management';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
@@ -50,129 +48,12 @@ export function hasSysInformation(entity: unknown): entity is EntityWithSys {
 export type Argument = Entity | Entity[];
 export type SubscribeCallback = (data: Argument) => void;
 
-export enum LivePreviewPostMessageMethods {
-  IFRAME_CONNECTED = 'IFRAME_CONNECTED',
-  TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
-  URL_CHANGED = 'URL_CHANGED',
-  SUBSCRIBED = 'SUBSCRIBED',
-
-  ENTRY_UPDATED = 'ENTRY_UPDATED',
-  INSPECTOR_MODE_CHANGED = 'INSPECTOR_MODE_CHANGED',
-  DEBUG_MODE_ENABLED = 'DEBUG_MODE_ENABLED',
-
-  /**
-   * @deprecated use PostMessageStoreMethods instead
-   */
-  ENTITY_NOT_KNOWN = 'ENTITY_NOT_KNOWN',
-  /**
-   * @deprecated use PostMessageStoreMethods instead
-   */
-  UNKNOWN_REFERENCE_LOADED = 'UNKNOWN_REFERENCE_LOADED',
-}
-
-export type PostMessageMethods = LivePreviewPostMessageMethods | StorePostMessageMethods;
-
 export interface CollectionItem {
   sys: SysProps;
   __typename?: string;
 }
 
-export type IframeConnectedMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.IFRAME_CONNECTED;
-  connected: true;
-  tags: number;
-  locale: string;
-};
-
-export type TaggedFieldClickMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED;
-  fieldId: string;
-  entryId: string;
-  locale: string;
-};
-
-/** @deprecated use RequestEntitiesMessage instead */
-export type UnknownEntityMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.ENTITY_NOT_KNOWN;
-  referenceEntityId: string;
-  referenceContentType?: string;
-};
-
-export type UrlChangedMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.URL_CHANGED;
-};
-
-export type SubscribedMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.SUBSCRIBED;
-  type: 'GQL' | 'REST';
-  locale: string;
-};
-
 export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}
-
-export type EditorMessage =
-  | IframeConnectedMessage
-  | TaggedFieldClickMessage
-  | UnknownEntityMessage
-  | UrlChangedMessage
-  | SubscribedMessage
-  | RequestEntitiesMessage;
-
-export type MessageFromSDK = EditorMessage & {
-  method: PostMessageMethods;
-  /** @deprecated use source instead */
-  from: 'live-preview';
-  source: 'live-preview-sdk';
-  location: string;
-  version: string;
-};
-
-export type EntryUpdatedMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.ENTRY_UPDATED;
-  method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
-  entity: EntryProps | AssetProps;
-  contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
-};
-
-/** @deprecated use RequestEntitiesMessage instead */
-export type UnknownReferenceLoaded = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.UNKNOWN_REFERENCE_LOADED;
-  reference: EntryProps | AssetProps;
-  contentType?: SysLink;
-  entityReferenceMap: EntityReferenceMap;
-};
-
-export type InspectorModeChanged = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED;
-  isInspectorActive: boolean;
-};
-
-export type DebugModeEnabled = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED;
-};
-
-export type MessageFromEditor = (
-  | EntryUpdatedMessage
-  | UnknownReferenceLoaded
-  | InspectorModeChanged
-  | DebugModeEnabled
-  | RequestedEntitiesMessage
-) & {
-  method: PostMessageMethods;
-  /** @deprecated use source instead */
-  from: 'live-preview';
-  source: 'live-preview-app';
-};
 
 export type UpdateEntryProps = {
   contentType: ContentType;

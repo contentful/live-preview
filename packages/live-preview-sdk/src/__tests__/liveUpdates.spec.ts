@@ -2,9 +2,11 @@
 import { AssetProps, EntryProps } from 'contentful-management';
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
+import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
 import * as helpers from '../helpers';
 import { LiveUpdates } from '../liveUpdates';
-import { ContentType, LivePreviewPostMessageMethods } from '../types';
+import { LivePreviewPostMessageMethods } from '../messages';
+import { ContentType } from '../types';
 import assetFromEntryEditor from './fixtures/assetFromEntryEditor.json';
 import landingPageContentType from './fixtures/landingPageContentType.json';
 import nestedCollectionFromPreviewApp from './fixtures/nestedCollectionFromPreviewApp.json';
@@ -64,7 +66,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
     });
 
@@ -80,7 +82,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
     });
 
@@ -118,7 +120,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
     });
 
@@ -132,7 +134,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
     });
 
@@ -150,7 +152,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
       method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
       from: 'live-preview',
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
     });
 
     expect(callback).not.toHaveBeenCalled();
@@ -168,7 +170,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
     });
 
@@ -184,7 +186,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
       contentType: {} as unknown as ContentType,
     });
@@ -207,7 +209,7 @@ describe('LiveUpdates', () => {
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
-      source: 'live-preview-app',
+      source: LIVE_PREVIEW_EDITOR_SOURCE,
       entityReferenceMap: new Map(),
     });
 
