@@ -1,6 +1,6 @@
 import './styles.css';
 
-import type { DocumentNode } from 'graphql';
+import { type DocumentNode } from 'graphql';
 
 import {
   sendMessageToEditor,
@@ -9,14 +9,14 @@ import {
   debug,
   isInsideIframe,
 } from './helpers';
+import { isValidMessage } from './helpers/validateMessage';
 import { InspectorMode } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
+import { LivePreviewPostMessageMethods, MessageFromEditor } from './messages';
 import {
   Argument,
   InspectorModeTags,
-  LivePreviewPostMessageMethods,
   LivePreviewProps,
-  MessageFromEditor,
   SubscribeCallback,
   TagAttributes,
 } from './types';
@@ -94,8 +94,9 @@ export class ContentfulLivePreview {
 
       // bind event listeners for interactivity
       window.addEventListener('message', (event: MessageEvent<MessageFromEditor>) => {
-        if (typeof event.data !== 'object' || !event.data) return;
-        if (event.data.from !== 'live-preview') return;
+        if (!isValidMessage(event)) {
+          return;
+        }
 
         debug.log('Received message', event.data);
 
@@ -124,6 +125,7 @@ export class ContentfulLivePreview {
       });
 
       // tell the editor that there's a SDK
+      // TODO: switch to CONNECTED event once the editor supports it
       sendMessageToEditor(LivePreviewPostMessageMethods.IFRAME_CONNECTED, {
         action: LivePreviewPostMessageMethods.IFRAME_CONNECTED,
         connected: true,
@@ -182,3 +184,6 @@ export class ContentfulLivePreview {
     return this.liveUpdatesEnabled;
   }
 }
+
+export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
+export * from './messages';

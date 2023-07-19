@@ -9,3 +9,6 @@ export const TOOLTIP_HEIGHT = 32;
 export const TOOLTIP_PADDING_LEFT = 5;
 
 export const MAX_DEPTH = 5;
+
+export const LIVE_PREVIEW_EDITOR_SOURCE = 'live-preview-editor' as const;
+export const LIVE_PREVIEW_SDK_SOURCE = 'live-preview-sdk' as const;

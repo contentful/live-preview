@@ -1,5 +1,6 @@
 import * as packageJson from '../../package.json';
-import type { EditorMessage, PostMessageMethods, MessageFromSDK } from '../types';
+import { PostMessageMethods } from '../messages';
+import type { EditorMessage, MessageFromSDK } from '../messages';
 import { debug } from './debug';
 
 /**

@@ -8,11 +8,11 @@ import {
 } from './constants';
 import { sendMessageToEditor } from './helpers';
 import {
-  InspectorModeChanged,
+  InspectorModeChangedMessage,
   LivePreviewPostMessageMethods,
   MessageFromEditor,
-  TagAttributes,
-} from './types';
+} from './messages';
+import { TagAttributes } from './types';
 
 export class InspectorMode {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
@@ -43,7 +43,7 @@ export class InspectorMode {
       // Toggle the contentful-inspector--active class on the body element based on the isInspectorActive boolean
       document.body.classList.toggle(
         'contentful-inspector--active',
-        (data as InspectorModeChanged).isInspectorActive
+        (data as InspectorModeChangedMessage).isInspectorActive
       );
     }
   }
