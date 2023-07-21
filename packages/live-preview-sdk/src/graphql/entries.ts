@@ -1,5 +1,6 @@
 import { BLOCKS, INLINES } from '@contentful/rich-text-types';
-import type { EntryProps } from 'contentful-management';
+import { Asset, Entry } from 'contentful';
+import type { SetOptional } from 'type-fest';
 
 import {
   isPrimitiveField,
@@ -9,6 +10,7 @@ import {
   debug,
   generateTypeName,
 } from '../helpers';
+import { SUPPORTED_RICHTEXT_EMBEDS, isAsset, isRichText } from '../helpers/entities';
 import {
   CollectionItem,
   SysProps,
@@ -18,7 +20,6 @@ import {
   UpdateFieldProps,
   UpdateReferenceFieldProps,
   UpdateEntryProps,
-  isAsset,
   GraphQLParams,
 } from '../types';
 import { updateAsset } from './assets';
@@ -56,7 +57,6 @@ export async function updateEntry({
           dataFromPreviewApp: copyOfDataFromPreviewApp,
           updateFromEntryEditor,
           name,
-          locale,
         });
       } else if (field.type === 'RichText') {
         await updateRichTextField({
@@ -111,17 +111,10 @@ async function processNode(
   gqlParams?: GraphQLParams
 ) {
   // Check if the node is an embedded entity
-  if (
-    node.nodeType === BLOCKS.EMBEDDED_ENTRY ||
-    node.nodeType === BLOCKS.EMBEDDED_ASSET ||
-    node.nodeType === INLINES.EMBEDDED_ENTRY ||
-    node.nodeType === INLINES.ENTRY_HYPERLINK ||
-    node.nodeType === INLINES.ASSET_HYPERLINK
-  ) {
+  if (SUPPORTED_RICHTEXT_EMBEDS.includes(node.nodeType)) {
     if (node.data && node.data.target && node.data.target.sys) {
-      const id = node.data.target?.sys.id || '';
       const updatedReference = {
-        sys: { id: id, type: 'Link', linkType: node.data.target.sys.type },
+        sys: { ...node.data.target.sys, type: 'Link', linkType: node.data.target.sys.type },
       };
 
       let ref;
@@ -214,7 +207,7 @@ async function updateRichTextField({
 
   // Update the rich text JSON data
   (dataFromPreviewApp[name] as { json: unknown }).json =
-    updateFromEntryEditor?.fields?.[name]?.[locale] ?? null;
+    updateFromEntryEditor?.fields?.[name] || null;
 
   // Update the rich text embedded entries
   dataFromPreviewApp[name].links = await processRichTextField(
@@ -231,7 +224,7 @@ async function updateReferenceAssetField({
   entityReferenceMap,
   locale,
   gqlParams,
-}: UpdateReferenceFieldProps) {
+}: SetOptional<Required<UpdateReferenceFieldProps>, 'gqlParams'>) {
   const { reference } = await resolveReference({
     entityReferenceMap,
     referenceId: updatedReference.sys.id,
@@ -240,9 +233,12 @@ async function updateReferenceAssetField({
   });
 
   return updateAsset(
-    { ...referenceFromPreviewApp, ...updatedReference, __typename: ASSET_TYPENAME },
+    {
+      ...referenceFromPreviewApp,
+      ...updatedReference,
+      __typename: ASSET_TYPENAME,
+    } as unknown as Entity & CollectionItem,
     reference,
-    locale,
     gqlParams
   );
 }
@@ -253,7 +249,7 @@ async function updateReferenceEntryField({
   entityReferenceMap,
   locale,
   gqlParams,
-}: UpdateReferenceFieldProps) {
+}: SetOptional<Required<UpdateReferenceFieldProps>, 'gqlParams'>) {
   const { reference, typeName } = await resolveReference({
     entityReferenceMap,
     referenceId: updatedReference.sys.id,
@@ -265,7 +261,7 @@ async function updateReferenceEntryField({
     ...referenceFromPreviewApp,
     ...updatedReference,
     __typename: typeName,
-  } as Entity & CollectionItem;
+  } as unknown as Entity & CollectionItem;
 
   // TODO: kind of duplication with line 46, check if we can combine them
   for (const key in reference.fields) {
@@ -273,15 +269,15 @@ async function updateReferenceEntryField({
       continue;
     }
 
-    const value = reference.fields[key as keyof typeof reference.fields][locale];
+    const value = reference.fields[key as keyof typeof reference.fields];
     if (value && typeof value === 'object') {
-      if (value.nodeType === 'document') {
+      if (isRichText(value)) {
         // richtext
         merged[key] = { json: value };
         merged[key].links = await processRichTextField(value, entityReferenceMap, locale);
       }
 
-      if (value.sys) {
+      if ('sys' in value) {
         // single reference
         merged[key] = value;
         await updateSingleRefField({
@@ -361,11 +357,12 @@ async function updateSingleRefField({
   entityReferenceMap,
   gqlParams,
 }: UpdateFieldProps) {
+  const updatedReference = updateFromEntryEditor?.fields?.[name] as Asset | Entry | undefined;
   dataFromPreviewApp[name] = await updateReferenceField({
-    referenceFromPreviewApp: dataFromPreviewApp[name] as EntryProps & {
+    referenceFromPreviewApp: dataFromPreviewApp[name] as Entry & {
       __typename?: string;
     },
-    updatedReference: updateFromEntryEditor?.fields?.[name]?.[locale],
+    updatedReference,
     entityReferenceMap: entityReferenceMap as EntityReferenceMap,
     locale,
     gqlParams,
@@ -382,15 +379,15 @@ async function updateMultiRefField({
 }: UpdateFieldProps) {
   const fieldName = buildCollectionName(name);
 
-  const list = updateFromEntryEditor?.fields?.[name]?.[locale] ?? [];
+  const list = (updateFromEntryEditor?.fields?.[name] || []) as Entry[];
   const dataFromPreviewAppItems = await Promise.all(
-    list.map(async (updatedItem: Entity & CollectionItem) => {
+    list.map(async (updatedItem) => {
       const itemFromPreviewApp = (
         dataFromPreviewApp[fieldName] as { items: CollectionItem[] } | undefined
       )?.items?.find((item) => item.sys.id === updatedItem.sys.id);
 
       const result = await updateReferenceField({
-        referenceFromPreviewApp: itemFromPreviewApp as unknown as EntryProps & {
+        referenceFromPreviewApp: itemFromPreviewApp as unknown as Entry & {
           __typename?: string;
         },
         updatedReference: updatedItem,
@@ -407,6 +404,5 @@ async function updateMultiRefField({
     dataFromPreviewApp[fieldName] = { items: [] };
   }
 
-  (dataFromPreviewApp[fieldName] as { items: CollectionItem[] }).items =
-    dataFromPreviewAppItems.filter(Boolean);
+  dataFromPreviewApp[fieldName].items = dataFromPreviewAppItems.filter(Boolean);
 }

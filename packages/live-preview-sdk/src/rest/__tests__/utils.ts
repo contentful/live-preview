@@ -1,6 +1,6 @@
-import type { AssetProps, EntryProps } from 'contentful-management';
+import type { Asset, Entry } from 'contentful';
 
-export function patchField<T extends EntryProps | AssetProps>(
+export function patchField<T extends Asset | Entry>(
   originalData: T,
   name: keyof T['fields'],
   value: unknown

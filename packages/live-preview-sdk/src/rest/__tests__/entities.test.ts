@@ -1,4 +1,5 @@
-import type { AssetProps, ContentTypeProps, EntryProps } from 'contentful-management';
+import type { Asset, Entry } from 'contentful';
+import type { ContentTypeProps } from 'contentful-management';
 import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
@@ -17,17 +18,20 @@ import {
   resolvedRichTextLinks,
   unresolvedRichTextLinks,
 } from './fixtures/data';
-import dataFromPreviewApp from './fixtures/dataFromPreviewApp.json';
-import asset from './fixtures/updateAssetFromEntryEditor.json';
-import entry from './fixtures/updateFromEntryEditor.json';
+import dataFromPreviewAppJSON from './fixtures/dataFromPreviewApp.json';
+import assetJSON from './fixtures/updateAssetFromEntryEditor.json';
+import entryJSON from './fixtures/updateFromEntryEditor.json';
 import { patchField } from './utils';
 
 vi.mock('../../helpers/resolveReference');
 
 const contentTypeEntry = contentTypeEntryJSON as ContentTypeProps;
+const entry = entryJSON as unknown as Entry;
+const asset = assetJSON as unknown as Asset;
+const dataFromPreviewApp = dataFromPreviewAppJSON as unknown as Entry;
 
 describe('Update REST entry', () => {
-  const defaultEntityReferenceMap = new Map<string, EntryProps | AssetProps>([
+  const defaultEntityReferenceMap = new Map<string, Entry | Asset>([
     [newEntryReference.sys.id, newEntryReference],
     [newAssetReference.sys.id, newAssetReference],
     [
@@ -35,11 +39,9 @@ describe('Update REST entry', () => {
       {
         sys: { id: referenceWithRichTextId },
         fields: {
-          richTextFieldName: {
-            [EN]: unresolvedRichTextLinks,
-          },
+          richTextFieldName: unresolvedRichTextLinks,
         },
-      } as unknown as EntryProps,
+      } as unknown as Entry,
     ],
   ]);
   beforeEach(() => {
@@ -60,8 +62,8 @@ describe('Update REST entry', () => {
     entityReferenceMap = defaultEntityReferenceMap,
   }: {
     contentType?: ContentTypeProps;
-    dataFromPreviewApp: EntryProps;
-    updateFromEntryEditor?: EntryProps | AssetProps;
+    dataFromPreviewApp: Entry;
+    updateFromEntryEditor?: Entry | Asset;
     locale?: string;
     entityReferenceMap?: EntityReferenceMap;
   }) => {
@@ -74,7 +76,7 @@ describe('Update REST entry', () => {
       locale,
       entityReferenceMap,
       0,
-      visitedReferences,
+      visitedReferences
     );
   };
 
@@ -84,7 +86,7 @@ describe('Update REST entry', () => {
   });
 
   it('updates primitive fields for assets', async () => {
-    const assetFromPreviewApp = dataFromPreviewApp.fields.mediaOneFile as unknown as EntryProps;
+    const assetFromPreviewApp = dataFromPreviewApp.fields.mediaOneFile as unknown as Entry;
 
     const result = await updateFn({
       contentType: contentTypeAsset,
@@ -96,9 +98,9 @@ describe('Update REST entry', () => {
       ...assetFromPreviewApp,
       fields: {
         ...assetFromPreviewApp.fields,
-        title: asset.fields.title[EN],
-        description: asset.fields.description[EN],
-        file: asset.fields.file[EN],
+        title: asset.fields.title,
+        description: asset.fields.description,
+        file: asset.fields.file,
       },
     });
   });
@@ -116,29 +118,28 @@ describe('Update REST entry', () => {
     it('adds a single reference', async () => {
       const result = await updateFn({
         dataFromPreviewApp: patchField(dataFromPreviewApp, 'refOneSameSpace', undefined),
-        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
-          [EN]: { sys: newEntryReference.sys },
-        }),
+        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', { sys: newEntryReference.sys }),
       });
 
       expect(result).toEqual(
-        patchField(defaultResult, 'refOneSameSpace', newEntryReferenceTransformed),
+        patchField(defaultResult, 'refOneSameSpace', newEntryReferenceTransformed)
       );
     });
 
     it('adds multi references', async () => {
       const result = await updateFn({
         dataFromPreviewApp: patchField(dataFromPreviewApp, 'refManySameSpace', undefined),
-        updateFromEntryEditor: patchField(entry, 'refManySameSpace', {
-          [EN]: [{ sys: newEntryReference.sys }, { sys: newAssetReference.sys }],
-        }),
+        updateFromEntryEditor: patchField(entry, 'refManySameSpace', [
+          { sys: newEntryReference.sys },
+          { sys: newAssetReference.sys },
+        ]),
       });
 
       expect(result).toEqual(
         patchField(defaultResult, 'refManySameSpace', [
           newEntryReferenceTransformed,
           newAssetReferenceTransformed,
-        ]),
+        ])
       );
     });
 
@@ -148,16 +149,17 @@ describe('Update REST entry', () => {
           newEntryReferenceTransformed,
           newAssetReferenceTransformed,
         ]),
-        updateFromEntryEditor: patchField(entry, 'refManySameSpace', {
-          [EN]: [{ sys: newAssetReference.sys }, { sys: newEntryReference.sys }],
-        }),
+        updateFromEntryEditor: patchField(entry, 'refManySameSpace', [
+          { sys: newAssetReference.sys },
+          { sys: newEntryReference.sys },
+        ]),
       });
 
       expect(result).toEqual(
         patchField(defaultResult, 'refManySameSpace', [
           newAssetReferenceTransformed,
           newEntryReferenceTransformed,
-        ]),
+        ])
       );
     });
 
@@ -167,13 +169,13 @@ describe('Update REST entry', () => {
           newEntryReferenceTransformed,
           newAssetReferenceTransformed,
         ]),
-        updateFromEntryEditor: patchField(entry, 'refManySameSpace', {
-          [EN]: [{ sys: newEntryReference.sys }],
-        }),
+        updateFromEntryEditor: patchField(entry, 'refManySameSpace', [
+          { sys: newEntryReference.sys },
+        ]),
       });
 
       expect(result).toEqual(
-        patchField(defaultResult, 'refManySameSpace', [newEntryReferenceTransformed]),
+        patchField(defaultResult, 'refManySameSpace', [newEntryReferenceTransformed])
       );
     });
 
@@ -192,10 +194,13 @@ describe('Update REST entry', () => {
       const result = await updateFn({
         dataFromPreviewApp: patchField(defaultResult, 'refOneSameSpace', undefined),
         updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
-          [EN]: { sys: { id: referenceWithRichTextId } },
+          sys: { id: referenceWithRichTextId },
         }),
       });
-      expect(result.fields.refOneSameSpace.fields.richTextFieldName).toEqual(resolvedRichTextLinks);
+
+      expect(
+        (result.fields.refOneSameSpace as Entry | undefined)?.fields?.richTextFieldName
+      ).toEqual(resolvedRichTextLinks);
     });
   });
 
@@ -206,11 +211,9 @@ describe('Update REST entry', () => {
       const circularReference = {
         sys: { id: circularReferenceId },
         fields: {
-          reference: {
-            [EN]: { sys: { id: circularReferenceId, linkType: 'Entry', type: 'Link' } },
-          },
+          reference: { sys: { id: circularReferenceId, linkType: 'Entry', type: 'Link' } },
         },
-      } as unknown as EntryProps;
+      } as unknown as Entry;
 
       // Add circular reference to map
       defaultEntityReferenceMap.set(circularReferenceId, circularReference);
@@ -218,16 +221,14 @@ describe('Update REST entry', () => {
       // Update entry to contain the circular reference
       const result = await updateFn({
         dataFromPreviewApp,
-        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', {
-          [EN]: { sys: circularReference.sys },
-        }),
+        updateFromEntryEditor: patchField(entry, 'refOneSameSpace', { sys: circularReference.sys }),
       });
 
       // Assert that the recursion stops at a certain depth
       let depthCounter = 0;
-      let currentReference = result.fields.refOneSameSpace;
+      let currentReference = result.fields.refOneSameSpace as Entry | undefined;
       while (currentReference && currentReference.fields && currentReference.fields.reference) {
-        currentReference = currentReference.fields.reference;
+        currentReference = currentReference.fields.reference as Entry | undefined;
         depthCounter += 1;
       }
 

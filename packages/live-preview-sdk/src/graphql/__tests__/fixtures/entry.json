@@ -65,131 +65,99 @@
     }
   },
   "fields": {
-    "shortText": {
-      "en-US": "Short Text"
-    },
-    "shortTextList": {
-      "en-US": ["item 1", "item 2", "item 3"]
-    },
-    "longText": {
-      "en-US": "Long Text"
-    },
-    "numberInteger": {
-      "en-US": 1
-    },
-    "numberDecimal": {
-      "en-US": 1
-    },
-    "dateTime": {
-      "en-US": "2023-03-14T00:00+01:00"
-    },
+    "shortText": "Short Text",
+    "shortTextList": ["item 1", "item 2", "item 3"],
+    "longText": "Long Text",
+    "numberInteger": 1,
+    "numberDecimal": 1,
+    "dateTime": "2023-03-14T00:00+01:00",
     "location": {
-      "en-US": {
-        "lon": 13.383788200574154,
-        "lat": 52.53941258524417
-      }
+      "lon": 13.383788200574154,
+      "lat": 52.53941258524417
     },
     "json": {
-      "en-US": {
-        "test": "This is JSON"
-      }
+      "test": "This is JSON"
     },
     "media": {
-      "en-US": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Asset",
+        "id": "4YRUBbjYKnVAU17retktzF"
+      }
+    },
+    "mediaMany": [
+      {
         "sys": {
           "type": "Link",
           "linkType": "Asset",
           "id": "4YRUBbjYKnVAU17retktzF"
         }
+      },
+      {
+        "sys": {
+          "type": "Link",
+          "linkType": "Asset",
+          "id": "2bGsPN0EuQMOCc6sx3adsn"
+        }
       }
-    },
-    "mediaMany": {
-      "en-US": [
+    ],
+    "boolean": true,
+    "richText": {
+      "nodeType": "document",
+      "data": {},
+      "content": [
         {
-          "sys": {
-            "type": "Link",
-            "linkType": "Asset",
-            "id": "4YRUBbjYKnVAU17retktzF"
-          }
-        },
-        {
-          "sys": {
-            "type": "Link",
-            "linkType": "Asset",
-            "id": "2bGsPN0EuQMOCc6sx3adsn"
-          }
+          "nodeType": "paragraph",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "text",
+              "value": "Hello from Rich Text",
+              "marks": [],
+              "data": {}
+            }
+          ]
         }
       ]
     },
-    "boolean": {
-      "en-US": true
-    },
-    "richText": {
-      "en-US": {
-        "nodeType": "document",
-        "data": {},
-        "content": [
-          {
-            "nodeType": "paragraph",
-            "data": {},
-            "content": [
-              {
-                "nodeType": "text",
-                "value": "Hello from Rich Text",
-                "marks": [],
-                "data": {}
-              }
-            ]
-          }
-        ]
+    "reference": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Entry",
+        "id": "422a9DU6Yb01C8Hh9ISq5c"
       }
     },
-    "reference": {
-      "en-US": {
+    "referenceMany": [
+      {
         "sys": {
           "type": "Link",
           "linkType": "Entry",
-          "id": "422a9DU6Yb01C8Hh9ISq5c"
+          "id": "6oD6HTe8N77dQQhBqULQhD"
+        }
+      },
+      {
+        "sys": {
+          "type": "Link",
+          "linkType": "Entry",
+          "id": "4BAzEzgu8AR1hVWsvBNlzE"
         }
       }
-    },
-    "referenceMany": {
-      "en-US": [
-        {
-          "sys": {
-            "type": "Link",
-            "linkType": "Entry",
-            "id": "6oD6HTe8N77dQQhBqULQhD"
-          }
-        },
-        {
-          "sys": {
-            "type": "Link",
-            "linkType": "Entry",
-            "id": "4BAzEzgu8AR1hVWsvBNlzE"
-          }
-        }
-      ]
-    },
+    ],
     "crossSpaceReference": {
-      "en-US": {
+      "sys": {
+        "type": "ResourceLink",
+        "linkType": "Contentful:Entry",
+        "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
+      }
+    },
+    "crossSpaceReferenceMany": [
+      {
         "sys": {
           "type": "ResourceLink",
           "linkType": "Contentful:Entry",
           "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
         }
       }
-    },
-    "crossSpaceReferenceMany": {
-      "en-US": [
-        {
-          "sys": {
-            "type": "ResourceLink",
-            "linkType": "Contentful:Entry",
-            "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
-          }
-        }
-      ]
-    }
+    ]
   }
 }

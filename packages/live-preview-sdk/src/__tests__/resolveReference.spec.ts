@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { EditorEntityStore } from '@contentful/visual-sdk';
-import type { AssetProps, EntryProps } from 'contentful-management';
+import type { Asset, Entry } from 'contentful';
 import { describe, vi, it, beforeEach, afterEach, expect, Mock } from 'vitest';
 
 import { resolveReference } from '../helpers/resolveReference';
@@ -27,21 +27,17 @@ describe('resolveReference', () => {
   describe('asset', () => {
     const asset = {
       fields: {
-        file: { [locale]: { fileName: 'abc.jpg' } },
+        file: { fileName: 'abc.jpg' },
       },
       sys: {
         id: '1',
       },
-    } as unknown as AssetProps;
+    } as unknown as Asset;
 
     const expected = {
       reference: {
         fields: {
-          file: {
-            [locale]: {
-              fileName: 'abc.jpg',
-            },
-          },
+          file: { fileName: 'abc.jpg' },
         },
         sys: {
           id: '1',
@@ -69,17 +65,14 @@ describe('resolveReference', () => {
       });
 
       expect(result.typeName).toBe('Asset');
-      expect(result.reference.fields).toEqual({
-        title: { [locale]: cdaAsset.fields.title },
-        file: { [locale]: cdaAsset.fields.file },
-      });
+      expect(result.reference.fields).toEqual(cdaAsset.fields);
     });
   });
 
   describe('entries', () => {
     const entry = {
       fields: {
-        title: { 'en-US': 'Hello World' },
+        title: 'Hello World',
       },
       sys: {
         id: '1',
@@ -87,14 +80,12 @@ describe('resolveReference', () => {
           sys: { id: 'helloWorld' },
         },
       },
-    } as unknown as EntryProps;
+    } as unknown as Entry;
 
     const expected = {
       reference: {
         fields: {
-          title: {
-            'en-US': 'Hello World',
-          },
+          title: 'Hello World',
         },
         sys: {
           id: '1',
@@ -124,12 +115,7 @@ describe('resolveReference', () => {
       });
 
       expect(result.typeName).toBe('TopicProductFeature');
-      expect(result.reference.fields).toEqual({
-        internalName: { [locale]: cdaEntry.fields.internalName },
-        longDescription: { [locale]: cdaEntry.fields.longDescription },
-        name: { [locale]: cdaEntry.fields.name },
-        shortDescription: { [locale]: cdaEntry.fields.shortDescription },
-      });
+      expect(result.reference.fields).toEqual(cdaEntry.fields);
     });
   });
 });

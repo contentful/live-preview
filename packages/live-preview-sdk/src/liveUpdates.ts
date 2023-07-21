@@ -1,4 +1,4 @@
-import type { AssetProps, EntryProps } from 'contentful-management';
+import type { Asset, Entry } from 'contentful';
 
 import type { ContentfulSubscribeConfig, EntryUpdatedMessage, MessageFromEditor } from '.';
 import * as gql from './graphql';
@@ -21,7 +21,7 @@ import {
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;
   locale: string;
-  updateFromEntryEditor: EntryProps | AssetProps;
+  updateFromEntryEditor: Entry | Asset;
   contentType: ContentType;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
@@ -64,11 +64,11 @@ export class LiveUpdates {
     if ('__typename' in dataFromPreviewApp) {
       // GraphQL
       const data = await (dataFromPreviewApp.__typename === 'Asset'
-        ? gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as AssetProps, locale)
+        ? gql.updateAsset(dataFromPreviewApp, updateFromEntryEditor as Asset, gqlParams)
         : gql.updateEntry({
             contentType,
             dataFromPreviewApp,
-            updateFromEntryEditor: updateFromEntryEditor as EntryProps,
+            updateFromEntryEditor: updateFromEntryEditor as Entry,
             locale,
             entityReferenceMap,
             gqlParams,
@@ -86,8 +86,8 @@ export class LiveUpdates {
       return {
         data: await rest.updateEntity(
           contentType,
-          dataFromPreviewApp as EntryProps,
-          updateFromEntryEditor as EntryProps,
+          dataFromPreviewApp as Entry,
+          updateFromEntryEditor as Entry,
           locale,
           entityReferenceMap,
           depth,
@@ -119,7 +119,8 @@ export class LiveUpdates {
     let updated = false;
     // If the entity is cacheable and it was once proceeded we use this one as base
     let result: Entity =
-      (isCacheable ? this.storage.get(dataFromPreviewappId) : undefined) || dataFromPreviewApp;
+      (isCacheable ? this.storage.get(dataFromPreviewappId, params.locale) : undefined) ||
+      dataFromPreviewApp;
 
     if (hasSysInformation(result) && dataFromPreviewappId === params.updateFromEntryEditor.sys.id) {
       // Happy path, direct match from received and provided data
@@ -144,7 +145,7 @@ export class LiveUpdates {
 
     if (isCacheable) {
       // Cache the updated data for future updates
-      this.storage.set(dataFromPreviewappId, result);
+      this.storage.set(dataFromPreviewappId, params.locale, result);
     }
 
     return { data: result, updated };
@@ -177,7 +178,7 @@ export class LiveUpdates {
     return this.mergeNestedReference({ ...params, dataFromPreviewApp }, useCache);
   }
 
-  private isCfEntity(entity: unknown): entity is AssetProps | EntryProps {
+  private isCfEntity(entity: unknown): entity is Asset | Entry {
     return hasSysInformation(entity) && 'fields' in entity;
   }
 
@@ -224,14 +225,14 @@ export class LiveUpdates {
     }
   }
 
-  private async restore(data: Argument, id: string): Promise<void> {
+  private async restore(data: Argument, locale: string, id: string): Promise<void> {
     if (!data) {
       return;
     }
 
     const restoreLogic = (item: Entity) => {
       if (hasSysInformation(item)) {
-        const restoredItem = this.storage.get(item.sys.id);
+        const restoredItem = this.storage.get(item.sys.id, locale);
         if (restoredItem) {
           return restoredItem;
         }
@@ -274,6 +275,8 @@ export class LiveUpdates {
     }
 
     const id = generateUID();
+    const locale = config.locale || this.defaultLocale;
+
     this.subscriptions.set(id, {
       ...config,
       gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
@@ -284,7 +287,7 @@ export class LiveUpdates {
       // which might cause the callback to be called even if the subscription is removed immediately afterward.
       // To fix this, we wrap the restore call in a setTimeout,
       // allowing the unsubscribe function to be executed before the callback is called.
-      this.restore(config.data, id);
+      this.restore(config.data, locale, id);
     }, 0);
 
     // Tell the editor that there is a subscription
@@ -292,7 +295,7 @@ export class LiveUpdates {
     sendMessageToEditor(LivePreviewPostMessageMethods.SUBSCRIBED, {
       action: LivePreviewPostMessageMethods.SUBSCRIBED,
       type: isGQL ? 'GQL' : 'REST',
-      locale: config.locale || this.defaultLocale,
+      locale,
     });
 
     return () => {

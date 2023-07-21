@@ -53,22 +53,26 @@ export class StorageMap<T extends unknown> {
     this.value = this.restoreSessionData() || defaultValue;
   }
 
+  private getKey(key: string, locale: string) {
+    return `${key}-${locale}`;
+  }
+
   private restoreSessionData() {
     try {
       const item = window.sessionStorage.getItem(this.storageKey);
-      const parsed = item ? (JSON.parse(item) as T) : null;
+      const parsed = item ? JSON.parse(item) : null;
       return Array.isArray(parsed) ? new Map<string, T>(parsed) : null;
     } catch (err) {
       return null;
     }
   }
 
-  public get(key: string): T | undefined {
-    return this.value.get(key);
+  public get(key: string, locale: string): T | undefined {
+    return this.value.get(this.getKey(key, locale));
   }
 
-  public set(key: string, data: T): void {
-    this.value.set(key, data);
+  public set(key: string, locale: string, data: T): void {
+    this.value.set(this.getKey(key, locale), data);
 
     try {
       // Attention: Map can not be `JSON.stringify`ed directly
@@ -117,7 +121,7 @@ export function setProtocolToHttps(url: string | undefined): string | undefined 
  * Hint: It uses the structuredClone which is only available in modern browsers,
  * for older one it uses the JSON.parse(JSON.strinfify) hack.
  */
-export function clone<T extends Record<string, unknown> | Array<unknown>>(incoming: T): T {
+export function clone<T extends Record<any, any> | Array<any>>(incoming: T): T {
   if (typeof structuredClone === 'function') {
     return structuredClone(incoming);
   }

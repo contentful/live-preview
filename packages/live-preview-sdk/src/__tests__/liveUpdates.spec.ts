@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { AssetProps, EntryProps } from 'contentful-management';
+import { Asset, Entry } from 'contentful';
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
@@ -47,12 +47,12 @@ describe('LiveUpdates', () => {
   const locale = 'en-US';
   const updateFromEntryEditor1 = {
     sys: { id: '1' },
-    fields: { title: { [locale]: 'Data 2' } },
-  } as unknown as EntryProps;
+    fields: { title: 'Data 2' },
+  } as unknown as Entry;
   const updateFromEntryEditor2 = {
     sys: { id: '1' },
-    fields: { title: { [locale]: 'Data 3' } },
-  } as unknown as EntryProps;
+    fields: { title: 'Data 3' },
+  } as unknown as Entry;
 
   it('should listen to changes and calls the subscribed handlers', async () => {
     const liveUpdates = new LiveUpdates({ locale });
@@ -182,7 +182,7 @@ describe('LiveUpdates', () => {
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedDataFromPreviewApp, callback });
     await liveUpdates.receiveMessage({
-      entity: assetFromEntryEditor as unknown as AssetProps,
+      entity: assetFromEntryEditor as unknown as Asset,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
       method: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -192,9 +192,8 @@ describe('LiveUpdates', () => {
     });
 
     const expected = helpers.clone(nestedDataFromPreviewApp);
-    expected.featuredImage.title = assetFromEntryEditor.fields.title[locale];
-    (expected.featuredImage.description as string | null) =
-      assetFromEntryEditor.fields.description[locale];
+    expected.featuredImage.title = assetFromEntryEditor.fields.title;
+    (expected.featuredImage.description as string | null) = assetFromEntryEditor.fields.description;
 
     expect(callback).toHaveBeenCalledWith(expected);
   });
@@ -204,7 +203,7 @@ describe('LiveUpdates', () => {
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, callback });
     await liveUpdates.receiveMessage({
-      entity: pageInsideCollectionFromEntryEditor,
+      entity: pageInsideCollectionFromEntryEditor as unknown as Entry,
       contentType: landingPageContentType as unknown as ContentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
@@ -216,9 +215,9 @@ describe('LiveUpdates', () => {
     const expected = helpers.clone(nestedCollectionFromPreviewApp);
     // updated fields
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].pageName =
-      pageInsideCollectionFromEntryEditor.fields.pageName[locale];
+      pageInsideCollectionFromEntryEditor.fields.pageName;
     expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1].slug =
-      pageInsideCollectionFromEntryEditor.fields.slug[locale];
+      pageInsideCollectionFromEntryEditor.fields.slug;
     // new fields
     (
       expected.items[0].menuItemsCollection.items[2].featuredPagesCollection.items[1] as any
@@ -271,7 +270,7 @@ describe('LiveUpdates', () => {
     const data = { sys: { id }, title: 'Title', __typename: 'Foo' };
     const subscription = {
       data,
-      locale: 'en-US',
+      locale,
       callback: vi.fn(),
     };
     const liveUpdates = new LiveUpdates({ locale });
@@ -283,15 +282,15 @@ describe('LiveUpdates', () => {
 
     it('should restore a single entity', () => {
       liveUpdates['subscriptions'].set(id, subscription);
-      liveUpdates['storage'].set(id, { ...data, title: 'Title from storage' });
-      liveUpdates['restore'](data, id);
+      liveUpdates['storage'].set(id, locale, { ...data, title: 'Title from storage' });
+      liveUpdates['restore'](data, locale, id);
       const restoredData = { ...data, title: 'Title from storage' };
       expect(subscription.callback).toHaveBeenCalledTimes(1);
       expect(subscription.callback).toHaveBeenCalledWith(restoredData);
     });
 
     it('should not call the callback if the data is not in storage', () => {
-      liveUpdates['restore'](subscription.data, '1');
+      liveUpdates['restore'](subscription.data, locale, '1');
 
       expect(subscription.callback).not.toHaveBeenCalled();
     });

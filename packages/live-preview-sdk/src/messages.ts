@@ -1,6 +1,7 @@
 import type { RequestEntitiesMessage, RequestedEntitiesMessage } from '@contentful/visual-sdk';
 import { PostMessageMethods as StorePostMessageMethods } from '@contentful/visual-sdk';
-import type { AssetProps, EntryProps, SysLink } from 'contentful-management';
+import type { Asset, Entry } from 'contentful';
+import type { SysLink } from 'contentful-management';
 
 import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 import type { ContentType, EntityReferenceMap } from './types';
@@ -96,14 +97,14 @@ export type EntryUpdatedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
-  entity: EntryProps | AssetProps;
+  entity: Entry | Asset;
   contentType: ContentType;
   entityReferenceMap: EntityReferenceMap;
 };
 
 export type EntrySavedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_SAVED;
-  entity: EntryProps | AssetProps;
+  entity: Entry | Asset;
   contentType: ContentType;
   entityReferenceMap: EntityReferenceMap;
 };
@@ -112,7 +113,7 @@ export type EntrySavedMessage = {
 export type UnknownReferenceLoaded = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.UNKNOWN_REFERENCE_LOADED;
-  reference: EntryProps | AssetProps;
+  reference: Entry | Asset;
   contentType?: SysLink;
   entityReferenceMap: EntityReferenceMap;
 };

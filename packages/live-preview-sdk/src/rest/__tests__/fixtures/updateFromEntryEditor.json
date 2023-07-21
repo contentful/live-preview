@@ -17,82 +17,72 @@
     "contentType": { "sys": { "type": "Link", "linkType": "ContentType", "id": "allFields" } }
   },
   "fields": {
-    "shortText": { "en-US": "test test test test test " },
-    "shortTextUrl": { "en-US": "https://app.contentful.com" },
-    "shortTextSlug": { "en-US": "test-page" },
-    "shortTextList": { "en-US": ["short", "text", "list", "comma"] },
-    "longTextMultiple": { "en-US": "long\ntext\nmultiple\nlines" },
+    "shortText": "test test test test test ",
+    "shortTextUrl": "https://app.contentful.com",
+    "shortTextSlug": "test-page",
+    "shortTextList": ["short", "text", "list", "comma"],
+    "longTextMultiple": "long\ntext\nmultiple\nlines",
     "richText": {
-      "en-US": {
-        "data": {},
-        "content": [
-          {
-            "data": {},
-            "content": [
-              { "data": {}, "marks": [], "value": "rich text ", "nodeType": "text" },
-              {
-                "data": {},
-                "marks": [{ "type": "bold" }],
-                "value": "2 222223",
-                "nodeType": "text"
-              },
-              {
-                "data": {},
-                "marks": [{ "type": "code" }],
-                "value": "Hello World!",
-                "nodeType": "text"
-              }
-            ],
-            "nodeType": "paragraph"
-          }
-        ],
-        "nodeType": "document"
+      "data": {},
+      "content": [
+        {
+          "data": {},
+          "content": [
+            { "data": {}, "marks": [], "value": "rich text ", "nodeType": "text" },
+            {
+              "data": {},
+              "marks": [{ "type": "bold" }],
+              "value": "2 222223",
+              "nodeType": "text"
+            },
+            {
+              "data": {},
+              "marks": [{ "type": "code" }],
+              "value": "Hello World!",
+              "nodeType": "text"
+            }
+          ],
+          "nodeType": "paragraph"
+        }
+      ],
+      "nodeType": "document"
+    },
+    "numberInteger": 1,
+    "numberDecimal": 1.5,
+    "dateTime": "2023-04-01T00:00+01:00",
+    "location": { "lon": 9.67388, "lat": 36.12335 },
+    "mediaOneFile": {
+      "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" }
+    },
+    "mediaManyFiles": [
+      { "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" } },
+      { "sys": { "type": "Link", "linkType": "Asset", "id": "4YRUBbjYKnVAU17retktzF" } }
+    ],
+    "boolean": false,
+    "json": { "Locale": "en-US" },
+    "refOneSameSpace": {
+      "sys": { "type": "Link", "linkType": "Entry", "id": "2wx02IajQQMYggaxBT8CF3" }
+    },
+    "refManySameSpace": [
+      { "sys": { "type": "Link", "linkType": "Entry", "id": "422a9DU6Yb01C8Hh9ISq5c" } },
+      { "sys": { "type": "Link", "linkType": "Entry", "id": "1Gj746GwfYgQwFL0rcjmhE" } }
+    ],
+    "refOneDiffSpace": {
+      "sys": {
+        "type": "ResourceLink",
+        "linkType": "Contentful:Entry",
+        "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
       }
     },
-    "numberInteger": { "en-US": 1 },
-    "numberDecimal": { "en-US": 1.5 },
-    "dateTime": { "en-US": "2023-04-01T00:00+01:00" },
-    "location": { "en-US": { "lon": 9.67388, "lat": 36.12335 } },
-    "mediaOneFile": {
-      "en-US": { "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" } }
-    },
-    "mediaManyFiles": {
-      "en-US": [
-        { "sys": { "type": "Link", "linkType": "Asset", "id": "2bGsPN0EuQMOCc6sx3adsn" } },
-        { "sys": { "type": "Link", "linkType": "Asset", "id": "4YRUBbjYKnVAU17retktzF" } }
-      ]
-    },
-    "boolean": { "en-US": false },
-    "json": { "en-US": { "Locale": "en-US" } },
-    "refOneSameSpace": {
-      "en-US": { "sys": { "type": "Link", "linkType": "Entry", "id": "2wx02IajQQMYggaxBT8CF3" } }
-    },
-    "refManySameSpace": {
-      "en-US": [
-        { "sys": { "type": "Link", "linkType": "Entry", "id": "422a9DU6Yb01C8Hh9ISq5c" } },
-        { "sys": { "type": "Link", "linkType": "Entry", "id": "1Gj746GwfYgQwFL0rcjmhE" } }
-      ]
-    },
-    "refOneDiffSpace": {
-      "en-US": {
+    "refManyDiffSpace": [
+      {
         "sys": {
           "type": "ResourceLink",
           "linkType": "Contentful:Entry",
           "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
         }
       }
-    },
-    "refManyDiffSpace": {
-      "en-US": [
-        {
-          "sys": {
-            "type": "ResourceLink",
-            "linkType": "Contentful:Entry",
-            "urn": "crn:contentful:::content:spaces/3yzzz65gh9tw/entries/1oU53EU4UJjLk73abzyZV3"
-          }
-        }
-      ]
-    }
+    ]
   },
   "metadata": { "tags": [] }
 }
