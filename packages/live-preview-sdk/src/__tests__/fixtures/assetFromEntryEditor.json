@@ -36,25 +36,19 @@
     "version": 80
   },
   "fields": {
-    "title": {
-      "en-US": "Polarlights are marvelous!!"
-    },
-    "description": {
-      "en-US": "say hello!"
-    },
+    "title": "Polarlights are marvelous!!",
+    "description": "say hello!",
     "file": {
-      "en-US": {
-        "url": "//images.ctfassets.net/c586i03gpxi9/bF3sZxYTHnAYJOFMNI3Vm/d32dd04a866df4511c701576022ac5fd/Polarlicht_2.jpg",
-        "details": {
-          "size": 1305911,
-          "image": {
-            "width": 3008,
-            "height": 1960
-          }
-        },
-        "fileName": "Polarlicht_2.jpg",
-        "contentType": "image/jpeg"
-      }
+      "url": "//images.ctfassets.net/c586i03gpxi9/bF3sZxYTHnAYJOFMNI3Vm/d32dd04a866df4511c701576022ac5fd/Polarlicht_2.jpg",
+      "details": {
+        "size": 1305911,
+        "image": {
+          "width": 3008,
+          "height": 1960
+        }
+      },
+      "fileName": "Polarlicht_2.jpg",
+      "contentType": "image/jpeg"
     }
   },
   "metadata": {

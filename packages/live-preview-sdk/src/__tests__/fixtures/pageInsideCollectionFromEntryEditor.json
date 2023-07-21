@@ -44,22 +44,14 @@
     }
   },
   "fields": {
-    "internalName": {
-      "en-US": "Testing"
-    },
-    "pageName": {
-      "en-US": "Testing1"
-    },
-    "slug": {
-      "en-US": "testing"
-    },
+    "internalName": "Testing",
+    "pageName": "Testing1",
+    "slug": "testing",
     "pageContent": {
-      "en-US": {
-        "sys": {
-          "type": "Link",
-          "linkType": "Entry",
-          "id": "6wuDj6hgz4SOQuiq6f8UzX"
-        }
+      "sys": {
+        "type": "Link",
+        "linkType": "Entry",
+        "id": "6wuDj6hgz4SOQuiq6f8UzX"
       }
     }
   },

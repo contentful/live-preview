@@ -1,4 +1,5 @@
-import type { ContentTypeProps, EntryProps, KeyValueMap } from 'contentful-management/types';
+import type { Entry } from 'contentful';
+import type { ContentTypeProps } from 'contentful-management/types';
 import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import * as Utils from '../../helpers';
@@ -41,13 +42,13 @@ describe('Update GraphQL Entry', () => {
 
   const updateFn = ({
     data,
-    update = entry as EntryProps,
+    update = entry as unknown as Entry,
     locale = EN,
     entityReferenceMap = new EntityReferenceMap(),
     contentType = defaultContentType,
   }: {
     data: Entity & { sys: SysProps };
-    update?: EntryProps;
+    update?: Entry;
     locale?: string;
     entityReferenceMap?: EntityReferenceMap;
     contentType?: ContentType;
@@ -105,15 +106,15 @@ describe('Update GraphQL Entry', () => {
 
     expect(result).toEqual(
       expect.objectContaining({
-        shortText: entry.fields.shortText[EN],
-        shortTextList: entry.fields.shortTextList[EN],
-        longText: entry.fields.longText[EN],
-        boolean: entry.fields.boolean[EN],
-        numberInteger: entry.fields.numberInteger[EN],
-        numberDecimal: entry.fields.numberDecimal[EN],
-        dateTime: entry.fields.dateTime[EN],
-        location: entry.fields.location[EN],
-        json: entry.fields.json[EN],
+        shortText: entry.fields.shortText,
+        shortTextList: entry.fields.shortTextList,
+        longText: entry.fields.longText,
+        boolean: entry.fields.boolean,
+        numberInteger: entry.fields.numberInteger,
+        numberDecimal: entry.fields.numberDecimal,
+        dateTime: entry.fields.dateTime,
+        location: entry.fields.location,
+        json: entry.fields.json,
         sys: {
           id: entry.sys.id,
         },
@@ -137,16 +138,14 @@ describe('Update GraphQL Entry', () => {
           },
           fields: {
             reference: {
-              'en-US': {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testReferenceId,
-                },
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testReferenceId,
               },
             },
           },
-        } as unknown as EntryProps<KeyValueMap>;
+        } as unknown as Entry;
 
         const result = await updateFn({ data, update });
 
@@ -183,17 +182,15 @@ describe('Update GraphQL Entry', () => {
           },
           fields: {
             reference: {
-              'en-US': {
-                __typename: 'TestContentType',
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testAddingEntryId,
-                },
+              __typename: 'TestContentType',
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testAddingEntryId,
               },
             },
           },
-        } as unknown as EntryProps<KeyValueMap>;
+        } as unknown as Entry;
 
         const result = await updateFn({ data, update });
 
@@ -238,16 +235,14 @@ describe('Update GraphQL Entry', () => {
           },
           fields: {
             reference: {
-              'en-US': {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testReferenceId,
-                },
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testReferenceId,
               },
             },
           },
-        } as unknown as EntryProps<KeyValueMap>;
+        } as unknown as Entry;
 
         const result = await updateFn({ data, update });
 
@@ -285,11 +280,9 @@ describe('Update GraphQL Entry', () => {
             id: '1',
           },
           fields: {
-            hero: {
-              [EN]: { sys: { id: '1', linkType: 'Asset', type: 'Link' } },
-            },
+            hero: { sys: { id: '1', linkType: 'Asset', type: 'Link' } },
           },
-        } as unknown as EntryProps<KeyValueMap>;
+        } as unknown as Entry;
 
         const contentType = {
           sys: { id: 'string' },
@@ -345,19 +338,17 @@ describe('Update GraphQL Entry', () => {
           id: entry.sys.id,
         },
         fields: {
-          referenceMany: {
-            'en-US': [
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testAddingEntryId,
-                },
+          referenceMany: [
+            {
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testAddingEntryId,
               },
-            ],
-          },
+            },
+          ],
         },
-      } as unknown as EntryProps<KeyValueMap>;
+      } as unknown as Entry;
 
       (resolveReference as Mock).mockResolvedValue({
         reference: {
@@ -414,20 +405,18 @@ describe('Update GraphQL Entry', () => {
           id: entry.sys.id,
         },
         fields: {
-          referenceMany: {
-            'en-US': [
-              {
-                __typename: 'TestContentTypeForManyRef',
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testAddingEntryId,
-                },
+          referenceMany: [
+            {
+              __typename: 'TestContentTypeForManyRef',
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testAddingEntryId,
               },
-            ],
-          },
+            },
+          ],
         },
-      } as unknown as EntryProps<KeyValueMap>;
+      } as unknown as Entry;
 
       const result = await updateFn({ data, update });
 
@@ -482,20 +471,18 @@ describe('Update GraphQL Entry', () => {
           id: entry.sys.id,
         },
         fields: {
-          referenceMany: {
-            'en-US': [
-              {
-                __typename: 'TestContentTypeForManyRef',
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: testAddingEntryId,
-                },
+          referenceMany: [
+            {
+              __typename: 'TestContentTypeForManyRef',
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: testAddingEntryId,
               },
-            ],
-          },
+            },
+          ],
         },
-      } as unknown as EntryProps<KeyValueMap>;
+      } as unknown as Entry;
 
       const result = await updateFn({
         data,
@@ -541,6 +528,14 @@ describe('Update GraphQL Entry', () => {
         sys: defaultContentType.sys,
         fields: [{ name: 'shortText', type: 'Symbol' }],
       } as unknown as ContentType,
+      update: {
+        sys: {
+          id: entry.sys.id,
+        },
+        fields: {
+          shortText: undefined,
+        },
+      } as unknown as Entry,
     });
 
     expect(result).toEqual({
@@ -562,15 +557,13 @@ describe('Update GraphQL Entry', () => {
       const update = {
         sys: { id: '1' },
         fields: {
-          menu: {
-            [EN]: [
-              {
-                sys: { id: '2' },
-              },
-            ],
-          },
+          menu: [
+            {
+              sys: { id: '2' },
+            },
+          ],
         },
-      } as unknown as EntryProps<KeyValueMap>;
+      } as unknown as Entry;
 
       const contentType = {
         sys: { id: '1' },
@@ -590,9 +583,7 @@ describe('Update GraphQL Entry', () => {
             },
           },
           fields: {
-            title: {
-              [EN]: 'Hello World',
-            },
+            title: 'Hello World',
           },
         },
         typeName: '2',

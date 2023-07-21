@@ -1,21 +1,18 @@
 import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
-import type { AssetProps, EntryProps } from 'contentful-management';
 
 import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
-import { clone, sendMessageToEditor } from './utils';
+import { sendMessageToEditor } from './utils';
 
-import { ContentfulLivePreview } from '..';
-
-let store: EditorEntityStore | undefined = undefined;
+const store: Record<string, EditorEntityStore> = {};
 
 export function generateTypeName(contentTypeId: string): string {
   return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
 }
 
-function getStore() {
-  if (!store) {
-    store = new EditorEntityStore({
+function getStore(locale: string): EditorEntityStore {
+  if (!store[locale]) {
+    store[locale] = new EditorEntityStore({
       entities: [],
       sendMessage: sendMessageToEditor,
       subscribe: (method, cb) => {
@@ -34,36 +31,24 @@ function getStore() {
 
         return () => window.removeEventListener('message', listeners);
       },
-      locale: ContentfulLivePreview.locale,
+      locale,
     });
   }
 
-  return store;
-}
-
-function fallback(asset: Asset, locale: string): AssetProps;
-function fallback(entry: Entry, locale: string): EntryProps;
-function fallback(entity: Asset | Entry, locale: string): AssetProps | EntryProps {
-  const cloned = clone(entity as any);
-
-  for (const key in cloned.fields) {
-    cloned.fields[key] = { [locale]: cloned.fields[key] };
-  }
-
-  return cloned;
+  return store[locale];
 }
 
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   locale: string;
-}): Promise<{ reference: EntryProps; typeName: string }>;
+}): Promise<{ reference: Entry; typeName: string }>;
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset: true;
   locale: string;
-}): Promise<{ reference: AssetProps; typeName: string }>;
+}): Promise<{ reference: Asset; typeName: string }>;
 /**
  * Returns the requested reference from
  * 1) the entityReferenceMap if it was already resolved once
@@ -79,37 +64,38 @@ export async function resolveReference({
   referenceId: string;
   isAsset?: boolean;
   locale: string;
-}): Promise<{ reference: EntryProps | AssetProps; typeName: string }> {
+}): Promise<{ reference: Entry | Asset; typeName: string }> {
   const reference = entityReferenceMap.get(referenceId);
 
   if (reference) {
     return {
       reference,
-      typeName: reference.sys.contentType?.sys?.id
-        ? generateTypeName(reference.sys.contentType.sys.id)
-        : ASSET_TYPENAME,
+      typeName:
+        'contentType' in reference.sys && reference.sys?.contentType?.sys?.id
+          ? generateTypeName(reference.sys.contentType.sys.id)
+          : ASSET_TYPENAME,
     };
   }
 
   if (isAsset) {
-    const result = await getStore().fetchAsset(referenceId);
+    const result = await getStore(locale).fetchAsset(referenceId);
     if (!result) {
       throw new Error(`Unknown reference ${referenceId}`);
     }
 
     return {
-      reference: fallback(result, locale),
+      reference: result,
       typeName: ASSET_TYPENAME,
     };
   }
 
-  const result = await getStore().fetchEntry(referenceId);
+  const result = await getStore(locale).fetchEntry(referenceId);
   if (!result) {
     throw new Error(`Unknown reference ${referenceId}`);
   }
 
   return {
-    reference: fallback(result, locale),
+    reference: result,
     typeName: generateTypeName(result.sys.contentType.sys.id),
   };
 }

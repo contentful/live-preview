@@ -1,4 +1,5 @@
-import type { AssetProps, EntryProps, ContentTypeProps } from 'contentful-management';
+import type { Asset, Entry } from 'contentful';
+import type { ContentTypeProps } from 'contentful-management';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
@@ -53,12 +54,12 @@ export interface CollectionItem {
   __typename?: string;
 }
 
-export class EntityReferenceMap extends Map<string, EntryProps | AssetProps> {}
+export class EntityReferenceMap extends Map<string, Entry | Asset> {}
 
 export type UpdateEntryProps = {
   contentType: ContentType;
   dataFromPreviewApp: Entity & { sys: SysProps };
-  updateFromEntryEditor: EntryProps;
+  updateFromEntryEditor: Entry;
   locale: string;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
@@ -66,7 +67,7 @@ export type UpdateEntryProps = {
 
 export type UpdateFieldProps = {
   dataFromPreviewApp: Entity;
-  updateFromEntryEditor: EntryProps;
+  updateFromEntryEditor: Entry;
   name: string;
   locale: string;
   entityReferenceMap: EntityReferenceMap;
@@ -74,8 +75,8 @@ export type UpdateFieldProps = {
 };
 
 export type UpdateReferenceFieldProps = {
-  referenceFromPreviewApp: (EntryProps & { __typename?: string }) | null | undefined;
-  updatedReference: Entity & CollectionItem;
+  referenceFromPreviewApp: (Entity & { __typename?: string }) | null | undefined;
+  updatedReference?: (Pick<Entry, 'sys'> | Pick<Asset, 'sys'>) & { __typename?: string };
   entityReferenceMap: EntityReferenceMap;
   locale: string;
   gqlParams?: GraphQLParams;
@@ -102,8 +103,4 @@ export interface Subscription {
   locale?: string;
   callback: SubscribeCallback;
   gqlParams?: GraphQLParams;
-}
-
-export function isAsset(entity: EntryProps | (Entity & CollectionItem)): boolean {
-  return 'linkType' in entity.sys && entity.sys.linkType === ASSET_TYPENAME;
 }

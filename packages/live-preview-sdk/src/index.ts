@@ -125,9 +125,8 @@ export class ContentfulLivePreview {
       });
 
       // tell the editor that there's a SDK
-      // TODO: switch to CONNECTED event once the editor supports it
-      sendMessageToEditor(LivePreviewPostMessageMethods.IFRAME_CONNECTED, {
-        action: LivePreviewPostMessageMethods.IFRAME_CONNECTED,
+      sendMessageToEditor(LivePreviewPostMessageMethods.CONNECTED, {
+        action: LivePreviewPostMessageMethods.CONNECTED,
         connected: true,
         tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
         locale: this.locale,

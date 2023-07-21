@@ -1,6 +1,6 @@
-import type { AssetProps, EntryProps } from 'contentful-management';
+import { Document } from '@contentful/rich-text-types';
+import type { Asset, Entry } from 'contentful';
 
-import { EN } from '../constants';
 import { patchField } from '../utils';
 import dataFromPreviewApp from './dataFromPreviewApp.json';
 import entry from './updateFromEntryEditor.json';
@@ -8,47 +8,47 @@ import entry from './updateFromEntryEditor.json';
 export const newEntryReference = {
   sys: { id: 'new-entry-id' },
   fields: {
-    headline: { [EN]: 'Hello' },
+    headline: 'Hello',
   },
-} as unknown as EntryProps;
+} as unknown as Entry;
 
 export const newAssetReference = {
   sys: { id: 'new-asset-id', linkType: 'Asset' },
   fields: {
-    title: { [EN]: 'New Asset' },
-    file: { [EN]: { url: 'https://app.contentful.com/newAsset.png' } },
+    title: 'New Asset',
+    file: { url: 'https://app.contentful.com/newAsset.png' },
   },
-} as unknown as AssetProps;
+} as unknown as Asset;
 
 export const defaultResult = {
   ...dataFromPreviewApp,
   fields: {
     ...dataFromPreviewApp.fields,
     // updated data:
-    shortText: entry.fields.shortText[EN],
-    shortTextUrl: entry.fields.shortTextUrl[EN],
-    shortTextSlug: entry.fields.shortTextSlug[EN],
-    longTextMultiple: entry.fields.longTextMultiple[EN],
-    richText: entry.fields.richText[EN],
-    numberInteger: entry.fields.numberInteger[EN],
-    numberDecimal: entry.fields.numberDecimal[EN],
-    dateTime: entry.fields.dateTime[EN],
-    location: entry.fields.location[EN],
-    boolean: entry.fields.boolean[EN],
-    json: entry.fields.json[EN],
+    shortText: entry.fields.shortText,
+    shortTextUrl: entry.fields.shortTextUrl,
+    shortTextSlug: entry.fields.shortTextSlug,
+    longTextMultiple: entry.fields.longTextMultiple,
+    richText: entry.fields.richText,
+    numberInteger: entry.fields.numberInteger,
+    numberDecimal: entry.fields.numberDecimal,
+    dateTime: entry.fields.dateTime,
+    location: entry.fields.location,
+    boolean: entry.fields.boolean,
+    json: entry.fields.json,
   },
-};
+} as unknown as Entry;
 
-export const newEntryReferenceTransformed = patchField(
+export const newEntryReferenceTransformed: Entry = patchField(
   newEntryReference,
   'headline',
-  newEntryReference.fields.headline[EN]
+  newEntryReference.fields.headline
 );
 
 export const newAssetReferenceTransformed = patchField(
-  patchField(newAssetReference, 'title', newAssetReference.fields.title[EN]),
+  patchField(newAssetReference, 'title', newAssetReference.fields.title),
   'file',
-  newAssetReference.fields.file[EN]
+  newAssetReference.fields.file
 );
 
 export const unresolvedRichTextLinks = {
@@ -206,4 +206,4 @@ export const resolvedRichTextLinks = {
     },
   ],
   data: {},
-};
+} as unknown as Document;
