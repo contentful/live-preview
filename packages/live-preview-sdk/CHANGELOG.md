@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.5.6...@contentful/live-preview@2.6.0) (2023-07-27)
+
+
+### Features
+
+* support fallback locales ([a9c871a](https://github.com/contentful/live-preview/commit/a9c871a8ad5f2a2fbd8d213cbc84a63774944865))
+
+
+
+
+
 ## [2.5.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.5.5...@contentful/live-preview@2.5.6) (2023-07-24)
 
 **Note:** Version bump only for package @contentful/live-preview
