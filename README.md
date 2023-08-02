@@ -371,6 +371,7 @@ export default function BlogPost: ({ blogPost }) {
       </Text>
     </Section>
   )
+}
 ```
 
 4. Enable draft mode
