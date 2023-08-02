@@ -1,6 +1,12 @@
 import type { Asset, Entry } from 'contentful';
 
-import type { ContentfulSubscribeConfig, EntryUpdatedMessage, MessageFromEditor } from '.';
+import type {
+  ContentfulSubscribeConfig,
+  EntryUpdatedMessage,
+  ErrorMessage,
+  MessageFromEditor,
+  SubscribedMessage,
+} from '.';
 import * as gql from './graphql';
 import { parseGraphQLParams } from './graphql/queryUtils';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
@@ -214,6 +220,12 @@ export class LiveUpdates {
               s.callback(data);
             }
           } catch (error) {
+            sendMessageToEditor(LivePreviewPostMessageMethods.ERROR, {
+              message: (error as Error).message,
+              payload: { data: s.data, update: entity },
+              type: 'SUBSCRIPTION_UPDATE_FAILED',
+            } as ErrorMessage);
+
             debug.error('Failed to apply live update', {
               error,
               subscribedData: s.data,
@@ -266,9 +278,14 @@ export class LiveUpdates {
    * Will be called once initially for the restored data
    */
   public subscribe(config: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid } = validateDataForLiveUpdates(config.data);
+    const { isGQL, isValid, sysId, isREST } = validateDataForLiveUpdates(config.data);
 
     if (!isValid) {
+      sendMessageToEditor(LivePreviewPostMessageMethods.ERROR, {
+        message: 'Failed to subscribe',
+        payload: { isGQL, isValid, sysId, isREST },
+        type: 'SUBSCRIPTION_SETUP_FAILED',
+      } as ErrorMessage);
       return () => {
         /* noop */
       };
@@ -296,7 +313,8 @@ export class LiveUpdates {
       action: LivePreviewPostMessageMethods.SUBSCRIBED,
       type: isGQL ? 'GQL' : 'REST',
       locale,
-    });
+      entryId: sysId,
+    } as SubscribedMessage);
 
     return () => {
       this.subscriptions.delete(id);

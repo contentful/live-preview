@@ -1,7 +1,7 @@
 import { Argument } from '../types';
 import { debug } from './debug';
 
-function validation(d: Argument): { isGQL: boolean; hasSys: boolean; isREST: boolean } {
+function validation(d: Argument): { isGQL: boolean; sysId: string | null; isREST: boolean } {
   if (Array.isArray(d)) {
     for (const value of d) {
       const result = validation(value);
@@ -11,14 +11,14 @@ function validation(d: Argument): { isGQL: boolean; hasSys: boolean; isREST: boo
       }
     }
 
-    return { isGQL: false, hasSys: false, isREST: false };
+    return { isGQL: false, sysId: null, isREST: false };
   } else {
     const isGQL = Object.hasOwn(d, '__typename');
-    const hasSys = Object.hasOwn(d, 'sys');
+    const sysId = Object.hasOwn(d, 'sys') ? d.sys.id : null;
     const isREST = Object.hasOwn(d, 'fields');
 
-    if (isGQL || hasSys || isREST) {
-      return { isGQL, hasSys, isREST };
+    if (isGQL || sysId || isREST) {
+      return { isGQL, sysId, isREST };
     }
 
     // maybe it's nested
@@ -30,17 +30,12 @@ function validation(d: Argument): { isGQL: boolean; hasSys: boolean; isREST: boo
  * **Basic** validating of the subscribed data
  * Is it GraphQL or REST and does it contain the sys information
  */
-export function validateDataForLiveUpdates(data: Argument): {
-  isGQL: boolean;
-  isREST: boolean;
-  hasSys: boolean;
-  isValid: boolean;
-} {
+export function validateDataForLiveUpdates(data: Argument) {
   let isValid = true;
 
-  const { isGQL, hasSys, isREST } = validation(data);
+  const { isGQL, sysId, isREST } = validation(data);
 
-  if (!hasSys) {
+  if (!sysId) {
     isValid = false;
     debug.error('Live Updates requires the "sys.id" to be present on the provided data', data);
   }
@@ -56,7 +51,7 @@ export function validateDataForLiveUpdates(data: Argument): {
   return {
     isGQL,
     isREST,
-    hasSys,
+    sysId,
     isValid,
   };
 }

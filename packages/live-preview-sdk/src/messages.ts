@@ -9,6 +9,7 @@ import type { ContentType, EntityReferenceMap } from './types';
 enum LivePreviewPostMessageMethods {
   CONNECTED = 'CONNECTED',
   DISCONNECTED = 'DISCONNECTED',
+  ERROR = 'ERROR',
   /**
    * @deprecated use `LivePreviewPostMessageMethods.CONNECTED` instead
    */
@@ -44,8 +45,10 @@ export type ConnectedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.IFRAME_CONNECTED | LivePreviewPostMessageMethods.CONNECTED;
   connected: true;
-  tags: number;
   locale: string;
+  /** @deprecated use taggedElementCount instead */
+  tags: number;
+  taggedElementCount: number;
 };
 
 export type TaggedFieldClickMessage = {
@@ -67,13 +70,24 @@ export type UnknownEntityMessage = {
 export type UrlChangedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.URL_CHANGED;
+  taggedElementCount: number;
 };
 
 export type SubscribedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.SUBSCRIBED;
   type: 'GQL' | 'REST';
+  entryId: string;
   locale: string;
+};
+
+export type ErrorMessage = {
+  /** Error type */
+  type: string;
+  /** Error message */
+  message: string;
+  /** Additional information that could be helpful about this error (e.g. entryId) */
+  payload: Record<string, any>;
 };
 
 export type EditorMessage =
@@ -82,7 +96,8 @@ export type EditorMessage =
   | UnknownEntityMessage
   | UrlChangedMessage
   | SubscribedMessage
-  | RequestEntitiesMessage;
+  | RequestEntitiesMessage
+  | ErrorMessage;
 
 export type MessageFromSDK = EditorMessage & {
   method: PostMessageMethods;

@@ -12,7 +12,12 @@ import {
 import { isValidMessage } from './helpers/validateMessage';
 import { InspectorMode } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
-import { LivePreviewPostMessageMethods, MessageFromEditor } from './messages';
+import {
+  ConnectedMessage,
+  LivePreviewPostMessageMethods,
+  MessageFromEditor,
+  UrlChangedMessage,
+} from './messages';
 import {
   Argument,
   InspectorModeTags,
@@ -121,16 +126,18 @@ export class ContentfulLivePreview {
       pollUrlChanges(() => {
         sendMessageToEditor(LivePreviewPostMessageMethods.URL_CHANGED, {
           action: LivePreviewPostMessageMethods.URL_CHANGED,
-        });
+          taggedElementCount: this.inspectorMode?.getTaggedElements().length,
+        } as UrlChangedMessage);
       });
 
       // tell the editor that there's a SDK
       sendMessageToEditor(LivePreviewPostMessageMethods.CONNECTED, {
         action: LivePreviewPostMessageMethods.CONNECTED,
         connected: true,
-        tags: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+        tags: this.inspectorMode?.getTaggedElements().length,
+        taggedElementCount: this.inspectorMode?.getTaggedElements().length,
         locale: this.locale,
-      });
+      } as ConnectedMessage);
 
       // all set up - ready to go
       this.initialized = true;

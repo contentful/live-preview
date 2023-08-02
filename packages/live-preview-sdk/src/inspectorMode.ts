@@ -34,6 +34,10 @@ export class InspectorMode {
     window.addEventListener('mouseover', this.addTooltipOnHover);
   }
 
+  public getTaggedElements() {
+    return document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`);
+  }
+
   // Handles incoming messages from Contentful
   public receiveMessage(data: MessageFromEditor): void {
     if (
