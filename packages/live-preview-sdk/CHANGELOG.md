@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.6.1...@contentful/live-preview@2.6.2) (2023-08-02)
+
+
+### Bug Fixes
+
+* **live-updates:** support deeper nested entries ([#253](https://github.com/contentful/live-preview/issues/253)) ([1d69e18](https://github.com/contentful/live-preview/commit/1d69e187019a9b6a7d6562d459bc192cf8fb8da2))
+
+
+
+
+
 ## [2.6.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.6.0...@contentful/live-preview@2.6.1) (2023-07-31)
 
 **Note:** Version bump only for package @contentful/live-preview
