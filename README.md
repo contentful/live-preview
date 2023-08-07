@@ -6,7 +6,6 @@ Live preview SDK for both the inspector mode connection + live content updates b
 <summary>Table of contents</summary>
 
 <!-- TOC -->
-
 - [Getting started](#getting-started)
   - [Requirements](#requirements)
   - [Installation](#installation)
@@ -33,7 +32,6 @@ Live preview SDK for both the inspector mode connection + live content updates b
 ### Requirements
 
 - Node.js: `>=16.15.1`
-- React.js `>=17`
 
 To install live preview simply run one of the following commands.
 
@@ -282,6 +280,10 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
 That's it! You should now be able to use the Contentful Live Preview SDK with vanilla JS.
 
 ### React
+
+#### Requirements
+
+- React.js >=17
 
 #### Integration with Next.js
 

@@ -24,7 +24,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: true,
-        hasSys: true,
+        sysId: '123',
         isValid: true,
       });
     });
@@ -44,7 +44,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: true,
-        hasSys: true,
+        sysId: '123',
         isValid: true,
       });
     });
@@ -66,7 +66,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: true,
-        hasSys: true,
+        sysId: '123',
         isValid: true,
       });
     });
@@ -85,7 +85,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        hasSys: true,
+        sysId: '123',
         isValid: true,
       });
     });
@@ -104,7 +104,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        hasSys: true,
+        sysId: '123',
         isValid: true,
       });
     });
@@ -127,7 +127,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        hasSys: true,
+        sysId: '123',
         isValid: true,
       });
     });
@@ -150,7 +150,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        hasSys: false,
+        sysId: null,
         isValid: false,
       });
     });
@@ -170,7 +170,7 @@ describe('validateDataForLiveUpdates', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: false,
-        hasSys: true,
+        sysId: '1',
         isValid: false,
       });
     });

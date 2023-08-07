@@ -247,6 +247,7 @@ describe('LiveUpdates', () => {
         action: LivePreviewPostMessageMethods.SUBSCRIBED,
         type: 'GQL',
         locale,
+        entryId: '1',
       });
     });
 
@@ -261,6 +262,7 @@ describe('LiveUpdates', () => {
         action: LivePreviewPostMessageMethods.SUBSCRIBED,
         type: 'REST',
         locale,
+        entryId: '1',
       });
     });
   });

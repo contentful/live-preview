@@ -18,6 +18,7 @@ describe('ContentfulLivePreview', () => {
 
   (InspectorMode as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageTagging,
+    getTaggedElements: vi.fn(() => []),
   }));
   (LiveUpdates as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageUpdates,
