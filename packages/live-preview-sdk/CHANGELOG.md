@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.6.4...@contentful/live-preview@2.7.0) (2023-08-07)
+
+
+### Features
+
+* **live-preview:** provide better information for status modal ([#255](https://github.com/contentful/live-preview/issues/255)) ([8fd0556](https://github.com/contentful/live-preview/commit/8fd05562779e6f33d7d9903a89058068dd44a9b7))
+
+
+
+
+
 ## [2.6.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.6.3...@contentful/live-preview@2.6.4) (2023-08-07)
 
 **Note:** Version bump only for package @contentful/live-preview
