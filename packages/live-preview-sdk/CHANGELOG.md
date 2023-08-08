@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.7.0...@contentful/live-preview@2.7.1) (2023-08-08)
+
+
+### Bug Fixes
+
+* **live-preview:** adjust missing data for the status modal ([#264](https://github.com/contentful/live-preview/issues/264)) ([3152531](https://github.com/contentful/live-preview/commit/31525315b1b7af97d3fd06faabf783147ac79024))
+
+
+
+
+
 # [2.7.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.6.4...@contentful/live-preview@2.7.0) (2023-08-07)
 
 
