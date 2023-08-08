@@ -49,6 +49,8 @@ export type ConnectedMessage = {
   /** @deprecated use taggedElementCount instead */
   tags: number;
   taggedElementCount: number;
+  isInspectorEnabled: boolean;
+  isLiveUpdatesEnabled: boolean;
 };
 
 export type TaggedFieldClickMessage = {
