@@ -126,17 +126,20 @@ export class ContentfulLivePreview {
       pollUrlChanges(() => {
         sendMessageToEditor(LivePreviewPostMessageMethods.URL_CHANGED, {
           action: LivePreviewPostMessageMethods.URL_CHANGED,
-          taggedElementCount: this.inspectorMode?.getTaggedElements().length,
+          taggedElementCount: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
         } as UrlChangedMessage);
       });
 
       // tell the editor that there's a SDK
+      const taggedElementCount = document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length;
       sendMessageToEditor(LivePreviewPostMessageMethods.CONNECTED, {
         action: LivePreviewPostMessageMethods.CONNECTED,
         connected: true,
-        tags: this.inspectorMode?.getTaggedElements().length,
-        taggedElementCount: this.inspectorMode?.getTaggedElements().length,
+        tags: taggedElementCount,
+        taggedElementCount,
         locale: this.locale,
+        isInspectorEnabled: this.inspectorModeEnabled,
+        isLiveUpdatesEnabled: this.liveUpdatesEnabled,
       } as ConnectedMessage);
 
       // all set up - ready to go
