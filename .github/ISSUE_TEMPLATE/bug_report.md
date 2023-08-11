@@ -21,7 +21,7 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Screenshots / example**
-If applicable, add screenshots to help explain your problem or share a code snippet.
+If applicable, add screenshots to help explain your problem. Please also submit a minimal reproducible example to help with the investigation. Feel free to use CodeStandbox or any other similar service of your choosing.
 
 **Context (please complete the following information):**
  - Live preview SDK version number: [e.g. 2.4.6]
