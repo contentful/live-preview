@@ -38,7 +38,7 @@
     "eslint-plugin-import-helpers": "^1.2.1",
     "husky": "^8.0.3",
     "lerna": "^7.1.1",
-    "lint-staged": "^13.1.2",
+    "lint-staged": "^14.0.0",
     "prettier": "2.8.8"
   },
   "lint-staged": {
