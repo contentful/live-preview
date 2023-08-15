@@ -1,0 +1,32 @@
+{
+  "name": "next-13-app-router-graphql",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prepare": "relative-deps"
+  },
+  "dependencies": {
+    "@contentful/live-preview": "^2.4.6",
+    "@contentful/visual-sdk": "^1.0.0-alpha.11",
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
+    "eslint": "8.47.0",
+    "eslint-config-next": "13.4.13",
+    "next": "13.4.13",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "relative-deps": "^1.0.7"
+  },
+  "relativeDependencies": {
+    "@contentful/live-preview": "../live-preview/packages/live-preview-sdk",
+    "@contentful/visual-sdk": "../live-preview/packages/visual-sdk"
+  }
+}
