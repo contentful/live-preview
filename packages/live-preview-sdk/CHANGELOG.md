@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.7.3...@contentful/live-preview@2.8.0) (2023-08-16)
+
+
+### Features
+
+* expose opening entry ([c3931d5](https://github.com/contentful/live-preview/commit/c3931d55cf54bdb573c89a0aa0236d3b9d9b20e1))
+
+
+
+
+
 ## [2.7.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.7.2...@contentful/live-preview@2.7.3) (2023-08-14)
 
 **Note:** Version bump only for package @contentful/live-preview
