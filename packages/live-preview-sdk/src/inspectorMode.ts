@@ -6,11 +6,11 @@ import {
   TOOLTIP_HEIGHT,
   TOOLTIP_PADDING_LEFT,
 } from './constants';
-import { sendMessageToEditor } from './helpers';
 import {
   InspectorModeChangedMessage,
   LivePreviewPostMessageMethods,
   MessageFromEditor,
+  openEntryInEditorUtility,
 } from './messages';
 import { TagAttributes } from './types';
 
@@ -115,20 +115,12 @@ export class InspectorMode {
 
   // responsible for handling the event when the user clicks on the edit button in the tooltip
   private clickHandler() {
-    if (!this.tooltip) {
-      return;
-    }
-    const fieldId = this.tooltip.getAttribute(DATA_CURR_FIELD_ID);
-    const entryId = this.tooltip.getAttribute(DATA_CURR_ENTRY_ID);
-    const locale = this.tooltip.getAttribute(DATA_CURR_LOCALE);
+    const fieldId = this.tooltip?.getAttribute(DATA_CURR_FIELD_ID);
+    const entryId = this.tooltip?.getAttribute(DATA_CURR_ENTRY_ID);
+    const locale = this.tooltip?.getAttribute(DATA_CURR_LOCALE) || this.defaultLocale;
 
     if (fieldId && entryId && locale) {
-      sendMessageToEditor(LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED, {
-        action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
-        fieldId,
-        entryId,
-        locale,
-      });
+      openEntryInEditorUtility(fieldId, entryId, locale);
     }
   }
 }

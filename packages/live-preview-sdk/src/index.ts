@@ -17,6 +17,7 @@ import {
   LivePreviewPostMessageMethods,
   MessageFromEditor,
   UrlChangedMessage,
+  openEntryInEditorUtility,
 } from './messages';
 import {
   Argument,
@@ -191,6 +192,14 @@ export class ContentfulLivePreview {
   static toggleLiveUpdatesMode(): boolean {
     this.liveUpdatesEnabled = !this.liveUpdatesEnabled;
     return this.liveUpdatesEnabled;
+  }
+
+  static openEntryInEditor({ fieldId, entryId, locale }: LivePreviewProps): void {
+    if (!fieldId || !entryId) {
+      debug.error('Please provide field id and entry id to openEntryInEditor.');
+    }
+
+    openEntryInEditorUtility(fieldId, entryId, locale || this.locale);
   }
 }
 
