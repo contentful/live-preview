@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   const { isEnabled } = draftMode();
 
-  console.log({ isEnabled });
-  const posts = await getAllPostsForHome(true);
+  const posts = await getAllPostsForHome(isEnabled);
 
   if (!posts || posts.length === 0) {
     return (

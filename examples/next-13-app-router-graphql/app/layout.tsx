@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // @TODO: draft mode is not working yet
   const { isEnabled } = draftMode();
 
   return (

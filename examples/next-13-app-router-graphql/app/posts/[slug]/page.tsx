@@ -6,7 +6,6 @@ import PostLayout from '../../components/post-layout';
 export default async function Post({ params }: { params: { slug: string } }) {
   const { isEnabled } = draftMode();
 
-  // @TODO: draft mode is not working yet
   const { post } = await getPost(params.slug, isEnabled);
 
   return <PostLayout post={post} />;
