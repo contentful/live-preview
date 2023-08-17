@@ -6,6 +6,7 @@ Live preview SDK for both the inspector mode connection + live content updates b
 <summary>Table of contents</summary>
 
 <!-- TOC -->
+
 - [Getting started](#getting-started)
   - [Requirements](#requirements)
   - [Installation](#installation)
@@ -151,6 +152,26 @@ const query = gql`
 // ...
 const updated = useContentfulLiveUpdates(originalData, { query });
 // ...
+```
+
+### Open Entry in Editor
+
+`ContentfulLivePreview.openEntryInEditor({fieldId: string, entryId: string, locale: string})`
+
+Opens an entry in the Contentful live preview editor. This utility function allows for manual control over the editor opening process, providing flexibility for developers to integrate this action within custom UI components or events.
+
+- **fieldId** (string): The ID of the field you want to target.
+- **entryId** (string): The ID of the entry containing the field.
+- **locale** (string): The locale of the content.
+
+**Usage**:
+
+```javascript
+ContentfulLivePreview.openEntryInEditor({
+  entryId: 'entryId',
+  fieldId: 'fieldId',
+  locale: 'en-US',
+});
 ```
 
 ## Example Integrations

@@ -4,6 +4,7 @@ import type { Asset, Entry } from 'contentful';
 import type { SysLink } from 'contentful-management';
 
 import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
+import { sendMessageToEditor } from './helpers';
 import type { ContentType, EntityReferenceMap } from './types';
 
 enum LivePreviewPostMessageMethods {
@@ -159,3 +160,12 @@ export type MessageFromEditor = (
   from: 'live-preview';
   source: typeof LIVE_PREVIEW_EDITOR_SOURCE;
 };
+
+export function openEntryInEditorUtility(fieldId: string, entryId: string, locale: string): void {
+  sendMessageToEditor(LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED, {
+    action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
+    fieldId,
+    entryId,
+    locale,
+  });
+}
