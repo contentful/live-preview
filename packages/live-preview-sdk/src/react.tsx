@@ -1,13 +1,15 @@
+'use client';
+
 import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
   type PropsWithChildren,
   type ReactElement,
-  useEffect,
 } from 'react';
 
 import { DocumentNode } from 'graphql';
