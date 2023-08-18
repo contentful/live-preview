@@ -1,34 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js GraphQL Contentful live preview SDK example
 
-## Getting Started
+This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that uses the GraphQL API. The live preview SDK provides live updates functionality for content changes and the inspector mode for your Contentful space.
 
-First, run the development server:
+## 1. Installation
+
+Install the dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 2. Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To run this project, you will need to add the following environment variables to your `.env.local` file:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- `CONTENTFUL_SPACE_ID`: This is the Space ID from your Contentful space.
+- `CONTENTFUL_ACCESS_TOKEN`: This is the Content Delivery API - access token, which is used for fetching **published** data from your Contentful space.
+- `CONTENTFUL_PREVIEW_ACCESS_TOKEN`: This is the Content Preview API - access token, which is used for fetching **draft** data from your Contentful space.
+- `CONTENTFUL_PREVIEW_SECRET`: This can be any value you want. It must be URL friendly as it will be send as a query parameter to enable draft mode.
 
-## Learn More
+## 3. Setting up the content model
 
-To learn more about Next.js, take a look at the following resources:
+You will need to set up a content model within your Contentful space. For this project, we need a `Post` content type with the following fields:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `slug`
+- `title`
+- `description`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Once you've set up the `Post` content model, you can populate it with some example entries.
 
-## Deploy on Vercel
+## 4. Setting up Content preview URL
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+In order to enable the live preview feature in your local development environment, you need to set up the Content preview URL in your Contentful space.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`http://localhost:3000/api/draft?secret=<CONTENTFUL_PREVIEW_SECRET>&slug={entry.fields.slug}`
+
+Replace `<CONTENTFUL_PREVIEW_SECRET>` with its respective value in `.env.local`.
+
+## 5. Running the project locally
+
+To run the project locally, you can use the `npm run dev` command. You can now use the live preview feature.
