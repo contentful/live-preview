@@ -308,7 +308,7 @@ That's it! You should now be able to use the Contentful Live Preview SDK with va
 
 #### Integration with Next.js
 
-You can find an example implementation in the [examples/nextjs](./examples/nextjs/) folder.
+You can find an example for the NextJS Pages Router implementation in the [examples/nextjs-graphql](./examples/nextjs-graphql/) folder. If you are using the app router you can look at this [example](./examples/nextjs-13-app-router-graphql/) instead.
 
 To use the Contentful Live Preview SDK with [Next.js](https://nextjs.org), you can either use one of the Contentful starter templates, or do the following steps to add it to an existing project.
 
