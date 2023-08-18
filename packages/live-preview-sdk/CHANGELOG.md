@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.8.0...@contentful/live-preview@2.9.0) (2023-08-18)
+
+
+### Features
+
+* add nextjs app dir example ([#279](https://github.com/contentful/live-preview/issues/279)) ([6c4bef6](https://github.com/contentful/live-preview/commit/6c4bef66e316c332b3981fa6778a8052c852db8d))
+
+
+
+
+
 # [2.8.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.7.3...@contentful/live-preview@2.8.0) (2023-08-16)
 
 
