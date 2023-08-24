@@ -178,6 +178,10 @@ ContentfulLivePreview.openEntryInEditor({
 
 ### Vanilla Javascript
 
+You can find an example in the [examples/vanilla-js](./examples/vanilla-js/) folder.
+
+Before you initialize live preview SDK you'll want to make whatever call (REST or GraphQL API) to get the entries and assets that make up the page being requested.
+
 To use the Contentful Live Preview SDK with [Javascript], you can use the following steps to add it to an existing project.
 
 1. Add the @contentful/live-preview package to your project
@@ -192,7 +196,7 @@ or
 npm install @contentful/live-preview
 ```
 
-2. Initialize the SDK with the `ContentfulLivePreview` class' [init function](#init-configuration) and add the stylesheet for field tagging as a stylesheet link.
+2. Once you've got the data from Contentful, then you can initialize the live preview. You can use the `ContentfulLivePreview` class' [init function](#init-configuration) and add the stylesheet for field tagging as a stylesheet link.
 
 ```html
 <!DOCTYPE html>
@@ -205,7 +209,7 @@ npm install @contentful/live-preview
       href="./node_modules/@contentful/live-preview/dist/style.css"
     />
     <script type="module">
-      import { ContentfulLivePreview } from './node_modules/@contentful/live-preview/dist/index.js';
+      import { ContentfulLivePreview } from '@contentful/live-preview';
 
       ContentfulLivePreview.init({ locale: 'en-US' });
     </script>
@@ -214,9 +218,9 @@ npm install @contentful/live-preview
 </html>
 ```
 
-3. To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`) to your HTML element output.
+3. Then for each entry and field on which you want to use the inspector mode to show an edit button in the preview, you'll need to tag the HTML elements with the appropriate data attributes. The data attributes are `data-contentful-entry-id` and `data-contentful-field-id`. If you want to override the global locale from the init function, you can set `data-contentful-locale`.
 
-You can do this via our helper function.
+You can use the provided helper function `getProps()`.
 
 The necessary styles for the live edit tags can be found in the `@contentful/live-preview/style.css` file.
 
@@ -231,7 +235,7 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
       href="./node_modules/@contentful/live-preview/dist/style.css"
     />
     <script type="module">
-      import { ContentfulLivePreview } from './node_modules/@contentful/live-preview/dist/index.js';
+      import { ContentfulLivePreview } from '@contentful/live-preview';
 
       ContentfulLivePreview.init({ locale: 'en-US' });
 
@@ -243,7 +247,7 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
        * const props = {
        *   'data-contentful-field-id': 'fieldId',
        *   'data-contentful-entry-id': 'entryId',
-       *    'data-contentful-locale': 'en-US',
+       *   'data-contentful-locale': 'en-US',
        *   }
        */
       const props = ContentfulLivePreview.getProps({ entryId: id, fieldId: title });
@@ -264,7 +268,7 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
 </html>
 ```
 
-4.To use the live updates feature you can make use of the subscribe function to listen to the data changes as shown below:
+4.To use the live updates feature you will have to subscribe for changes for **each** entry/asset, to get updates when a field is edited in Contentful.
 
 ```html
 <!DOCTYPE html>
@@ -277,7 +281,7 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
       href="./node_modules/@contentful/live-preview/dist/style.css"
     />
     <script type="module">
-      import { ContentfulLivePreview } from './node_modules/@contentful/live-preview/dist/index.js';
+      import { ContentfulLivePreview } from '@contentful/live-preview';
 
       const locale = 'en-US';
 
@@ -288,9 +292,9 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
        * Will be called once initially for the restored data
        */
       const unsubscribe = ContentfulLivePreview.subscribe({
-        data,
+        data, //the JSON response from the CPA for an entry/asset or an array of entries (or assets)
         locale,
-        callback,
+        callback, //is a function to be called when the entry/asset is updated in Contentful to tell the frontend to update the preview. This callback is what makes the frontend update almost instantaneously when typing in a field in the editor.
       });
     </script>
   </head>
