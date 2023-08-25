@@ -6,7 +6,12 @@ import {
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ErrorPage from 'next/error';
-import { Post as PostType, getAllPostsWithSlug, getPost } from '../../lib/api-graphql';
+import {
+  ALL_POSTS_SLUGGED_QUERY,
+  Post as PostType,
+  getAllPostsWithSlug,
+  getPost,
+} from '../../lib/api-graphql';
 
 interface PostProps {
   post: PostType | null;
@@ -14,7 +19,9 @@ interface PostProps {
 
 const Post: NextPage<PostProps> = ({ post }) => {
   const router = useRouter();
-  const updatedPost = useContentfulLiveUpdates(post);
+  const updatedPost = useContentfulLiveUpdates(post, {
+    query: ALL_POSTS_SLUGGED_QUERY,
+  });
   const inspectorProps = useContentfulInspectorMode({ entryId: post?.sys.id });
 
   if (!router.isFallback && !updatedPost) {
