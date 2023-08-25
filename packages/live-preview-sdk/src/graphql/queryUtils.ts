@@ -1,12 +1,25 @@
-import type { DocumentNode, SelectionNode } from 'graphql';
+import type { DocumentNode, FieldNode, SelectionNode } from 'graphql';
 
+import { buildCollectionName, extractNameFromCollectionName } from './utils';
 import { debug } from '../helpers';
 import type { GraphQLParams } from '../types';
-import { buildCollectionName } from './utils';
+
 interface GeneratedGraphQLStructure {
   name: string;
   alias?: string;
   __typename: string;
+}
+
+/**
+ * Generates the typename for the next node
+ * If it's inside a collection it will provide the typename from the collection name
+ */
+function getTypeName(selection: FieldNode, prevTypeName: string): string {
+  if (selection.name.value === 'items') {
+    return extractNameFromCollectionName(prevTypeName) || selection.name.value;
+  }
+
+  return selection.name.value;
 }
 
 /**
@@ -28,7 +41,10 @@ function gatherFieldInformation(
 
       if (selection.selectionSet?.selections) {
         generated.push(
-          ...gatherFieldInformation(selection.selectionSet.selections, selection.name.value)
+          ...gatherFieldInformation(
+            selection.selectionSet.selections,
+            getTypeName(selection, typename)
+          )
         );
       }
     }
@@ -100,7 +116,9 @@ export function isRelevantField(
     return false;
   }
 
-  return queryInformation.fields.has(name) || queryInformation.fields.has(buildCollectionName(name));
+  return (
+    queryInformation.fields.has(name) || queryInformation.fields.has(buildCollectionName(name))
+  );
 }
 
 /**

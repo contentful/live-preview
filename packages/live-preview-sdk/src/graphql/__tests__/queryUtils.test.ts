@@ -16,6 +16,7 @@ const query = gql`
       }
       topSectionCollection {
         items {
+          __typename
           sys {
             id
           }
@@ -48,7 +49,7 @@ describe('parseGraphQLParams', () => {
         ['sys', { alias: new Map(), fields: new Set(['id']) }],
         ['content', { alias: new Map(), fields: new Set(['json']) }],
         ['topSectionCollection', { alias: new Map(), fields: new Set(['items']) }],
-        ['items', { alias: new Map(), fields: new Set(['sys']) }],
+        ['TopSection', { alias: new Map(), fields: new Set(['sys', '__typename']) }],
       ])
     );
   });

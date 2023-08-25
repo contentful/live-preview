@@ -3,12 +3,9 @@ import type { Asset, Entry } from 'contentful';
 
 import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
 import { sendMessageToEditor } from './utils';
+import { generateTypeName } from '../graphql/utils';
 
 const store: Record<string, EditorEntityStore> = {};
-
-export function generateTypeName(contentTypeId: string): string {
-  return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
-}
 
 function getStore(locale: string): EditorEntityStore {
   if (!store[locale]) {

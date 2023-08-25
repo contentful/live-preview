@@ -2,14 +2,7 @@ import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import { Asset, Entry } from 'contentful';
 import type { SetOptional } from 'type-fest';
 
-import {
-  isPrimitiveField,
-  updatePrimitiveField,
-  resolveReference,
-  clone,
-  debug,
-  generateTypeName,
-} from '../helpers';
+import { isPrimitiveField, updatePrimitiveField, resolveReference, clone, debug } from '../helpers';
 import { SUPPORTED_RICHTEXT_EMBEDS, isAsset, isRichText } from '../helpers/entities';
 import {
   CollectionItem,
@@ -24,7 +17,7 @@ import {
 } from '../types';
 import { updateAsset } from './assets';
 import { isRelevantField, updateAliasedInformation } from './queryUtils';
-import { buildCollectionName } from './utils';
+import { buildCollectionName, generateTypeName } from './utils';
 
 /**
  * Updates GraphQL response data based on CMA entry object
