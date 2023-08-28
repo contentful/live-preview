@@ -2969,10 +2969,10 @@ contentful-management@^10.30.1:
     lodash.isplainobject "^4.0.6"
     type-fest "^4.0.0"
 
-contentful-resolve-response@^1.3.6:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/contentful-resolve-response/-/contentful-resolve-response-1.7.0.tgz#0431d222a474e60a397b050a883bb3df61d9a378"
-  integrity sha512-NIaQkXAdNWf/1wp13aqtrmHWHy71oCIIbynojGs9ONDtA7hBXC2yCEf2IjzfgOkrkEfOMvwDQHizD0WmL6FR8w==
+contentful-resolve-response@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/contentful-resolve-response/-/contentful-resolve-response-1.8.1.tgz#b44ff13e12fab7deb00ef6216d8a7171bdda0395"
+  integrity sha512-VXGK2c8dBIGcRCknqudKmkDr2PzsUYfjLN6hhx71T09UzoXOdA/c0kfDhsf/BBCBWPWcLaUgaJEFU0lCo45TSg==
   dependencies:
     fast-copy "^2.1.7"
 
@@ -2997,14 +2997,14 @@ contentful-sdk-core@^8.1.0:
     lodash.isstring "^4.0.1"
     p-throttle "^4.1.1"
 
-contentful@10.4.2, contentful@^10.3.4:
-  version "10.4.2"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.4.2.tgz#ee777cf254f5536e0b6468f91949ff46dae34bff"
-  integrity sha512-NzSZZg21EFEADfZ2hXUzDIRK/cWvPlZGMIuo2FBcdzBD2ejIQFiaTfeNe1zFt/o5a/y3jEbWLXHI5ICjSGwHNg==
+contentful@10.5.0, contentful@^10.3.4:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.5.0.tgz#3b1337618640aadff10948f7c37d4c22242c8e3a"
+  integrity sha512-aCXGmUSR8Qn/tz49Eztk9mUPJ6xe1osZfqgMSYzEM2dm1WT+gQbqnxOiBBHOdCckXNAk9OnA535IjihW6yMysw==
   dependencies:
     "@contentful/rich-text-types" "^16.0.2"
     axios "^1.4.0"
-    contentful-resolve-response "^1.3.6"
+    contentful-resolve-response "^1.8.1"
     contentful-sdk-core "^8.1.0"
     json-stringify-safe "^5.0.1"
     type-fest "^4.0.0"
