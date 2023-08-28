@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.9.3...@contentful/live-preview@2.9.4) (2023-08-28)
+
+
+### Bug Fixes
+
+* **graphql:** providing the query no longer prevents updates [TOL-1409] ([#288](https://github.com/contentful/live-preview/issues/288)) ([b24df04](https://github.com/contentful/live-preview/commit/b24df048e08cb762c2573e979cb10bfbc665271f))
+
+
+
+
+
 ## [2.9.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.9.2...@contentful/live-preview@2.9.3) (2023-08-28)
 
 **Note:** Version bump only for package @contentful/live-preview
