@@ -73,10 +73,14 @@ describe('ContentfulLivePreview', () => {
 
       // Check that the LiveUpdates.subscribe was called correctly
       expect(subscribe).toHaveBeenCalledOnce();
-      expect(subscribe).toHaveBeenCalledWith({ data, locale: 'en-US', callback });
+      expect(subscribe).toHaveBeenCalledWith('edit', {
+        data,
+        locale: 'en-US',
+        callback,
+      });
 
       // Updates from the subscribe fn will trigger the callback
-      subscribe.mock.lastCall?.[0].callback({ entity: { title: 'Hello' } });
+      subscribe.mock.lastCall?.[1].callback({ entity: { title: 'Hello' } });
 
       expect(callback).toHaveBeenCalledTimes(1);
       expect(callback).toHaveBeenCalledWith({ entity: { title: 'Hello' } });

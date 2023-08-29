@@ -26,6 +26,8 @@ import {
   SubscribeCallback,
   TagAttributes,
 } from './types';
+import { getEntryList } from './utils';
+import { SaveEvent } from './saveEvent';
 
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
@@ -45,6 +47,7 @@ export class ContentfulLivePreview {
   static initialized = false;
   static inspectorMode: InspectorMode | null = null;
   static liveUpdates: LiveUpdates | null = null;
+  static saveEvent: SaveEvent | null = null;
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
   static locale: string;
@@ -96,6 +99,7 @@ export class ContentfulLivePreview {
 
       if (this.liveUpdatesEnabled) {
         ContentfulLivePreview.liveUpdates = new LiveUpdates({ locale });
+        ContentfulLivePreview.saveEvent = new SaveEvent({ locale });
       }
 
       // bind event listeners for interactivity
@@ -150,20 +154,41 @@ export class ContentfulLivePreview {
     }
   }
 
-  static subscribe(config: ContentfulSubscribeConfig): VoidFunction {
+  static subscribe(config: ContentfulSubscribeConfig): VoidFunction;
+  static subscribe(
+    event: 'save',
+    config: Pick<ContentfulSubscribeConfig, 'callback'>
+  ): VoidFunction;
+  static subscribe(event: 'edit', config: ContentfulSubscribeConfig): VoidFunction;
+  static subscribe(
+    configOrEvent: 'save' | 'edit' | ContentfulSubscribeConfig,
+    config?: ContentfulSubscribeConfig | Pick<ContentfulSubscribeConfig, 'callback'>
+  ): VoidFunction {
     if (!this.liveUpdatesEnabled) {
       return () => {
         /* noop */
       };
     }
 
+    const event = typeof configOrEvent === 'string' ? configOrEvent : 'edit';
+    const subscribeConfig = typeof configOrEvent === 'object' ? configOrEvent : config!;
+
+    if (event === 'save') {
+      if (!this.saveEvent) {
+        throw new Error(
+          'Save event is not initialized, please call `ContentfulLivePreview.init()` first.'
+        );
+      }
+      return this.saveEvent.subscribe(subscribeConfig.callback);
+    }
+
     if (!this.liveUpdates) {
       throw new Error(
-        'Live Updates are not initialized, please call `ContentfulLivePreview.init()` first.'
+        'Live updates are not initialized, please call `ContentfulLivePreview.init()` first.'
       );
     }
 
-    return this.liveUpdates.subscribe(config);
+    return this.liveUpdates.subscribe(subscribeConfig as ContentfulSubscribeConfig);
   }
 
   // Static method to render live preview data-attributes to HTML element output
@@ -200,6 +225,13 @@ export class ContentfulLivePreview {
     }
 
     openEntryInEditorUtility(fieldId, entryId, locale || this.locale);
+  }
+
+  /**
+   * Returns a list of tagged entries on the page
+   */
+  static getEntryList(): string[] {
+    return getEntryList();
   }
 }
 
