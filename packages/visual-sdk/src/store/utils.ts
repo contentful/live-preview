@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function get<T>(obj: Record<string, any>, path: string[]): T | undefined {
   if (!path.length) {
     return obj as T;

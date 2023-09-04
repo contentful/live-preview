@@ -45,7 +45,7 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
 /**
  * Map with integrated persistence layer to save/restore data during the session
  */
-export class StorageMap<T extends unknown> {
+export class StorageMap<T> {
   private storageKey: string;
   private value: Map<string, T>;
 
@@ -122,6 +122,7 @@ export function setProtocolToHttps(url: string | undefined): string | undefined 
  * Hint: It uses the structuredClone which is only available in modern browsers,
  * for older one it uses the JSON.parse(JSON.strinfify) hack.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function clone<T extends Record<any, any> | Array<any>>(incoming: T): T {
   if (typeof structuredClone === 'function') {
     return structuredClone(incoming);

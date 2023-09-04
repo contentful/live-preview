@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // @vitest-environment jsdom
 import { Asset, Entry } from 'contentful';
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';

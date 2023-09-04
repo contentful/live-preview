@@ -1,4 +1,4 @@
-import type { Asset, Entry } from 'contentful';
+import type { Asset, ChainModifiers, Entry } from 'contentful';
 
 import { EntityStore } from './EntityStore';
 
@@ -31,7 +31,7 @@ type Subscribe = (
  * over the sendMessage and subscribe functions.
  */
 export class EditorEntityStore extends EntityStore {
-  private requestCache = new Map<string, Promise<any>>();
+  private requestCache = new Map<string, Promise<(Entry | Asset<ChainModifiers, string>)[]>>();
   private sendMessage: SendMessage;
   private subscribe: Subscribe;
   private timeoutDuration: number;
@@ -97,33 +97,35 @@ export class EditorEntityStore extends EntityStore {
       return openRequest;
     }
 
-    const newPromise = new Promise((resolve, reject) => {
-      const unsubscribe = this.subscribe(
-        PostMessageMethods.REQUESTED_ENTITIES,
-        (message: RequestedEntitiesMessage) => {
-          if (missingIds.every((id) => message.entities.find((entity) => entity.sys.id === id))) {
-            clearTimeout(timeout);
-            resolve(message.entities);
+    const newPromise: Promise<(Entry | Asset<ChainModifiers, string>)[]> = new Promise(
+      (resolve, reject) => {
+        const unsubscribe = this.subscribe(
+          PostMessageMethods.REQUESTED_ENTITIES,
+          (message: RequestedEntitiesMessage) => {
+            if (missingIds.every((id) => message.entities.find((entity) => entity.sys.id === id))) {
+              clearTimeout(timeout);
+              resolve(message.entities);
 
-            this.cleanupPromise(cacheId);
-            ids.forEach((id) => this.cleanupPromise(id));
+              this.cleanupPromise(cacheId);
+              ids.forEach((id) => this.cleanupPromise(id));
 
-            unsubscribe();
+              unsubscribe();
+            }
           }
-        }
-      );
+        );
 
-      const timeout = setTimeout(() => {
-        reject(new Error('Request for entities timed out'));
-        unsubscribe();
-      }, this.timeoutDuration);
+        const timeout = setTimeout(() => {
+          reject(new Error('Request for entities timed out'));
+          unsubscribe();
+        }, this.timeoutDuration);
 
-      this.sendMessage(PostMessageMethods.REQUEST_ENTITIES, {
-        entityIds: missingIds,
-        entityType: isAsset ? 'Asset' : 'Entry',
-        locale: this.locale,
-      });
-    });
+        this.sendMessage(PostMessageMethods.REQUEST_ENTITIES, {
+          entityIds: missingIds,
+          entityType: isAsset ? 'Asset' : 'Entry',
+          locale: this.locale,
+        });
+      }
+    );
 
     this.requestCache.set(cacheId, newPromise);
     ids.forEach((cid) => {

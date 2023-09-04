@@ -90,6 +90,7 @@ export type ErrorMessage = {
   /** Error message */
   message: string;
   /** Additional information that could be helpful about this error (e.g. entryId) */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: Record<string, any>;
 };
 

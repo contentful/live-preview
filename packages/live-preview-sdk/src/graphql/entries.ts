@@ -96,6 +96,7 @@ function isEntityLinkEmpty(obj: RichTextLink) {
 }
 
 async function processNode(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   node: any,
   entries: RichTextLink,
   assets: RichTextLink,
@@ -166,6 +167,7 @@ async function processNode(
 }
 
 async function processRichTextField(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   richTextNode: any | null,
   entityReferenceMap: EntityReferenceMap,
   locale: string,

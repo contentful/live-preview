@@ -188,6 +188,7 @@ async function updateSingleRefField(
 }
 
 async function resolveRichTextLinks(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   node: any,
   entityReferenceMap: EntityReferenceMap,
   locale: string,
