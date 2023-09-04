@@ -1,7 +1,7 @@
+import { getAllTaggedEntries } from './fieldTaggingUtils';
 import { debug } from './helpers';
 import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages';
 import { SubscribeCallback } from './types';
-import { getEntryList } from './utils';
 
 export class SaveEvent {
   locale: string;
@@ -14,7 +14,7 @@ export class SaveEvent {
   public subscribe(cb: SubscribeCallback): VoidFunction {
     if (this.subscription) {
       debug.log(
-        'There is already a subscription for the save event, the existing will be replaced.'
+        'There is already a subscription for the save event, the existing one will be replaced.'
       );
     }
 
@@ -34,10 +34,10 @@ export class SaveEvent {
     };
   }
 
-  public receiveMessage(message: MessageFromEditor): void {
+  public receiveMessage(message: Omit<MessageFromEditor, 'from' | 'source'>): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
       const { entity } = message as EntrySavedMessage;
-      const entries = getEntryList();
+      const entries = getAllTaggedEntries();
 
       if (entries.includes(entity.sys.id)) {
         this.subscription(entity);

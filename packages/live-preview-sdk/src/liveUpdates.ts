@@ -2,7 +2,6 @@ import type { Asset, Entry } from 'contentful';
 
 import type {
   ContentfulSubscribeConfig,
-  EntrySavedMessage,
   EntryUpdatedMessage,
   ErrorMessage,
   MessageFromEditor,

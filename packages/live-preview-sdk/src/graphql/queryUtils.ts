@@ -1,8 +1,8 @@
 import type { DocumentNode, FieldNode, SelectionNode } from 'graphql';
 
-import { buildCollectionName, extractNameFromCollectionName } from './utils';
 import { debug } from '../helpers';
 import type { GraphQLParams } from '../types';
+import { buildCollectionName, extractNameFromCollectionName } from './utils';
 
 interface GeneratedGraphQLStructure {
   name: string;

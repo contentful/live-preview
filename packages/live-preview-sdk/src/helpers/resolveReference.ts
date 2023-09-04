@@ -1,9 +1,9 @@
 import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
 
+import { generateTypeName } from '../graphql/utils';
 import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
 import { sendMessageToEditor } from './utils';
-import { generateTypeName } from '../graphql/utils';
 
 const store: Record<string, EditorEntityStore> = {};
 

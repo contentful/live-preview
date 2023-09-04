@@ -2,6 +2,7 @@ import './styles.css';
 
 import { type DocumentNode } from 'graphql';
 
+import { getAllTaggedEntries } from './fieldTaggingUtils';
 import {
   sendMessageToEditor,
   pollUrlChanges,
@@ -19,6 +20,7 @@ import {
   UrlChangedMessage,
   openEntryInEditorUtility,
 } from './messages';
+import { SaveEvent } from './saveEvent';
 import {
   Argument,
   InspectorModeTags,
@@ -26,8 +28,6 @@ import {
   SubscribeCallback,
   TagAttributes,
 } from './types';
-import { getEntryList } from './utils';
-import { SaveEvent } from './saveEvent';
 
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
@@ -87,19 +87,19 @@ export class ContentfulLivePreview {
 
       this.locale = locale;
 
-      if (ContentfulLivePreview.initialized) {
+      if (this.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.inspectorMode);
       }
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        ContentfulLivePreview.inspectorMode = new InspectorMode({ locale });
+        this.inspectorMode = new InspectorMode({ locale });
       }
 
       if (this.liveUpdatesEnabled) {
-        ContentfulLivePreview.liveUpdates = new LiveUpdates({ locale });
-        ContentfulLivePreview.saveEvent = new SaveEvent({ locale });
+        this.liveUpdates = new LiveUpdates({ locale });
+        this.saveEvent = new SaveEvent({ locale });
       }
 
       // bind event listeners for interactivity
@@ -119,11 +119,12 @@ export class ContentfulLivePreview {
         }
 
         if (this.inspectorModeEnabled) {
-          ContentfulLivePreview.inspectorMode?.receiveMessage(event.data);
+          this.inspectorMode?.receiveMessage(event.data);
         }
 
         if (this.liveUpdatesEnabled) {
-          ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
+          this.liveUpdates?.receiveMessage(event.data);
+          this.saveEvent?.receiveMessage(event.data);
         }
       });
 
@@ -231,7 +232,7 @@ export class ContentfulLivePreview {
    * Returns a list of tagged entries on the page
    */
   static getEntryList(): string[] {
-    return getEntryList();
+    return getAllTaggedEntries();
   }
 }
 

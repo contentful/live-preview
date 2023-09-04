@@ -5,24 +5,32 @@ import { sendMessageToEditor, isInsideIframe } from '../helpers';
 import { ContentfulLivePreview } from '../index';
 import { InspectorMode } from '../inspectorMode';
 import { LiveUpdates } from '../liveUpdates';
+import { SaveEvent } from '../saveEvent';
 import { TagAttributes } from '../types';
 
 vi.mock('../inspectorMode');
 vi.mock('../liveUpdates');
+vi.mock('../saveEvent');
 vi.mock('../helpers');
 
 describe('ContentfulLivePreview', () => {
-  const receiveMessageTagging = vi.fn();
-  const receiveMessageUpdates = vi.fn();
-  const subscribe = vi.fn();
+  const receiveMessageInspectorMode = vi.fn();
+  const receiveMessageLiveUpdates = vi.fn();
+  const receiveMessageSaveEvent = vi.fn();
+  const subscribeToLiveUpdates = vi.fn();
+  const subscribeToSaveEvent = vi.fn();
 
   (InspectorMode as Mock).mockImplementation(() => ({
-    receiveMessage: receiveMessageTagging,
+    receiveMessage: receiveMessageInspectorMode,
     getTaggedElements: vi.fn(() => []),
   }));
   (LiveUpdates as Mock).mockImplementation(() => ({
-    receiveMessage: receiveMessageUpdates,
-    subscribe,
+    receiveMessage: receiveMessageLiveUpdates,
+    subscribe: subscribeToLiveUpdates,
+  }));
+  (SaveEvent as Mock).mockImplementation(() => ({
+    receiveMessage: receiveMessageSaveEvent,
+    subscribe: subscribeToSaveEvent,
   }));
 
   beforeAll(() => {
@@ -43,10 +51,10 @@ describe('ContentfulLivePreview', () => {
         const data = { from: 'live-preview', value: 'any' };
         window.dispatchEvent(new MessageEvent('message', { data }));
 
-        expect(receiveMessageTagging).toHaveBeenCalledTimes(1);
-        expect(receiveMessageTagging).toHaveBeenCalledWith(data);
-        expect(receiveMessageUpdates).toHaveBeenCalledTimes(1);
-        expect(receiveMessageUpdates).toHaveBeenCalledWith(data);
+        expect(receiveMessageInspectorMode).toHaveBeenCalledTimes(1);
+        expect(receiveMessageInspectorMode).toHaveBeenCalledWith(data);
+        expect(receiveMessageLiveUpdates).toHaveBeenCalledTimes(1);
+        expect(receiveMessageLiveUpdates).toHaveBeenCalledWith(data);
       });
 
       it('doenst call the InspectorMode and LiveUpdates for invalid events', () => {
@@ -59,8 +67,8 @@ describe('ContentfulLivePreview', () => {
         window.dispatchEvent(new MessageEvent('message', { data: 'just a string' }));
         window.dispatchEvent(new MessageEvent('message', { data: null }));
 
-        expect(receiveMessageTagging).not.toHaveBeenCalled();
-        expect(receiveMessageUpdates).not.toHaveBeenCalled();
+        expect(receiveMessageInspectorMode).not.toHaveBeenCalled();
+        expect(receiveMessageLiveUpdates).not.toHaveBeenCalled();
       });
     });
   });
@@ -72,18 +80,24 @@ describe('ContentfulLivePreview', () => {
       ContentfulLivePreview.subscribe({ data, locale: 'en-US', callback });
 
       // Check that the LiveUpdates.subscribe was called correctly
-      expect(subscribe).toHaveBeenCalledOnce();
-      expect(subscribe).toHaveBeenCalledWith('edit', {
+      expect(subscribeToLiveUpdates).toHaveBeenCalledOnce();
+      expect(subscribeToLiveUpdates).toHaveBeenCalledWith({
         data,
         locale: 'en-US',
         callback,
       });
 
       // Updates from the subscribe fn will trigger the callback
-      subscribe.mock.lastCall?.[1].callback({ entity: { title: 'Hello' } });
+      subscribeToLiveUpdates.mock.lastCall?.[0].callback({ entity: { title: 'Hello' } });
 
       expect(callback).toHaveBeenCalledTimes(1);
       expect(callback).toHaveBeenCalledWith({ entity: { title: 'Hello' } });
+    });
+
+    it('should subscribe to changes from the save event', () => {
+      ContentfulLivePreview.subscribe('save', { callback: vi.fn() });
+
+      expect(subscribeToSaveEvent).toHaveBeenCalledOnce();
     });
 
     it('should not subscribe to changes if it is disabled', () => {
@@ -94,7 +108,7 @@ describe('ContentfulLivePreview', () => {
       ContentfulLivePreview.subscribe({ data, locale: 'en-US', callback });
 
       // Check that the LiveUpdates.subscribe was called correctly
-      expect(subscribe).not.toHaveBeenCalled();
+      expect(subscribeToLiveUpdates).not.toHaveBeenCalled();
     });
   });
 
