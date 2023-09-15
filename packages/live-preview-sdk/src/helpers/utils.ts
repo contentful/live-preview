@@ -21,7 +21,6 @@ export function sendMessageToEditor(method: PostMessageMethods, data: EditorMess
   debug.log('Send message', message);
 
   CONTENTFUL_ORIGINS.forEach((origin) => {
-    console.log(origin);
     window.top?.postMessage(message, origin);
   });
 }
