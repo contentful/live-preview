@@ -1,5 +1,5 @@
 import * as packageJson from '../../package.json';
-import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
+import { CONTENTFUL_ORIGINS, LIVE_PREVIEW_SDK_SOURCE } from '../constants';
 import { PostMessageMethods } from '../messages';
 import type { EditorMessage, MessageFromSDK } from '../messages';
 import { debug } from './debug';
@@ -20,10 +20,9 @@ export function sendMessageToEditor(method: PostMessageMethods, data: EditorMess
 
   debug.log('Send message', message);
 
-  window.top?.postMessage(
-    message,
-    '*' // TODO: check if there is any security risk with this
-  );
+  CONTENTFUL_ORIGINS.forEach((origin) => {
+    window.top?.postMessage(message, origin);
+  });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
