@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.9.8...@contentful/live-preview@2.10.0) (2023-09-18)
+
+
+### Features
+
+* [] Add origins for editor postMessage ([#312](https://github.com/contentful/live-preview/issues/312)) ([c4e8829](https://github.com/contentful/live-preview/commit/c4e8829d33b6429b3ffc54d54e603f4bf6899e6d))
+
+
+
+
+
 ## [2.9.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.9.7...@contentful/live-preview@2.9.8) (2023-09-18)
 
 **Note:** Version bump only for package @contentful/live-preview
