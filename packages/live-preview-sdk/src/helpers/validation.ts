@@ -26,32 +26,51 @@ function validation(d: Argument): { isGQL: boolean; sysId: string | null; isREST
   }
 }
 
+type ValidationResult = (
+  | {
+      isValid: true;
+      sysId: string;
+    }
+  | {
+      isValid: false;
+      sysId: string | null;
+    }
+) & { isGQL: boolean; isREST: boolean };
+
 /**
  * **Basic** validating of the subscribed data
  * Is it GraphQL or REST and does it contain the sys information
  */
-export function validateDataForLiveUpdates(data: Argument) {
-  let isValid = true;
-
+export function validateDataForLiveUpdates(data: Argument): ValidationResult {
   const { isGQL, sysId, isREST } = validation(data);
 
   if (!sysId) {
-    isValid = false;
     debug.error('Live Updates requires the "sys.id" to be present on the provided data', data);
+    return {
+      isValid: false,
+      sysId,
+      isGQL,
+      isREST,
+    };
   }
 
   if (!isGQL && !isREST) {
-    isValid = false;
     debug.error(
       'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates are not applied.',
       data
     );
+    return {
+      isValid: false,
+      sysId,
+      isGQL,
+      isREST,
+    };
   }
 
   return {
     isGQL,
     isREST,
     sysId,
-    isValid,
+    isValid: true,
   };
 }

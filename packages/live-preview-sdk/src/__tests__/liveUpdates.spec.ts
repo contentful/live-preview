@@ -201,7 +201,10 @@ describe('LiveUpdates', () => {
   it('merges nested collections', async () => {
     const liveUpdates = new LiveUpdates({ locale });
     const callback = vi.fn();
-    liveUpdates.subscribe({ data: nestedCollectionFromPreviewApp, callback });
+    liveUpdates.subscribe({
+      data: nestedCollectionFromPreviewApp,
+      callback,
+    });
     await liveUpdates.receiveMessage({
       entity: pageInsideCollectionFromEntryEditor as unknown as Entry,
       contentType: landingPageContentType as unknown as ContentType,
@@ -248,6 +251,7 @@ describe('LiveUpdates', () => {
         type: 'GQL',
         locale,
         entryId: '1',
+        event: 'edit',
       });
     });
 
@@ -263,6 +267,7 @@ describe('LiveUpdates', () => {
         type: 'REST',
         locale,
         entryId: '1',
+        event: 'edit',
       });
     });
   });
@@ -274,6 +279,8 @@ describe('LiveUpdates', () => {
       data,
       locale,
       callback: vi.fn(),
+      event: 'edit',
+      sysId: id,
     };
     const liveUpdates = new LiveUpdates({ locale });
 

@@ -82,6 +82,7 @@ export type SubscribedMessage = {
   type: 'GQL' | 'REST';
   entryId: string;
   locale: string;
+  event: 'edit' | 'save';
 };
 
 export type ErrorMessage = {

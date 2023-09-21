@@ -2,6 +2,7 @@ import './styles.css';
 
 import { type DocumentNode } from 'graphql';
 
+import { getAllTaggedEntries } from './fieldTaggingUtils';
 import {
   sendMessageToEditor,
   pollUrlChanges,
@@ -19,6 +20,7 @@ import {
   UrlChangedMessage,
   openEntryInEditorUtility,
 } from './messages';
+import { SaveEvent } from './saveEvent';
 import {
   Argument,
   InspectorModeTags,
@@ -45,6 +47,7 @@ export class ContentfulLivePreview {
   static initialized = false;
   static inspectorMode: InspectorMode | null = null;
   static liveUpdates: LiveUpdates | null = null;
+  static saveEvent: SaveEvent | null = null;
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
   static locale: string;
@@ -84,18 +87,19 @@ export class ContentfulLivePreview {
 
       this.locale = locale;
 
-      if (ContentfulLivePreview.initialized) {
+      if (this.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.inspectorMode);
       }
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        ContentfulLivePreview.inspectorMode = new InspectorMode({ locale });
+        this.inspectorMode = new InspectorMode({ locale });
       }
 
       if (this.liveUpdatesEnabled) {
-        ContentfulLivePreview.liveUpdates = new LiveUpdates({ locale });
+        this.liveUpdates = new LiveUpdates({ locale });
+        this.saveEvent = new SaveEvent({ locale });
       }
 
       // bind event listeners for interactivity
@@ -115,11 +119,12 @@ export class ContentfulLivePreview {
         }
 
         if (this.inspectorModeEnabled) {
-          ContentfulLivePreview.inspectorMode?.receiveMessage(event.data);
+          this.inspectorMode?.receiveMessage(event.data);
         }
 
         if (this.liveUpdatesEnabled) {
-          ContentfulLivePreview.liveUpdates?.receiveMessage(event.data);
+          this.liveUpdates?.receiveMessage(event.data);
+          this.saveEvent?.receiveMessage(event.data);
         }
       });
 
@@ -150,20 +155,41 @@ export class ContentfulLivePreview {
     }
   }
 
-  static subscribe(config: ContentfulSubscribeConfig): VoidFunction {
+  static subscribe(config: ContentfulSubscribeConfig): VoidFunction;
+  static subscribe(
+    event: 'save',
+    config: Pick<ContentfulSubscribeConfig, 'callback'>
+  ): VoidFunction;
+  static subscribe(event: 'edit', config: ContentfulSubscribeConfig): VoidFunction;
+  static subscribe(
+    configOrEvent: 'save' | 'edit' | ContentfulSubscribeConfig,
+    config?: ContentfulSubscribeConfig | Pick<ContentfulSubscribeConfig, 'callback'>
+  ): VoidFunction {
     if (!this.liveUpdatesEnabled) {
       return () => {
         /* noop */
       };
     }
 
+    const event = typeof configOrEvent === 'string' ? configOrEvent : 'edit';
+    const subscribeConfig = typeof configOrEvent === 'object' ? configOrEvent : config!;
+
+    if (event === 'save') {
+      if (!this.saveEvent) {
+        throw new Error(
+          'Save event is not initialized, please call `ContentfulLivePreview.init()` first.'
+        );
+      }
+      return this.saveEvent.subscribe(subscribeConfig.callback);
+    }
+
     if (!this.liveUpdates) {
       throw new Error(
-        'Live Updates are not initialized, please call `ContentfulLivePreview.init()` first.'
+        'Live updates are not initialized, please call `ContentfulLivePreview.init()` first.'
       );
     }
 
-    return this.liveUpdates.subscribe(config);
+    return this.liveUpdates.subscribe(subscribeConfig as ContentfulSubscribeConfig);
   }
 
   // Static method to render live preview data-attributes to HTML element output
@@ -200,6 +226,13 @@ export class ContentfulLivePreview {
     }
 
     openEntryInEditorUtility(fieldId, entryId, locale || this.locale);
+  }
+
+  /**
+   * Returns a list of tagged entries on the page
+   */
+  static getEntryList(): string[] {
+    return getAllTaggedEntries();
   }
 }
 

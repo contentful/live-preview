@@ -296,6 +296,7 @@ export class LiveUpdates {
 
     this.subscriptions.set(id, {
       ...config,
+      sysId,
       gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
     });
 
@@ -314,6 +315,7 @@ export class LiveUpdates {
       type: isGQL ? 'GQL' : 'REST',
       locale,
       entryId: sysId,
+      event: 'edit',
     } as SubscribedMessage);
 
     return () => {
