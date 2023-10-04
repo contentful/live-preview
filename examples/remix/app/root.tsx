@@ -31,7 +31,6 @@ export default function App() {
         <head>
           <Meta />
           <Links />
-          <link rel="stylesheet" href="/style.css" />
         </head>
         <body>
           <main>

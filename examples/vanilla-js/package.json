@@ -11,7 +11,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@contentful/live-preview": "^2.9.1",
+    "@contentful/live-preview": "latest",
     "contentful": "^10.5.0",
     "dotenv": "^16.3.1"
   },
