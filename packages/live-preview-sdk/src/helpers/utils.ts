@@ -1,5 +1,5 @@
 import { version } from '../../package.json';
-import { CONTENTFUL_ORIGINS, LIVE_PREVIEW_SDK_SOURCE } from '../constants';
+import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
 import { PostMessageMethods } from '../messages';
 import type { EditorMessage, MessageFromSDK } from '../messages';
 import { debug } from './debug';
@@ -8,7 +8,11 @@ import { debug } from './debug';
  * Sends the given message to the editor
  * enhances it with the information necessary to be accepted
  */
-export function sendMessageToEditor(method: PostMessageMethods, data: EditorMessage): void {
+export function sendMessageToEditor(
+  method: PostMessageMethods,
+  data: EditorMessage,
+  targetOrigin: string[]
+): void {
   const message: MessageFromSDK = {
     ...data,
     method,
@@ -20,7 +24,7 @@ export function sendMessageToEditor(method: PostMessageMethods, data: EditorMess
 
   debug.log('Send message', message);
 
-  CONTENTFUL_ORIGINS.forEach((origin) => {
+  targetOrigin.forEach((origin) => {
     window.top?.postMessage(message, origin);
   });
 }

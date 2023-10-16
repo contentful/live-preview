@@ -162,11 +162,20 @@ export type MessageFromEditor = (
   source: typeof LIVE_PREVIEW_EDITOR_SOURCE;
 };
 
-export function openEntryInEditorUtility(fieldId: string, entryId: string, locale: string): void {
-  sendMessageToEditor(LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED, {
-    action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
-    fieldId,
-    entryId,
-    locale,
-  });
+export function openEntryInEditorUtility(
+  fieldId: string,
+  entryId: string,
+  locale: string,
+  targetOrigin: string[]
+): void {
+  sendMessageToEditor(
+    LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
+    {
+      action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
+      fieldId,
+      entryId,
+      locale,
+    },
+    targetOrigin
+  );
 }

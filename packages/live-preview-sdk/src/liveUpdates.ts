@@ -45,9 +45,11 @@ export class LiveUpdates {
   private subscriptions = new Map<string, Subscription>();
   private storage: StorageMap<Entity>;
   private defaultLocale: string;
+  private targetOrigin: string[];
 
-  constructor({ locale }: { locale: string }) {
+  constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
+    this.targetOrigin = targetOrigin;
     this.storage = new StorageMap<Entity>('live-updates', new Map());
     window.addEventListener('beforeunload', () => this.clearStorage());
   }
@@ -215,11 +217,11 @@ export class LiveUpdates {
               s.callback(data);
             }
           } catch (error) {
-            sendMessageToEditor(LivePreviewPostMessageMethods.ERROR, {
+            this.sendErrorMessage({
               message: (error as Error).message,
               payload: { data: s.data, update: entity },
               type: 'SUBSCRIPTION_UPDATE_FAILED',
-            } as ErrorMessage);
+            });
 
             debug.error('Failed to apply live update', {
               error,
@@ -268,6 +270,10 @@ export class LiveUpdates {
     this.storage.clear();
   }
 
+  private sendErrorMessage(error: ErrorMessage): void {
+    sendMessageToEditor(LivePreviewPostMessageMethods.ERROR, error, this.targetOrigin);
+  }
+
   /**
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
@@ -276,11 +282,11 @@ export class LiveUpdates {
     const { isGQL, isValid, sysId, isREST } = validateDataForLiveUpdates(config.data);
 
     if (!isValid) {
-      sendMessageToEditor(LivePreviewPostMessageMethods.ERROR, {
+      this.sendErrorMessage({
         message: 'Failed to subscribe',
         payload: { isGQL, isValid, sysId, isREST },
         type: 'SUBSCRIPTION_SETUP_FAILED',
-      } as ErrorMessage);
+      });
       return () => {
         /* noop */
       };
@@ -305,13 +311,17 @@ export class LiveUpdates {
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.
-    sendMessageToEditor(LivePreviewPostMessageMethods.SUBSCRIBED, {
-      action: LivePreviewPostMessageMethods.SUBSCRIBED,
-      type: isGQL ? 'GQL' : 'REST',
-      locale,
-      entryId: sysId,
-      event: 'edit',
-    } as SubscribedMessage);
+    sendMessageToEditor(
+      LivePreviewPostMessageMethods.SUBSCRIBED,
+      {
+        action: LivePreviewPostMessageMethods.SUBSCRIBED,
+        type: isGQL ? 'GQL' : 'REST',
+        locale,
+        entryId: sysId,
+        event: 'edit',
+      } as SubscribedMessage,
+      this.targetOrigin
+    );
 
     return () => {
       this.subscriptions.delete(id);

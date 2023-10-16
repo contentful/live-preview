@@ -3,15 +3,17 @@ import type { Asset, Entry } from 'contentful';
 
 import { generateTypeName } from '../graphql/utils';
 import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
-import { sendMessageToEditor } from './utils';
 
 const store: Record<string, EditorEntityStore> = {};
 
-function getStore(locale: string): EditorEntityStore {
+function getStore(
+  locale: string,
+  sendMessage: EditorEntityStore['sendMessage']
+): EditorEntityStore {
   if (!store[locale]) {
     store[locale] = new EditorEntityStore({
       entities: [],
-      sendMessage: sendMessageToEditor,
+      sendMessage,
       subscribe: (method, cb) => {
         // TODO: move this to a generic subscribe function on ContentfulLivePreview
         const listeners = (
@@ -56,11 +58,13 @@ export async function resolveReference({
   referenceId,
   isAsset,
   locale,
+  sendMessage,
 }: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset?: boolean;
   locale: string;
+  sendMessage: EditorEntityStore['sendMessage'];
 }): Promise<{ reference: Entry | Asset; typeName: string }> {
   const reference = entityReferenceMap.get(referenceId);
 
@@ -75,7 +79,7 @@ export async function resolveReference({
   }
 
   if (isAsset) {
-    const result = await getStore(locale).fetchAsset(referenceId);
+    const result = await getStore(locale, sendMessage).fetchAsset(referenceId);
     if (!result) {
       throw new Error(`Unknown reference ${referenceId}`);
     }
@@ -86,7 +90,7 @@ export async function resolveReference({
     };
   }
 
-  const result = await getStore(locale).fetchEntry(referenceId);
+  const result = await getStore(locale, sendMessage).fetchEntry(referenceId);
   if (!result) {
     throw new Error(`Unknown reference ${referenceId}`);
   }
