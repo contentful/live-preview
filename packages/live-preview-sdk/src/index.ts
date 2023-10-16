@@ -2,6 +2,7 @@ import './styles.css';
 
 import { type DocumentNode } from 'graphql';
 
+import { version } from '../package.json';
 import { getAllTaggedEntries } from './fieldTaggingUtils';
 import {
   sendMessageToEditor,
@@ -28,6 +29,8 @@ import {
   SubscribeCallback,
   TagAttributes,
 } from './types';
+
+export const VERSION = version;
 
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
