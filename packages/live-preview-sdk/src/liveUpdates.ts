@@ -31,7 +31,6 @@ interface MergeEntityProps {
   contentType: ContentType;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
-  visitedReferences: Set<string>;
 }
 
 interface MergeArgumentProps extends Omit<MergeEntityProps, 'dataFromPreviewApp'> {
@@ -60,7 +59,6 @@ export class LiveUpdates {
     locale,
     updateFromEntryEditor,
     gqlParams,
-    visitedReferences,
   }: Omit<MergeEntityProps, 'dataFromPreviewApp'> & {
     dataFromPreviewApp: EntityWithSys;
   }): Promise<{
@@ -89,6 +87,7 @@ export class LiveUpdates {
     if (this.isCfEntity(dataFromPreviewApp)) {
       // REST
       const depth = 0;
+      const visitedReferenceMap = new Map<string, rest.Reference>();
       return {
         data: await rest.updateEntity(
           contentType,
@@ -97,7 +96,7 @@ export class LiveUpdates {
           locale,
           entityReferenceMap,
           depth,
-          visitedReferences
+          visitedReferenceMap
         ),
         updated: true,
       };
@@ -199,9 +198,6 @@ export class LiveUpdates {
       await Promise.all(
         [...this.subscriptions].map(async ([, s]) => {
           try {
-            // Reset the visitedReferences set for each new update.
-            const visitedReferences = new Set<string>();
-
             const { updated, data } = await this.merge({
               // Clone the original data on the top level,
               // to prevent cloning multiple times (time)
@@ -212,7 +208,6 @@ export class LiveUpdates {
               contentType: contentType,
               entityReferenceMap: entityReferenceMap,
               gqlParams: s.gqlParams,
-              visitedReferences,
             });
 
             // Only if there was an update, trigger the callback to unnecessary re-renders

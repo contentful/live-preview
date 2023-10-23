@@ -12,7 +12,7 @@ import {
 } from '../helpers/entities';
 import { ContentType, EntityReferenceMap } from '../types';
 
-type Reference = Asset | Entry | WithResourceName<Entry>;
+export type Reference = Asset | Entry | WithResourceName<Entry>;
 
 /**
  * Resolves the correct field name from the ContentType
@@ -36,23 +36,20 @@ async function updateRef(
   locale: string,
   entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferences: Set<string>
+  visitedReferenceMap: Map<string, Reference>
 ): Promise<Reference | undefined | null> {
   let reference;
+  const id =
+    'urn' in updateFromEntryEditor.sys
+      ? updateFromEntryEditor.sys.urn
+      : updateFromEntryEditor.sys.id;
+
   // If the ID of the updateFromEntryEditor is in visitedReferences, then stop the recursion
-  if (visitedReferences.has(updateFromEntryEditor.sys.id)) {
+  // if (visitedReferences.has(updateFromEntryEditor.sys.id)) {
+  if (visitedReferenceMap.has(id)) {
     debug.warn('Detected a circular reference, stopping recursion');
-    reference = entityReferenceMap.get(
-      'urn' in updateFromEntryEditor.sys
-        ? updateFromEntryEditor.sys.urn
-        : updateFromEntryEditor.sys.id
-    );
+    reference = visitedReferenceMap.get(id);
   } else {
-    visitedReferences.add(
-      'urn' in updateFromEntryEditor.sys
-        ? updateFromEntryEditor.sys.urn
-        : updateFromEntryEditor.sys.id
-    );
     const { reference: resolvedReference } = await resolveReference({
       entityReferenceMap,
       referenceId: updateFromEntryEditor.sys.id,
@@ -60,6 +57,7 @@ async function updateRef(
       locale,
     });
     reference = resolvedReference;
+    visitedReferenceMap.set(id, resolvedReference);
   }
 
   if (!reference) {
@@ -82,7 +80,7 @@ async function updateRef(
         key as keyof Reference['fields'],
         entityReferenceMap,
         depth + 1,
-        visitedReferences
+        visitedReferenceMap
       );
       // multi ref fields
     } else if (Array.isArray(value) && isEntityLink(value[0]) && depth < MAX_DEPTH) {
@@ -93,7 +91,7 @@ async function updateRef(
         key as keyof Reference['fields'],
         entityReferenceMap,
         depth + 1,
-        visitedReferences
+        visitedReferenceMap
       );
       // rich text fields
     } else if (isRichText(value)) {
@@ -104,7 +102,7 @@ async function updateRef(
         locale,
         entityReferenceMap,
         depth + 1,
-        visitedReferences
+        visitedReferenceMap
       );
       // single and multi resource link fields
     } else if (isResourceLink(value) || (Array.isArray(value) && isResourceLink(value[0]))) {
@@ -132,7 +130,7 @@ async function updateMultiRefField(
   name: keyof Reference['fields'],
   entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferences: Set<string>
+  visitedReferenceMap: Map<string, Reference>
 ) {
   if (!updateFromEntryEditor.fields?.[name]) {
     delete dataFromPreviewApp.fields[name];
@@ -148,7 +146,7 @@ async function updateMultiRefField(
           locale,
           entityReferenceMap,
           depth + 1,
-          visitedReferences
+          visitedReferenceMap
         )
     )
   ).then((list) => list.filter(Boolean))) as Reference[];
@@ -164,7 +162,7 @@ async function updateSingleRefField(
   name: keyof Reference['fields'],
   entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferences: Set<string>
+  visitedReferenceMap: Map<string, Reference>
 ) {
   const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name] as Reference | undefined;
 
@@ -181,7 +179,7 @@ async function updateSingleRefField(
     locale,
     entityReferenceMap,
     depth + 1,
-    visitedReferences
+    visitedReferenceMap
   );
 
   return dataFromPreviewApp;
@@ -192,7 +190,7 @@ async function resolveRichTextLinks(
   entityReferenceMap: EntityReferenceMap,
   locale: string,
   depth: number,
-  visitedReferences: Set<string>
+  visitedReferenceMap: Map<string, Reference>
 ) {
   if (SUPPORTED_RICHTEXT_EMBEDS.includes(node.nodeType)) {
     if (node.data && node.data.target && node.data.target.sys) {
@@ -208,7 +206,7 @@ async function resolveRichTextLinks(
           locale,
           entityReferenceMap,
           depth + 1,
-          visitedReferences
+          visitedReferenceMap
         );
       }
     }
@@ -221,7 +219,7 @@ async function resolveRichTextLinks(
         entityReferenceMap,
         locale,
         depth + 1,
-        visitedReferences
+        visitedReferenceMap
       );
     }
   }
@@ -234,7 +232,7 @@ async function updateRichTextField(
   locale: string,
   entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferences: Set<string>
+  visitedReferenceMap: Map<string, Reference>
 ) {
   const richText = updateFromEntryEditor.fields?.[name];
 
@@ -243,7 +241,7 @@ async function updateRichTextField(
     dataFromPreviewApp.fields[name] = richText;
     // Resolve the linked entries or assets within the rich text field
     for (const node of richText.content) {
-      await resolveRichTextLinks(node, entityReferenceMap, locale, depth, visitedReferences);
+      await resolveRichTextLinks(node, entityReferenceMap, locale, depth, visitedReferenceMap);
     }
   }
 }
@@ -264,7 +262,7 @@ export async function updateEntity(
   locale: string,
   entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferences: Set<string>
+  visitedReferenceMap: Map<string, Reference>
 ): Promise<Entry> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
     return dataFromPreviewApp;
@@ -287,7 +285,7 @@ export async function updateEntity(
         name as keyof Reference['fields'],
         entityReferenceMap,
         depth + 1,
-        visitedReferences
+        visitedReferenceMap
       );
     } else if (field.type === 'Array' && field.items?.type === 'Link' && depth < MAX_DEPTH) {
       await updateMultiRefField(
@@ -297,7 +295,7 @@ export async function updateEntity(
         name as keyof Reference['fields'],
         entityReferenceMap,
         depth + 1,
-        visitedReferences
+        visitedReferenceMap
       );
     } else if (field.type === 'RichText') {
       await updateRichTextField(
@@ -307,7 +305,7 @@ export async function updateEntity(
         locale,
         entityReferenceMap,
         depth,
-        visitedReferences
+        visitedReferenceMap
       );
     } else if (field.type === 'ResourceLink') {
       //@TODO -- add live updates for resource links
