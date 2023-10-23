@@ -45,7 +45,6 @@ async function updateRef(
       : updateFromEntryEditor.sys.id;
 
   // If the ID of the updateFromEntryEditor is in visitedReferences, then stop the recursion
-  // if (visitedReferences.has(updateFromEntryEditor.sys.id)) {
   if (visitedReferenceMap.has(id)) {
     debug.warn('Detected a circular reference, stopping recursion');
     reference = visitedReferenceMap.get(id);
