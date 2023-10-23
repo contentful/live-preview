@@ -6,7 +6,7 @@ import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
 import { MAX_DEPTH } from '../../constants';
 import { clone, resolveReference } from '../../helpers';
 import { EntityReferenceMap } from '../../types';
-import { updateEntity } from '../entities';
+import { Reference, updateEntity } from '../entities';
 import { EN, referenceWithRichTextId } from './constants';
 import contentTypeEntryJSON from './fixtures/contentType.json';
 import {
@@ -67,7 +67,7 @@ describe('Update REST entry', () => {
     locale?: string;
     entityReferenceMap?: EntityReferenceMap;
   }) => {
-    const visitedReferences = new Set<string>();
+    const visitedReferences = new Map<string, Reference>();
 
     return updateEntity(
       contentType,
