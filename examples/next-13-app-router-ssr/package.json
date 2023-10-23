@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run build:script && npm run dev:next",
+    "dev:next": "next dev",
+    "build": "npm run build:script && npm run build:next",
     "build:next": "next build",
     "build:script": "vite build",
     "start": "next start",
@@ -13,7 +14,6 @@
   },
   "dependencies": {
     "@contentful/live-preview": "../../packages/live-preview-sdk",
-    "@contentful/visual-sdk": "^1.0.0-alpha.11",
     "next": "13.4.13",
     "react": "18.2.0",
     "react-dom": "18.2.0"
