@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.7...@contentful/live-preview@2.11.8) (2023-10-23)
+
+
+### Bug Fixes
+
+* fixing circular ref updates by using store of already fetched data [] ([#377](https://github.com/contentful/live-preview/issues/377)) ([14ba7b1](https://github.com/contentful/live-preview/commit/14ba7b11b2f20ee26eb00b45f728368232acb5e1))
+
+
+
+
+
 ## [2.11.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.6...@contentful/live-preview@2.11.7) (2023-10-23)
 
 **Note:** Version bump only for package @contentful/live-preview
