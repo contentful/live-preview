@@ -30,7 +30,7 @@
   "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
+    "@commitlint/config-conventional": "^18.0.0",
     "@contentful/eslint-config-extension": "0.4.3",
     "commitizen": "4.3.0",
     "concurrently": "8.2.1",
