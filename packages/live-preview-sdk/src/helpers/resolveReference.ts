@@ -1,4 +1,9 @@
-import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
+import {
+  EditorEntityStore,
+  PostMessageMethods,
+  RequestEntitiesMessage,
+  RequestedEntitiesMessage,
+} from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
 
 import { generateTypeName } from '../graphql/utils';
@@ -6,10 +11,9 @@ import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
 
 const store: Record<string, EditorEntityStore> = {};
 
-function getStore(
-  locale: string,
-  sendMessage: EditorEntityStore['sendMessage']
-): EditorEntityStore {
+export type SendMessage = (method: PostMessageMethods, params: RequestEntitiesMessage) => void;
+
+function getStore(locale: string, sendMessage: SendMessage): EditorEntityStore {
   if (!store[locale]) {
     store[locale] = new EditorEntityStore({
       entities: [],
@@ -41,12 +45,14 @@ export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   locale: string;
+  sendMessage: SendMessage;
 }): Promise<{ reference: Entry; typeName: string }>;
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset: true;
   locale: string;
+  sendMessage: SendMessage;
 }): Promise<{ reference: Asset; typeName: string }>;
 /**
  * Returns the requested reference from
@@ -64,7 +70,7 @@ export async function resolveReference({
   referenceId: string;
   isAsset?: boolean;
   locale: string;
-  sendMessage: EditorEntityStore['sendMessage'];
+  sendMessage: SendMessage;
 }): Promise<{ reference: Entry | Asset; typeName: string }> {
   const reference = entityReferenceMap.get(referenceId);
 

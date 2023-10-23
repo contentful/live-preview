@@ -31,6 +31,7 @@ const asset = assetJSON as unknown as Asset;
 const dataFromPreviewApp = dataFromPreviewAppJSON as unknown as Entry;
 
 describe('Update REST entry', () => {
+  const sendMessage = vi.fn();
   const defaultEntityReferenceMap = new Map<string, Entry | Asset>([
     [newEntryReference.sys.id, newEntryReference],
     [newAssetReference.sys.id, newAssetReference],
@@ -44,6 +45,7 @@ describe('Update REST entry', () => {
       } as unknown as Entry,
     ],
   ]);
+
   beforeEach(() => {
     (resolveReference as Mock).mockImplementation(async ({ referenceId }) => {
       return { reference: defaultEntityReferenceMap.get(referenceId) };
@@ -76,7 +78,8 @@ describe('Update REST entry', () => {
       locale,
       entityReferenceMap,
       0,
-      visitedReferences
+      visitedReferences,
+      sendMessage
     );
   };
 

@@ -9,9 +9,10 @@ const locale = 'en-US';
 
 describe('InspectorMode', () => {
   let inspectorMode: InspectorMode;
+  const targetOrigin = ['https://app.contentful.com'];
 
   beforeEach(() => {
-    inspectorMode = new InspectorMode({ locale });
+    inspectorMode = new InspectorMode({ locale, targetOrigin });
   });
 
   afterEach(() => {

@@ -2,9 +2,11 @@ import type { Asset, Entry } from 'contentful';
 
 import type {
   ContentfulSubscribeConfig,
+  EditorMessage,
   EntryUpdatedMessage,
   ErrorMessage,
   MessageFromEditor,
+  PostMessageMethods,
   SubscribedMessage,
 } from '.';
 import * as gql from './graphql';
@@ -45,11 +47,11 @@ export class LiveUpdates {
   private subscriptions = new Map<string, Subscription>();
   private storage: StorageMap<Entity>;
   private defaultLocale: string;
-  private targetOrigin: string[];
+  private sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
 
   constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
-    this.targetOrigin = targetOrigin;
+    this.sendMessage = (method, data) => sendMessageToEditor(method, data, targetOrigin);
     this.storage = new StorageMap<Entity>('live-updates', new Map());
     window.addEventListener('beforeunload', () => this.clearStorage());
   }
@@ -78,6 +80,7 @@ export class LiveUpdates {
             locale,
             entityReferenceMap,
             gqlParams,
+            sendMessage: this.sendMessage,
           }));
 
       return {
@@ -98,7 +101,8 @@ export class LiveUpdates {
           locale,
           entityReferenceMap,
           depth,
-          visitedReferenceMap
+          visitedReferenceMap,
+          this.sendMessage
         ),
         updated: true,
       };
@@ -271,7 +275,7 @@ export class LiveUpdates {
   }
 
   private sendErrorMessage(error: ErrorMessage): void {
-    sendMessageToEditor(LivePreviewPostMessageMethods.ERROR, error, this.targetOrigin);
+    this.sendMessage(LivePreviewPostMessageMethods.ERROR, error);
   }
 
   /**
@@ -311,17 +315,13 @@ export class LiveUpdates {
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.
-    sendMessageToEditor(
-      LivePreviewPostMessageMethods.SUBSCRIBED,
-      {
-        action: LivePreviewPostMessageMethods.SUBSCRIBED,
-        type: isGQL ? 'GQL' : 'REST',
-        locale,
-        entryId: sysId,
-        event: 'edit',
-      } as SubscribedMessage,
-      this.targetOrigin
-    );
+    this.sendMessage(LivePreviewPostMessageMethods.SUBSCRIBED, {
+      action: LivePreviewPostMessageMethods.SUBSCRIBED,
+      type: isGQL ? 'GQL' : 'REST',
+      locale,
+      entryId: sysId,
+      event: 'edit',
+    } as SubscribedMessage);
 
     return () => {
       this.subscriptions.delete(id);

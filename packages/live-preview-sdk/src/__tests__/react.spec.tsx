@@ -64,7 +64,7 @@ describe('useContentfulLiveUpdates', () => {
     });
 
     expect(subscribe).toHaveBeenCalledTimes(1);
-    expect(subscribe).toHaveBeenCalledWith({
+    expect(subscribe).toHaveBeenCalledWith('edit', {
       data: initialData,
       locale,
       callback: expect.any(Function),
@@ -108,7 +108,7 @@ describe('useContentfulLiveUpdates', () => {
 
     const updatedData1 = createData('4', 'Hello World');
     act(() => {
-      subscribe.mock.calls[0][0].callback(updatedData1);
+      subscribe.mock.calls[0][1].callback(updatedData1);
       vi.advanceTimersToNextTimer();
     });
 
@@ -116,7 +116,7 @@ describe('useContentfulLiveUpdates', () => {
 
     const updatedData2 = createData('4', 'Hello World!');
     act(() => {
-      subscribe.mock.calls[0][0].callback(updatedData2);
+      subscribe.mock.calls[0][1].callback(updatedData2);
       vi.advanceTimersToNextTimer();
     });
 
@@ -142,11 +142,11 @@ describe('useContentfulLiveUpdates', () => {
 
     const updatedData = createData('5', 'Hello World');
     act(() => {
-      subscribe.mock.calls[0][0].callback(createData('5', 'Hello W'));
-      subscribe.mock.calls[0][0].callback(createData('5', 'Hello Wo'));
-      subscribe.mock.calls[0][0].callback(createData('5', 'Hello Wor'));
-      subscribe.mock.calls[0][0].callback(createData('5', 'Hello Worl'));
-      subscribe.mock.calls[0][0].callback(updatedData);
+      subscribe.mock.calls[0][1].callback(createData('5', 'Hello W'));
+      subscribe.mock.calls[0][1].callback(createData('5', 'Hello Wo'));
+      subscribe.mock.calls[0][1].callback(createData('5', 'Hello Wor'));
+      subscribe.mock.calls[0][1].callback(createData('5', 'Hello Worl'));
+      subscribe.mock.calls[0][1].callback(updatedData);
       vi.advanceTimersToNextTimer();
     });
 

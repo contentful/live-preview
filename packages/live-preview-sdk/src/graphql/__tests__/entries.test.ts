@@ -19,6 +19,7 @@ const defaultContentType = defaultContentTypeJSON as ContentTypeProps;
 // Note: we can get rid of expect.objectContaining, if we iterate over the provided data instead of the ContentType.fields
 describe('Update GraphQL Entry', () => {
   const testReferenceId = '18kDTlnJNnDIJf6PsXE5Mr';
+  const sendMessage = vi.fn();
 
   beforeEach(() => {
     (resolveReference as Mock).mockResolvedValue({
@@ -59,6 +60,7 @@ describe('Update GraphQL Entry', () => {
       updateFromEntryEditor: update,
       locale,
       entityReferenceMap,
+      sendMessage,
     });
   };
 

@@ -16,8 +16,10 @@ import { InspectorMode } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
 import {
   ConnectedMessage,
+  EditorMessage,
   LivePreviewPostMessageMethods,
   MessageFromEditor,
+  PostMessageMethods,
   UrlChangedMessage,
   openEntryInEditorUtility,
 } from './messages';
@@ -61,6 +63,7 @@ export class ContentfulLivePreview {
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
   static locale: string;
+  static sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
   static targetOrigin: string[];
 
   // Static method to initialize the LivePreview SDK
@@ -113,11 +116,11 @@ export class ContentfulLivePreview {
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        this.inspectorMode = new InspectorMode({ locale });
+        this.inspectorMode = new InspectorMode({ locale, targetOrigin: this.targetOrigin });
       }
 
       if (this.liveUpdatesEnabled) {
-        this.liveUpdates = new LiveUpdates({ locale, origins: this.targetOrigin });
+        this.liveUpdates = new LiveUpdates({ locale, targetOrigin: this.targetOrigin });
         this.saveEvent = new SaveEvent({ locale });
       }
 
