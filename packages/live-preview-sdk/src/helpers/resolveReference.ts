@@ -1,17 +1,23 @@
-import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
+import {
+  EditorEntityStore,
+  PostMessageMethods,
+  RequestEntitiesMessage,
+  RequestedEntitiesMessage,
+} from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
 
 import { generateTypeName } from '../graphql/utils';
 import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
-import { sendMessageToEditor } from './utils';
 
 const store: Record<string, EditorEntityStore> = {};
 
-function getStore(locale: string): EditorEntityStore {
+export type SendMessage = (method: PostMessageMethods, params: RequestEntitiesMessage) => void;
+
+function getStore(locale: string, sendMessage: SendMessage): EditorEntityStore {
   if (!store[locale]) {
     store[locale] = new EditorEntityStore({
       entities: [],
-      sendMessage: sendMessageToEditor,
+      sendMessage,
       subscribe: (method, cb) => {
         // TODO: move this to a generic subscribe function on ContentfulLivePreview
         const listeners = (
@@ -39,12 +45,14 @@ export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   locale: string;
+  sendMessage: SendMessage;
 }): Promise<{ reference: Entry; typeName: string }>;
 export async function resolveReference(info: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset: true;
   locale: string;
+  sendMessage: SendMessage;
 }): Promise<{ reference: Asset; typeName: string }>;
 /**
  * Returns the requested reference from
@@ -56,11 +64,13 @@ export async function resolveReference({
   referenceId,
   isAsset,
   locale,
+  sendMessage,
 }: {
   entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset?: boolean;
   locale: string;
+  sendMessage: SendMessage;
 }): Promise<{ reference: Entry | Asset; typeName: string }> {
   const reference = entityReferenceMap.get(referenceId);
 
@@ -75,7 +85,7 @@ export async function resolveReference({
   }
 
   if (isAsset) {
-    const result = await getStore(locale).fetchAsset(referenceId);
+    const result = await getStore(locale, sendMessage).fetchAsset(referenceId);
     if (!result) {
       throw new Error(`Unknown reference ${referenceId}`);
     }
@@ -86,7 +96,7 @@ export async function resolveReference({
     };
   }
 
-  const result = await getStore(locale).fetchEntry(referenceId);
+  const result = await getStore(locale, sendMessage).fetchEntry(referenceId);
   if (!result) {
     throw new Error(`Unknown reference ${referenceId}`);
   }

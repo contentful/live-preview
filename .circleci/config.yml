@@ -32,6 +32,7 @@ jobs:
       - checkout
       - yarn_install
       - run: yarn lint
+      - run: yarn tsc
       - run: yarn build
   unit-tests:
     executor: linux-node

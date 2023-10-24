@@ -16,8 +16,10 @@ import { InspectorMode } from './inspectorMode';
 import { LiveUpdates } from './liveUpdates';
 import {
   ConnectedMessage,
+  EditorMessage,
   LivePreviewPostMessageMethods,
   MessageFromEditor,
+  PostMessageMethods,
   UrlChangedMessage,
   openEntryInEditorUtility,
 } from './messages';
@@ -32,11 +34,18 @@ import {
 
 export const VERSION = version;
 
+const DEFAULT_ORIGINS = ['https://app.contentful.com', 'https://app.eu.contentful.com'];
+
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
   debugMode?: boolean;
   enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
+  /**
+   * Contentful host in which the website should be shown
+   * Can be `https://app.contentful.com` or `https://app.eu.contentful.com`
+   */
+  targetOrigin?: string | string[];
 }
 
 export interface ContentfulSubscribeConfig {
@@ -54,6 +63,8 @@ export class ContentfulLivePreview {
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
   static locale: string;
+  static sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
+  static targetOrigin: string[];
 
   // Static method to initialize the LivePreview SDK
   static init(config: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
@@ -63,7 +74,13 @@ export class ContentfulLivePreview {
       );
     }
 
-    const { debugMode, enableInspectorMode, enableLiveUpdates, locale } = config;
+    const {
+      debugMode,
+      enableInspectorMode,
+      enableLiveUpdates,
+      locale,
+      targetOrigin = DEFAULT_ORIGINS,
+    } = config;
 
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
@@ -90,6 +107,8 @@ export class ContentfulLivePreview {
 
       this.locale = locale;
 
+      this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
+
       if (this.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
         return Promise.resolve(ContentfulLivePreview.inspectorMode);
@@ -97,11 +116,11 @@ export class ContentfulLivePreview {
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        this.inspectorMode = new InspectorMode({ locale });
+        this.inspectorMode = new InspectorMode({ locale, targetOrigin: this.targetOrigin });
       }
 
       if (this.liveUpdatesEnabled) {
-        this.liveUpdates = new LiveUpdates({ locale });
+        this.liveUpdates = new LiveUpdates({ locale, targetOrigin: this.targetOrigin });
         this.saveEvent = new SaveEvent({ locale });
       }
 
@@ -133,23 +152,31 @@ export class ContentfulLivePreview {
 
       // navigation changes
       pollUrlChanges(() => {
-        sendMessageToEditor(LivePreviewPostMessageMethods.URL_CHANGED, {
-          action: LivePreviewPostMessageMethods.URL_CHANGED,
-          taggedElementCount: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
-        } as UrlChangedMessage);
+        sendMessageToEditor(
+          LivePreviewPostMessageMethods.URL_CHANGED,
+          {
+            action: LivePreviewPostMessageMethods.URL_CHANGED,
+            taggedElementCount: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+          } as UrlChangedMessage,
+          this.targetOrigin
+        );
       });
 
       // tell the editor that there's a SDK
       const taggedElementCount = document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length;
-      sendMessageToEditor(LivePreviewPostMessageMethods.CONNECTED, {
-        action: LivePreviewPostMessageMethods.CONNECTED,
-        connected: true,
-        tags: taggedElementCount,
-        taggedElementCount,
-        locale: this.locale,
-        isInspectorEnabled: this.inspectorModeEnabled,
-        isLiveUpdatesEnabled: this.liveUpdatesEnabled,
-      } as ConnectedMessage);
+      sendMessageToEditor(
+        LivePreviewPostMessageMethods.CONNECTED,
+        {
+          action: LivePreviewPostMessageMethods.CONNECTED,
+          connected: true,
+          tags: taggedElementCount,
+          taggedElementCount,
+          locale: this.locale,
+          isInspectorEnabled: this.inspectorModeEnabled,
+          isLiveUpdatesEnabled: this.liveUpdatesEnabled,
+        } as ConnectedMessage,
+        this.targetOrigin
+      );
 
       // all set up - ready to go
       this.initialized = true;
@@ -228,7 +255,7 @@ export class ContentfulLivePreview {
       debug.error('Please provide field id and entry id to openEntryInEditor.');
     }
 
-    openEntryInEditorUtility(fieldId, entryId, locale || this.locale);
+    openEntryInEditorUtility(fieldId, entryId, locale || this.locale, this.targetOrigin);
   }
 
   /**

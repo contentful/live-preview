@@ -18,16 +18,6 @@ vi.mock('../helpers/debug');
 describe('LiveUpdates', () => {
   const sendMessage = vi.spyOn(helpers, 'sendMessageToEditor');
 
-  beforeEach(() => {
-    sendMessage.mockImplementation(() => {
-      // noop
-    });
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   const contentType = {
     sys: { id: 'Test' },
     fields: [
@@ -44,6 +34,7 @@ describe('LiveUpdates', () => {
       },
     ],
   } as unknown as ContentType;
+
   const locale = 'en-US';
   const updateFromEntryEditor1 = {
     sys: { id: '1' },
@@ -54,8 +45,20 @@ describe('LiveUpdates', () => {
     fields: { title: 'Data 3' },
   } as unknown as Entry;
 
+  const targetOrigin = ['https://app.contentful.com'];
+
+  beforeEach(() => {
+    sendMessage.mockImplementation(() => {
+      // noop
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should listen to changes and calls the subscribed handlers', async () => {
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, callback });
@@ -95,7 +98,7 @@ describe('LiveUpdates', () => {
 
   describe('invalid subscription data', () => {
     it('should notify because sys information is missing', () => {
-      const liveUpdates = new LiveUpdates({ locale });
+      const liveUpdates = new LiveUpdates({ locale, targetOrigin });
       const data = { title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
 
@@ -109,7 +112,7 @@ describe('LiveUpdates', () => {
   });
 
   it('no longer receives updates after unsubcribing', async () => {
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     const unsubscribe = liveUpdates.subscribe({ data, callback });
@@ -142,7 +145,7 @@ describe('LiveUpdates', () => {
   });
 
   it('ignores invalid messages', async () => {
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
     const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, callback });
@@ -159,7 +162,7 @@ describe('LiveUpdates', () => {
   });
 
   it('doesnt call the subscribe handler if the data was not updated', () => {
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
     const data = { sys: { id: '99' }, title: 'Data 1', __typename: 'Demo' };
     const callback = vi.fn();
     liveUpdates.subscribe({ data, locale, callback });
@@ -178,7 +181,7 @@ describe('LiveUpdates', () => {
   });
 
   it('merges nested field updates', async () => {
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedDataFromPreviewApp, callback });
     await liveUpdates.receiveMessage({
@@ -199,7 +202,7 @@ describe('LiveUpdates', () => {
   });
 
   it('merges nested collections', async () => {
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
     const callback = vi.fn();
     liveUpdates.subscribe({
       data: nestedCollectionFromPreviewApp,
@@ -240,35 +243,43 @@ describe('LiveUpdates', () => {
 
   describe('sendMessageToEditor', () => {
     it('sends a message to the editor for a subscription with GQL data', () => {
-      const liveUpdates = new LiveUpdates({ locale });
+      const liveUpdates = new LiveUpdates({ locale, targetOrigin });
       const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
       liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
-      expect(sendMessage).toHaveBeenCalledWith(LivePreviewPostMessageMethods.SUBSCRIBED, {
-        action: LivePreviewPostMessageMethods.SUBSCRIBED,
-        type: 'GQL',
-        locale,
-        entryId: '1',
-        event: 'edit',
-      });
+      expect(sendMessage).toHaveBeenCalledWith(
+        LivePreviewPostMessageMethods.SUBSCRIBED,
+        {
+          action: LivePreviewPostMessageMethods.SUBSCRIBED,
+          type: 'GQL',
+          locale,
+          entryId: '1',
+          event: 'edit',
+        },
+        ['https://app.contentful.com']
+      );
     });
 
     it('sends a message to the editor for a subscription with REST data', () => {
-      const liveUpdates = new LiveUpdates({ locale });
+      const liveUpdates = new LiveUpdates({ locale, targetOrigin });
       const data = { sys: { id: '1' }, fields: { title: 'Data 1' } };
       const callback = vi.fn();
       liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
-      expect(sendMessage).toHaveBeenCalledWith(LivePreviewPostMessageMethods.SUBSCRIBED, {
-        action: LivePreviewPostMessageMethods.SUBSCRIBED,
-        type: 'REST',
-        locale,
-        entryId: '1',
-        event: 'edit',
-      });
+      expect(sendMessage).toHaveBeenCalledWith(
+        LivePreviewPostMessageMethods.SUBSCRIBED,
+        {
+          action: LivePreviewPostMessageMethods.SUBSCRIBED,
+          type: 'REST',
+          locale,
+          entryId: '1',
+          event: 'edit',
+        },
+        ['https://app.contentful.com']
+      );
     });
   });
 
@@ -282,7 +293,7 @@ describe('LiveUpdates', () => {
       event: 'edit',
       sysId: id,
     };
-    const liveUpdates = new LiveUpdates({ locale });
+    const liveUpdates = new LiveUpdates({ locale, targetOrigin });
 
     beforeEach(() => {
       liveUpdates.subscribe(subscription);

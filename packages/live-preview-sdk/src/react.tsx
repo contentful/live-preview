@@ -55,6 +55,7 @@ export function ContentfulLivePreviewProvider({
   debugMode = false,
   enableInspectorMode = true,
   enableLiveUpdates = true,
+  targetOrigin,
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>): ReactElement {
   if (!locale) {
     throw new Error(
@@ -62,11 +63,17 @@ export function ContentfulLivePreviewProvider({
     );
   }
 
-  ContentfulLivePreview.init({ locale, debugMode, enableInspectorMode, enableLiveUpdates });
+  ContentfulLivePreview.init({
+    locale,
+    debugMode,
+    enableInspectorMode,
+    enableLiveUpdates,
+    targetOrigin,
+  });
 
   const props = useMemo(
-    () => ({ locale, debugMode, enableInspectorMode, enableLiveUpdates }),
-    [locale, debugMode, enableInspectorMode, enableLiveUpdates]
+    () => ({ locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin }),
+    [locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin]
   );
 
   return (
@@ -148,7 +155,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
     }
 
     // or update content through live updates
-    return ContentfulLivePreview.subscribe({
+    return ContentfulLivePreview.subscribe('edit', {
       data: data as Argument,
       locale: options.locale,
       query: options.query,

@@ -18,11 +18,13 @@ export class InspectorMode {
   private tooltip: HTMLButtonElement | null = null; // this tooltip scrolls to the correct field in the entry editor
   private currentElementBesideTooltip: HTMLElement | null = null; // this element helps to position the tooltip
   private defaultLocale: string;
+  private targetOrigin: string[];
 
-  constructor({ locale }: { locale: string }) {
+  constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.tooltip = null;
     this.currentElementBesideTooltip = null;
     this.defaultLocale = locale;
+    this.targetOrigin = targetOrigin;
 
     this.updateTooltipPosition = this.updateTooltipPosition.bind(this);
     this.addTooltipOnHover = this.addTooltipOnHover.bind(this);
@@ -120,7 +122,7 @@ export class InspectorMode {
     const locale = this.tooltip?.getAttribute(DATA_CURR_LOCALE) || this.defaultLocale;
 
     if (fieldId && entryId && locale) {
-      openEntryInEditorUtility(fieldId, entryId, locale);
+      openEntryInEditorUtility(fieldId, entryId, locale, this.targetOrigin);
     }
   }
 }

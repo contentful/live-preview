@@ -11,6 +11,7 @@ vi.mock('@contentful/visual-sdk');
 
 describe('resolveReference', () => {
   const locale = 'en-US';
+  const sendMessage = vi.fn();
 
   beforeEach(() => {
     (EditorEntityStore as Mock).mockImplementation(() => ({
@@ -51,6 +52,7 @@ describe('resolveReference', () => {
         entityReferenceMap: new Map([['1', asset]]),
         referenceId: '1',
         locale,
+        sendMessage,
       });
 
       expect(result).toEqual(expected);
@@ -62,6 +64,7 @@ describe('resolveReference', () => {
         referenceId: cdaAsset.sys.id,
         isAsset: true,
         locale,
+        sendMessage,
       });
 
       expect(result.typeName).toBe('Asset');
@@ -102,6 +105,7 @@ describe('resolveReference', () => {
         entityReferenceMap: new Map([['1', entry]]),
         referenceId: '1',
         locale,
+        sendMessage,
       });
 
       expect(result).toEqual(expected);
@@ -112,6 +116,7 @@ describe('resolveReference', () => {
         entityReferenceMap: new Map(),
         referenceId: cdaEntry.sys.id,
         locale,
+        sendMessage,
       });
 
       expect(result.typeName).toBe('TopicProductFeature');
