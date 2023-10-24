@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.9](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.8...@contentful/live-preview@2.11.9) (2023-10-24)
+
+
+### Bug Fixes
+
+* allow overriding the targetOrigin for messaging [] ([#360](https://github.com/contentful/live-preview/issues/360)) ([ed35e0f](https://github.com/contentful/live-preview/commit/ed35e0f6317ab8662ec4aa3ee1e82cb2e76973b6))
+
+
+
+
+
 ## [2.11.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.7...@contentful/live-preview@2.11.8) (2023-10-23)
 
 
