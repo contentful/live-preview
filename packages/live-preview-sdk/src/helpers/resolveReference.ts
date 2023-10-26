@@ -7,7 +7,7 @@ import {
 import type { Asset, Entry } from 'contentful';
 
 import { generateTypeName } from '../graphql/utils';
-import { ASSET_TYPENAME, EntityReferenceMap } from '../types';
+import { ASSET_TYPENAME, ReferenceMap } from '../types';
 
 const store: Record<string, EditorEntityStore> = {};
 
@@ -42,39 +42,39 @@ function getStore(locale: string, sendMessage: SendMessage): EditorEntityStore {
 }
 
 export async function resolveReference(info: {
-  entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   locale: string;
   sendMessage: SendMessage;
+  referenceMap: ReferenceMap;
 }): Promise<{ reference: Entry; typeName: string }>;
 export async function resolveReference(info: {
-  entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset: true;
   locale: string;
   sendMessage: SendMessage;
+  referenceMap: ReferenceMap;
 }): Promise<{ reference: Asset; typeName: string }>;
 /**
  * Returns the requested reference from
- * 1) the entityReferenceMap if it was already resolved once
+ * 1) the referenceMap if it was already resolved once
  * 2) loads it from the editor directly
  */
 export async function resolveReference({
-  entityReferenceMap,
   referenceId,
   isAsset,
   locale,
   sendMessage,
+  referenceMap,
 }: {
-  entityReferenceMap: EntityReferenceMap;
   referenceId: string;
   isAsset?: boolean;
   locale: string;
   sendMessage: SendMessage;
+  referenceMap: ReferenceMap;
 }): Promise<{ reference: Entry | Asset; typeName: string }> {
-  const reference = entityReferenceMap.get(referenceId);
-
+  const reference = referenceMap.get(referenceId);
   if (reference) {
+    referenceMap.set(referenceId, reference);
     return {
       reference,
       typeName:
@@ -101,6 +101,7 @@ export async function resolveReference({
     throw new Error(`Unknown reference ${referenceId}`);
   }
 
+  referenceMap.set(referenceId, result);
   return {
     reference: result,
     typeName: generateTypeName(result.sys.contentType.sys.id),

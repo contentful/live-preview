@@ -56,16 +56,17 @@ export interface CollectionItem {
   __typename?: string;
 }
 
-export class EntityReferenceMap extends Map<string, Entry | Asset> {}
+export type ReferenceMap = Map<string, Entry | Asset>;
 
 export type UpdateEntryProps = {
   contentType: ContentType;
   dataFromPreviewApp: Entity & { sys: SysProps };
   updateFromEntryEditor: Entry;
   locale: string;
-  entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
   sendMessage: SendMessage;
+  depth: number;
+  referenceMap: ReferenceMap;
 };
 
 export type UpdateFieldProps = {
@@ -73,18 +74,20 @@ export type UpdateFieldProps = {
   updateFromEntryEditor: Entry;
   name: string;
   locale: string;
-  entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
   sendMessage: SendMessage;
+  depth: number;
+  referenceMap: ReferenceMap;
 };
 
 export type UpdateReferenceFieldProps = {
   referenceFromPreviewApp: (Entity & { __typename?: string }) | null | undefined;
   updatedReference?: (Pick<Entry, 'sys'> | Pick<Asset, 'sys'>) & { __typename?: string };
-  entityReferenceMap: EntityReferenceMap;
   locale: string;
   gqlParams?: GraphQLParams;
   sendMessage: SendMessage;
+  depth: number;
+  referenceMap: ReferenceMap;
 };
 
 /**

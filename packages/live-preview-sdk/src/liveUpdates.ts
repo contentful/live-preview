@@ -20,10 +20,10 @@ import {
   ContentType,
   Entity,
   EntityWithSys,
-  EntityReferenceMap,
   hasSysInformation,
   Subscription,
   GraphQLParams,
+  ReferenceMap,
 } from './types';
 
 interface MergeEntityProps {
@@ -31,7 +31,6 @@ interface MergeEntityProps {
   locale: string;
   updateFromEntryEditor: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
 }
 
@@ -48,6 +47,7 @@ export class LiveUpdates {
   private storage: StorageMap<Entity>;
   private defaultLocale: string;
   private sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
+  private referenceMap: ReferenceMap = new Map();
 
   constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
@@ -59,7 +59,6 @@ export class LiveUpdates {
   private async mergeEntity({
     contentType,
     dataFromPreviewApp,
-    entityReferenceMap,
     locale,
     updateFromEntryEditor,
     gqlParams,
@@ -69,6 +68,8 @@ export class LiveUpdates {
     data: Entity;
     updated: boolean;
   }> {
+    const depth = 0;
+
     if ('__typename' in dataFromPreviewApp) {
       // GraphQL
       const data = await (dataFromPreviewApp.__typename === 'Asset'
@@ -78,9 +79,10 @@ export class LiveUpdates {
             dataFromPreviewApp,
             updateFromEntryEditor: updateFromEntryEditor as Entry,
             locale,
-            entityReferenceMap,
             gqlParams,
             sendMessage: this.sendMessage,
+            depth,
+            referenceMap: this.referenceMap,
           }));
 
       return {
@@ -91,17 +93,14 @@ export class LiveUpdates {
 
     if (this.isCfEntity(dataFromPreviewApp)) {
       // REST
-      const depth = 0;
-      const visitedReferenceMap = new Map<string, rest.Reference>();
       return {
         data: await rest.updateEntity(
           contentType,
           dataFromPreviewApp as Entry,
           updateFromEntryEditor as Entry,
           locale,
-          entityReferenceMap,
           depth,
-          visitedReferenceMap,
+          this.referenceMap,
           this.sendMessage
         ),
         updated: true,
@@ -201,6 +200,10 @@ export class LiveUpdates {
     ) {
       const { entity, contentType, entityReferenceMap } = message as EntryUpdatedMessage;
 
+      for (const [key, value] of entityReferenceMap.entries()) {
+        this.referenceMap.set(key, value);
+      }
+
       await Promise.all(
         [...this.subscriptions].map(async ([, s]) => {
           try {
@@ -212,7 +215,6 @@ export class LiveUpdates {
               locale: s.locale || this.defaultLocale,
               updateFromEntryEditor: entity,
               contentType: contentType,
-              entityReferenceMap: entityReferenceMap,
               gqlParams: s.gqlParams,
             });
 

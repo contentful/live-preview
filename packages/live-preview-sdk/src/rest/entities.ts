@@ -17,7 +17,7 @@ import {
   isResourceLink,
   isRichText,
 } from '../helpers/entities';
-import { ContentType, EntityReferenceMap } from '../types';
+import { ContentType, ReferenceMap } from '../types';
 
 export type Reference = Asset | Entry | WithResourceName<Entry>;
 
@@ -34,39 +34,24 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
 }
 
 /**
- * Update the reference from the entry editor with the information from the entityReferenceMap.
+ * Update the reference from the entry editor with the information from the referenceMap.
  * If the information is not yet available, it send a message to the editor to retrieve it.
  */
 async function updateRef(
   dataFromPreviewApp: Reference | undefined,
   updateFromEntryEditor: Reference,
   locale: string,
-  entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferenceMap: Map<string, Reference>,
+  referenceMap: Map<string, Reference>,
   sendMessage: SendMessage
 ): Promise<Reference | undefined | null> {
-  let reference;
-  const id =
-    'urn' in updateFromEntryEditor.sys
-      ? updateFromEntryEditor.sys.urn
-      : updateFromEntryEditor.sys.id;
-
-  // If the ID of the updateFromEntryEditor is in visitedReferences, then stop the recursion
-  if (visitedReferenceMap.has(id)) {
-    debug.warn('Detected a circular reference, stopping recursion');
-    reference = visitedReferenceMap.get(id);
-  } else {
-    const { reference: resolvedReference } = await resolveReference({
-      entityReferenceMap,
-      referenceId: updateFromEntryEditor.sys.id,
-      ...(isAsset(updateFromEntryEditor) ? { isAsset: true } : undefined),
-      locale,
-      sendMessage,
-    });
-    reference = resolvedReference;
-    visitedReferenceMap.set(id, resolvedReference);
-  }
+  const { reference } = await resolveReference({
+    referenceId: updateFromEntryEditor.sys.id,
+    ...(isAsset(updateFromEntryEditor) ? { isAsset: true } : undefined),
+    locale,
+    sendMessage,
+    referenceMap,
+  });
 
   if (!reference) {
     return dataFromPreviewApp;
@@ -86,9 +71,8 @@ async function updateRef(
         reference,
         locale,
         key as keyof Reference['fields'],
-        entityReferenceMap,
         depth + 1,
-        visitedReferenceMap,
+        referenceMap,
         sendMessage
       );
       // multi ref fields
@@ -98,9 +82,8 @@ async function updateRef(
         reference,
         locale,
         key as keyof Reference['fields'],
-        entityReferenceMap,
         depth + 1,
-        visitedReferenceMap,
+        referenceMap,
         sendMessage
       );
       // rich text fields
@@ -110,9 +93,8 @@ async function updateRef(
         reference as Entry,
         key,
         locale,
-        entityReferenceMap,
         depth + 1,
-        visitedReferenceMap,
+        referenceMap,
         sendMessage
       );
       // single and multi resource link fields
@@ -139,9 +121,8 @@ async function updateMultiRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferenceMap: Map<string, Reference>,
+  referenceMap: Map<string, Reference>,
   sendMessage: SendMessage
 ) {
   if (!updateFromEntryEditor.fields?.[name]) {
@@ -156,9 +137,8 @@ async function updateMultiRefField(
           (dataFromPreviewApp.fields[name] as Reference[])?.[index],
           updateFromEntryReference,
           locale,
-          entityReferenceMap,
           depth + 1,
-          visitedReferenceMap,
+          referenceMap,
           sendMessage
         )
     )
@@ -173,9 +153,8 @@ async function updateSingleRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferenceMap: Map<string, Reference>,
+  referenceMap: Map<string, Reference>,
   sendMessage: SendMessage
 ) {
   const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name] as Reference | undefined;
@@ -191,9 +170,8 @@ async function updateSingleRefField(
     dataFromPreviewApp.fields[name] as Reference | undefined,
     matchUpdateFromEntryEditor,
     locale,
-    entityReferenceMap,
     depth + 1,
-    visitedReferenceMap,
+    referenceMap,
     sendMessage
   );
 
@@ -202,10 +180,9 @@ async function updateSingleRefField(
 
 async function resolveRichTextLinks(
   node: any,
-  entityReferenceMap: EntityReferenceMap,
   locale: string,
   depth: number,
-  visitedReferenceMap: Map<string, Reference>,
+  referenceMap: Map<string, Reference>,
   sendMessage: SendMessage
 ) {
   if (SUPPORTED_RICHTEXT_EMBEDS.includes(node.nodeType)) {
@@ -220,9 +197,8 @@ async function resolveRichTextLinks(
           undefined,
           updatedReference,
           locale,
-          entityReferenceMap,
           depth + 1,
-          visitedReferenceMap,
+          referenceMap,
           sendMessage
         );
       }
@@ -231,14 +207,7 @@ async function resolveRichTextLinks(
 
   if (node.content) {
     for (const childNode of node.content) {
-      await resolveRichTextLinks(
-        childNode,
-        entityReferenceMap,
-        locale,
-        depth + 1,
-visitedReferenceMap,
-        sendMessage
-      );
+      await resolveRichTextLinks(childNode, locale, depth + 1, referenceMap, sendMessage);
     }
   }
 }
@@ -248,9 +217,8 @@ async function updateRichTextField(
   updateFromEntryEditor: Entry,
   name: string,
   locale: string,
-  entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferenceMap: Map<string, Reference>,
+  referenceMap: Map<string, Reference>,
   sendMessage: SendMessage
 ) {
   const richText = updateFromEntryEditor.fields?.[name];
@@ -260,14 +228,7 @@ async function updateRichTextField(
     dataFromPreviewApp.fields[name] = richText;
     // Resolve the linked entries or assets within the rich text field
     for (const node of richText.content) {
-      await resolveRichTextLinks(
-        node,
-        entityReferenceMap,
-        locale,
-        depth,
-        visitedReferenceMap,
-        sendMessage
-      );
+      await resolveRichTextLinks(node, locale, depth, referenceMap, sendMessage);
     }
   }
 }
@@ -275,10 +236,6 @@ async function updateRichTextField(
 /**
  * Updates REST response data based on CMA entry object
  *
- * @param contentType
- * @param dataFromPreviewApp The REST response to be updated
- * @param updateFromEntryEditor CMA entry object containing the update
- * @param locale Locale code
  * @returns Updated REST response data
  */
 export async function updateEntity(
@@ -286,9 +243,8 @@ export async function updateEntity(
   dataFromPreviewApp: Entry,
   updateFromEntryEditor: Entry | Asset,
   locale: string,
-  entityReferenceMap: EntityReferenceMap,
   depth: number,
-  visitedReferenceMap: Map<string, Reference>,
+  referenceMap: ReferenceMap,
   sendMessage: SendMessage
 ): Promise<Entry> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
@@ -310,9 +266,8 @@ export async function updateEntity(
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
-        entityReferenceMap,
         depth + 1,
-        visitedReferenceMap,
+        referenceMap,
         sendMessage
       );
     } else if (field.type === 'Array' && field.items?.type === 'Link' && depth < MAX_DEPTH) {
@@ -321,9 +276,8 @@ export async function updateEntity(
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
-        entityReferenceMap,
         depth + 1,
-        visitedReferenceMap,
+        referenceMap,
         sendMessage
       );
     } else if (field.type === 'RichText') {
@@ -332,9 +286,8 @@ export async function updateEntity(
         updateFromEntryEditor as Entry,
         name,
         locale,
-        entityReferenceMap,
         depth,
-        visitedReferenceMap,
+        referenceMap,
         sendMessage
       );
     } else if (field.type === 'ResourceLink') {
