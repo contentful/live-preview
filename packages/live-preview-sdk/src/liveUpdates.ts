@@ -7,6 +7,7 @@ import type {
   ErrorMessage,
   MessageFromEditor,
   PostMessageMethods,
+  RequestedEntitiesMessage,
   SubscribedMessage,
 } from '.';
 import * as gql from './graphql';
@@ -23,8 +24,8 @@ import {
   hasSysInformation,
   Subscription,
   GraphQLParams,
-  ReferenceMap,
 } from './types';
+import { EditorEntityStore } from '@contentful/visual-sdk';
 
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;
@@ -47,13 +48,41 @@ export class LiveUpdates {
   private storage: StorageMap<Entity>;
   private defaultLocale: string;
   private sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
-  private referenceMap: ReferenceMap = new Map();
+  private store: Record<string, EditorEntityStore> = {};
 
   constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
     this.sendMessage = (method, data) => sendMessageToEditor(method, data, targetOrigin);
     this.storage = new StorageMap<Entity>('live-updates', new Map());
     window.addEventListener('beforeunload', () => this.clearStorage());
+  }
+
+  private getStore(locale: string) {
+    if (!this.store[locale]) {
+      this.store[locale] = new EditorEntityStore({
+        entities: [],
+        sendMessage: this.sendMessage,
+        subscribe: (method, cb) => {
+          // TODO: move this to a generic subscribe function on ContentfulLivePreview
+          const listeners = (
+            event: MessageEvent<RequestedEntitiesMessage & { from: 'live-preview'; method: string }>
+          ) => {
+            if (typeof event.data !== 'object' || !event.data) return;
+            if (event.data.from !== 'live-preview') return;
+            if (event.data.method === method) {
+              cb(event.data);
+            }
+          };
+
+          window.addEventListener('message', listeners);
+
+          return () => window.removeEventListener('message', listeners);
+        },
+        locale,
+      });
+    }
+
+    return this.store[locale];
   }
 
   private async mergeEntity({
@@ -80,9 +109,8 @@ export class LiveUpdates {
             updateFromEntryEditor: updateFromEntryEditor as Entry,
             locale,
             gqlParams,
-            sendMessage: this.sendMessage,
             depth,
-            referenceMap: this.referenceMap,
+            getStore: this.getStore,
           }));
 
       return {
@@ -100,8 +128,7 @@ export class LiveUpdates {
           updateFromEntryEditor as Entry,
           locale,
           depth,
-          this.referenceMap,
-          this.sendMessage
+          this.getStore
         ),
         updated: true,
       };
@@ -200,8 +227,10 @@ export class LiveUpdates {
     ) {
       const { entity, contentType, entityReferenceMap } = message as EntryUpdatedMessage;
 
-      for (const [key, value] of entityReferenceMap.entries()) {
-        this.referenceMap.set(key, value);
+      for (const value of entityReferenceMap.values()) {
+        if (value.sys.locale) {
+          this.getStore(value.sys.locale).updateEntity(value);
+        }
       }
 
       await Promise.all(

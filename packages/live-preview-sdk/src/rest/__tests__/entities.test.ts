@@ -5,7 +5,6 @@ import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 import contentTypeAsset from '../../__tests__/fixtures/contentTypeAsset.json';
 import { MAX_DEPTH } from '../../constants';
 import { clone, resolveReference } from '../../helpers';
-import { EntityReferenceMap } from '../../types';
 import { Reference, updateEntity } from '../entities';
 import { EN, referenceWithRichTextId } from './constants';
 import contentTypeEntryJSON from './fixtures/contentType.json';
@@ -22,6 +21,7 @@ import dataFromPreviewAppJSON from './fixtures/dataFromPreviewApp.json';
 import assetJSON from './fixtures/updateAssetFromEntryEditor.json';
 import entryJSON from './fixtures/updateFromEntryEditor.json';
 import { patchField } from './utils';
+import { GetStore } from '../../types';
 
 vi.mock('../../helpers/resolveReference');
 
@@ -31,24 +31,21 @@ const asset = assetJSON as unknown as Asset;
 const dataFromPreviewApp = dataFromPreviewAppJSON as unknown as Entry;
 
 describe('Update REST entry', () => {
-  const sendMessage = vi.fn();
-  const defaultEntityReferenceMap = new Map<string, Entry | Asset>([
-    [newEntryReference.sys.id, newEntryReference],
-    [newAssetReference.sys.id, newAssetReference],
-    [
-      referenceWithRichTextId,
-      {
-        sys: { id: referenceWithRichTextId },
-        fields: {
-          richTextFieldName: unresolvedRichTextLinks,
-        },
-      } as unknown as Entry,
-    ],
-  ]);
+  const getStore = vi.fn<Parameters<GetStore>, ReturnType<GetStore>>();
+  const defaultEntities: Reference[] = [
+    newEntryReference,
+    newAssetReference,
+    {
+      sys: { id: referenceWithRichTextId },
+      fields: {
+        richTextFieldName: unresolvedRichTextLinks,
+      },
+    } as unknown as Entry,
+  ];
 
   beforeEach(() => {
     (resolveReference as Mock).mockImplementation(async ({ referenceId }) => {
-      return { reference: defaultEntityReferenceMap.get(referenceId) };
+      return { reference: defaultEntities.find((e) => e.sys.id === referenceId) };
     });
   });
 
@@ -61,27 +58,20 @@ describe('Update REST entry', () => {
     dataFromPreviewApp,
     updateFromEntryEditor = entry,
     locale = EN,
-    entityReferenceMap = defaultEntityReferenceMap,
   }: {
     contentType?: ContentTypeProps;
     dataFromPreviewApp: Entry;
     updateFromEntryEditor?: Entry | Asset;
     locale?: string;
-    entityReferenceMap?: EntityReferenceMap;
-  }) => {
-    const visitedReferences = new Map<string, Reference>();
-
-    return updateEntity(
+  }) =>
+    updateEntity(
       contentType,
       clone(dataFromPreviewApp),
       clone(updateFromEntryEditor),
       locale,
-      entityReferenceMap,
       0,
-      visitedReferences,
-      sendMessage
+      getStore
     );
-  };
 
   it('updates primitive fields', async () => {
     const result = await updateFn({ dataFromPreviewApp });
@@ -218,8 +208,11 @@ describe('Update REST entry', () => {
         },
       } as unknown as Entry;
 
-      // Add circular reference to map
-      defaultEntityReferenceMap.set(circularReferenceId, circularReference);
+      (resolveReference as Mock).mockImplementation(async ({ referenceId }) => {
+        return {
+          reference: [...defaultEntities, circularReference].find((e) => e.sys.id === referenceId),
+        };
+      });
 
       // Update entry to contain the circular reference
       const result = await updateFn({

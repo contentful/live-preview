@@ -4,7 +4,7 @@ import { describe, it, expect, vi, afterEach, beforeEach, Mock } from 'vitest';
 
 import * as Utils from '../../helpers';
 import { resolveReference } from '../../helpers/resolveReference';
-import { SysProps, EntityReferenceMap, Entity, ContentType } from '../../types';
+import type { SysProps, Entity, ContentType, GetStore } from '../../types';
 import { updateEntry } from '../entries';
 import defaultContentTypeJSON from './fixtures/contentType.json';
 import entry from './fixtures/entry.json';
@@ -19,7 +19,7 @@ const defaultContentType = defaultContentTypeJSON as ContentTypeProps;
 // Note: we can get rid of expect.objectContaining, if we iterate over the provided data instead of the ContentType.fields
 describe('Update GraphQL Entry', () => {
   const testReferenceId = '18kDTlnJNnDIJf6PsXE5Mr';
-  const sendMessage = vi.fn();
+  const getStore = vi.fn<Parameters<GetStore>, ReturnType<GetStore>>();
 
   beforeEach(() => {
     (resolveReference as Mock).mockResolvedValue({
@@ -45,13 +45,11 @@ describe('Update GraphQL Entry', () => {
     data,
     update = entry as unknown as Entry,
     locale = EN,
-    entityReferenceMap = new EntityReferenceMap(),
     contentType = defaultContentType,
   }: {
     data: Entity & { sys: SysProps };
     update?: Entry;
     locale?: string;
-    entityReferenceMap?: EntityReferenceMap;
     contentType?: ContentType;
   }) => {
     return updateEntry({
@@ -59,8 +57,8 @@ describe('Update GraphQL Entry', () => {
       dataFromPreviewApp: data,
       updateFromEntryEditor: update,
       locale,
-      entityReferenceMap,
-      sendMessage,
+      getStore,
+      depth: 0,
     });
   };
 

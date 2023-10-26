@@ -1,7 +1,7 @@
 import type { Asset, Entry } from 'contentful';
 import type { ContentTypeProps } from 'contentful-management';
 
-import { SendMessage } from './helpers';
+import { EditorEntityStore } from '@contentful/visual-sdk';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
@@ -56,7 +56,9 @@ export interface CollectionItem {
   __typename?: string;
 }
 
-export type ReferenceMap = Map<string, Entry | Asset>;
+export type EntityReferenceMap = Map<string, Asset | Entry>;
+
+export type GetStore = (locale: string) => EditorEntityStore;
 
 export type UpdateEntryProps = {
   contentType: ContentType;
@@ -64,9 +66,8 @@ export type UpdateEntryProps = {
   updateFromEntryEditor: Entry;
   locale: string;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
+  getStore: GetStore;
   depth: number;
-  referenceMap: ReferenceMap;
 };
 
 export type UpdateFieldProps = {
@@ -75,9 +76,8 @@ export type UpdateFieldProps = {
   name: string;
   locale: string;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
+  getStore: GetStore;
   depth: number;
-  referenceMap: ReferenceMap;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -85,9 +85,8 @@ export type UpdateReferenceFieldProps = {
   updatedReference?: (Pick<Entry, 'sys'> | Pick<Asset, 'sys'>) & { __typename?: string };
   locale: string;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
+  getStore: GetStore;
   depth: number;
-  referenceMap: ReferenceMap;
 };
 
 /**
