@@ -30,8 +30,10 @@ export async function resolveReference({
   locale: string;
   getStore: GetStore;
 }): Promise<{ reference: Entry | Asset; typeName: string }> {
+  const store = getStore(locale);
+
   if (isAsset) {
-    const result = await getStore(locale).fetchAsset(referenceId);
+    const result = await store.fetchAsset(referenceId);
     if (!result) {
       throw new Error(`Unknown reference ${referenceId}`);
     }
@@ -42,7 +44,7 @@ export async function resolveReference({
     };
   }
 
-  const result = await getStore(locale).fetchEntry(referenceId);
+  const result = await store.fetchEntry(referenceId);
   if (!result) {
     throw new Error(`Unknown reference ${referenceId}`);
   }

@@ -8,6 +8,7 @@ import type { SysProps, Entity, ContentType, GetStore } from '../../types';
 import { updateEntry } from '../entries';
 import defaultContentTypeJSON from './fixtures/contentType.json';
 import entry from './fixtures/entry.json';
+import { MAX_DEPTH } from '../../constants';
 
 const EN = 'en-US';
 
@@ -58,7 +59,7 @@ describe('Update GraphQL Entry', () => {
       updateFromEntryEditor: update,
       locale,
       getStore,
-      depth: 0,
+      maxDepth: MAX_DEPTH,
     });
   };
 

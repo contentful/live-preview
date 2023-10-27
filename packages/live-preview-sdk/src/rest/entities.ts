@@ -1,7 +1,7 @@
 import { Asset, Entry } from 'contentful';
 import type { WithResourceName } from 'contentful-management';
 
-import { MAX_DEPTH } from '../constants';
+import { MAX_RTE_DEPTH } from '../constants';
 import { debug, clone, isPrimitiveField, resolveReference, updatePrimitiveField } from '../helpers';
 import {
   SUPPORTED_RICHTEXT_EMBEDS,
@@ -26,6 +26,14 @@ function getFieldName(contentType: ContentType, field: ContentType['fields'][num
   return field.apiName || field.name;
 }
 
+function isInDepthLimit(maxDepth: number): boolean {
+  return maxDepth >= 0;
+}
+
+function getRichTextDepth(maxDepth: number) {
+  return Math.min(maxDepth - 1, MAX_RTE_DEPTH);
+}
+
 /**
  * Update the reference from the entry editor with the information from the store.
  * If the information is not yet available, it send a message to the editor to retrieve it.
@@ -34,7 +42,7 @@ async function updateRef(
   dataFromPreviewApp: Reference | undefined,
   updateFromEntryEditor: Reference,
   locale: string,
-  depth: number,
+  maxDepth: number,
   getStore: GetStore
 ): Promise<Reference | undefined | null> {
   const { reference } = await resolveReference({
@@ -55,23 +63,23 @@ async function updateRef(
     const value = reference.fields[key as keyof typeof reference.fields];
 
     // single ref fields
-    if (isEntityLink(value) && depth < MAX_DEPTH) {
+    if (isEntityLink(value) && isInDepthLimit(maxDepth)) {
       await updateSingleRefField(
         result,
         reference,
         locale,
         key as keyof Reference['fields'],
-        depth + 1,
+        maxDepth - 1,
         getStore
       );
       // multi ref fields
-    } else if (Array.isArray(value) && isEntityLink(value[0]) && depth < MAX_DEPTH) {
+    } else if (Array.isArray(value) && isEntityLink(value[0]) && isInDepthLimit(maxDepth)) {
       await updateMultiRefField(
         result,
         reference,
         locale,
         key as keyof Reference['fields'],
-        depth + 1,
+        maxDepth - 1,
         getStore
       );
       // rich text fields
@@ -81,7 +89,7 @@ async function updateRef(
         reference as Entry,
         key,
         locale,
-        depth + 1,
+        getRichTextDepth(maxDepth),
         getStore
       );
       // single and multi resource link fields
@@ -108,7 +116,7 @@ async function updateMultiRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  depth: number,
+  maxDepth: number,
   getStore: GetStore
 ) {
   if (!updateFromEntryEditor.fields?.[name]) {
@@ -123,7 +131,7 @@ async function updateMultiRefField(
           (dataFromPreviewApp.fields[name] as Reference[])?.[index],
           updateFromEntryReference,
           locale,
-          depth + 1,
+          maxDepth - 1,
           getStore
         )
     )
@@ -138,7 +146,7 @@ async function updateSingleRefField(
   updateFromEntryEditor: Reference,
   locale: string,
   name: keyof Reference['fields'],
-  depth: number,
+  maxDepth: number,
   getStore: GetStore
 ) {
   const matchUpdateFromEntryEditor = updateFromEntryEditor?.fields?.[name] as Reference | undefined;
@@ -154,14 +162,19 @@ async function updateSingleRefField(
     dataFromPreviewApp.fields[name] as Reference | undefined,
     matchUpdateFromEntryEditor,
     locale,
-    depth + 1,
+    maxDepth - 1,
     getStore
   );
 
   return dataFromPreviewApp;
 }
 
-async function resolveRichTextLinks(node: any, locale: string, depth: number, getStore: GetStore) {
+async function resolveRichTextLinks(
+  node: any,
+  locale: string,
+  maxDepth: number,
+  getStore: GetStore
+) {
   if (SUPPORTED_RICHTEXT_EMBEDS.includes(node.nodeType)) {
     if (node.data && node.data.target && node.data.target.sys) {
       if (node.data.target.sys.linkType === 'Entry' || node.data.target.sys.linkType === 'Asset') {
@@ -174,7 +187,7 @@ async function resolveRichTextLinks(node: any, locale: string, depth: number, ge
           undefined,
           updatedReference,
           locale,
-          depth + 1,
+          maxDepth - 1,
           getStore
         );
       }
@@ -183,7 +196,7 @@ async function resolveRichTextLinks(node: any, locale: string, depth: number, ge
 
   if (node.content) {
     for (const childNode of node.content) {
-      await resolveRichTextLinks(childNode, locale, depth + 1, getStore);
+      await resolveRichTextLinks(childNode, locale, maxDepth - 1, getStore);
     }
   }
 }
@@ -193,7 +206,7 @@ async function updateRichTextField(
   updateFromEntryEditor: Entry,
   name: string,
   locale: string,
-  depth: number,
+  maxDepth: number,
   getStore: GetStore
 ) {
   const richText = updateFromEntryEditor.fields?.[name];
@@ -203,7 +216,7 @@ async function updateRichTextField(
     dataFromPreviewApp.fields[name] = richText;
     // Resolve the linked entries or assets within the rich text field
     for (const node of richText.content) {
-      await resolveRichTextLinks(node, locale, depth, getStore);
+      await resolveRichTextLinks(node, locale, maxDepth, getStore);
     }
   }
 }
@@ -218,7 +231,7 @@ export async function updateEntity(
   dataFromPreviewApp: Entry,
   updateFromEntryEditor: Entry | Asset,
   locale: string,
-  depth: number,
+  maxDepth: number,
   getStore: GetStore
 ): Promise<Entry> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
@@ -234,22 +247,22 @@ export async function updateEntity(
         updateFromEntryEditor,
         name,
       });
-    } else if (field.type === 'Link' && depth < MAX_DEPTH) {
+    } else if (field.type === 'Link' && isInDepthLimit(maxDepth)) {
       await updateSingleRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
-        depth + 1,
+        maxDepth - 1,
         getStore
       );
-    } else if (field.type === 'Array' && field.items?.type === 'Link' && depth < MAX_DEPTH) {
+    } else if (field.type === 'Array' && field.items?.type === 'Link' && isInDepthLimit(maxDepth)) {
       await updateMultiRefField(
         dataFromPreviewApp,
         updateFromEntryEditor,
         locale,
         name as keyof Reference['fields'],
-        depth + 1,
+        maxDepth - 1,
         getStore
       );
     } else if (field.type === 'RichText') {
@@ -258,7 +271,7 @@ export async function updateEntity(
         updateFromEntryEditor as Entry,
         name,
         locale,
-        depth,
+        MAX_RTE_DEPTH,
         getStore
       );
     } else if (field.type === 'ResourceLink') {

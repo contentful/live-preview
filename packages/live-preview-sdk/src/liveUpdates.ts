@@ -26,6 +26,7 @@ import {
   GraphQLParams,
 } from './types';
 import { EditorEntityStore } from '@contentful/visual-sdk';
+import { MAX_DEPTH } from './constants';
 
 interface MergeEntityProps {
   dataFromPreviewApp: Entity;
@@ -54,6 +55,7 @@ export class LiveUpdates {
     this.defaultLocale = locale;
     this.sendMessage = (method, data) => sendMessageToEditor(method, data, targetOrigin);
     this.storage = new StorageMap<Entity>('live-updates', new Map());
+    this.getStore = this.getStore.bind(this);
     window.addEventListener('beforeunload', () => this.clearStorage());
   }
 
@@ -97,8 +99,6 @@ export class LiveUpdates {
     data: Entity;
     updated: boolean;
   }> {
-    const depth = 0;
-
     if ('__typename' in dataFromPreviewApp) {
       // GraphQL
       const data = await (dataFromPreviewApp.__typename === 'Asset'
@@ -109,7 +109,7 @@ export class LiveUpdates {
             updateFromEntryEditor: updateFromEntryEditor as Entry,
             locale,
             gqlParams,
-            depth,
+            maxDepth: MAX_DEPTH,
             getStore: this.getStore,
           }));
 
@@ -127,7 +127,7 @@ export class LiveUpdates {
           dataFromPreviewApp as Entry,
           updateFromEntryEditor as Entry,
           locale,
-          depth,
+          MAX_DEPTH,
           this.getStore
         ),
         updated: true,

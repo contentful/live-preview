@@ -18,7 +18,7 @@ import {
 import { updateAsset } from './assets';
 import { isRelevantField, updateAliasedInformation } from './queryUtils';
 import { buildCollectionName, generateTypeName } from './utils';
-import { MAX_DEPTH } from '../constants';
+import { MAX_RTE_DEPTH } from '../constants';
 
 /**
  * Updates GraphQL response data based on CMA entry object
@@ -33,6 +33,7 @@ export async function updateEntry({
   contentType,
   dataFromPreviewApp,
   updateFromEntryEditor,
+  maxDepth,
   ...props
 }: UpdateEntryProps): Promise<Entity & { sys: SysProps }> {
   if (dataFromPreviewApp.sys.id !== updateFromEntryEditor.sys.id) {
@@ -56,6 +57,7 @@ export async function updateEntry({
           dataFromPreviewApp: copyOfDataFromPreviewApp,
           updateFromEntryEditor,
           name,
+          maxDepth: MAX_RTE_DEPTH,
         });
       } else if (field.type === 'Link') {
         await updateSingleRefField({
@@ -63,6 +65,7 @@ export async function updateEntry({
           dataFromPreviewApp: copyOfDataFromPreviewApp,
           updateFromEntryEditor,
           name,
+          maxDepth: maxDepth - 1,
         });
       } else if (field.type === 'Array' && field.items?.type === 'Link') {
         await updateMultiRefField({
@@ -70,6 +73,7 @@ export async function updateEntry({
           dataFromPreviewApp: copyOfDataFromPreviewApp,
           updateFromEntryEditor,
           name,
+          maxDepth: maxDepth - 1,
         });
       }
     }
@@ -100,7 +104,7 @@ async function processNode({
   locale: string;
   getStore: GetStore;
   gqlParams?: GraphQLParams;
-  depth: number;
+  maxDepth: number;
 }) {
   // Check if the node is an embedded entity
   if (SUPPORTED_RICHTEXT_EMBEDS.includes(node.nodeType)) {
@@ -173,7 +177,7 @@ async function processRichTextField({
   locale: string;
   getStore: GetStore;
   gqlParams?: GraphQLParams;
-  depth: number;
+  maxDepth: number;
 }): Promise<{ entries: RichTextLink; assets: RichTextLink }> {
   const entries: RichTextLink = { block: [], inline: [], hyperlink: [] };
   const assets: RichTextLink = { block: [], inline: [], hyperlink: [] };
@@ -202,7 +206,7 @@ async function updateRichTextField({
   locale,
   gqlParams,
   getStore,
-  depth,
+  maxDepth,
 }: UpdateFieldProps) {
   if (!dataFromPreviewApp[name]) {
     dataFromPreviewApp[name] = {};
@@ -218,7 +222,7 @@ async function updateRichTextField({
     locale,
     getStore,
     gqlParams,
-    depth,
+    maxDepth,
   });
 }
 
@@ -247,8 +251,24 @@ async function updateReferenceAssetField({
   );
 }
 
-function isInDepthLimit(depth: number, gqlParams?: GraphQLParams): boolean {
-  return !!gqlParams || depth < MAX_DEPTH;
+function isInDepthLimit(entityId: string, maxDepth: number, gqlParams?: GraphQLParams): boolean {
+  if (gqlParams) {
+    return true;
+  }
+
+  if (maxDepth > 0) {
+    return true;
+  }
+
+  debug.log(
+    'Max update depth is reached, please provide the GraphQL query if you need deeper nested information.',
+    { entityId }
+  );
+  return false;
+}
+
+function getRichTextDepth(maxDepth: number) {
+  return Math.min(maxDepth - 1, MAX_RTE_DEPTH);
 }
 
 async function updateReferenceEntryField({
@@ -257,7 +277,7 @@ async function updateReferenceEntryField({
   locale,
   gqlParams,
   getStore,
-  depth,
+  maxDepth,
 }: SetOptional<Required<UpdateReferenceFieldProps>, 'gqlParams'>) {
   const { reference, typeName } = await resolveReference({
     referenceId: updatedReference.sys.id,
@@ -287,12 +307,12 @@ async function updateReferenceEntryField({
           richTextNode: value,
           locale,
           gqlParams,
-          depth,
+          maxDepth: getRichTextDepth(maxDepth),
           getStore,
         });
       }
 
-      if ('sys' in value && isInDepthLimit(depth, gqlParams)) {
+      if ('sys' in value && isInDepthLimit(updatedReference.sys.id, maxDepth, gqlParams)) {
         // single reference
         merged[key] = value;
         await updateSingleRefField({
@@ -302,10 +322,14 @@ async function updateReferenceEntryField({
           name: key,
           gqlParams,
           getStore,
-          depth: depth + 1,
+          maxDepth: maxDepth - 1,
         });
       }
-    } else if (Array.isArray(value) && value[0]?.sys && isInDepthLimit(depth, gqlParams)) {
+    } else if (
+      Array.isArray(value) &&
+      value[0]?.sys &&
+      isInDepthLimit(updatedReference.sys.id, maxDepth, gqlParams)
+    ) {
       // multi references
       const name = buildCollectionName(key);
       merged[name] = { items: value };
@@ -316,7 +340,7 @@ async function updateReferenceEntryField({
         name: key,
         gqlParams,
         getStore,
-        depth: depth + 1,
+        maxDepth: maxDepth - 1,
       });
     } else {
       // primitive fields
@@ -330,10 +354,7 @@ async function updateReferenceEntryField({
 async function updateReferenceField({
   referenceFromPreviewApp,
   updatedReference,
-  locale,
-  gqlParams,
-  getStore,
-  depth,
+  ...props
 }: UpdateReferenceFieldProps) {
   if (!updatedReference) {
     return null;
@@ -350,22 +371,16 @@ async function updateReferenceField({
 
   if (isAsset(updatedReference)) {
     return updateReferenceAssetField({
+      ...props,
       referenceFromPreviewApp,
       updatedReference,
-      locale,
-      gqlParams,
-      getStore,
-      depth,
     });
   }
 
   return updateReferenceEntryField({
+    ...props,
     referenceFromPreviewApp,
     updatedReference,
-    locale,
-    gqlParams,
-    getStore,
-    depth,
   });
 }
 
@@ -373,21 +388,17 @@ async function updateSingleRefField({
   dataFromPreviewApp,
   updateFromEntryEditor,
   name,
-  locale,
-  gqlParams,
-  getStore,
-  depth,
+  maxDepth,
+  ...props
 }: UpdateFieldProps) {
   const updatedReference = updateFromEntryEditor?.fields?.[name] as Asset | Entry | undefined;
   dataFromPreviewApp[name] = await updateReferenceField({
+    ...props,
     referenceFromPreviewApp: dataFromPreviewApp[name] as Entry & {
       __typename?: string;
     },
     updatedReference,
-    locale,
-    gqlParams,
-    getStore,
-    depth,
+    maxDepth: maxDepth - 1,
   });
 }
 
@@ -395,10 +406,8 @@ async function updateMultiRefField({
   dataFromPreviewApp,
   updateFromEntryEditor,
   name,
-  locale,
-  gqlParams,
-  getStore,
-  depth,
+  maxDepth,
+  ...props
 }: UpdateFieldProps) {
   const fieldName = buildCollectionName(name);
 
@@ -410,14 +419,12 @@ async function updateMultiRefField({
       )?.items?.find((item) => item.sys.id === updatedItem.sys.id);
 
       const result = await updateReferenceField({
+        ...props,
         referenceFromPreviewApp: itemFromPreviewApp as unknown as Entry & {
           __typename?: string;
         },
         updatedReference: updatedItem,
-        locale,
-        gqlParams,
-        getStore,
-        depth,
+        maxDepth: maxDepth - 1,
       });
 
       return result;

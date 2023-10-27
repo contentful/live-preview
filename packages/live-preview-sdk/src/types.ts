@@ -67,7 +67,7 @@ export type UpdateEntryProps = {
   locale: string;
   gqlParams?: GraphQLParams;
   getStore: GetStore;
-  depth: number;
+  maxDepth: number;
 };
 
 export type UpdateFieldProps = {
@@ -77,7 +77,7 @@ export type UpdateFieldProps = {
   locale: string;
   gqlParams?: GraphQLParams;
   getStore: GetStore;
-  depth: number;
+  maxDepth: number;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -86,7 +86,7 @@ export type UpdateReferenceFieldProps = {
   locale: string;
   gqlParams?: GraphQLParams;
   getStore: GetStore;
-  depth: number;
+  maxDepth: number;
 };
 
 /**
