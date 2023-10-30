@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.27](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.26...@contentful/visual-sdk@1.0.0-alpha.27) (2023-10-30)
+
+**Note:** Version bump only for package @contentful/visual-sdk
+
+
+
+
+
 # [1.0.0-alpha.26](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.25...@contentful/visual-sdk@1.0.0-alpha.26) (2023-10-23)
 
 **Note:** Version bump only for package @contentful/visual-sdk
