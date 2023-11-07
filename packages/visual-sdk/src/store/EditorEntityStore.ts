@@ -67,30 +67,20 @@ export class EditorEntityStore extends EntityStore {
     return id.length === 1 ? id[0] : id.join(this.cacheIdSeperator);
   }
 
-  private findMissingEntites(ids: string[]) {
-    const missing = [];
+  private async fetchEntity(type: 'Asset', ids: string[]): Promise<Array<Asset>>;
+  private async fetchEntity(type: 'Entry', ids: string[]): Promise<Array<Entry>>;
+  private async fetchEntity(
+    type: 'Asset' | 'Entry',
+    ids: string[]
+  ): Promise<Array<Entry> | Array<Asset>> {
+    const { missing, resolved } = this.getEntitiesFromMap(type, ids);
 
-    for (const id of ids) {
-      const entry = this.entitiesMap.get(id);
-      if (!entry) {
-        missing.push(id);
-      }
-    }
-
-    return missing;
-  }
-
-  private async fetchEntity(ids: string[]): Promise<Array<Entry>>;
-  private async fetchEntity(ids: string[], isAsset: true): Promise<Array<Asset>>;
-  private async fetchEntity(ids: string[], isAsset?: boolean): Promise<Array<Entry | Asset>> {
-    const missingIds = this.findMissingEntites(ids);
-
-    if (missingIds.length === 0) {
+    if (missing.length === 0) {
       // everything is already in cache
-      return ids.map((id) => this.entitiesMap.get(id)) as Array<Entry | Asset>;
+      return resolved as Array<Entry> | Array<Asset>;
     }
 
-    const cacheId = this.getCacheId(missingIds);
+    const cacheId = this.getCacheId(missing);
     const openRequest = this.requestCache.get(cacheId);
 
     if (openRequest) {
@@ -101,7 +91,7 @@ export class EditorEntityStore extends EntityStore {
       const unsubscribe = this.subscribe(
         PostMessageMethods.REQUESTED_ENTITIES,
         (message: RequestedEntitiesMessage) => {
-          if (missingIds.every((id) => message.entities.find((entity) => entity.sys.id === id))) {
+          if (missing.every((id) => message.entities.find((entity) => entity.sys.id === id))) {
             clearTimeout(timeout);
             resolve(message.entities);
 
@@ -119,8 +109,8 @@ export class EditorEntityStore extends EntityStore {
       }, this.timeoutDuration);
 
       this.sendMessage(PostMessageMethods.REQUEST_ENTITIES, {
-        entityIds: missingIds,
-        entityType: isAsset ? 'Asset' : 'Entry',
+        entityIds: missing,
+        entityType: type,
         locale: this.locale,
       });
     });
@@ -130,13 +120,13 @@ export class EditorEntityStore extends EntityStore {
       this.requestCache.set(cid, newPromise);
     });
 
-    const result = (await newPromise) as Array<Entry | Asset>;
+    const result = (await newPromise) as Array<Entry> | Array<Asset>;
 
     result.forEach((value) => {
-      this.entitiesMap.set(value.sys.id, value);
+      this.addEntity(value);
     });
 
-    return ids.map((id) => this.entitiesMap.get(id)) as Array<Entry | Asset>;
+    return this.getEntitiesFromMap(type, ids).resolved as Array<Entry> | Array<Asset>;
   }
 
   public async fetchAsset(id: string): Promise<Asset | undefined> {
@@ -150,7 +140,7 @@ export class EditorEntityStore extends EntityStore {
   }
 
   public fetchAssets(ids: string[]): Promise<Asset[]> {
-    return this.fetchEntity(ids, true);
+    return this.fetchEntity('Asset', ids);
   }
 
   public async fetchEntry(id: string): Promise<Entry | undefined> {
@@ -164,6 +154,6 @@ export class EditorEntityStore extends EntityStore {
   }
 
   public fetchEntries(ids: string[]): Promise<Entry[]> {
-    return this.fetchEntity(ids);
+    return this.fetchEntity('Entry', ids);
   }
 }

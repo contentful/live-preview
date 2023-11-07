@@ -22,6 +22,21 @@ describe('EntityStore', () => {
     expect(createStore().entities).toEqual(entities);
   });
 
+  it('prevents id collision for assets and entries', async () => {
+    const patchedAsset = { ...asset, sys: { ...asset.sys, id: '1' } };
+    const patchedEntry = { ...entry, sys: { ...entry.sys, id: '1' } };
+
+    const store = new EntityStore({ entities: [patchedAsset, patchedEntry], locale });
+
+    const [resolvedAsset, resolvedEntry] = await Promise.all([
+      store.fetchAsset('1'),
+      store.fetchEntry('1'),
+    ]);
+
+    expect(resolvedAsset).toEqual(patchedAsset);
+    expect(resolvedEntry).toEqual(patchedEntry);
+  });
+
   describe('getValue', () => {
     it('should return the value based on entityId and path', () => {
       const store = createStore();
