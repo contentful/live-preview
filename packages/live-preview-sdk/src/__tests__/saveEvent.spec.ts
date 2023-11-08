@@ -1,12 +1,12 @@
 import { Entry } from 'contentful';
 import { describe, beforeEach, vi, it, afterEach, Mock, expect } from 'vitest';
 
-import { getAllTaggedEntries } from '../fieldTaggingUtils';
 import { EntrySavedMessage, LivePreviewPostMessageMethods } from '../messages';
 import { SaveEvent } from '../saveEvent';
 import { ContentType } from '../types';
+import { getAllTaggedEntries } from '../inspectorMode/utils';
 
-vi.mock('../fieldTaggingUtils');
+vi.mock('../inspectorMode/utils');
 
 describe('SaveEvent', () => {
   const locale = 'en-US';

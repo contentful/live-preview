@@ -102,11 +102,8 @@ To use the inspector mode, you need to tag fields by adding the live preview dat
 
 You can do this in React via our helper function.
 
-The necessary styles for the live edit tags can be found in the `@contentful/live-preview/style.css` file.
-
 ```jsx
 import { ContentfulLivePreview } from '@contentful/live-preview';
-import '@contentful/live-preview/style.css';
 ...
 
 <h1 {...ContentfulLivePreview.getProps({ entryId: id, fieldId: 'title' })}>
@@ -197,18 +194,13 @@ or
 npm install @contentful/live-preview
 ```
 
-2. Once you've got the data from Contentful, then you can initialize the live preview. You can use the `ContentfulLivePreview` class' [init function](#init-configuration) and add the stylesheet for field tagging as a stylesheet link.
+2. Once you've got the data from Contentful, then you can initialize the live preview. You can use the `ContentfulLivePreview` class' [init function](#init-configuration).
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Live Preview Example</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="./node_modules/@contentful/live-preview/dist/style.css"
-    />
     <script type="module">
       import { ContentfulLivePreview } from '@contentful/live-preview';
 
@@ -223,18 +215,11 @@ npm install @contentful/live-preview
 
 You can use the provided helper function `getProps()`.
 
-The necessary styles for the live edit tags can be found in the `@contentful/live-preview/style.css` file.
-
 ```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Live Preview Example</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="./node_modules/@contentful/live-preview/dist/style.css"
-    />
     <script type="module">
       import { ContentfulLivePreview } from '@contentful/live-preview';
 
@@ -276,11 +261,6 @@ The necessary styles for the live edit tags can be found in the `@contentful/liv
 <html lang="en">
   <head>
     <title>Live Preview Example</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="./node_modules/@contentful/live-preview/dist/style.css"
-    />
     <script type="module">
       import { ContentfulLivePreview } from '@contentful/live-preview';
 
@@ -334,7 +314,6 @@ npm install @contentful/live-preview
    The `ContentfulLivePreviewProvider` accepts the same arguments as the [init function](#init-configuration).
 
 ```tsx
-import '@contentful/live-preview/style.css';
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
@@ -347,7 +326,6 @@ const CustomApp = ({ Component, pageProps }) => (
 This provides the possibility to only enable live updates and inspector mode inside draft mode:
 
 ```tsx
-import '@contentful/live-preview/style.css';
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
@@ -436,8 +414,6 @@ npm install @contentful/live-preview
 2. In your gatsby-browser.js file, import the live preview styles and initialize the SDK:
 
 ```tsx
-import '@contentful/live-preview/style.css';
-
 import React from 'react';
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 

@@ -1,5 +1,5 @@
-import { getAllTaggedEntries } from './fieldTaggingUtils';
 import { debug } from './helpers';
+import { getAllTaggedEntries } from './inspectorMode/utils';
 import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages';
 import { SubscribeCallback } from './types';
 

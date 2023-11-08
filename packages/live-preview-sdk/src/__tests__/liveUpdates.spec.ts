@@ -5,7 +5,7 @@ import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
 import * as helpers from '../helpers';
 import { LiveUpdates } from '../liveUpdates';
-import { LivePreviewPostMessageMethods } from '../messages';
+import { InspectorModeEventMethods, LivePreviewPostMessageMethods } from '../messages';
 import { ContentType } from '../types';
 import assetFromEntryEditor from './fixtures/assetFromEntryEditor.json';
 import landingPageContentType from './fixtures/landingPageContentType.json';
@@ -152,8 +152,8 @@ describe('LiveUpdates', () => {
 
     await liveUpdates.receiveMessage({
       isInspectorActive: false,
-      action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
-      method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
+      action: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
+      method: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
       from: 'live-preview',
       source: LIVE_PREVIEW_EDITOR_SOURCE,
     });

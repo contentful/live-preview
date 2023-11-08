@@ -13,14 +13,14 @@ export function sendMessageToEditor(
   data: EditorMessage,
   targetOrigin: string[]
 ): void {
-  const message: MessageFromSDK = {
+  const message = {
     ...data,
     method,
     from: 'live-preview',
     source: LIVE_PREVIEW_SDK_SOURCE,
     location: window.location.href,
     version,
-  };
+  } as MessageFromSDK;
 
   debug.log('Send message', message);
 
