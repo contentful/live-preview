@@ -1,5 +1,3 @@
-import type { Asset, Entry } from 'contentful';
-
 import { stringify } from 'flatted';
 import type {
   ContentfulSubscribeConfig,
@@ -14,28 +12,7 @@ import { parseGraphQLParams } from './graphql/queryUtils';
 import { StorageMap, debug, generateUID, sendMessageToEditor } from './helpers';
 import { validateDataForLiveUpdates } from './helpers/validation';
 import { LivePreviewPostMessageMethods } from './messages';
-import {
-  Argument,
-  ContentType,
-  Entity,
-  EntityReferenceMap,
-  GraphQLParams,
-  Subscription,
-  hasSysInformation,
-} from './types';
-
-interface MergeEntityProps {
-  dataFromPreviewApp: Entity;
-  locale: string;
-  updateFromEntryEditor: Entry | Asset;
-  contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
-  gqlParams?: GraphQLParams;
-}
-
-interface MergeArgumentProps extends Omit<MergeEntityProps, 'dataFromPreviewApp'> {
-  dataFromPreviewApp: Argument;
-}
+import { Argument, Entity, Subscription, hasSysInformation } from './types';
 
 /**
  * LiveUpdates for the Contentful Live Preview mode
