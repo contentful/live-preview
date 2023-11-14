@@ -35,10 +35,10 @@ enum LivePreviewPostMessageMethods {
 }
 
 export {
-  StorePostMessageMethods,
   LivePreviewPostMessageMethods,
   RequestEntitiesMessage,
   RequestedEntitiesMessage,
+  StorePostMessageMethods,
 };
 export type PostMessageMethods = LivePreviewPostMessageMethods | StorePostMessageMethods;
 
@@ -83,6 +83,8 @@ export type SubscribedMessage = {
   entryId: string;
   locale: string;
   event: 'edit' | 'save';
+  id: string;
+  config: string;
 };
 
 export type ErrorMessage = {
@@ -156,6 +158,7 @@ export type MessageFromEditor = (
   | DebugModeEnabledMessage
   | RequestedEntitiesMessage
 ) & {
+  data: any;
   method: PostMessageMethods;
   /** @deprecated use source instead */
   from: 'live-preview';

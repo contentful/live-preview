@@ -5,11 +5,11 @@ import { type DocumentNode } from 'graphql';
 import { version } from '../package.json';
 import { getAllTaggedEntries } from './fieldTaggingUtils';
 import {
-  sendMessageToEditor,
-  pollUrlChanges,
-  setDebugMode,
   debug,
   isInsideIframe,
+  pollUrlChanges,
+  sendMessageToEditor,
+  setDebugMode,
 } from './helpers';
 import { isValidMessage } from './helpers/validateMessage';
 import { InspectorMode } from './inspectorMode';
@@ -268,3 +268,7 @@ export class ContentfulLivePreview {
 
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 export * from './messages';
+
+export const newFunc = () => {
+  console.log('newFunc');
+};

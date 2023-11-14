@@ -36,7 +36,7 @@ export class SaveEvent {
 
   public receiveMessage(message: Omit<MessageFromEditor, 'from' | 'source'>): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
-      const { entity } = message as EntrySavedMessage;
+      const { entity } = message as unknown as EntrySavedMessage;
       const entries = getAllTaggedEntries();
 
       if (entries.includes(entity.sys.id)) {
