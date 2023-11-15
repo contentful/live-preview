@@ -24,19 +24,19 @@ export class InspectorMode {
     this.defaultLocale = locale;
     this.targetOrigin = targetOrigin;
 
-    this.bindHoverListener = this.bindHoverListener.bind(this);
-    this.bindScrollListener = this.bindScrollListener.bind(this);
-    this.bindMutationListener = this.bindMutationListener.bind(this);
-    this.bindResizeListener = this.bindResizeListener.bind(this);
+    this.addHoverListener = this.addHoverListener.bind(this);
+    this.addScrollListener = this.addScrollListener.bind(this);
+    this.addMutationListener = this.addMutationListener.bind(this);
+    this.addResizeListener = this.addResizeListener.bind(this);
 
     this.handleTaggedElement = this.handleTaggedElement.bind(this);
     this.sendAllElements = this.sendAllElements.bind(this);
 
     // Attach interaction listeners
-    this.bindHoverListener();
-    this.bindScrollListener();
-    this.bindMutationListener();
-    this.bindResizeListener();
+    this.addHoverListener();
+    this.addScrollListener();
+    this.addMutationListener();
+    this.addResizeListener();
   }
 
   // Handles incoming messages from Contentful
@@ -50,7 +50,7 @@ export class InspectorMode {
   }
 
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
-  private bindHoverListener() {
+  private addHoverListener() {
     const onMouseOver = (e: MouseEvent) => {
       const eventTargets = e.composedPath();
 
@@ -81,7 +81,7 @@ export class InspectorMode {
   }
 
   /** Sends scroll start and end event to the editor, on end it also sends the tagged elements again */
-  private bindScrollListener() {
+  private addScrollListener() {
     const onScroll = () => {
       if (!this.isScrolling) {
         this.isScrolling = true;
@@ -111,7 +111,7 @@ export class InspectorMode {
   }
 
   /** Detects DOM changes and sends the tagged elements to the editor */
-  private bindMutationListener() {
+  private addMutationListener() {
     const mutationObserver = new MutationObserver(() => {
       const taggedElements = getAllTaggedElements().filter(
         (el) => !!getInspectorModeAttributes(el)
@@ -137,7 +137,7 @@ export class InspectorMode {
   }
 
   /** Sends resize start and end event to the editor, on end it also sends the tagged elements again */
-  private bindResizeListener() {
+  private addResizeListener() {
     const resizeObserver = new ResizeObserver(() => {
       if (!this.isResizing) {
         this.isResizing = true;
