@@ -6,12 +6,22 @@ import { ContentfulLivePreview } from '../index';
 import { InspectorMode } from '../inspectorMode';
 import { LiveUpdates } from '../liveUpdates';
 import { SaveEvent } from '../saveEvent';
-import { TagAttributes } from '../types';
+import { InspectorModeDataAttributes } from '../inspectorMode/types';
 
 vi.mock('../inspectorMode');
 vi.mock('../liveUpdates');
 vi.mock('../saveEvent');
 vi.mock('../helpers');
+
+const ObserverMock = vi.fn(() => ({
+  disconnect: vi.fn(),
+  observe: vi.fn(),
+  takeRecords: vi.fn(),
+  unobserve: vi.fn(),
+}));
+
+vi.stubGlobal('ResizeObserver', ObserverMock);
+vi.stubGlobal('MutationObserver', ObserverMock);
 
 describe('ContentfulLivePreview', () => {
   const receiveMessageInspectorMode = vi.fn();
@@ -125,9 +135,9 @@ describe('ContentfulLivePreview', () => {
       });
 
       expect(result).toStrictEqual({
-        [TagAttributes.FIELD_ID]: fieldId,
-        [TagAttributes.ENTRY_ID]: entryId,
-        [TagAttributes.LOCALE]: locale,
+        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+        [InspectorModeDataAttributes.ENTRY_ID]: entryId,
+        [InspectorModeDataAttributes.LOCALE]: locale,
       });
     });
 

@@ -9,6 +9,16 @@ import { LiveUpdates } from '../liveUpdates';
 
 vi.mock('../helpers');
 
+const ObserverMock = vi.fn(() => ({
+  disconnect: vi.fn(),
+  observe: vi.fn(),
+  takeRecords: vi.fn(),
+  unobserve: vi.fn(),
+}));
+
+vi.stubGlobal('ResizeObserver', ObserverMock);
+vi.stubGlobal('MutationObserver', ObserverMock);
+
 describe('init', () => {
   beforeEach(() => {
     (isInsideIframe as Mock).mockReturnValue(true);

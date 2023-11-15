@@ -12,18 +12,6 @@ export type LivePreviewProps = {
   locale?: string;
 };
 
-export const enum TagAttributes {
-  FIELD_ID = 'data-contentful-field-id',
-  ENTRY_ID = 'data-contentful-entry-id',
-  LOCALE = 'data-contentful-locale',
-}
-
-export type InspectorModeTags = {
-  [TagAttributes.ENTRY_ID]: string;
-  [TagAttributes.FIELD_ID]: string;
-  [TagAttributes.LOCALE]?: string;
-} | null;
-
 export interface SysProps {
   id: string;
   [key: string]: unknown;

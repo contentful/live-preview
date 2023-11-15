@@ -13,7 +13,7 @@
     "prepare": "relative-deps"
   },
   "dependencies": {
-    "@contentful/live-preview": "../../packages/live-preview-sdk",
+    "@contentful/live-preview": "latest",
     "next": "13.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"

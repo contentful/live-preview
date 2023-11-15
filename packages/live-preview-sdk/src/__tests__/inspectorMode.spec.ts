@@ -3,9 +3,22 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
 import { InspectorMode } from '../inspectorMode';
-import { LivePreviewPostMessageMethods } from '../messages';
+import { InspectorModeEventMethods, LivePreviewPostMessageMethods } from '../messages';
+import { sendMessageToEditor } from '../helpers';
+
+vi.mock('../helpers');
 
 const locale = 'en-US';
+
+const ObserverMock = vi.fn(() => ({
+  disconnect: vi.fn(),
+  observe: vi.fn(),
+  takeRecords: vi.fn(),
+  unobserve: vi.fn(),
+}));
+
+vi.stubGlobal('ResizeObserver', ObserverMock);
+vi.stubGlobal('MutationObserver', ObserverMock);
 
 describe('InspectorMode', () => {
   let inspectorMode: InspectorMode;
@@ -30,16 +43,23 @@ describe('InspectorMode', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    test('should toggle "contentful-inspector--active" class on document.body based on value of isInspectorActive', () => {
-      const spy = vi.spyOn(document.body.classList, 'toggle');
+    test('should send the tagged elements back to the editor', () => {
       inspectorMode.receiveMessage({
-        action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
+        action: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
         from: 'live-preview',
-        method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
+        method: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
         source: LIVE_PREVIEW_EDITOR_SOURCE,
         isInspectorActive: true,
       });
-      expect(spy).toHaveBeenCalledWith('contentful-inspector--active', true);
+
+      expect(sendMessageToEditor).toHaveBeenCalledOnce();
+      expect(sendMessageToEditor).toHaveBeenCalledWith(
+        InspectorModeEventMethods.TAGGED_ELEMENTS,
+        {
+          elements: [],
+        },
+        targetOrigin
+      );
     });
   });
 });

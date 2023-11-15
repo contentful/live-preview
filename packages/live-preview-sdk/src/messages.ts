@@ -5,6 +5,15 @@ import type { SysLink } from 'contentful-management';
 
 import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 import { sendMessageToEditor } from './helpers';
+import {
+  type InspectorModeAttributes,
+  type InspectorModeChangedMessage,
+  InspectorModeEventMethods,
+  type InspectorModeMouseMoveMessage,
+  type InspectorModeResizeMessage,
+  type InspectorModeScrollMessage,
+  type InspectorModeTaggedElementsMessage,
+} from './inspectorMode/types';
 import type { ContentType, EntityReferenceMap } from './types';
 
 enum LivePreviewPostMessageMethods {
@@ -21,7 +30,6 @@ enum LivePreviewPostMessageMethods {
 
   ENTRY_UPDATED = 'ENTRY_UPDATED',
   ENTRY_SAVED = 'ENTRY_SAVED',
-  INSPECTOR_MODE_CHANGED = 'INSPECTOR_MODE_CHANGED',
   DEBUG_MODE_ENABLED = 'DEBUG_MODE_ENABLED',
 
   /**
@@ -39,8 +47,13 @@ export {
   LivePreviewPostMessageMethods,
   RequestEntitiesMessage,
   RequestedEntitiesMessage,
+  InspectorModeEventMethods,
 };
-export type PostMessageMethods = LivePreviewPostMessageMethods | StorePostMessageMethods;
+
+export type PostMessageMethods =
+  | LivePreviewPostMessageMethods
+  | StorePostMessageMethods
+  | InspectorModeEventMethods;
 
 export type ConnectedMessage = {
   /** @deprecated use method instead */
@@ -57,10 +70,7 @@ export type ConnectedMessage = {
 export type TaggedFieldClickMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED;
-  fieldId: string;
-  entryId: string;
-  locale: string;
-};
+} & InspectorModeAttributes;
 
 /** @deprecated use RequestEntitiesMessage instead */
 export type UnknownEntityMessage = {
@@ -101,7 +111,11 @@ export type EditorMessage =
   | UrlChangedMessage
   | SubscribedMessage
   | RequestEntitiesMessage
-  | ErrorMessage;
+  | ErrorMessage
+  | InspectorModeMouseMoveMessage
+  | InspectorModeScrollMessage
+  | InspectorModeResizeMessage
+  | InspectorModeTaggedElementsMessage;
 
 export type MessageFromSDK = EditorMessage & {
   method: PostMessageMethods;
@@ -135,12 +149,6 @@ export type UnknownReferenceLoaded = {
   reference: Entry | Asset;
   contentType?: SysLink;
   entityReferenceMap: EntityReferenceMap;
-};
-
-export type InspectorModeChangedMessage = {
-  /** @deprecated use method instead */
-  action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED;
-  isInspectorActive: boolean;
 };
 
 export type DebugModeEnabledMessage = {

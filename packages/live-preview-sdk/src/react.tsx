@@ -17,7 +17,8 @@ import isEqual from 'lodash.isequal';
 
 import { debounce } from './helpers';
 import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index';
-import { Argument, InspectorModeTags, LivePreviewProps } from './types';
+import type { InspectorModeTags } from './inspectorMode/types';
+import { Argument, LivePreviewProps } from './types';
 
 type UseEffectParams = Parameters<typeof useEffect>;
 type EffectCallback = UseEffectParams[0];
