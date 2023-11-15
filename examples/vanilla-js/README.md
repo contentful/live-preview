@@ -2,18 +2,6 @@
 
 This is an example project that demonstrates how to use the `@contentful/live-preview` SDK in a Vanilla JS application. The SDK provides live preview functionality for content changes and the inspector mode for your Contentful space.
 
-The `@contentful/live-preview` SDK comes with its own CSS file, which needs to be included in your project.
-
-```html
-<head>
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="./node_modules/@contentful/live-preview/dist/style.css"
-  />
-</head>
-```
-
 ## 1. Installation
 
 Install the dependencies:

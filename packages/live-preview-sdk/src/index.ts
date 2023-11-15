@@ -3,7 +3,6 @@ import './styles.css';
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
-import { getAllTaggedEntries } from './fieldTaggingUtils';
 import {
   debug,
   isInsideIframe,
@@ -13,24 +12,20 @@ import {
 } from './helpers';
 import { isValidMessage } from './helpers/validateMessage';
 import { InspectorMode } from './inspectorMode';
+import { type InspectorModeTags, InspectorModeDataAttributes } from './inspectorMode/types';
+import { getAllTaggedEntries } from './inspectorMode/utils';
 import { LiveUpdates } from './liveUpdates';
 import {
-  ConnectedMessage,
-  EditorMessage,
+  type ConnectedMessage,
+  type EditorMessage,
+  type MessageFromEditor,
+  type PostMessageMethods,
+  type UrlChangedMessage,
   LivePreviewPostMessageMethods,
-  MessageFromEditor,
-  PostMessageMethods,
-  UrlChangedMessage,
   openEntryInEditorUtility,
 } from './messages';
 import { SaveEvent } from './saveEvent';
-import {
-  Argument,
-  InspectorModeTags,
-  LivePreviewProps,
-  SubscribeCallback,
-  TagAttributes,
-} from './types';
+import type { Argument, LivePreviewProps, SubscribeCallback } from './types';
 
 export const VERSION = version;
 
@@ -156,14 +151,18 @@ export class ContentfulLivePreview {
           LivePreviewPostMessageMethods.URL_CHANGED,
           {
             action: LivePreviewPostMessageMethods.URL_CHANGED,
-            taggedElementCount: document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length,
+            taggedElementCount: document.querySelectorAll(
+              `[${InspectorModeDataAttributes.ENTRY_ID}]`
+            ).length,
           } as UrlChangedMessage,
           this.targetOrigin
         );
       });
 
       // tell the editor that there's a SDK
-      const taggedElementCount = document.querySelectorAll(`[${TagAttributes.ENTRY_ID}]`).length;
+      const taggedElementCount = document.querySelectorAll(
+        `[${InspectorModeDataAttributes.ENTRY_ID}]`
+      ).length;
       sendMessageToEditor(
         LivePreviewPostMessageMethods.CONNECTED,
         {
@@ -234,9 +233,9 @@ export class ContentfulLivePreview {
     }
 
     return {
-      [TagAttributes.FIELD_ID]: fieldId,
-      [TagAttributes.ENTRY_ID]: entryId,
-      [TagAttributes.LOCALE]: locale,
+      [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+      [InspectorModeDataAttributes.ENTRY_ID]: entryId,
+      [InspectorModeDataAttributes.LOCALE]: locale,
     };
   }
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.12.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.13...@contentful/live-preview@2.12.0) (2023-11-15)
+
+
+### Features
+
+* **inspectorMode:** move inspectorMode outlines on top of the iframe [] ([#405](https://github.com/contentful/live-preview/issues/405)) ([473c8f5](https://github.com/contentful/live-preview/commit/473c8f5e504a1c342a397948a7935bc68419041a))
+
+
+
+
+
 ## [2.11.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.12...@contentful/live-preview@2.11.13) (2023-11-13)
 
 **Note:** Version bump only for package @contentful/live-preview

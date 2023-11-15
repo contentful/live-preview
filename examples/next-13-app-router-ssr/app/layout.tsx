@@ -3,8 +3,6 @@ import { Inter } from 'next/font/google';
 import { draftMode } from 'next/headers';
 import Script from 'next/script';
 
-import '@contentful/live-preview/style.css';
-
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {

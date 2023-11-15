@@ -1,3 +1,4 @@
+// TODO: instead of polling could we use MutationObserver to check for dom changes and then compare URL's
 export function pollUrlChanges(callback: (newUrl: string) => void, interval = 500): () => void {
   let initialUrl = window.location.href;
 

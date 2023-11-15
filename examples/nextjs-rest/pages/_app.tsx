@@ -1,5 +1,4 @@
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
-import '@contentful/live-preview/style.css';
 import { AppProps } from 'next/app';
 
 function App({ Component, pageProps }: AppProps) {
