@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import { Asset, Entry } from 'contentful';
-import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { stringify } from 'flatted';
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
 import * as helpers from '../helpers';
 import { LiveUpdates } from '../liveUpdates';
@@ -13,7 +14,17 @@ import nestedCollectionFromPreviewApp from './fixtures/nestedCollectionFromPrevi
 import nestedDataFromPreviewApp from './fixtures/nestedDataFromPreviewApp.json';
 import pageInsideCollectionFromEntryEditor from './fixtures/pageInsideCollectionFromEntryEditor.json';
 
+const UUID = 'mocked-uuid';
+
 vi.mock('../helpers/debug');
+
+vi.mock('../helpers/uuid', () => {
+  return {
+    __esModule: true,
+    generateUID: vi.fn(() => UUID),
+    foo: 'mocked foo',
+  };
+});
 
 describe('LiveUpdates', () => {
   const sendMessage = vi.spyOn(helpers, 'sendMessageToEditor');
@@ -64,6 +75,7 @@ describe('LiveUpdates', () => {
     liveUpdates.subscribe({ data, callback });
 
     await liveUpdates.receiveMessage({
+      data,
       entity: updateFromEntryEditor1,
       contentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -80,6 +92,7 @@ describe('LiveUpdates', () => {
     });
 
     await liveUpdates.receiveMessage({
+      data,
       entity: updateFromEntryEditor2,
       contentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -118,6 +131,7 @@ describe('LiveUpdates', () => {
     const unsubscribe = liveUpdates.subscribe({ data, callback });
 
     await liveUpdates.receiveMessage({
+      data,
       entity: updateFromEntryEditor1,
       contentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -132,6 +146,7 @@ describe('LiveUpdates', () => {
     unsubscribe();
 
     await liveUpdates.receiveMessage({
+      data,
       entity: updateFromEntryEditor2,
       contentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -151,6 +166,7 @@ describe('LiveUpdates', () => {
     liveUpdates.subscribe({ data, callback });
 
     await liveUpdates.receiveMessage({
+      data,
       isInspectorActive: false,
       action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
       method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
@@ -168,6 +184,7 @@ describe('LiveUpdates', () => {
     liveUpdates.subscribe({ data, locale, callback });
 
     liveUpdates.receiveMessage({
+      data,
       entity: updateFromEntryEditor1,
       contentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -185,6 +202,7 @@ describe('LiveUpdates', () => {
     const callback = vi.fn();
     liveUpdates.subscribe({ data: nestedDataFromPreviewApp, callback });
     await liveUpdates.receiveMessage({
+      data: nestedDataFromPreviewApp,
       entity: assetFromEntryEditor as unknown as Asset,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
       from: 'live-preview',
@@ -209,6 +227,7 @@ describe('LiveUpdates', () => {
       callback,
     });
     await liveUpdates.receiveMessage({
+      data: nestedCollectionFromPreviewApp,
       entity: pageInsideCollectionFromEntryEditor as unknown as Entry,
       contentType: landingPageContentType as unknown as ContentType,
       action: LivePreviewPostMessageMethods.ENTRY_UPDATED,
@@ -246,6 +265,8 @@ describe('LiveUpdates', () => {
       const liveUpdates = new LiveUpdates({ locale, targetOrigin });
       const data = { sys: { id: '1' }, title: 'Data 1', __typename: 'Demo' };
       const callback = vi.fn();
+      const config = stringify({ data, callback });
+
       liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
@@ -255,6 +276,8 @@ describe('LiveUpdates', () => {
           action: LivePreviewPostMessageMethods.SUBSCRIBED,
           type: 'GQL',
           locale,
+          id: UUID,
+          config,
           entryId: '1',
           event: 'edit',
         },
@@ -265,7 +288,9 @@ describe('LiveUpdates', () => {
     it('sends a message to the editor for a subscription with REST data', () => {
       const liveUpdates = new LiveUpdates({ locale, targetOrigin });
       const data = { sys: { id: '1' }, fields: { title: 'Data 1' } };
+
       const callback = vi.fn();
+      const config = stringify({ data, callback });
       liveUpdates.subscribe({ data, callback });
 
       expect(sendMessage).toHaveBeenCalledTimes(1);
@@ -275,6 +300,8 @@ describe('LiveUpdates', () => {
           action: LivePreviewPostMessageMethods.SUBSCRIBED,
           type: 'REST',
           locale,
+          id: UUID,
+          config,
           entryId: '1',
           event: 'edit',
         },

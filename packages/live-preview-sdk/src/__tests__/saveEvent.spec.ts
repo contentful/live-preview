@@ -1,8 +1,8 @@
 import { Entry } from 'contentful';
-import { describe, beforeEach, vi, it, afterEach, Mock, expect } from 'vitest';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAllTaggedEntries } from '../fieldTaggingUtils';
-import { EntrySavedMessage, LivePreviewPostMessageMethods } from '../messages';
+import { LivePreviewPostMessageMethods, MessageFromEditor } from '../messages';
 import { SaveEvent } from '../saveEvent';
 import { ContentType } from '../types';
 
@@ -27,11 +27,11 @@ describe('SaveEvent', () => {
     const saveEvent = new SaveEvent({ locale });
     saveEvent.subscribe(callback);
     saveEvent.receiveMessage({
+      data: {},
       method: LivePreviewPostMessageMethods.ENTRY_SAVED,
-      entityReferenceMap: new Map(),
       contentType,
       entity: entry,
-    } as EntrySavedMessage);
+    } as unknown as Omit<MessageFromEditor, 'from' | 'source'>);
 
     expect(callback).toHaveBeenCalledTimes(1);
   });
@@ -44,10 +44,9 @@ describe('SaveEvent', () => {
     saveEvent.subscribe(callback);
     saveEvent.receiveMessage({
       method: LivePreviewPostMessageMethods.ENTRY_SAVED,
-      entityReferenceMap: new Map(),
       contentType,
       entity: entry,
-    } as EntrySavedMessage);
+    } as unknown as Omit<MessageFromEditor, 'from' | 'source'>);
 
     expect(callback).not.toHaveBeenCalled();
   });

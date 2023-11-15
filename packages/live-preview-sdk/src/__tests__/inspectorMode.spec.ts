@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
 import { InspectorMode } from '../inspectorMode';
@@ -33,6 +33,7 @@ describe('InspectorMode', () => {
     test('should toggle "contentful-inspector--active" class on document.body based on value of isInspectorActive', () => {
       const spy = vi.spyOn(document.body.classList, 'toggle');
       inspectorMode.receiveMessage({
+        data: {},
         action: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
         from: 'live-preview',
         method: LivePreviewPostMessageMethods.INSPECTOR_MODE_CHANGED,
