@@ -12,17 +12,17 @@ import {
 } from './helpers';
 import { isValidMessage } from './helpers/validateMessage';
 import { InspectorMode } from './inspectorMode';
-import { type InspectorModeTags, InspectorModeDataAttributes } from './inspectorMode/types';
+import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types';
 import { getAllTaggedEntries } from './inspectorMode/utils';
 import { LiveUpdates } from './liveUpdates';
 import {
+  LivePreviewPostMessageMethods,
+  openEntryInEditorUtility,
   type ConnectedMessage,
   type EditorMessage,
   type MessageFromEditor,
   type PostMessageMethods,
   type UrlChangedMessage,
-  LivePreviewPostMessageMethods,
-  openEntryInEditorUtility,
 } from './messages';
 import { SaveEvent } from './saveEvent';
 import type { Argument, LivePreviewProps, SubscribeCallback } from './types';
@@ -267,7 +267,3 @@ export class ContentfulLivePreview {
 
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 export * from './messages';
-
-export const newFunc = () => {
-  console.log('newFunc');
-};

@@ -130,7 +130,6 @@ export class LiveUpdates {
       gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
     });
 
-    console.log({ config });
     setTimeout(() => {
       // Restore function is being called immediately after the subscription is added,
       // which might cause the callback to be called even if the subscription is removed immediately afterward.
