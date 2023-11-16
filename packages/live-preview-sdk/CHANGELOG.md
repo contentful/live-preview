@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0-alpha.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.0...@contentful/live-preview@2.13.0-alpha.0) (2023-11-16)
+
+
+### Features
+
+* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
+
+
+
+
+
 # [2.12.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.11.13...@contentful/live-preview@2.12.0) (2023-11-15)
 
 
