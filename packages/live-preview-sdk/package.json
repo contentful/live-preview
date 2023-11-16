@@ -51,6 +51,7 @@
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.0",
     "@contentful/visual-sdk": "^1.0.0-alpha.30",
+    "flatted": "^3.2.9",
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
@@ -62,7 +63,6 @@
     "@vitejs/plugin-react-swc": "^3.0.0",
     "contentful": "^10.3.4",
     "contentful-management": "^11.0.1",
-    "flatted": "^3.2.9",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
     "jsdom": "^22.0.0",
