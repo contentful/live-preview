@@ -36,7 +36,8 @@ export class SaveEvent {
 
   public receiveMessage(message: Omit<MessageFromEditor, 'from' | 'source'>): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
-      const { entity } = message as EntrySavedMessage;
+      // @TODO: will fix this type as part of this ticket https://contentful.atlassian.net/browse/TOL-1599
+      const { entity } = message as unknown as EntrySavedMessage;
       const entries = getAllTaggedEntries();
 
       if (entries.includes(entity.sys.id)) {

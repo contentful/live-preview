@@ -6,9 +6,9 @@ import type { SysLink } from 'contentful-management';
 import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 import { sendMessageToEditor } from './helpers';
 import {
+  InspectorModeEventMethods,
   type InspectorModeAttributes,
   type InspectorModeChangedMessage,
-  InspectorModeEventMethods,
   type InspectorModeMouseMoveMessage,
   type InspectorModeResizeMessage,
   type InspectorModeScrollMessage,
@@ -43,11 +43,11 @@ enum LivePreviewPostMessageMethods {
 }
 
 export {
-  StorePostMessageMethods,
+  InspectorModeEventMethods,
   LivePreviewPostMessageMethods,
   RequestEntitiesMessage,
   RequestedEntitiesMessage,
-  InspectorModeEventMethods,
+  StorePostMessageMethods,
 };
 
 export type PostMessageMethods =
@@ -93,6 +93,8 @@ export type SubscribedMessage = {
   entryId: string;
   locale: string;
   event: 'edit' | 'save';
+  id: string;
+  config: string;
 };
 
 export type ErrorMessage = {
@@ -164,6 +166,7 @@ export type MessageFromEditor = (
   | DebugModeEnabledMessage
   | RequestedEntitiesMessage
 ) & {
+  data: any;
   method: PostMessageMethods;
   /** @deprecated use source instead */
   from: 'live-preview';

@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
+import { sendMessageToEditor } from '../helpers';
 import { InspectorMode } from '../inspectorMode';
 import { InspectorModeEventMethods, LivePreviewPostMessageMethods } from '../messages';
-import { sendMessageToEditor } from '../helpers';
 
 vi.mock('../helpers');
 
@@ -45,6 +45,7 @@ describe('InspectorMode', () => {
 
     test('should send the tagged elements back to the editor', () => {
       inspectorMode.receiveMessage({
+        data: {},
         action: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
         from: 'live-preview',
         method: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
