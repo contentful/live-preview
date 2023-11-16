@@ -2,7 +2,6 @@ import type { Asset, Entry } from 'contentful';
 import type { ContentTypeProps } from 'contentful-management';
 
 import { SendMessage } from './helpers';
-export * from './inspectorMode/types';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';

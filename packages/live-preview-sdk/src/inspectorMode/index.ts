@@ -2,8 +2,8 @@ import { sendMessageToEditor } from '../helpers';
 import type { MessageFromEditor } from '../messages';
 import {
   InspectorModeDataAttributes,
-  type InspectorModeChangedMessage,
   InspectorModeEventMethods,
+  type InspectorModeChangedMessage,
 } from './types';
 import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
 
