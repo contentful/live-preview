@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.31](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.30...@contentful/visual-sdk@1.0.0-alpha.31) (2023-11-17)
+
+
+### Bug Fixes
+
+* **entity-store:** split into asset and entry map to prevent id collision [] ([#406](https://github.com/contentful/live-preview/issues/406)) ([8689a1e](https://github.com/contentful/live-preview/commit/8689a1e388dfa290d4656f0380cb1ecdc642331c))
+
+
+
+
+
 # [1.0.0-alpha.30](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.29...@contentful/visual-sdk@1.0.0-alpha.30) (2023-11-13)
 
 **Note:** Version bump only for package @contentful/visual-sdk
