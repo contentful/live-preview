@@ -26,7 +26,6 @@ import {
 } from './messages';
 import { SaveEvent } from './saveEvent';
 import type { Argument, LivePreviewProps, SubscribeCallback } from './types';
-export * from './inspectorMode/types';
 
 export const VERSION = version;
 

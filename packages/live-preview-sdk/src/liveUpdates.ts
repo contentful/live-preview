@@ -8,8 +8,8 @@ import type {
   PostMessageMethods,
   SubscribedMessage,
 } from '.';
-import { parseGraphQLParams } from './graphql/queryUtils';
 import { StorageMap, debug, generateUID, sendMessageToEditor } from './helpers';
+import { parseGraphQLParams } from './helpers/utils.js';
 import { validateDataForLiveUpdates } from './helpers/validation';
 import { LivePreviewPostMessageMethods } from './messages';
 import { Argument, Entity, Subscription, hasSysInformation } from './types';

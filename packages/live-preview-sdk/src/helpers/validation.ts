@@ -1,3 +1,4 @@
+import { has } from 'lodash';
 import { Argument } from '../types';
 import { debug } from './debug';
 
@@ -13,9 +14,9 @@ function validation(d: Argument): { isGQL: boolean; sysId: string | null; isREST
 
     return { isGQL: false, sysId: null, isREST: false };
   } else {
-    const isGQL = Object.hasOwn(d, '__typename');
-    const sysId = Object.hasOwn(d, 'sys') ? d.sys.id : null;
-    const isREST = Object.hasOwn(d, 'fields');
+    const isGQL = has(d, '__typename');
+    const sysId = d.sys?.id ?? null;
+    const isREST = has(d, 'fields');
 
     if (isGQL || sysId || isREST) {
       return { isGQL, sysId, isREST };

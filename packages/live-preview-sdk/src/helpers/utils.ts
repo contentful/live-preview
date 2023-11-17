@@ -1,8 +1,13 @@
+import { DocumentNode, SelectionNode } from 'graphql';
 import { version } from '../../package.json';
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
-import { PostMessageMethods } from '../messages';
 import type { EditorMessage, MessageFromSDK } from '../messages';
+import { PostMessageMethods } from '../messages';
 import { debug } from './debug';
+
+type Params = Map<string, { alias: Map<string, string>; fields: Set<string> }>;
+type Generated = { __typename: string; alias?: string; name: string };
+const COLLECTION_SUFFIX = 'Collection';
 
 /**
  * Sends the given message to the editor
@@ -115,7 +120,7 @@ export function setProtocolToHttps(url: string | undefined): string | undefined 
     parsed.protocol = 'https:';
     return parsed.href;
   } catch (err) {
-    debug.error(`Recevied invalid asset url "${url}"`, err);
+    debug.error(`Received invalid asset url "${url}"`, err);
     return url;
   }
 }
@@ -146,4 +151,113 @@ export function isInsideIframe(): boolean {
     // window.top.location.href is not accessable for non same origin iframes
     return true;
   }
+}
+
+/**
+ * Takes a list of graphql fields and extract the field names and aliases for the live update processing
+ */
+export function gatherFieldInformation(
+  selections: Readonly<SelectionNode[]>,
+  typename: string
+): Generated[] {
+  const generated: Array<Generated> = [];
+
+  for (const selection of selections) {
+    if (selection.kind === 'Field') {
+      generated.push({
+        name: selection.name.value,
+        alias: selection.alias?.value,
+        __typename: typename,
+      });
+
+      if (selection.selectionSet?.selections) {
+        generated.push(
+          ...gatherFieldInformation(
+            selection.selectionSet.selections,
+            getTypeName(selection, typename)
+          )
+        );
+      }
+    }
+  }
+
+  return generated;
+}
+
+/**
+ * Parses the GraphQL query information and extracts the information,
+ * we're using for processing the live updates (requested fields, alias)
+ */
+export function parseGraphQLParams(query: DocumentNode): Params {
+  const generated: Array<Generated> = [];
+
+  for (const def of query.definitions) {
+    if (def.kind === 'OperationDefinition' || def.kind === 'FragmentDefinition') {
+      const typename = 'typeCondition' in def ? def.typeCondition.name.value : def.name?.value;
+
+      if (!typename) {
+        console.warn('Could not generate __typename for query definition', def);
+        continue;
+      }
+
+      for (const selection of def.selectionSet.selections) {
+        if (selection.kind === 'Field') {
+          generated.push(...gatherFieldInformation(def.selectionSet.selections, typename));
+        }
+      }
+    }
+  }
+
+  // Transform the list of GraphQL information into a Map for faster access
+  // (by __typename)
+  const params: Params = new Map();
+  for (const { __typename, alias, name } of generated) {
+    const match = params.get(__typename) || {
+      alias: new Map<string, string>(),
+      fields: new Set<string>(),
+    };
+
+    match.fields.add(name);
+    if (alias) {
+      match.alias.set(name, alias);
+    }
+
+    params.set(__typename, match);
+  }
+
+  return params;
+}
+
+/**
+ * Generates the typename for the next node
+ * If it's inside a collection it will provide the typename from the collection name
+ */
+export function getTypeName(selection: { name: { value: string } }, prevTypeName: string): string {
+  if (selection.name.value === 'items') {
+    return extractNameFromCollectionName(prevTypeName) || selection.name.value;
+  }
+
+  return selection.name.value;
+}
+
+/**
+ * Extract the name of an entry from the collection (e.g. "postCollection" => "Post")
+ * Returns undefined if the name doesn't has the collection suffix.
+ */
+export function extractNameFromCollectionName(collection: string): string | undefined {
+  if (!collection.endsWith(COLLECTION_SUFFIX)) {
+    return undefined;
+  }
+
+  return generateTypeName(collection.replace(COLLECTION_SUFFIX, ''));
+}
+
+/**
+ * Generates the type name by capitalizing the first letter of the content type ID.
+ *
+ * @param {string} contentTypeId - The content type ID.
+ * @return {string} The generated type name.
+ */
+export function generateTypeName(contentTypeId: string): string {
+  return contentTypeId.charAt(0).toUpperCase() + contentTypeId.slice(1);
 }
