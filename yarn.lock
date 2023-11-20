@@ -2957,9 +2957,9 @@ content-disposition@^0.5.4:
     safe-buffer "5.2.1"
 
 contentful-management@^11.0.1:
-  version "11.5.1"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.5.1.tgz#f3fb06a2729593d32074c6a2e8764d771f21c22f"
-  integrity sha512-t3PN28A1p+qE5sGliiNiBljGtHcVQXCTMB3HVer5yRPMtqkzpINqzxl5qzFPKliY4i8lms2wMLUi5l4lWrcrAg==
+  version "11.5.4"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.5.4.tgz#074279b343a1ddaf10a2156112397fa5ff31923b"
+  integrity sha512-VopfVqyzE+U5MBsDkwbrP+v9+vOZzx6q4cNTpcJWLmXU1CXcOhU9oFWbwlQXhkr+GYYpvnU9nPlU2R1KLxguIg==
   dependencies:
     "@contentful/rich-text-types" "^16.3.0"
     "@types/json-patch" "0.0.30"
