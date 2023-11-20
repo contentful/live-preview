@@ -1,7 +1,7 @@
 {
   "name": "@contentful/visual-sdk",
   "author": "Contentful GmbH",
-  "version": "1.0.0-alpha.31",
+  "version": "1.0.0-alpha.32",
   "description": "Base SDK for building a visual SDK with contentful",
   "license": "MIT",
   "main": "dist/index.js",
