@@ -1,9 +1,8 @@
 import { Entry } from 'contentful';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LivePreviewPostMessageMethods, MessageFromEditor } from '../messages';
-
 import { getAllTaggedEntries } from '../inspectorMode/utils';
+import { LivePreviewPostMessageMethods, MessageFromEditor } from '../messages';
 import { SaveEvent } from '../saveEvent';
 import { ContentType } from '../types';
 

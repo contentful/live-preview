@@ -52,10 +52,12 @@
     "@contentful/rich-text-types": "^16.2.0",
     "@contentful/visual-sdk": "^1.0.0-alpha.30",
     "flatted": "^3.2.9",
+    "lodash-es": "^4.17.21",
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
     "@testing-library/react": "14.1.0",
+    "@types/lodash-es": "^4.17.11",
     "@types/lodash.isequal": "^4.5.6",
     "@types/node": "^20.1.0",
     "@types/react": "^18.0.27",

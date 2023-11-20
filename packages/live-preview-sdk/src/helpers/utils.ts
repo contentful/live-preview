@@ -1,4 +1,5 @@
 import { DocumentNode, SelectionNode } from 'graphql';
+
 import { version } from '../../package.json';
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
 import type { EditorMessage, MessageFromSDK } from '../messages';
@@ -130,7 +131,7 @@ export function setProtocolToHttps(url: string | undefined): string | undefined 
  * Hint: It uses the structuredClone which is only available in modern browsers,
  * for older one it uses the JSON.parse(JSON.strinfify) hack.
  */
-export function clone<T extends Record<any, any> | Array<any>>(incoming: T): T {
+export function clone<T extends Record<string, unknown> | Array<unknown>>(incoming: T): T {
   if (typeof structuredClone === 'function') {
     return structuredClone(incoming);
   }

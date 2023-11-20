@@ -1,4 +1,5 @@
-import { has } from 'lodash';
+import { has } from 'lodash-es';
+
 import { Argument } from '../types';
 import { debug } from './debug';
 
