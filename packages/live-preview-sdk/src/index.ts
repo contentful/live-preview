@@ -79,12 +79,12 @@ export class ContentfulLivePreview {
 
     // Check if running in a browser environment
     if (typeof window !== 'undefined') {
-      if (!isInsideIframe()) {
-        // If the SDK is used outside of the LivePreviewIframe it should do nothing
-        this.liveUpdatesEnabled = false;
+      // if (!isInsideIframe()) {
+      //   // If the SDK is used outside of the LivePreviewIframe it should do nothing
+      //   this.liveUpdatesEnabled = false;
 
-        return Promise.resolve(null);
-      }
+      //   return Promise.resolve(null);
+      // }
 
       if (debugMode) {
         setDebugMode(debugMode);
@@ -142,6 +142,45 @@ export class ContentfulLivePreview {
         if (this.liveUpdatesEnabled) {
           this.liveUpdates?.receiveMessage(event.data);
           this.saveEvent?.receiveMessage(event.data);
+        }
+      });
+
+      const _this = this;
+
+      document.addEventListener('live-preview-receive-message', function (eventData: any) {
+        const event = {
+          data: eventData.detail.message,
+        } as MessageEvent<MessageFromEditor>;
+        console.log({
+          event,
+          eventData,
+          isvalid: isValidMessage(event),
+        });
+
+        if (!isValidMessage(event)) {
+          return;
+        }
+
+        console.log('post message received from editor', {
+          event,
+        });
+        debug.log('Received message', event.data);
+
+        if (
+          ('action' in event.data && event.data.action === 'DEBUG_MODE_ENABLED') ||
+          event.data.method === LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED
+        ) {
+          setDebugMode(true);
+          return;
+        }
+
+        if (_this.inspectorModeEnabled) {
+          _this.inspectorMode?.receiveMessage(event.data);
+        }
+
+        if (_this.liveUpdatesEnabled) {
+          _this.liveUpdates?.receiveMessage(event.data);
+          _this.saveEvent?.receiveMessage(event.data);
         }
       });
 
