@@ -24,6 +24,14 @@ export function sendMessageToEditor(
 
   debug.log('Send message', message);
 
+  console.log('sending message to editor');
+  const event = new CustomEvent('live-preview-messages-from-sdk', {
+    detail: {
+      message,
+    },
+  });
+  document.dispatchEvent(event);
+
   targetOrigin.forEach((origin) => {
     window.top?.postMessage(message, origin);
   });

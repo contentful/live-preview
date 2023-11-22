@@ -93,6 +93,7 @@ export class LiveUpdates {
       // REST
       const depth = 0;
       const visitedReferenceMap = new Map<string, rest.Reference>();
+
       return {
         data: await rest.updateEntity(
           contentType,
@@ -129,6 +130,7 @@ export class LiveUpdates {
     // TODO: This is still not perfect as it doesn't check if anything got updated, only if something could have been merged.
     let updated = false;
     // If the entity is cacheable and it was once proceeded we use this one as base
+
     let result: Entity =
       (isCacheable ? this.storage.get(dataFromPreviewappId, params.locale) : undefined) ||
       dataFromPreviewApp;
@@ -153,7 +155,6 @@ export class LiveUpdates {
         }
       }
     }
-
     if (isCacheable) {
       // Cache the updated data for future updates
       this.storage.set(dataFromPreviewappId, params.locale, result);
@@ -221,6 +222,7 @@ export class LiveUpdates {
               s.callback(data);
             }
           } catch (error) {
+            console.log({ wasThereAnError: error });
             this.sendErrorMessage({
               message: (error as Error).message,
               payload: { data: s.data, update: entity },
