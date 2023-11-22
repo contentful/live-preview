@@ -304,38 +304,38 @@ export async function updateEntity(
         name,
       });
     } else if (field.type === 'Link' && depth < MAX_DEPTH) {
-      // await updateSingleRefField(
-      //   dataFromPreviewApp,
-      //   updateFromEntryEditor,
-      //   locale,
-      //   name as keyof Reference['fields'],
-      //   entityReferenceMap,
-      //   depth + 1,
-      //   visitedReferenceMap,
-      //   sendMessage
-      // );
+      await updateSingleRefField(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        locale,
+        name as keyof Reference['fields'],
+        entityReferenceMap,
+        depth + 1,
+        visitedReferenceMap,
+        sendMessage
+      );
     } else if (field.type === 'Array' && field.items?.type === 'Link' && depth < MAX_DEPTH) {
-      // await updateMultiRefField(
-      //   dataFromPreviewApp,
-      //   updateFromEntryEditor,
-      //   locale,
-      //   name as keyof Reference['fields'],
-      //   entityReferenceMap,
-      //   depth + 1,
-      //   visitedReferenceMap,
-      //   sendMessage
-      // );
+      await updateMultiRefField(
+        dataFromPreviewApp,
+        updateFromEntryEditor,
+        locale,
+        name as keyof Reference['fields'],
+        entityReferenceMap,
+        depth + 1,
+        visitedReferenceMap,
+        sendMessage
+      );
     } else if (field.type === 'RichText') {
-      // await updateRichTextField(
-      //   dataFromPreviewApp,
-      //   updateFromEntryEditor as Entry,
-      //   name,
-      //   locale,
-      //   entityReferenceMap,
-      //   depth,
-      //   visitedReferenceMap,
-      //   sendMessage
-      // );
+      await updateRichTextField(
+        dataFromPreviewApp,
+        updateFromEntryEditor as Entry,
+        name,
+        locale,
+        entityReferenceMap,
+        depth,
+        visitedReferenceMap,
+        sendMessage
+      );
     } else if (field.type === 'ResourceLink') {
       //@TODO -- add live updates for resource links
       debug.warn('Detected a resource link, support is still under development.');

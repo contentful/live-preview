@@ -72,7 +72,10 @@ export async function resolveReference({
   locale: string;
   sendMessage: SendMessage;
 }): Promise<{ reference: Entry | Asset; typeName: string }> {
-  const reference = entityReferenceMap.get(referenceId);
+  // const reference = entityReferenceMap.get(referenceId);
+  // FIXME maybe this will not be needed in future
+  // @ts-expect-error -- .
+  const reference = entityReferenceMap[referenceId];
 
   if (reference) {
     return {
