@@ -2,8 +2,11 @@
 
 This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that runs only on the server.
 
-The live preview SDK will be in an seperate [script](./public/_live-preview.ts), reload the page after **related** content changes and enables the inspector mode for your application.
+You will have to setup a revalidate endpoint in order for us to invalidate your page cache as shown [here](./app/api/revalidate/route.ts)
 
+The live preview SDK will be in a separate [script](./public/_live-preview.ts). Once a save event is detected it will call your revalidation endpoint which will load the new changes on the page
+
+The SDK also enables the inspector mode for your application.
 
 It's important that you use the CPA (Content Preview API) when using this functionality.
 
