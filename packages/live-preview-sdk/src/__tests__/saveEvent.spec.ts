@@ -2,7 +2,7 @@ import { Entry } from 'contentful';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAllTaggedEntries } from '../inspectorMode/utils';
-import { LivePreviewPostMessageMethods, MessageFromEditor } from '../messages';
+import { LivePreviewPostMessageMethods } from '../messages';
 import { SaveEvent } from '../saveEvent';
 import { ContentType } from '../types';
 
@@ -31,7 +31,7 @@ describe('SaveEvent', () => {
       method: LivePreviewPostMessageMethods.ENTRY_SAVED,
       contentType,
       entity: entry,
-    } as unknown as Omit<MessageFromEditor, 'from' | 'source'>);
+    });
 
     expect(callback).toHaveBeenCalledTimes(1);
   });
@@ -46,7 +46,7 @@ describe('SaveEvent', () => {
       method: LivePreviewPostMessageMethods.ENTRY_SAVED,
       contentType,
       entity: entry,
-    } as unknown as Omit<MessageFromEditor, 'from' | 'source'>);
+    });
 
     expect(callback).not.toHaveBeenCalled();
   });

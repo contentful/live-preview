@@ -134,14 +134,12 @@ export type EntryUpdatedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   entity: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
 };
 
 export type EntrySavedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_SAVED;
   entity: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
 };
 
 /** @deprecated use RequestEntitiesMessage instead */
