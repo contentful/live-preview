@@ -1,7 +1,16 @@
-import { has } from 'lodash-es';
-
 import { Argument } from '../types';
 import { debug } from './debug';
+
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * Checks if `key` is a direct property of `object`.
+ * Refactored the previous Object.hasOwn implementation to this function
+ * to avoid bug in web apps where Object.hasOwn is not available
+ */
+function has(object: Record<string, unknown>, key: string) {
+  return object != null && hasOwnProperty.call(object, key);
+}
 
 function validation(d: Argument): { isGQL: boolean; sysId: string | null; isREST: boolean } {
   if (Array.isArray(d)) {
