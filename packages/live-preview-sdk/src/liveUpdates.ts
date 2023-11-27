@@ -12,7 +12,7 @@ import type {
 import * as gql from './graphql';
 import { parseGraphQLParams } from './graphql/queryUtils';
 import { clone, generateUID, sendMessageToEditor, StorageMap, debug } from './helpers';
-import { validateDataForLiveUpdates } from './helpers/validation';
+import { validateLiveUpdatesConfiguration } from './helpers/validation';
 import { LivePreviewPostMessageMethods } from './messages';
 import * as rest from './rest';
 import {
@@ -282,8 +282,9 @@ export class LiveUpdates {
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
    */
-  public subscribe(config: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysId, isREST } = validateDataForLiveUpdates(config.data);
+  public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
+    const { isGQL, isValid, sysId, isREST, config } =
+      validateLiveUpdatesConfiguration(originalConfig);
 
     if (!isValid) {
       this.sendErrorMessage({
