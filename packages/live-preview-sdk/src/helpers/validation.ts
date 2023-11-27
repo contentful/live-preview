@@ -2,11 +2,20 @@ import type { ContentfulSubscribeConfig } from '..';
 import { Argument } from '../types';
 import { debug } from './debug';
 
-// FIXME: don't go down infinite
-function validateData(d: Argument): { isGQL: boolean; sysId: string | null; isREST: boolean } {
+function validateData(
+  d: Argument,
+  maxDepth: number
+): { isGQL: boolean; sysId: string | null; isREST: boolean } {
+  if (maxDepth === 0) {
+    debug.error(
+      'Max depth for validation of subscription data is reached, please provide your data in the correct format.'
+    );
+    return { isGQL: false, sysId: null, isREST: false };
+  }
+
   if (Array.isArray(d)) {
     for (const value of d) {
-      const result = validateData(value);
+      const result = validateData(value, maxDepth - 1);
 
       if (Object.values(result).includes(true)) {
         return result;
@@ -24,7 +33,7 @@ function validateData(d: Argument): { isGQL: boolean; sysId: string | null; isRE
     }
 
     // maybe it's nested
-    return validateData(Object.values(d) as Argument);
+    return validateData(Object.values(d) as Argument, maxDepth - 1);
   }
 }
 
@@ -70,7 +79,7 @@ type ValidationResult = (
 export function validateLiveUpdatesConfiguration(
   originalConfig: ContentfulSubscribeConfig
 ): ValidationResult {
-  const { isGQL, isREST, sysId } = validateData(originalConfig.data);
+  const { isGQL, isREST, sysId } = validateData(originalConfig.data, 10);
   const config = validatedConfig(originalConfig, isREST);
 
   if (!sysId) {

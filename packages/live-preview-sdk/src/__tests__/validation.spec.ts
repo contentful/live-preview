@@ -14,6 +14,39 @@ describe('validateLiveUpdatesConfiguration', () => {
   });
 
   describe('config.data', () => {
+    it('stops at 10 level depth to prevents infinite loops', () => {
+      const data1 = { value: { data: {} } };
+      const data2 = { value: { data: {} } };
+
+      data1.value.data = data2;
+      data2.value.data = data1;
+
+      const config = {
+        callback,
+        data: {
+          value: data1,
+        },
+      };
+      const result = validateLiveUpdatesConfiguration(config);
+
+      expect(debug.error).toHaveBeenCalledTimes(2);
+      expect(debug.error).toHaveBeenCalledWith(
+        'Max depth for validation of subscription data is reached, please provide your data in the correct format.'
+      );
+      expect(debug.error).toHaveBeenCalledWith(
+        'Live Updates requires the "sys.id" to be present on the provided data',
+        config.data
+      );
+
+      expect(result).toEqual({
+        isGQL: false,
+        isREST: false,
+        sysId: null,
+        isValid: false,
+        config,
+      });
+    });
+
     describe('REST', () => {
       it('detects REST structure on the top level', () => {
         const config = {
