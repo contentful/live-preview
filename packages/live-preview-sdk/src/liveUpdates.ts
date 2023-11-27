@@ -1,7 +1,6 @@
 import { stringify } from 'flatted';
 
-import { StorageMap, debug, generateUID, sendMessageToEditor } from './helpers';
-import { parseGraphQLParams } from './helpers/utils.js';
+import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
 import { validateDataForLiveUpdates } from './helpers/validation';
 import type {
   ContentfulSubscribeConfig,

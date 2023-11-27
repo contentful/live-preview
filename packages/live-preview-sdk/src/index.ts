@@ -1,5 +1,3 @@
-import './styles.css';
-
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
