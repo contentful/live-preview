@@ -47,7 +47,7 @@ export interface ContentfulSubscribeConfig {
   data: Argument;
   locale?: string;
   callback: SubscribeCallback;
-  query?: DocumentNode;
+  query?: DocumentNode | string;
 }
 
 export class ContentfulLivePreview {
