@@ -113,7 +113,7 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 
 ### Live Updates
 
-Live Updates allow you to make changes in your editor and see the updates in real time. The updates are only happening on the **client-side** and in the live preview environment of [Contentful](https://app.contentful.com).
+Live updates allow you to make changes in your editor and see the updates in real time. The updates are only happening on the **client-side** and in the live preview environment of [Contentful](https://app.contentful.com). **Note:** Currently transformations of Contentful response data are not supported. In order for live updates to work as intended, Contentful data must be kept in its original structure.
 
 ```tsx
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';

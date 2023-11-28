@@ -1,7 +1,7 @@
 import { stringify } from 'flatted';
 
 import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
-import { validateDataForLiveUpdates } from './helpers/validation';
+import { validateLiveUpdatesConfiguration } from './helpers/validation';
 import type {
   ContentfulSubscribeConfig,
   EditorMessage,
@@ -107,8 +107,9 @@ export class LiveUpdates {
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
    */
-  public subscribe(config: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysId, isREST } = validateDataForLiveUpdates(config.data);
+  public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
+    const { isGQL, isValid, sysId, isREST, config } =
+      validateLiveUpdatesConfiguration(originalConfig);
 
     if (!isValid) {
       this.sendErrorMessage({
@@ -122,7 +123,7 @@ export class LiveUpdates {
     }
 
     const id = generateUID();
-    const locale = config.locale || this.defaultLocale;
+    const locale = config.locale ?? this.defaultLocale;
 
     this.subscriptions.set(id, {
       ...config,

@@ -9,12 +9,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
+## [2.12.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.4...@contentful/live-preview@2.12.5) (2023-11-28)
+
+
+### Bug Fixes
+
+* **validation:** warn about invalid query usage on live updates subscription [] ([#450](https://github.com/contentful/live-preview/issues/450)) ([72423a6](https://github.com/contentful/live-preview/commit/72423a60f53492b52610fc3029c9c9efd0045eb6))
 
 
 
 
 
 # [2.13.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.1...@contentful/live-preview@2.13.0-alpha.2) (2023-11-16)
+## [2.12.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.3...@contentful/live-preview@2.12.4) (2023-11-27)
 
 **Note:** Version bump only for package @contentful/live-preview
 
@@ -23,6 +30,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [2.13.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.0...@contentful/live-preview@2.13.0-alpha.1) (2023-11-16)
+## [2.12.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.2...@contentful/live-preview@2.12.3) (2023-11-27)
 
 **Note:** Version bump only for package @contentful/live-preview
 
@@ -36,6 +44,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
+## [2.12.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.1...@contentful/live-preview@2.12.2) (2023-11-20)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [2.12.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.0...@contentful/live-preview@2.12.1) (2023-11-17)
+
+**Note:** Version bump only for package @contentful/live-preview
 
 
 
