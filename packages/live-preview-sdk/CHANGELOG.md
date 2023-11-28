@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.2...@contentful/live-preview@2.13.0-alpha.3) (2023-11-28)
+
+
+### Features
+
+* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
+
+
+
+
+
 # [2.13.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.1...@contentful/live-preview@2.13.0-alpha.2) (2023-11-16)
 
 **Note:** Version bump only for package @contentful/live-preview
