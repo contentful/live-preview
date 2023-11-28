@@ -1,5 +1,3 @@
-import './styles.css';
-
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
@@ -26,7 +24,6 @@ import {
 } from './messages';
 import { SaveEvent } from './saveEvent';
 import type { Argument, LivePreviewProps, SubscribeCallback } from './types';
-export * from './inspectorMode/types';
 
 export const VERSION = version;
 

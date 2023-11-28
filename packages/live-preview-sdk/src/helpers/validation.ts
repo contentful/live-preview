@@ -1,6 +1,17 @@
 import { Argument } from '../types';
 import { debug } from './debug';
 
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * Checks if `key` is a direct property of `object`.
+ * Refactored the previous Object.hasOwn implementation to this function
+ * to avoid bug in web apps where Object.hasOwn is not available
+ */
+function has(object: Record<string, unknown>, key: string) {
+  return object != null && hasOwnProperty.call(object, key);
+}
+
 function validation(d: Argument): { isGQL: boolean; sysId: string | null; isREST: boolean } {
   if (Array.isArray(d)) {
     for (const value of d) {
@@ -13,9 +24,9 @@ function validation(d: Argument): { isGQL: boolean; sysId: string | null; isREST
 
     return { isGQL: false, sysId: null, isREST: false };
   } else {
-    const isGQL = Object.hasOwn(d, '__typename');
-    const sysId = Object.hasOwn(d, 'sys') ? d.sys.id : null;
-    const isREST = Object.hasOwn(d, 'fields');
+    const isGQL = has(d, '__typename');
+    const sysId = d.sys?.id ?? null;
+    const isREST = has(d, 'fields');
 
     if (isGQL || sysId || isREST) {
       return { isGQL, sysId, isREST };

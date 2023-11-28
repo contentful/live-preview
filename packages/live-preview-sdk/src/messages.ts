@@ -14,7 +14,7 @@ import {
   type InspectorModeScrollMessage,
   type InspectorModeTaggedElementsMessage,
 } from './inspectorMode/types';
-import type { ContentType, EntityReferenceMap } from './types';
+import type { Argument, ContentType, EntityReferenceMap } from './types';
 
 enum LivePreviewPostMessageMethods {
   CONNECTED = 'CONNECTED',
@@ -103,7 +103,7 @@ export type ErrorMessage = {
   /** Error message */
   message: string;
   /** Additional information that could be helpful about this error (e.g. entryId) */
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 };
 
 export type EditorMessage =
@@ -134,14 +134,12 @@ export type EntryUpdatedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   entity: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
 };
 
 export type EntrySavedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_SAVED;
   entity: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
 };
 
 /** @deprecated use RequestEntitiesMessage instead */
@@ -166,7 +164,7 @@ export type MessageFromEditor = (
   | DebugModeEnabledMessage
   | RequestedEntitiesMessage
 ) & {
-  data: any;
+  data: Argument;
   method: PostMessageMethods;
   /** @deprecated use source instead */
   from: 'live-preview';

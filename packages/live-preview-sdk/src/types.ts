@@ -1,8 +1,6 @@
 import type { Asset, Entry } from 'contentful';
 import type { ContentTypeProps } from 'contentful-management';
 
-import { SendMessage } from './helpers';
-
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
 
@@ -53,7 +51,6 @@ export type UpdateEntryProps = {
   locale: string;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
 };
 
 export type UpdateFieldProps = {
@@ -63,7 +60,6 @@ export type UpdateFieldProps = {
   locale: string;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -72,7 +68,6 @@ export type UpdateReferenceFieldProps = {
   entityReferenceMap: EntityReferenceMap;
   locale: string;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
 };
 
 /**

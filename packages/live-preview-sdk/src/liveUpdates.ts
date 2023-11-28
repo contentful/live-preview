@@ -1,4 +1,7 @@
 import { stringify } from 'flatted';
+
+import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
+import { validateDataForLiveUpdates } from './helpers/validation';
 import type {
   ContentfulSubscribeConfig,
   EditorMessage,
@@ -7,10 +10,7 @@ import type {
   MessageFromEditor,
   PostMessageMethods,
   SubscribedMessage,
-} from '.';
-import { parseGraphQLParams } from './graphql/queryUtils';
-import { StorageMap, debug, generateUID, sendMessageToEditor } from './helpers';
-import { validateDataForLiveUpdates } from './helpers/validation';
+} from './index';
 import { LivePreviewPostMessageMethods } from './messages';
 import { Argument, Entity, Subscription, hasSysInformation } from './types';
 
