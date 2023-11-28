@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.4...@contentful/live-preview@2.12.5) (2023-11-28)
+
+
+### Bug Fixes
+
+* **validation:** warn about invalid query usage on live updates subscription [] ([#450](https://github.com/contentful/live-preview/issues/450)) ([72423a6](https://github.com/contentful/live-preview/commit/72423a60f53492b52610fc3029c9c9efd0045eb6))
+
+
+
+
+
 ## [2.12.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.3...@contentful/live-preview@2.12.4) (2023-11-27)
 
 **Note:** Version bump only for package @contentful/live-preview
