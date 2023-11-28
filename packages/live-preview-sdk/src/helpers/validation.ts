@@ -1,6 +1,8 @@
+import gql from 'graphql-tag';
 import type { ContentfulSubscribeConfig } from '..';
-import { Argument } from '../types';
+import { Argument, SubscribeCallback } from '../types';
 import { debug } from './debug';
+import { DocumentNode } from 'graphql';
 
 function validateData(
   d: Argument,
@@ -37,16 +39,23 @@ function validateData(
   }
 }
 
-function validatedConfig(originalConfig: ContentfulSubscribeConfig, isREST: boolean) {
+function validatedConfig(
+  originalConfig: ContentfulSubscribeConfig,
+  isREST: boolean
+): ValidatedConfig {
   const config = { ...originalConfig };
 
   if (config.query) {
-    if (typeof config.query !== 'object') {
-      debug.warn(
-        'The provided GraphQL query needs to be a `DocumentNode`, please provide it in the correct format.',
-        originalConfig
-      );
-      config.query = undefined;
+    if (typeof config.query === 'string') {
+      try {
+        config.query = gql(config.query);
+      } catch (error) {
+        debug.error(
+          'The provided GraphQL query is invalid, please provide it in the correct format.',
+          originalConfig
+        );
+        config.query = undefined;
+      }
     }
 
     if (isREST) {
@@ -58,8 +67,15 @@ function validatedConfig(originalConfig: ContentfulSubscribeConfig, isREST: bool
     }
   }
 
-  return config;
+  return config as ValidatedConfig;
 }
+
+type ValidatedConfig = {
+  data: Argument;
+  locale?: string;
+  callback: SubscribeCallback;
+  query?: DocumentNode;
+};
 
 type ValidationResult = (
   | {
@@ -70,7 +86,7 @@ type ValidationResult = (
       isValid: false;
       sysId: string | null;
     }
-) & { isGQL: boolean; isREST: boolean; config: ContentfulSubscribeConfig };
+) & { isGQL: boolean; isREST: boolean; config: ValidatedConfig };
 
 /**
  * **Basic** validating of the subscribed configuration

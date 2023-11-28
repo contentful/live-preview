@@ -147,7 +147,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         });
       });
 
-      it('detects REST structure inside lists', () => {
+      it('detects GraphQL structure inside lists', () => {
         const config = {
           callback,
           data: [
@@ -171,7 +171,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         });
       });
 
-      it('detects REST structure in a nested structure', () => {
+      it('detects GraphQL structure in a nested structure', () => {
         const config = {
           callback,
           data: {
@@ -284,7 +284,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       });
     });
 
-    it('warns about invalid query and removes the query param', () => {
+    it('parses the DocumentNode from the query string', () => {
       const config = {
         callback,
         data: {
@@ -295,17 +295,58 @@ describe('validateLiveUpdatesConfiguration', () => {
         query: `
           query test {
             __typename
-            sys { id }
+            sys {
+              id
+            }
             title
           }
-        ` as any, // Needed to convince typescript, more a test for non typescript consumers
+        `,
       };
 
       const result = validateLiveUpdatesConfiguration(config);
 
-      expect(debug.warn).toHaveBeenCalledTimes(1);
-      expect(debug.warn).toHaveBeenCalledWith(
-        'The provided GraphQL query needs to be a `DocumentNode`, please provide it in the correct format.',
+      expect(debug.warn).not.toHaveBeenCalled();
+
+      expect(result).toEqual({
+        isGQL: true,
+        isREST: false,
+        sysId: '123',
+        isValid: true,
+        config: {
+          ...config,
+          query: gql`
+            query test {
+              __typename
+              sys {
+                id
+              }
+              title
+            }
+          `,
+        },
+      });
+    });
+
+    it('warns about invalid query and removes the query param', () => {
+      const config = {
+        callback,
+        data: {
+          sys: { id: '123' },
+          title: { 'en-US': 'Hello World' },
+          __typename: 'hello',
+        },
+        query: `
+          __typename
+          sys { id }
+          title
+        `,
+      };
+
+      const result = validateLiveUpdatesConfiguration(config);
+
+      expect(debug.error).toHaveBeenCalledTimes(1);
+      expect(debug.error).toHaveBeenCalledWith(
+        'The provided GraphQL query is invalid, please provide it in the correct format.',
         config
       );
 
