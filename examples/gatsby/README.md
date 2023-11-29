@@ -14,7 +14,7 @@ npm install
 
 ## 2. Environment variables
 
-To run this project, you will need to add the following environment variables to your `.env.local` file:
+To run this project, you will need to add the following environment variables to your `.env` file:
 
 - `CONTENTFUL_SPACE_ID`: This is the Space ID from your Contentful space.
 - `CONTENTFUL_ACCESS_TOKEN`: This is the Content Delivery API - access token, which is used for fetching **published** data from your Contentful space.
@@ -38,4 +38,4 @@ In order to enable the live preview feature in your local development environmen
 
 ## 5. Running the project locally
 
-To run the project locally, you can use the `npm run dev` command. You can now use the live preview feature.
+To run the project locally, you can use the `npm run develop` command. You can now use the live preview feature.
