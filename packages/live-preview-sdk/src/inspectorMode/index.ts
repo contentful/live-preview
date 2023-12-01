@@ -1,5 +1,5 @@
 import { sendMessageToEditor } from '../helpers';
-import type { MessageFromEditor } from '../messages';
+import { LivePreviewPostMessageMethods, type MessageFromEditor } from '../messages';
 import {
   InspectorModeDataAttributes,
   type InspectorModeChangedMessage,
@@ -46,12 +46,17 @@ export class InspectorMode {
       if (isInspectorActive) {
         this.sendAllElements();
       }
-    } else {
-      this.handleResizing();
+    } else if (
+      data.method === LivePreviewPostMessageMethods.ENTRY_UPDATED ||
+      data.method === LivePreviewPostMessageMethods.ENTRY_SAVED
+    ) {
+      // for entry updates we need to wait a bit to make sure the DOM is updated
+      // then send the tagged elements again so that outlines are correct
+      this.handleResizing(250);
     }
   }
 
-  private handleResizing() {
+  private handleResizing(timeout = 150) {
     if (!this.isResizing) {
       this.isResizing = true;
       sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, this.targetOrigin);
@@ -71,7 +76,7 @@ export class InspectorMode {
       if (this.hoveredElement) {
         this.handleTaggedElement(this.hoveredElement);
       }
-    }, 150);
+    }, timeout);
   }
 
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
