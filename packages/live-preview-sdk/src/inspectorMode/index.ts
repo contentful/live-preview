@@ -46,7 +46,32 @@ export class InspectorMode {
       if (isInspectorActive) {
         this.sendAllElements();
       }
+    } else {
+      this.handleResizing();
     }
+  }
+
+  private handleResizing() {
+    if (!this.isResizing) {
+      this.isResizing = true;
+      sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, this.targetOrigin);
+    }
+
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+
+    // Start timeout to trigger the `end` event, if there would be another resize event,
+    // the existing timeout will be canceled and it starts again.
+    // Prevents showing wrong information during resizing.
+    this.resizeTimeout = setTimeout(() => {
+      this.isResizing = false;
+      sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, this.targetOrigin);
+      this.sendAllElements();
+      if (this.hoveredElement) {
+        this.handleTaggedElement(this.hoveredElement);
+      }
+    }, 150);
   }
 
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
@@ -139,26 +164,7 @@ export class InspectorMode {
   /** Sends resize start and end event to the editor, on end it also sends the tagged elements again */
   private addResizeListener() {
     const resizeObserver = new ResizeObserver(() => {
-      if (!this.isResizing) {
-        this.isResizing = true;
-        sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, this.targetOrigin);
-      }
-
-      if (this.resizeTimeout) {
-        clearTimeout(this.resizeTimeout);
-      }
-
-      // Start timeout to trigger the `end` event, if there would be another resize event,
-      // the existing timeout will be canceled and it starts again.
-      // Prevents showing wrong information during resizing.
-      this.resizeTimeout = setTimeout(() => {
-        this.isResizing = false;
-        sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, this.targetOrigin);
-        this.sendAllElements();
-        if (this.hoveredElement) {
-          this.handleTaggedElement(this.hoveredElement);
-        }
-      }, 150);
+      this.handleResizing();
     });
 
     resizeObserver.observe(document.body);
