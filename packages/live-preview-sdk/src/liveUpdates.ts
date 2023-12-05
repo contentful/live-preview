@@ -42,9 +42,10 @@ export class LiveUpdates {
       await Promise.all(
         [...this.subscriptions].map(async ([, s]) => {
           try {
-            // Only if there was an update, trigger the callback to unnecessary re-renders
-
-            s.callback(message.data);
+            // Only if there was an update, trigger the callback to avoid unnecessary re-renders
+            if (s.sysId === entity.sys.id) {
+              s.callback(message.data);
+            }
           } catch (error) {
             this.sendErrorMessage({
               message: (error as Error).message,
