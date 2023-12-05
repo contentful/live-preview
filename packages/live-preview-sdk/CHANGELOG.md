@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.4...@contentful/live-preview@2.13.0-alpha.5) (2023-12-05)
+
+
+### Features
+
+* only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
+
+
+
+
+
 # [2.13.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0-alpha.4) (2023-11-28)
 
 
