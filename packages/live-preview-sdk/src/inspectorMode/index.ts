@@ -46,37 +46,7 @@ export class InspectorMode {
       if (isInspectorActive) {
         this.sendAllElements();
       }
-    } else if (
-      data.method === LivePreviewPostMessageMethods.ENTRY_UPDATED ||
-      data.method === LivePreviewPostMessageMethods.ENTRY_SAVED
-    ) {
-      // for entry updates we need to wait a bit to make sure the DOM is updated
-      // then send the tagged elements again so that outlines are correct
-      this.handleResizing(250);
     }
-  }
-
-  private handleResizing(timeout = 150) {
-    if (!this.isResizing) {
-      this.isResizing = true;
-      sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, this.targetOrigin);
-    }
-
-    if (this.resizeTimeout) {
-      clearTimeout(this.resizeTimeout);
-    }
-
-    // Start timeout to trigger the `end` event, if there would be another resize event,
-    // the existing timeout will be canceled and it starts again.
-    // Prevents showing wrong information during resizing.
-    this.resizeTimeout = setTimeout(() => {
-      this.isResizing = false;
-      sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, this.targetOrigin);
-      this.sendAllElements();
-      if (this.hoveredElement) {
-        this.handleTaggedElement(this.hoveredElement);
-      }
-    }, timeout);
   }
 
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
@@ -163,13 +133,37 @@ export class InspectorMode {
       subtree: true,
     });
 
+    // mutationObserver.observe(description, {
+    //   attributes: true,characterData: true, subtree: true, childList: true
+
+    //   })
+
     return () => mutationObserver.disconnect();
   }
 
   /** Sends resize start and end event to the editor, on end it also sends the tagged elements again */
   private addResizeListener() {
     const resizeObserver = new ResizeObserver(() => {
-      this.handleResizing();
+      if (!this.isResizing) {
+        this.isResizing = true;
+        sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, this.targetOrigin);
+      }
+
+      if (this.resizeTimeout) {
+        clearTimeout(this.resizeTimeout);
+      }
+
+      // Start timeout to trigger the `end` event, if there would be another resize event,
+      // the existing timeout will be canceled and it starts again.
+      // Prevents showing wrong information during resizing.
+      this.resizeTimeout = setTimeout(() => {
+        this.isResizing = false;
+        sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, this.targetOrigin);
+        this.sendAllElements();
+        if (this.hoveredElement) {
+          this.handleTaggedElement(this.hoveredElement);
+        }
+      }, 150);
     });
 
     resizeObserver.observe(document.body);
@@ -213,15 +207,36 @@ export class InspectorMode {
     );
 
     this.taggedElements = entries;
+    const sendTaggedElementsMessage = () => {
+      sendMessageToEditor(
+        InspectorModeEventMethods.TAGGED_ELEMENTS,
+        {
+          elements: entries.map((e) => ({
+            coordinates: e.getBoundingClientRect(),
+          })),
+        },
+        this.targetOrigin
+      );
+    };
 
-    sendMessageToEditor(
-      InspectorModeEventMethods.TAGGED_ELEMENTS,
-      {
-        elements: entries.map((e) => ({
-          coordinates: e.getBoundingClientRect(),
-        })),
-      },
-      this.targetOrigin
-    );
+    const mutationObserver = new MutationObserver(sendTaggedElementsMessage);
+
+    this.taggedElements.forEach((element) => {
+      mutationObserver.observe(element, {
+        attributes: true,
+        attributeFilter: [
+          InspectorModeDataAttributes.ENTRY_ID,
+          InspectorModeDataAttributes.FIELD_ID,
+          InspectorModeDataAttributes.LOCALE,
+        ],
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    });
+
+    sendTaggedElementsMessage();
+
+    return () => mutationObserver.disconnect();
   }
 }
