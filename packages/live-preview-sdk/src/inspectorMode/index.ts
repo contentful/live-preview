@@ -19,6 +19,7 @@ export class InspectorMode {
 
   private hoveredElement?: HTMLElement;
   private taggedElements: Element[] = [];
+  private taggedElementMutationObserver?: MutationObserver;
 
   constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
@@ -207,6 +208,10 @@ export class InspectorMode {
     );
 
     this.taggedElements = entries;
+    if (this.taggedElementMutationObserver) {
+      this.taggedElementMutationObserver.disconnect();
+    }
+
     const sendTaggedElementsMessage = () => {
       sendMessageToEditor(
         InspectorModeEventMethods.TAGGED_ELEMENTS,
@@ -219,10 +224,10 @@ export class InspectorMode {
       );
     };
 
-    const mutationObserver = new MutationObserver(sendTaggedElementsMessage);
+    this.taggedElementMutationObserver = new MutationObserver(sendTaggedElementsMessage);
 
     this.taggedElements.forEach((element) => {
-      mutationObserver.observe(element, {
+      this.taggedElementMutationObserver?.observe(element, {
         attributes: true,
         attributeFilter: [
           InspectorModeDataAttributes.ENTRY_ID,
@@ -236,7 +241,5 @@ export class InspectorMode {
     });
 
     sendTaggedElementsMessage();
-
-    return () => mutationObserver.disconnect();
   }
 }
