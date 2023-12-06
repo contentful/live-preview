@@ -1,5 +1,5 @@
 import { sendMessageToEditor } from '../helpers';
-import { LivePreviewPostMessageMethods, type MessageFromEditor } from '../messages';
+import { type MessageFromEditor } from '../messages';
 import {
   InspectorModeDataAttributes,
   type InspectorModeChangedMessage,
