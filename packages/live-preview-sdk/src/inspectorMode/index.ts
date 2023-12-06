@@ -134,11 +134,6 @@ export class InspectorMode {
       subtree: true,
     });
 
-    // mutationObserver.observe(description, {
-    //   attributes: true,characterData: true, subtree: true, childList: true
-
-    //   })
-
     return () => mutationObserver.disconnect();
   }
 
