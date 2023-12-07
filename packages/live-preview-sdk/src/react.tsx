@@ -18,7 +18,7 @@ import isEqual from 'lodash.isequal';
 import { debounce } from './helpers';
 import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index';
 import type { InspectorModeTags } from './inspectorMode/types';
-import { Argument, LivePreviewProps } from './types';
+import { Argument, LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps } from './types';
 
 type UseEffectParams = Parameters<typeof useEffect>;
 type EffectCallback = UseEffectParams[0];
@@ -181,7 +181,12 @@ type GetInspectorModeProps<T> = (
  * Generates the function to build the required properties for the inspector mode (field tagging)
  */
 export function useContentfulInspectorMode<
-  T = undefined | Pick<LivePreviewProps, 'entryId'> | Pick<LivePreviewProps, 'entryId' | 'fieldId'>
+  T =
+    | undefined
+    | Pick<LivePreviewEntryProps, 'entryId'>
+    | Pick<LivePreviewEntryProps, 'entryId' | 'fieldId'>
+    | Pick<LivePreviewAssetProps, 'assetId'>
+    | Pick<LivePreviewAssetProps, 'assetId' | 'fieldId'>
 >(sharedProps?: T): GetInspectorModeProps<T> {
   const config = useContext(ContentfulLivePreviewContext);
 
