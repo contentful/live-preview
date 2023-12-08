@@ -183,76 +183,152 @@ describe('useContentfulLiveUpdates', () => {
 });
 
 describe('useContentfulInspectorMode', () => {
-  it('should provide a helper function to generate the correct tags (no initial data)', () => {
-    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
-      initialProps: undefined,
-      wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
-      ),
+  describe('entry', () => {
+    it('should provide a helper function to generate the correct tags (no initial data)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: undefined,
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ entryId: '1', locale, fieldId: 'title' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
     });
 
-    expect(result.current({ entryId: '1', locale, fieldId: 'title' })).toEqual({
-      'data-contentful-entry-id': '1',
-      'data-contentful-field-id': 'title',
-      'data-contentful-locale': 'en-US',
+    it('should provide a helper function to generate the correct tags (initial entryId)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { entryId: '1' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ locale, fieldId: 'title' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
+    });
+
+    it('should provide a helper function to generate the correct tags (initial locale)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { locale },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ entryId: '1', fieldId: 'title' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
+    });
+
+    it('should provide a helper function to generate the correct tags (initial entryId & locale)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { entryId: '1', locale },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
+    });
+
+    it('should return null because the inspector mode is disabled', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { locale, entryId: '1' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale} enableInspectorMode={false}>
+            {children}
+          </ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title' })).toBeNull();
     });
   });
+  describe('asset', () => {
+    it('should provide a helper function to generate the correct tags (no initial data)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: undefined,
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
 
-  it('should provide a helper function to generate the correct tags (initial entryId)', () => {
-    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
-      initialProps: { entryId: '1' },
-      wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
-      ),
+      expect(result.current({ assetId: '1', locale, fieldId: 'title' })).toEqual({
+        'data-contentful-asset-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
     });
 
-    expect(result.current({ locale, fieldId: 'title' })).toEqual({
-      'data-contentful-entry-id': '1',
-      'data-contentful-field-id': 'title',
-      'data-contentful-locale': 'en-US',
-    });
-  });
+    it('should provide a helper function to generate the correct tags (initial entryId)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { assetId: '1' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
 
-  it('should provide a helper function to generate the correct tags (initial locale)', () => {
-    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
-      initialProps: { locale },
-      wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
-      ),
-    });
-
-    expect(result.current({ entryId: '1', fieldId: 'title' })).toEqual({
-      'data-contentful-entry-id': '1',
-      'data-contentful-field-id': 'title',
-      'data-contentful-locale': 'en-US',
-    });
-  });
-
-  it('should provide a helper function to generate the correct tags (initial entryId & locale)', () => {
-    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
-      initialProps: { entryId: '1', locale },
-      wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
-      ),
+      expect(result.current({ locale, fieldId: 'title' })).toEqual({
+        'data-contentful-asset-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
     });
 
-    expect(result.current({ fieldId: 'title' })).toEqual({
-      'data-contentful-entry-id': '1',
-      'data-contentful-field-id': 'title',
-      'data-contentful-locale': 'en-US',
-    });
-  });
+    it('should provide a helper function to generate the correct tags (initial locale)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { locale },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
 
-  it('should return null because the inspector mode is disabled', () => {
-    const { result } = renderHook((data) => useContentfulInspectorMode(data), {
-      initialProps: { locale, entryId: '1' },
-      wrapper: ({ children }) => (
-        <ContentfulLivePreviewProvider locale={locale} enableInspectorMode={false}>
-          {children}
-        </ContentfulLivePreviewProvider>
-      ),
+      expect(result.current({ assetId: '1', fieldId: 'title' })).toEqual({
+        'data-contentful-asset-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
     });
 
-    expect(result.current({ fieldId: 'title' })).toBeNull();
+    it('should provide a helper function to generate the correct tags (initial entryId & locale)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { assetId: '1', locale },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title' })).toEqual({
+        'data-contentful-asset-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-locale': 'en-US',
+      });
+    });
+
+    it('should return null because the inspector mode is disabled', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { locale, assetId: '1' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale} enableInspectorMode={false}>
+            {children}
+          </ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title' })).toBeNull();
+    });
   });
 });

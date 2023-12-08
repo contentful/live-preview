@@ -172,9 +172,13 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
 }
 
 type GetInspectorModeProps<T> = (
-  props: {
-    [K in Exclude<keyof LivePreviewProps, keyof T | 'locale'>]: LivePreviewProps[K];
-  } & { locale?: LivePreviewProps['locale'] }
+  props:
+    | {
+        [K in Exclude<keyof LivePreviewEntryProps, keyof T | 'locale'>]: LivePreviewEntryProps[K];
+      }
+    | ({
+        [K in Exclude<keyof LivePreviewAssetProps, keyof T | 'locale'>]: LivePreviewAssetProps[K];
+      } & { locale?: LivePreviewProps['locale'] })
 ) => InspectorModeTags;
 
 /**
