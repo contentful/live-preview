@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0-alpha.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.6...@contentful/live-preview@2.13.0-alpha.7) (2023-12-08)
+
+
+### Features
+
+* return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
+
+
+
+
+
 # [2.13.0-alpha.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.5...@contentful/live-preview@2.13.0-alpha.6) (2023-12-06)
 
 **Note:** Version bump only for package @contentful/live-preview
