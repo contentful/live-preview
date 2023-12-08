@@ -132,7 +132,7 @@ export type EntryUpdatedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
-  entity: Entry | Asset;
+  data: Entry | Asset;
   contentType: ContentType;
 };
 

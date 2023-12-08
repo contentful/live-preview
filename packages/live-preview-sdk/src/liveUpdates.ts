@@ -33,33 +33,30 @@ export class LiveUpdates {
 
   /** Receives the data from the message event handler and calls the subscriptions */
   public async receiveMessage(message: MessageFromEditor): Promise<void> {
-    console.log({ message });
     if (
       ('action' in message && message.action === 'ENTRY_UPDATED') ||
       message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED
     ) {
-      const { entity } = message as EntryUpdatedMessage;
+      const { data } = message as EntryUpdatedMessage;
 
-      console.log('Received update from editor', this.subscriptions);
       await Promise.all(
         [...this.subscriptions].map(async ([, s]) => {
           try {
             // Only if there was an update, trigger the callback to avoid unnecessary re-renders
-            if (s.sysId === entity.sys.id) {
-              console.log('sysId matches', s.sysId, entity.sys.id);
-              s.callback(message.data);
+            if (s.sysId === data.sys.id) {
+              s.callback(data);
             }
           } catch (error) {
             this.sendErrorMessage({
               message: (error as Error).message,
-              payload: { data: s.data, update: entity },
+              payload: { data: s.data, update: data },
               type: 'SUBSCRIPTION_UPDATE_FAILED',
             });
 
             debug.error('Failed to apply live update', {
               error,
               subscribedData: s.data,
-              updateFromEditor: entity,
+              updateFromEditor: data,
             });
           }
         })
