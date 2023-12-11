@@ -17,7 +17,9 @@ export type LivePreviewAssetProps = {
   locale?: string;
 };
 
-export type LivePreviewProps = LivePreviewEntryProps | LivePreviewAssetProps;
+export type LivePreviewProps =
+  | (LivePreviewEntryProps & { assetId?: never })
+  | (LivePreviewAssetProps & { entryId?: never });
 
 export interface SysProps {
   id: string;
