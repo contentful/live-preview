@@ -1,5 +1,5 @@
 import { sendMessageToEditor } from '../helpers';
-import type { MessageFromEditor } from '../messages';
+import { type MessageFromEditor } from '../messages';
 import {
   InspectorModeDataAttributes,
   InspectorModeEventMethods,
@@ -19,6 +19,7 @@ export class InspectorMode {
 
   private hoveredElement?: HTMLElement;
   private taggedElements: Element[] = [];
+  private taggedElementMutationObserver?: MutationObserver;
 
   constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
@@ -202,15 +203,38 @@ export class InspectorMode {
     );
 
     this.taggedElements = entries;
+    if (this.taggedElementMutationObserver) {
+      this.taggedElementMutationObserver.disconnect();
+    }
 
-    sendMessageToEditor(
-      InspectorModeEventMethods.TAGGED_ELEMENTS,
-      {
-        elements: entries.map((e) => ({
-          coordinates: e.getBoundingClientRect(),
-        })),
-      },
-      this.targetOrigin
-    );
+    const sendTaggedElementsMessage = () => {
+      sendMessageToEditor(
+        InspectorModeEventMethods.TAGGED_ELEMENTS,
+        {
+          elements: entries.map((e) => ({
+            coordinates: e.getBoundingClientRect(),
+          })),
+        },
+        this.targetOrigin
+      );
+    };
+
+    this.taggedElementMutationObserver = new MutationObserver(sendTaggedElementsMessage);
+
+    this.taggedElements.forEach((element) => {
+      this.taggedElementMutationObserver?.observe(element, {
+        attributes: true,
+        attributeFilter: [
+          InspectorModeDataAttributes.ENTRY_ID,
+          InspectorModeDataAttributes.FIELD_ID,
+          InspectorModeDataAttributes.LOCALE,
+        ],
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    });
+
+    sendTaggedElementsMessage();
   }
 }
