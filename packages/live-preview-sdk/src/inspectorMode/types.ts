@@ -1,14 +1,21 @@
 import type { SetRequired } from 'type-fest';
 
-export type InspectorModeTags = {
+export type InspectorModeEntryTags = {
   [InspectorModeDataAttributes.ENTRY_ID]: string;
   [InspectorModeDataAttributes.FIELD_ID]: string;
   [InspectorModeDataAttributes.LOCALE]?: string;
-} | null;
+};
+export type InspectorModeAssetTags = {
+  [InspectorModeDataAttributes.ASSET_ID]: string;
+  [InspectorModeDataAttributes.FIELD_ID]: string;
+  [InspectorModeDataAttributes.LOCALE]?: string;
+};
+export type InspectorModeTags = InspectorModeEntryTags | InspectorModeAssetTags | null;
 
 export const enum InspectorModeDataAttributes {
   FIELD_ID = 'data-contentful-field-id',
   ENTRY_ID = 'data-contentful-entry-id',
+  ASSET_ID = 'data-contentful-asset-id',
   LOCALE = 'data-contentful-locale',
 }
 
@@ -22,11 +29,18 @@ export enum InspectorModeEventMethods {
   INSPECTOR_MODE_CHANGED = 'INSPECTOR_MODE_CHANGED',
 }
 
-export type InspectorModeAttributes = {
+export type InspectorModeEntryAttributes = {
   entryId: string;
   fieldId: string;
   locale: string;
 };
+export type InspectorModeAssetAttributes = {
+  assetId: string;
+  fieldId: string;
+  locale: string;
+};
+
+export type InspectorModeAttributes = InspectorModeEntryAttributes | InspectorModeAssetAttributes;
 
 export type InspectorModeElement = {
   attributes?: InspectorModeAttributes | null;

@@ -6,11 +6,20 @@ import { SendMessage } from './helpers';
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
 
-export type LivePreviewProps = {
+export type LivePreviewEntryProps = {
   fieldId: string;
   entryId: string;
   locale?: string;
 };
+export type LivePreviewAssetProps = {
+  fieldId: string;
+  assetId: string;
+  locale?: string;
+};
+
+export type LivePreviewProps =
+  | (LivePreviewEntryProps & { assetId?: never })
+  | (LivePreviewAssetProps & { entryId?: never });
 
 export interface SysProps {
   id: string;

@@ -98,7 +98,7 @@ const updated = useContentfulLiveUpdates(originalData, { locale });
 
 ### Inspector Mode (field tagging)
 
-To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-field-id`) to the rendered HTML element output.
+To use the inspector mode, you need to tag fields by adding the live preview data-attributes (`data-contentful-entry-id`, `data-contentful-asset-id`, `data-contentful-field-id`) to the rendered HTML element output.
 
 You can do this in React via our helper function.
 
@@ -152,7 +152,7 @@ const updated = useContentfulLiveUpdates(originalData, { query });
 // ...
 ```
 
-### Open Entry in Editor
+### Open Entry or Asset in Editor
 
 `ContentfulLivePreview.openEntryInEditor({fieldId: string, entryId: string, locale: string})`
 
@@ -160,6 +160,7 @@ Opens an entry in the Contentful live preview editor. This utility function allo
 
 - **fieldId** (string): The ID of the field you want to target.
 - **entryId** (string): The ID of the entry containing the field.
+- **assetId** (string): The ID of the asset containing the field.
 - **locale** (string): The locale of the content.
 
 **Usage**:
