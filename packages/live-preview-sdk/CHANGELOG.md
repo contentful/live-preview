@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0) (2023-12-13)
+
+
+### Features
+
+* adding support for asset editor field tagging [TOL-1683] ([#463](https://github.com/contentful/live-preview/issues/463)) ([f366953](https://github.com/contentful/live-preview/commit/f366953ad9a98dbcb133e06415d516165fab1155))
+
+
+
+
+
 ## [2.12.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.4...@contentful/live-preview@2.12.5) (2023-11-28)
 
 
