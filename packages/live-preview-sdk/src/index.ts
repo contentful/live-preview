@@ -34,6 +34,8 @@ import type {
   SubscribeCallback,
 } from './types';
 
+export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
+
 export const VERSION = version;
 
 const DEFAULT_ORIGINS = ['https://app.contentful.com', 'https://app.eu.contentful.com'];
