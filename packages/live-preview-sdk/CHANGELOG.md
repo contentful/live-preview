@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.14.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0...@contentful/live-preview@2.14.0) (2023-12-14)
+
+
+### Features
+
+* expose live preview props types ([#474](https://github.com/contentful/live-preview/issues/474)) ([1275dd3](https://github.com/contentful/live-preview/commit/1275dd3760e34cc77a684ba137243011ee1e850d))
+
+
+
+
+
 # [2.13.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0) (2023-12-13)
 
 
