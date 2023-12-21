@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.37](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.36...@contentful/visual-sdk@1.0.0-alpha.37) (2023-12-21)
+
+
+### Bug Fixes
+
+* cleanup request cache after timeout [SPA-1711] ([#482](https://github.com/contentful/live-preview/issues/482)) ([87000b4](https://github.com/contentful/live-preview/commit/87000b4bf29cca6829ee2f3e4b0f33811ef1fde2))
+
+
+
+
+
 # [1.0.0-alpha.36](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.35...@contentful/visual-sdk@1.0.0-alpha.36) (2023-12-12)
 
 **Note:** Version bump only for package @contentful/visual-sdk
