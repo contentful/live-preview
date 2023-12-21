@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.38](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.37...@contentful/visual-sdk@1.0.0-alpha.38) (2023-12-21)
+
+
+### Bug Fixes
+
+* accept and handle list of missing entity IDs ([#483](https://github.com/contentful/live-preview/issues/483)) ([e6d52f1](https://github.com/contentful/live-preview/commit/e6d52f104c09af7ca19e6e7a8869f10dfc9c5be2))
+
+
+
+
+
 # [1.0.0-alpha.37](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.36...@contentful/visual-sdk@1.0.0-alpha.37) (2023-12-21)
 
 
