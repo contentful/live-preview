@@ -10,6 +10,7 @@ export type RequestEntitiesMessage = {
 
 export type RequestedEntitiesMessage = {
   entities: Array<Entry | Asset>;
+  missingEntityIds?: string[]
 };
 
 export enum PostMessageMethods {
@@ -91,7 +92,11 @@ export class EditorEntityStore extends EntityStore {
       const unsubscribe = this.subscribe(
         PostMessageMethods.REQUESTED_ENTITIES,
         (message: RequestedEntitiesMessage) => {
-          if (missing.every((id) => message.entities.find((entity) => entity.sys.id === id))) {
+          const messageIds = [
+            ...message.entities.map((entity) => entity.sys.id),
+            ...(message.missingEntityIds ?? []),
+          ];
+          if (missing.every((id) => messageIds.find((entityId) => entityId === id))) {
             clearTimeout(timeout);
             resolve(message.entities);
 
