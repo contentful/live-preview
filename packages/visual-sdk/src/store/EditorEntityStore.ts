@@ -104,7 +104,11 @@ export class EditorEntityStore extends EntityStore {
       );
 
       const timeout = setTimeout(() => {
-        reject(new Error('Request for entities timed out'));
+        reject(new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`));
+
+        this.cleanupPromise(cacheId);
+        ids.forEach((id) => this.cleanupPromise(id));
+
         unsubscribe();
       }, this.timeoutDuration);
 
