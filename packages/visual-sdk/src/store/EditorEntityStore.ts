@@ -99,6 +99,8 @@ export class EditorEntityStore extends EntityStore {
             ids.forEach((id) => this.cleanupPromise(id));
 
             unsubscribe();
+          } else {
+            console.warn('Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.')
           }
         }
       );
