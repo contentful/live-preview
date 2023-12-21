@@ -99,12 +99,18 @@ export class EditorEntityStore extends EntityStore {
             ids.forEach((id) => this.cleanupPromise(id));
 
             unsubscribe();
+          } else {
+            console.warn('Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.')
           }
         }
       );
 
       const timeout = setTimeout(() => {
-        reject(new Error('Request for entities timed out'));
+        reject(new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`));
+
+        this.cleanupPromise(cacheId);
+        ids.forEach((id) => this.cleanupPromise(id));
+
         unsubscribe();
       }, this.timeoutDuration);
 
