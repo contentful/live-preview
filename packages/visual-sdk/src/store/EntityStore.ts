@@ -31,12 +31,11 @@ export class EntityStore {
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
   ): string | undefined {
-    entityLink.sys.type;
     const entity = this.getEntity(entityLink.sys.linkType, entityLink.sys.id);
 
     if (!entity) {
       // TODO: move to `debug` utils once it is extracted
-      console.warn(`Unresolved entity reference: ${entityLink}`);
+      console.warn(`Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`);
       return;
     }
 
