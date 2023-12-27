@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.39](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.38...@contentful/visual-sdk@1.0.0-alpha.39) (2023-12-27)
+
+
+### Bug Fixes
+
+* print link with ID instead of object Object when logging the link ([#484](https://github.com/contentful/live-preview/issues/484)) ([9fb3510](https://github.com/contentful/live-preview/commit/9fb35107bfb37f204c41c12d4a771a6e15244e2f))
+
+
+
+
+
 # [1.0.0-alpha.38](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.37...@contentful/visual-sdk@1.0.0-alpha.38) (2023-12-21)
 
 
