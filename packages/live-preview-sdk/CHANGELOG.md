@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.14.0...@contentful/live-preview@2.15.0) (2024-01-02)
+
+
+### Features
+
+* implement CSM transformation to encoded strings for GraphQL [TOL-1706] ([#473](https://github.com/contentful/live-preview/issues/473)) ([c29aa4c](https://github.com/contentful/live-preview/commit/c29aa4c2eb9c7a636227e50944c43d42afea50db))
+
+
+
+
+
 # [2.14.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0...@contentful/live-preview@2.14.0) (2023-12-14)
 
 
