@@ -11,7 +11,7 @@ export interface EntitySource {
 
 type Mappings = Record<string, { source: Source }>;
 
-interface IContentSourceMaps {
+interface ContentSourceMaps {
   version: number;
   spaces: string[];
   environments: string[];
@@ -25,6 +25,6 @@ interface IContentSourceMaps {
 export interface GraphQLResponse {
   data: any;
   extensions: {
-    contentSourceMaps: IContentSourceMaps;
+    contentSourceMaps: ContentSourceMaps;
   };
 }

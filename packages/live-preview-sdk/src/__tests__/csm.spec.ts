@@ -1,5 +1,5 @@
-import { describe, test, beforeEach, expect } from 'vitest';
-import { ContentSourceMaps } from '../csm';
+import { describe, test, expect } from 'vitest';
+import { encodeSourceMap } from '../csm';
 import { vercelStegaDecode } from '@vercel/stega';
 
 type Mappings = {
@@ -46,12 +46,6 @@ function testEncodingDecoding(encodedResponse: EncodedResponse, mappings: Mappin
 }
 
 describe('Content Source Maps', () => {
-  let csm: ContentSourceMaps;
-
-  beforeEach(() => {
-    csm = new ContentSourceMaps();
-  });
-
   describe('GraphQL', () => {
     test('basic example', () => {
       const graphQLResponse = {
@@ -89,7 +83,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = csm.encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         title: {
           origin: 'contentful.com',
@@ -158,7 +152,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = csm.encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items, {
         0: {
           title: {
@@ -229,7 +223,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = csm.encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items[0], {
         akanTitle: {
           origin: 'contentful.com',
@@ -274,7 +268,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = csm.encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
 
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         date: undefined,
@@ -309,7 +303,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = csm.encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
 
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         url: undefined,
