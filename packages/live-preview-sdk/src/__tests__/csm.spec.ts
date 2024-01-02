@@ -96,6 +96,58 @@ describe('Content Source Maps', () => {
       });
     });
 
+    test('handles EU domain', () => {
+      const graphQLResponse = {
+        data: {
+          post: {
+            title: 'Title of the post',
+            subtitle: 'Subtitle of the post',
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1.0,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['title', 'subtitle'],
+            locales: ['en-US'],
+            entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+            assets: [],
+            mappings: {
+              '/post/title': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+              '/post/subtitle': {
+                source: {
+                  entry: 0,
+                  field: 1,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeSourceMap(
+        graphQLResponse,
+        'https://app.eu.contentful.com'
+      );
+      testEncodingDecoding(encodedGraphQLResponse.data.post, {
+        title: {
+          origin: 'contentful.com',
+          href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
+        },
+        subtitle: {
+          origin: 'contentful.com',
+          href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
+        },
+      });
+    });
+
     test('collections', () => {
       const graphQLResponse = {
         data: {

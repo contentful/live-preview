@@ -20,7 +20,8 @@ const getHref = (
   spaces: string[],
   environments: string[],
   fields: string[],
-  locales: string[]
+  locales: string[],
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
 ): string | null => {
   const isEntry = 'entry' in source;
   const entity = isEntry ? entries[source.entry] : assets[source.asset];
@@ -31,13 +32,17 @@ const getHref = (
   const entityId = entity.id;
   const field = fields[source.field];
   const locale = locales[source.locale];
-
-  const basePath = `https://app.contentful.com/spaces/${space}/environments/${environment}`;
+  const targetOriginUrl = targetOrigin || 'https://app.contentful.com';
+  const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
   const entityType = isEntry ? 'entries' : 'assets';
+
   return `${basePath}/${entityType}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
 };
 
-export const encodeSourceMap = (graphqlResponse: GraphQLResponse): GraphQLResponse => {
+export const encodeSourceMap = (
+  graphqlResponse: GraphQLResponse,
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+): GraphQLResponse => {
   if (
     !graphqlResponse ||
     !graphqlResponse.extensions ||
@@ -52,7 +57,16 @@ export const encodeSourceMap = (graphqlResponse: GraphQLResponse): GraphQLRespon
 
   for (const pointer in mappings) {
     const { source } = mappings[pointer];
-    const href = getHref(source, entries, assets, spaces, environments, fields, locales);
+    const href = getHref(
+      source,
+      entries,
+      assets,
+      spaces,
+      environments,
+      fields,
+      locales,
+      targetOrigin
+    );
 
     if (href && jsonPointer.has(data, pointer)) {
       const currentValue = jsonPointer.get(data, pointer);
