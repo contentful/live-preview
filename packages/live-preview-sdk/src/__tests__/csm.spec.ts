@@ -2,20 +2,8 @@ import { describe, test, expect } from 'vitest';
 import { encodeSourceMap } from '../csm';
 import { vercelStegaDecode } from '@vercel/stega';
 
-type Mappings = {
-  [key: string]:
-    | {
-        origin: string;
-        href: string;
-      }
-    | {
-        [nestedKey: string]: {
-          origin: string;
-          href: string;
-        };
-      }
-    | undefined;
-};
+type Mapping = { origin: string; href: string };
+type Mappings = Record<string, Mapping | Record<string, Mapping> | undefined>;
 
 type EncodedResponse =
   | {
