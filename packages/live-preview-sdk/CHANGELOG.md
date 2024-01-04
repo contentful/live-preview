@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0...@contentful/live-preview@2.15.1) (2024-01-04)
+
+
+### Bug Fixes
+
+* handle empty rich text field [TOL-1708] ([#493](https://github.com/contentful/live-preview/issues/493)) ([19e7c3a](https://github.com/contentful/live-preview/commit/19e7c3af17a2b48f592e5d91983ce91d260db789))
+
+
+
+
+
 # [2.15.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.14.0...@contentful/live-preview@2.15.0) (2024-01-02)
 
 
