@@ -263,7 +263,6 @@ async function updateRichTextField(
 
   if (isRichText(richText)) {
     // Update the rich text JSON data
-
     dataFromPreviewApp.fields[name] = richText;
     // Resolve the linked entries or assets within the rich text field
     for (const node of richText.content) {
