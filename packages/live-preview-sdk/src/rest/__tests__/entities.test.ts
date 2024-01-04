@@ -108,6 +108,15 @@ describe('Update REST entry', () => {
     });
   });
 
+  it('sets undefined for rich text fields', async () => {
+    const result = await updateFn({
+      dataFromPreviewApp,
+      updateFromEntryEditor: patchField(entry, 'richText', undefined),
+    });
+
+    expect(result).toEqual(patchField(defaultResult, 'richText', undefined));
+  });
+
   describe('references', () => {
     it('removes a single reference', async () => {
       const result = await updateFn({

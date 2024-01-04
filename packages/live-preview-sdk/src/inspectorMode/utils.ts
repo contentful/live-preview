@@ -34,7 +34,6 @@ export function getAllTaggedElements(): Element[] {
     ...document.querySelectorAll(`[${InspectorModeDataAttributes.ENTRY_ID}]`),
     ...document.querySelectorAll(`[${InspectorModeDataAttributes.ASSET_ID}]`),
   ];
-  console.log(allElements);
   return allElements;
 }
 

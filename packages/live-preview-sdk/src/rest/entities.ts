@@ -236,7 +236,7 @@ async function resolveRichTextLinks(
         entityReferenceMap,
         locale,
         depth + 1,
-visitedReferenceMap,
+        visitedReferenceMap,
         sendMessage
       );
     }
@@ -254,6 +254,12 @@ async function updateRichTextField(
   sendMessage: SendMessage
 ) {
   const richText = updateFromEntryEditor.fields?.[name];
+
+  //when rich text field is empty, remove it from the preview data
+  if (!updateFromEntryEditor.fields[name]) {
+    delete dataFromPreviewApp.fields[name];
+    return;
+  }
 
   if (isRichText(richText)) {
     // Update the rich text JSON data
