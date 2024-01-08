@@ -15,6 +15,7 @@ import { getAllTaggedEntries } from './inspectorMode/utils';
 import { LiveUpdates } from './liveUpdates';
 import {
   LivePreviewPostMessageMethods,
+  openAssetInEditorUtility,
   openEntryInEditorUtility,
   type ConnectedMessage,
   type EditorMessage,
@@ -23,7 +24,15 @@ import {
   type UrlChangedMessage,
 } from './messages';
 import { SaveEvent } from './saveEvent';
-import type { Argument, LivePreviewProps, SubscribeCallback } from './types';
+import type {
+  Argument,
+  LivePreviewAssetProps,
+  LivePreviewEntryProps,
+  LivePreviewProps,
+  SubscribeCallback,
+} from './types';
+
+export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
 export const VERSION = version;
 
@@ -220,21 +229,31 @@ export class ContentfulLivePreview {
   }
 
   // Static method to render live preview data-attributes to HTML element output
-  static getProps({ fieldId, entryId, locale }: LivePreviewProps): InspectorModeTags {
+  static getProps(props: LivePreviewProps): InspectorModeTags {
+    const { fieldId, locale } = props;
+
     if (!this.inspectorModeEnabled) {
       return null;
     }
 
-    if (!fieldId || !entryId) {
-      debug.warn('Missing property for inspector mode', { fieldId, entryId });
-      return null;
+    if ((props as LivePreviewAssetProps).assetId !== undefined && fieldId) {
+      return {
+        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+        [InspectorModeDataAttributes.ASSET_ID]: (props as LivePreviewAssetProps).assetId,
+        [InspectorModeDataAttributes.LOCALE]: locale,
+      };
     }
 
-    return {
-      [InspectorModeDataAttributes.FIELD_ID]: fieldId,
-      [InspectorModeDataAttributes.ENTRY_ID]: entryId,
-      [InspectorModeDataAttributes.LOCALE]: locale,
-    };
+    if ((props as LivePreviewEntryProps).entryId !== undefined && fieldId) {
+      return {
+        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+        [InspectorModeDataAttributes.ENTRY_ID]: (props as LivePreviewEntryProps).entryId,
+        [InspectorModeDataAttributes.LOCALE]: locale,
+      };
+    }
+
+    debug.warn('Missing property for inspector mode', { ...props });
+    return null;
   }
 
   static toggleInspectorMode(): boolean {
@@ -247,12 +266,28 @@ export class ContentfulLivePreview {
     return this.liveUpdatesEnabled;
   }
 
-  static openEntryInEditor({ fieldId, entryId, locale }: LivePreviewProps): void {
-    if (!fieldId || !entryId) {
-      debug.error('Please provide field id and entry id to openEntryInEditor.');
+  static openEntryInEditor(props: LivePreviewProps): void {
+    if ((props as LivePreviewAssetProps).assetId !== undefined && props.fieldId) {
+      openAssetInEditorUtility(
+        props.fieldId,
+        (props as LivePreviewAssetProps).assetId,
+        props.locale || this.locale,
+        this.targetOrigin
+      );
+      return;
     }
 
-    openEntryInEditorUtility(fieldId, entryId, locale || this.locale, this.targetOrigin);
+    if ((props as LivePreviewEntryProps).entryId !== undefined && props.fieldId) {
+      openEntryInEditorUtility(
+        props.fieldId,
+        (props as LivePreviewEntryProps).entryId,
+        props.locale || this.locale,
+        this.targetOrigin
+      );
+      return;
+    }
+
+    debug.error('Please provide field id and entry id to openEntryInEditor.');
   }
 
   /**
