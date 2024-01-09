@@ -10,13 +10,18 @@ export function getInspectorModeAttributes(
 ): InspectorModeAttributes | null {
   const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID);
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
+  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
   const locale = element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale;
 
-  if (!fieldId || !entryId || !locale) {
-    return null;
+  if (assetId && locale && fieldId) {
+    return { fieldId, assetId, locale };
   }
 
-  return { fieldId, entryId, locale };
+  if (entryId && locale && fieldId) {
+    return { fieldId, entryId, locale };
+  }
+
+  return null;
 }
 
 /**
@@ -25,7 +30,11 @@ export function getInspectorModeAttributes(
  * if you want to have only valid ones check for `getTaggedInformation`
  */
 export function getAllTaggedElements(): Element[] {
-  return [...document.querySelectorAll(`[${InspectorModeDataAttributes.ENTRY_ID}]`)];
+  const allElements = [
+    ...document.querySelectorAll(`[${InspectorModeDataAttributes.ENTRY_ID}]`),
+    ...document.querySelectorAll(`[${InspectorModeDataAttributes.ASSET_ID}]`),
+  ];
+  return allElements;
 }
 
 /**

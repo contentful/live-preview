@@ -3,9 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.13.0-alpha.11](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.10...@contentful/live-preview@2.13.0-alpha.11) (2023-12-27)
+# [2.15.0-alpha.12](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.1...@contentful/live-preview@2.15.0-alpha.12) (2024-01-08)
+
+
+### Features
+
+* only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
+* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
+* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
+* return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
+
+
+
+
+
 
 **Note:** Version bump only for package @contentful/live-preview
+## [2.15.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0...@contentful/live-preview@2.15.1) (2024-01-04)
+
+
+### Bug Fixes
+
+* handle empty rich text field [TOL-1708] ([#493](https://github.com/contentful/live-preview/issues/493)) ([19e7c3a](https://github.com/contentful/live-preview/commit/19e7c3af17a2b48f592e5d91983ce91d260db789))
 
 
 
@@ -36,11 +55,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [2.13.0-alpha.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.6...@contentful/live-preview@2.13.0-alpha.7) (2023-12-08)
+# [2.15.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.14.0...@contentful/live-preview@2.15.0) (2024-01-02)
 
 
 ### Features
 
 * return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
+* implement CSM transformation to encoded strings for GraphQL [TOL-1706] ([#473](https://github.com/contentful/live-preview/issues/473)) ([c29aa4c](https://github.com/contentful/live-preview/commit/c29aa4c2eb9c7a636227e50944c43d42afea50db))
 
 
 
@@ -55,23 +76,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [2.13.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.4...@contentful/live-preview@2.13.0-alpha.5) (2023-12-05)
+# [2.14.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0...@contentful/live-preview@2.14.0) (2023-12-14)
 
 
 ### Features
 
 * only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
+* expose live preview props types ([#474](https://github.com/contentful/live-preview/issues/474)) ([1275dd3](https://github.com/contentful/live-preview/commit/1275dd3760e34cc77a684ba137243011ee1e850d))
 
 
 
 
 
 # [2.13.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0-alpha.4) (2023-11-28)
+# [2.13.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0) (2023-12-13)
 
 
 ### Features
 
 * remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
 * remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
+* adding support for asset editor field tagging [TOL-1683] ([#463](https://github.com/contentful/live-preview/issues/463)) ([f366953](https://github.com/contentful/live-preview/commit/f366953ad9a98dbcb133e06415d516165fab1155))
 
 
 

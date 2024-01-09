@@ -188,3 +188,21 @@ export function openEntryInEditorUtility(
     targetOrigin
   );
 }
+
+export function openAssetInEditorUtility(
+  fieldId: string,
+  assetId: string,
+  locale: string,
+  targetOrigin: string[]
+): void {
+  sendMessageToEditor(
+    LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
+    {
+      action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
+      fieldId,
+      assetId,
+      locale,
+    },
+    targetOrigin
+  );
+}
