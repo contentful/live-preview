@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-alpha.14](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.13...@contentful/live-preview@2.15.0-alpha.14) (2024-01-10)
+
+
+### Features
+
+* remove csm until stega is approved ([1d304fd](https://github.com/contentful/live-preview/commit/1d304fd01a5a1efd73eaddaa9f30d6e2f75d547e))
+
+
+
+
+
 # [2.15.0-alpha.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.11...@contentful/live-preview@2.15.0-alpha.13) (2024-01-09)
 
 **Note:** Version bump only for package @contentful/live-preview
