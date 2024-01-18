@@ -1,8 +1,10 @@
+import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
+
 import type { ContentfulSubscribeConfig } from '..';
+
 import { Argument, SubscribeCallback } from '../types';
 import { debug } from './debug';
-import { DocumentNode } from 'graphql';
 
 function validateData(
   d: Argument,

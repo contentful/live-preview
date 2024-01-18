@@ -4,9 +4,9 @@ import { describe, it, expect, vi, Mock, afterEach, beforeAll } from 'vitest';
 import { sendMessageToEditor, isInsideIframe } from '../helpers';
 import { ContentfulLivePreview } from '../index';
 import { InspectorMode } from '../inspectorMode';
+import { InspectorModeDataAttributes } from '../inspectorMode/types';
 import { LiveUpdates } from '../liveUpdates';
 import { SaveEvent } from '../saveEvent';
-import { InspectorModeDataAttributes } from '../inspectorMode/types';
 
 vi.mock('../inspectorMode');
 vi.mock('../liveUpdates');
