@@ -45,7 +45,6 @@
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.0",
-    "@contentful/visual-sdk": "1.0.0-alpha.39",
     "flatted": "^3.2.9",
     "graphql-tag": "^2.12.6",
     "json-pointer": "^0.6.2",
