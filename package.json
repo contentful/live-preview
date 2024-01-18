@@ -5,6 +5,9 @@
   "license": "MIT",
   "description": "Everything about content preview in contentful",
   "homepage": "https://github.com/contentful/live-preview#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/live-preview.git"
