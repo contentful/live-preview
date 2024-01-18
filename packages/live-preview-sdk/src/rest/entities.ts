@@ -209,7 +209,7 @@ async function resolveRichTextLinks(
   sendMessage: SendMessage
 ) {
   if (SUPPORTED_RICHTEXT_EMBEDS.includes(node.nodeType)) {
-    if (node.data && node.data.target && node?.data?.target.sys) {
+    if (node.data && node.data.target && node.data.target.sys) {
       if (node.data.target.sys.linkType === 'Entry' || node.data.target.sys.linkType === 'Asset') {
         const id = node.data.target?.sys.id || '';
         const updatedReference = {
