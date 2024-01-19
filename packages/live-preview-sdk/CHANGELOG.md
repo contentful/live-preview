@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.16...@contentful/live-preview@3.0.0-alpha.1) (2024-01-19)
+
+
+### Reverts
+
+* Revert "chore(visual-sdk): remove as it's no longer needed [] (#510)" ([bb3f174](https://github.com/contentful/live-preview/commit/bb3f174ab065a7a0e9c13422c897259769ef3875)), closes [#510](https://github.com/contentful/live-preview/issues/510)
+* Revert "feat(live-updates): send unsubscribed message to cleanup subscriptions on the counter part [] (#509)" ([1664262](https://github.com/contentful/live-preview/commit/1664262729925badaebbad7af48dad80cbec650a)), closes [#509](https://github.com/contentful/live-preview/issues/509)
+* Revert "chore(release): updated release notes and package versions [ci skip]" ([6457dd2](https://github.com/contentful/live-preview/commit/6457dd2516bc43124cc1cf0c79eb6969b7b20554))
+
+
+
+
+
 # [2.15.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.14...@contentful/live-preview@2.15.0-alpha.15) (2024-01-18)
 
 **Note:** Version bump only for package @contentful/live-preview

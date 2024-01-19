@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.40](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.39...@contentful/visual-sdk@1.0.0-alpha.40) (2024-01-19)
+
+
+### Reverts
+
+* Revert "chore(visual-sdk): remove as it's no longer needed [] (#510)" ([bb3f174](https://github.com/contentful/live-preview/commit/bb3f174ab065a7a0e9c13422c897259769ef3875)), closes [#510](https://github.com/contentful/live-preview/issues/510)
+
+
+
+
+
 # [1.0.0-alpha.39](https://github.com/contentful/live-preview/compare/@contentful/visual-sdk@1.0.0-alpha.38...@contentful/visual-sdk@1.0.0-alpha.39) (2023-12-27)
 
 
