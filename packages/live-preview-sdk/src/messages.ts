@@ -1,3 +1,5 @@
+import type { RequestEntitiesMessage, RequestedEntitiesMessage } from '@contentful/visual-sdk';
+import { PostMessageMethods as StorePostMessageMethods } from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
 import type { SysLink } from 'contentful-management';
 
@@ -40,9 +42,18 @@ enum LivePreviewPostMessageMethods {
   UNKNOWN_REFERENCE_LOADED = 'UNKNOWN_REFERENCE_LOADED',
 }
 
-export { InspectorModeEventMethods, LivePreviewPostMessageMethods };
+export {
+  InspectorModeEventMethods,
+  LivePreviewPostMessageMethods,
+  RequestEntitiesMessage,
+  RequestedEntitiesMessage,
+  StorePostMessageMethods,
+};
 
-export type PostMessageMethods = LivePreviewPostMessageMethods | InspectorModeEventMethods;
+export type PostMessageMethods =
+  | LivePreviewPostMessageMethods
+  | StorePostMessageMethods
+  | InspectorModeEventMethods;
 
 export type ConnectedMessage = {
   /** @deprecated use method instead */
@@ -101,6 +112,7 @@ export type EditorMessage =
   | UnknownEntityMessage
   | UrlChangedMessage
   | SubscribedMessage
+  | RequestEntitiesMessage
   | ErrorMessage
   | InspectorModeMouseMoveMessage
   | InspectorModeScrollMessage
@@ -150,6 +162,7 @@ export type MessageFromEditor = (
   | UnknownReferenceLoaded
   | InspectorModeChangedMessage
   | DebugModeEnabledMessage
+  | RequestedEntitiesMessage
 ) & {
   data: Argument;
   method: PostMessageMethods;
