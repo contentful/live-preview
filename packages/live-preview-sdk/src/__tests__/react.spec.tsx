@@ -17,13 +17,19 @@ import { Argument } from '../types';
 const locale = 'en-US';
 
 describe('ContentfulLivePreviewProvider', () => {
-  it('should warn about the missing locale proeprty', () => {
+  it('should warn about the missing locale property', () => {
+    // Keep test log clean of unnecessary console.error noise
+    const spy = vi.spyOn(console, 'error');
+    spy.mockImplementation(() => {});
+
     expect(
       // @ts-expect-error -- case locale not provided (e.g. JavaScript usage)
       () => render(<ContentfulLivePreviewProvider>Hello World</ContentfulLivePreviewProvider>)
     ).toThrowError(
       'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`'
     );
+
+    spy.mockRestore();
   });
 });
 
@@ -56,7 +62,7 @@ describe('useContentfulLiveUpdates', () => {
     expect(result.current).toEqual(initialData);
   });
 
-  it('should bind the subscibe fn', () => {
+  it('should bind the subscribe fn', () => {
     const initialData = createData('2');
     const { unmount } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
@@ -154,7 +160,7 @@ describe('useContentfulLiveUpdates', () => {
     expect(counter).toEqual(2);
   });
 
-  it('shouldnt listen to changes if the initial data is empty', () => {
+  it('should not listen to changes if the initial data is empty', () => {
     const { rerender } = renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: undefined as Argument | null | undefined,
       wrapper,
@@ -167,7 +173,7 @@ describe('useContentfulLiveUpdates', () => {
     expect(subscribe).not.toHaveBeenCalled();
   });
 
-  it('shouldnt listen if live updates are disabled', () => {
+  it('should not listen if live updates are disabled', () => {
     const initialData = createData('6');
     renderHook((data) => useContentfulLiveUpdates(data, locale), {
       initialProps: initialData,
