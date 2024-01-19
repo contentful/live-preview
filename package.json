@@ -34,13 +34,12 @@
   "devDependencies": {
     "@commitlint/cli": "18.0.0",
     "@commitlint/config-conventional": "18.0.0",
-    "@contentful/eslint-config-extension": "0.4.3",
-    "@typescript-eslint/eslint-plugin": "4.10.0",
-    "@typescript-eslint/parser": "4.10.0",
+    "@typescript-eslint/eslint-plugin": "6.19.0",
+    "@typescript-eslint/parser": "6.19.0",
     "commitizen": "4.3.0",
     "concurrently": "8.2.2",
-    "eslint": "7.32.0",
-    "eslint-plugin-import": "2.26.0",
+    "eslint": "8.56.0",
+    "eslint-plugin-import": "2.29.1",
     "eslint-plugin-import-helpers": "1.2.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
@@ -48,7 +47,7 @@
     "lerna": "^8.0.0",
     "lint-staged": "^15.0.1",
     "prettier": "2.8.8",
-    "typescript": "5.1.6"
+    "typescript": "5.3.3"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
