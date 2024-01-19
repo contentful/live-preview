@@ -3,17 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.15.0-alpha.16](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.15...@contentful/live-preview@2.15.0-alpha.16) (2024-01-18)
-
-
-### Features
-
-* **live-updates:** send unsubscribed message to cleanup subscriptions on the counter part [] ([#509](https://github.com/contentful/live-preview/issues/509)) ([66cbebd](https://github.com/contentful/live-preview/commit/66cbebd42ba8eb018c32c2bed0f54d8accc5891b))
-
-
-
-
-
 # [2.15.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.14...@contentful/live-preview@2.15.0-alpha.15) (2024-01-18)
 
 **Note:** Version bump only for package @contentful/live-preview
