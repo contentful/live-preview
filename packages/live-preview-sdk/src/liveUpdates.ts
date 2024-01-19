@@ -10,7 +10,6 @@ import type {
   MessageFromEditor,
   PostMessageMethods,
   SubscribedMessage,
-  UnsubscribedMessage,
 } from './index';
 import { LivePreviewPostMessageMethods } from './messages';
 import { Argument, Entity, Subscription, hasSysInformation } from './types';
@@ -143,22 +142,17 @@ export class LiveUpdates {
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.
-    const message: Omit<SubscribedMessage, 'action'> | UnsubscribedMessage = {
+    this.sendMessage(LivePreviewPostMessageMethods.SUBSCRIBED, {
+      action: LivePreviewPostMessageMethods.SUBSCRIBED,
       type: isGQL ? 'GQL' : 'REST',
       locale,
       entryId: sysId,
       event: 'edit',
       id,
       config: stringify(config),
-    };
-
-    this.sendMessage(LivePreviewPostMessageMethods.SUBSCRIBED, {
-      action: LivePreviewPostMessageMethods.SUBSCRIBED,
-      ...message,
     } as SubscribedMessage);
 
     return () => {
-      this.sendMessage(LivePreviewPostMessageMethods.UNSUBSCRIBED, message);
       this.subscriptions.delete(id);
     };
   }

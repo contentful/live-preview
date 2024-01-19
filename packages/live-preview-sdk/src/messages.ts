@@ -25,7 +25,6 @@ enum LivePreviewPostMessageMethods {
   TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
   URL_CHANGED = 'URL_CHANGED',
   SUBSCRIBED = 'SUBSCRIBED',
-  UNSUBSCRIBED = 'UNSUBSCRIBED',
 
   ENTRY_UPDATED = 'ENTRY_UPDATED',
   ENTRY_SAVED = 'ENTRY_SAVED',
@@ -41,7 +40,7 @@ enum LivePreviewPostMessageMethods {
   UNKNOWN_REFERENCE_LOADED = 'UNKNOWN_REFERENCE_LOADED',
 }
 
-export { InspectorModeEventMethods, InspectorModeChangedMessage, LivePreviewPostMessageMethods };
+export { InspectorModeEventMethods, LivePreviewPostMessageMethods };
 
 export type PostMessageMethods = LivePreviewPostMessageMethods | InspectorModeEventMethods;
 
@@ -87,15 +86,6 @@ export type SubscribedMessage = {
   config: string;
 };
 
-export type UnsubscribedMessage = {
-  type: 'GQL' | 'REST';
-  entryId: string;
-  locale: string;
-  event: 'edit' | 'save';
-  id: string;
-  config: string;
-};
-
 export type ErrorMessage = {
   /** Error type */
   type: string;
@@ -111,7 +101,6 @@ export type EditorMessage =
   | UnknownEntityMessage
   | UrlChangedMessage
   | SubscribedMessage
-  | UnsubscribedMessage
   | ErrorMessage
   | InspectorModeMouseMoveMessage
   | InspectorModeScrollMessage
