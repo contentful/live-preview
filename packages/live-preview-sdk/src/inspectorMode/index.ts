@@ -107,9 +107,7 @@ export class InspectorMode {
   /** Detects DOM changes and sends the tagged elements to the editor */
   private addMutationListener = () => {
     const mutationObserver = new MutationObserver(() => {
-      const taggedElements = getAllTaggedElements().filter(
-        (el) => !!getInspectorModeAttributes(el)
-      );
+      const taggedElements = getAllTaggedElements();
 
       if (this.taggedElements?.length !== taggedElements.length) {
         this.sendAllElements();
@@ -194,12 +192,10 @@ export class InspectorMode {
    * and sends them to the editor
    */
   private sendAllElements = () => {
-    const { targetOrigin, locale } = this.options;
-    const entries = getAllTaggedElements().filter(
-      (element) => !!getInspectorModeAttributes(element, locale)
-    );
+    const { targetOrigin } = this.options;
+    const elements = getAllTaggedElements();
 
-    this.taggedElements = entries;
+    this.taggedElements = elements;
     if (this.taggedElementMutationObserver) {
       this.taggedElementMutationObserver.disconnect();
     }
@@ -208,7 +204,7 @@ export class InspectorMode {
       sendMessageToEditor(
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
-          elements: entries.map((e) => ({
+          elements: elements.map((e) => ({
             coordinates: e.getBoundingClientRect(),
           })),
         },
