@@ -31,6 +31,7 @@ module.exports = {
       },
     ],
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
   },
   settings: {
     react: { version: 'detect' },
