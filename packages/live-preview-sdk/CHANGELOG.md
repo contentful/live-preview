@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 # [3.0.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.1...@contentful/live-preview@3.0.0-alpha.2) (2024-01-19)
+# [2.16.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.2...@contentful/live-preview@2.16.0) (2024-01-22)
 
 
 ### Features
 
 * restore unsub logic ([7161b56](https://github.com/contentful/live-preview/commit/7161b560af5b4d1ca832ad26cc8a34f6796bc0fd))
+* setup gh packages [TOL-1702] ([#512](https://github.com/contentful/live-preview/issues/512)) ([21128c9](https://github.com/contentful/live-preview/commit/21128c9d022a6994fda25a8fd17971ce5d13e735))
 
 
 
