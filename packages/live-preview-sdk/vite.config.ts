@@ -6,6 +6,7 @@ import { configDefaults } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    environment: 'jsdom',
     exclude: [
       ...configDefaults.exclude,
       'src/rest/__tests__/constants.ts',
