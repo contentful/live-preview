@@ -55,27 +55,30 @@ describe('getAllTaggedElements', () => {
     it('should ignore elements without field id', () => {
       const dom = html(`
 		<div>
-		  <!-- Entries -->
-		  <div ${dataEntry}="entry-1"></div>
+		  <!-- Keep -->
+		  <div id="entry" ${dataEntry}="entry-id" ${dataField}="field-id"></div>
 
+		  <!-- Ignore -->
+		  <div ${dataEntry}="entry-1"></div>
 		  <div ${dataEntry}="entry-2" ${dataLocale}="locale-2"></div>
 
-		  <!-- Assets -->
 		  <div ${dataAsset}="asset-1"></div>
-
 		  <div ${dataAsset}="asset-2" ${dataLocale}="locale-2"></div>
 		</div>
 	  `);
 
       const elements = getAllTaggedElements(dom);
 
-      expect(elements).toEqual([]);
+      expect(elements).toEqual([dom.getElementById('entry')]);
     });
 
     it('should ignore elements without entry or asset id', () => {
       const dom = html(`
 		<div>
-		  <!-- Entries -->
+		  <!-- Keep -->
+		  <div id="entry" ${dataEntry}="entry-id" ${dataField}="field-id"></div>
+			
+		  <!-- Ignore -->
 		  <div ${dataField}="field-1"></div>
 
 		  <div ${dataField}="field-2" ${dataLocale}="locale-2"></div>
@@ -84,7 +87,7 @@ describe('getAllTaggedElements', () => {
 
       const elements = getAllTaggedElements(dom);
 
-      expect(elements).toEqual([]);
+      expect(elements).toEqual([dom.getElementById('entry')]);
     });
   });
 });

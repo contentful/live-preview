@@ -1,7 +1,6 @@
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
 
 const isTaggedElement = (node: Node): boolean => {
-  // is Element?
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
