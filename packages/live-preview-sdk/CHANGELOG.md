@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.2...@contentful/live-preview@2.16.0) (2024-01-22)
+
+
+### Features
+
+* setup gh packages [TOL-1702] ([#512](https://github.com/contentful/live-preview/issues/512)) ([21128c9](https://github.com/contentful/live-preview/commit/21128c9d022a6994fda25a8fd17971ce5d13e735))
+
+
+
+
+
 ## [2.15.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.1...@contentful/live-preview@2.15.2) (2024-01-22)
 
 **Note:** Version bump only for package @contentful/live-preview
