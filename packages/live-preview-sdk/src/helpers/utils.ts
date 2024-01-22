@@ -1,7 +1,7 @@
 import { version } from '../../package.json';
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
-import { PostMessageMethods } from '../messages';
 import type { EditorMessage, MessageFromSDK } from '../messages';
+import { PostMessageMethods } from '../messages';
 import { debug } from './debug';
 
 /**
@@ -48,7 +48,7 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
 /**
  * Map with integrated persistence layer to save/restore data during the session
  */
-export class StorageMap<T extends unknown> {
+export class StorageMap<T> {
   private storageKey: string;
   private value: Map<string, T>;
 

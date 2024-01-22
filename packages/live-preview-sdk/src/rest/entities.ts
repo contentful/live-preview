@@ -3,12 +3,12 @@ import type { WithResourceName } from 'contentful-management';
 
 import { MAX_DEPTH } from '../constants';
 import {
-  debug,
+  SendMessage,
   clone,
+  debug,
   isPrimitiveField,
   resolveReference,
   updatePrimitiveField,
-  SendMessage,
 } from '../helpers';
 import {
   SUPPORTED_RICHTEXT_EMBEDS,

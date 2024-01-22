@@ -2,9 +2,9 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
+import { sendMessageToEditor } from '../helpers';
 import { InspectorMode } from '../inspectorMode';
 import { InspectorModeEventMethods, LivePreviewPostMessageMethods } from '../messages';
-import { sendMessageToEditor } from '../helpers';
 
 vi.mock('../helpers');
 

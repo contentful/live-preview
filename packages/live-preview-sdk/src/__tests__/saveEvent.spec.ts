@@ -1,10 +1,10 @@
 import { Entry } from 'contentful';
 import { describe, beforeEach, vi, it, afterEach, Mock, expect } from 'vitest';
 
+import { getAllTaggedEntries } from '../inspectorMode/utils';
 import { EntrySavedMessage, LivePreviewPostMessageMethods } from '../messages';
 import { SaveEvent } from '../saveEvent';
 import { ContentType } from '../types';
-import { getAllTaggedEntries } from '../inspectorMode/utils';
 
 vi.mock('../inspectorMode/utils');
 

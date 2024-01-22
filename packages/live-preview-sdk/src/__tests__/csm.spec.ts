@@ -1,6 +1,7 @@
-import { describe, test, expect } from 'vitest';
-import { encodeSourceMap } from '../csm';
 import { vercelStegaDecode } from '@vercel/stega';
+import { describe, test, expect } from 'vitest';
+
+import { encodeSourceMap } from '../csm';
 
 type Mapping = { origin: string; href: string };
 type Mappings = Record<string, Mapping | Record<string, Mapping> | undefined>;
