@@ -18,7 +18,9 @@ commands:
       - restore_cache: *cache-key
       - vault/get-secrets:
           template-preset: 'semantic-release'
-      - run: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc'
+      - run: |
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
+          echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn install --prefer-offline --pure-lockfile
       - save_cache:
           <<: *cache-key
@@ -50,7 +52,9 @@ jobs:
           template-preset: 'semantic-release'
       - yarn_install
       - vault/configure-lerna
-      - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
+      - run: |
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
+          echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
       - run: yarn version
       - run: yarn publish
@@ -63,7 +67,9 @@ jobs:
           template-preset: 'semantic-release'
       - yarn_install
       - vault/configure-lerna
-      - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
+      - run: |
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
+          echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
       - run: yarn version:canary
       - run: yarn publish:canary

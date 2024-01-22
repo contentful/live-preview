@@ -54,7 +54,7 @@ export function debounce<T extends Callback>(func: T, timeout = 100): DebouncedF
 /**
  * Map with integrated persistence layer to save/restore data during the session
  */
-export class StorageMap<T extends unknown> {
+export class StorageMap<T> {
   private storageKey: string;
   private value: Map<string, T>;
 

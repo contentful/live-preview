@@ -1,6 +1,7 @@
 import { vercelStegaEncode } from '@vercel/stega';
-import { debug } from '../helpers';
 import jsonPointer from 'json-pointer';
+
+import { debug } from '../helpers';
 import { EntitySource, GraphQLResponse, Source } from './types';
 
 const isUrlOrIsoDate = (value: string) => {
