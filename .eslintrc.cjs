@@ -32,6 +32,14 @@ module.exports = {
     ],
     'react/react-in-jsx-scope': 'off',
   },
+  overrides: [
+    {
+      files: ['*.test.ts(x)', '*.spec.tsx(x)'],
+      rules: {
+        '@typescript-eslint/no-empty-function': 'off',
+      },
+    },
+  ],
   settings: {
     react: { version: 'detect' },
   },
