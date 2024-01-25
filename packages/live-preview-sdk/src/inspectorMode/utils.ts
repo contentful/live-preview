@@ -1,4 +1,4 @@
-import { decode, SourceMapMetadata } from '../csm/encode';
+import { decode } from '../csm/encode';
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
 
 const isTaggedElement = (node?: Node | null): boolean => {
