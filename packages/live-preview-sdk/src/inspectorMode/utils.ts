@@ -104,7 +104,6 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     const el = node.parentElement;
 
     if (!el) {
-      console.log('skipping no parent');
       continue;
     }
 
@@ -120,7 +119,6 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     const localeCode = params.get('focusedLocale');
 
     if ((!entryId && !assetId) || !fieldId) {
-      console.log('skipping no entry id or asset id');
       continue;
     }
 

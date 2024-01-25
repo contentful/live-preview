@@ -5,7 +5,7 @@ import {
   type InspectorModeChangedMessage,
   InspectorModeEventMethods,
 } from './types';
-import { getAllTaggedElements, getAllTaggedEntries, getInspectorModeAttributes } from './utils';
+import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
 
 type InspectorModeOptions = {
   locale: string;
