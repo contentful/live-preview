@@ -93,7 +93,7 @@ describe('getAllTaggedElements', () => {
     });
   });
 
-  describe.only('Auto-tagging', () => {
+  describe('Auto-tagging', () => {
     const encode = ({
       text,
       href,
