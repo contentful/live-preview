@@ -1,4 +1,4 @@
-import { vercelStegaDecode } from '@vercel/stega';
+import { decode, SourceMapMetadata } from '../csm/encode';
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
 
 const isTaggedElement = (node?: Node | null): boolean => {
@@ -69,9 +69,9 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent ?? '';
 
-      const { origin, href } = (vercelStegaDecode(text) ?? {}) as Record<string, string>;
+      const { origin } = decode(text) ?? {};
 
-      if (origin !== 'contentful.com' || !href) {
+      if (origin !== 'contentful.com') {
         return NodeFilter.FILTER_SKIP;
       }
 
@@ -100,41 +100,22 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     }
 
     // Handle Encoded strings
-    const { href } = (vercelStegaDecode(node.textContent ?? '') ?? {}) as Record<string, string>;
+    const { cf } = decode(node.textContent ?? '') as SourceMapMetadata;
     const el = node.parentElement;
 
     if (!el) {
       continue;
     }
 
-    // FIXME: maybe we should encode these attributes as separate attributes
-    // in the encoded string?
-    // const spaceId = href.match(/\/spaces\/([^/]+)\//)?.at(1);
-    // const envId = href.match(/\/environments\/([^/]+)\//)?.at(1);
-    const entryId = href.match(/\/entries\/([^/?]+)/)?.at(1);
-    const assetId = href.match(/\/assets\/([^/?]+)/)?.at(1);
-
-    const params = new URLSearchParams(href.split('?')[1]);
-    const fieldId = params.get('focusedField');
-    const localeCode = params.get('focusedLocale');
-
-    if ((!entryId && !assetId) || !fieldId) {
-      continue;
+    if (cf.entityType === 'Entry') {
+      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, cf.entity);
+    } else {
+      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, cf.entity);
     }
 
-    if (entryId) {
-      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, entryId);
-    }
-
-    if (assetId) {
-      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, assetId);
-    }
-
-    if (localeCode) {
-      el.setAttribute(InspectorModeDataAttributes.LOCALE, localeCode);
-    }
-
-    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, fieldId);
+    // TODO: add space/env ids to properly handle cross-space content
+    el.setAttribute(InspectorModeDataAttributes.LOCALE, cf.locale);
+    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, cf.field);
 
     elements.push(el);
   }

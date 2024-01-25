@@ -1,8 +1,8 @@
-import { vercelStegaEncode } from '@vercel/stega';
 import jsonPointer from 'json-pointer';
 
 import { debug } from '../helpers';
-import { EntitySource, GraphQLResponse, Source } from './types';
+import { encode } from './encode';
+import { GraphQLResponse } from './types';
 
 const isUrlOrIsoDate = (value: string) => {
   // Regular expression for URL validation
@@ -15,29 +15,19 @@ const isUrlOrIsoDate = (value: string) => {
 };
 
 const getHref = (
-  source: Source,
-  entries: EntitySource[],
-  assets: EntitySource[],
-  spaces: string[],
-  environments: string[],
-  fields: string[],
-  locales: string[],
+  entityId: string,
+  entityType: 'Entry' | 'Asset',
+  space: string,
+  environment: string,
+  field: string,
+  locale: string,
   targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
 ): string | null => {
-  const isEntry = 'entry' in source;
-  const entity = isEntry ? entries[source.entry] : assets[source.asset];
-  if (!entity) return null;
-
-  const space = spaces[entity.space];
-  const environment = environments[entity.environment];
-  const entityId = entity.id;
-  const field = fields[source.field];
-  const locale = locales[source.locale];
   const targetOriginUrl = targetOrigin || 'https://app.contentful.com';
   const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
-  const entityType = isEntry ? 'entries' : 'assets';
+  const entityRoute = entityType === 'Entry' ? 'entries' : 'assets';
 
-  return `${basePath}/${entityType}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
+  return `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
 };
 
 export const encodeSourceMap = (
@@ -58,24 +48,37 @@ export const encodeSourceMap = (
 
   for (const pointer in mappings) {
     const { source } = mappings[pointer];
-    const href = getHref(
-      source,
-      entries,
-      assets,
-      spaces,
-      environments,
-      fields,
-      locales,
-      targetOrigin
-    );
+
+    const entity = 'entry' in source ? entries[source.entry] : assets[source.asset];
+    const entityType = 'entry' in source ? 'Entry' : 'Asset';
+
+    if (!entity) {
+      graphqlResponse;
+    }
+
+    const space = spaces[entity.space];
+    const environment = environments[entity.environment];
+    const entityId = entity.id;
+    const field = fields[source.field];
+    const locale = locales[source.locale];
+
+    const href = getHref(entityId, entityType, space, environment, field, locale, targetOrigin);
 
     if (href && jsonPointer.has(data, pointer)) {
       const currentValue = jsonPointer.get(data, pointer);
 
       if (!isUrlOrIsoDate(currentValue)) {
-        const encodedValue = vercelStegaEncode({
+        const encodedValue = encode({
           origin: 'contentful.com',
           href,
+          cf: {
+            space,
+            environment,
+            field,
+            locale,
+            entity: entityId,
+            entityType,
+          },
         });
         jsonPointer.set(data, pointer, `${encodedValue}${currentValue}`);
       }
