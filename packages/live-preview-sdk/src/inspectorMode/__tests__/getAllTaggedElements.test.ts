@@ -1,6 +1,6 @@
-import { vercelStegaEncode } from '@vercel/stega';
 import { describe, it, expect } from 'vitest';
 
+import { SourceMapMetadata, encode } from '../../csm/encode';
 import { InspectorModeDataAttributes } from '../types';
 import { getAllTaggedElements } from '../utils';
 
@@ -94,66 +94,35 @@ describe('getAllTaggedElements', () => {
   });
 
   describe('Auto-tagging', () => {
-    const encode = ({
-      text,
-      href,
-      origin = 'contentful.com',
-    }: {
-      text: string;
-      href: string;
-      origin?: string;
-    }) => {
-      return (
-        text +
-        vercelStegaEncode({
-          origin,
-          href: 'https://app.contentful.com' + href,
-        })
-      );
+    const metadata: SourceMapMetadata = {
+      href: 'contentful.com/test',
+      origin: 'contentful.com',
+      cf: {
+        space: 'test',
+        environment: 'master',
+        entity: 'entry-id',
+        entityType: 'Entry',
+        field: 'title',
+        locale: 'en-US',
+      },
     };
 
     it('should ignore encoded data if origin does not match', () => {
       const dom = html(`
-		<span>${encode({
-      text: 'Test',
-      href: '/spaces/test/environment/env/entries/entry-id',
-      origin: 'example.com',
-    })}</span>`);
-
-      const elements = getAllTaggedElements(dom);
-      expect(elements).toEqual([]);
-    });
-
-    it('should ignore encoded data if no entry id is found', () => {
-      const dom = html(`
-		<span>${encode({
-      text: 'Test',
-      href: '/spaces/test/environments/env/entries?focusedField=field-id&focusedLocale=en-US',
-      origin: 'example.com',
-    })}</span>`);
-
-      const elements = getAllTaggedElements(dom);
-      expect(elements).toEqual([]);
-    });
-
-    it('should ignore encoded data if no field id is found', () => {
-      const dom = html(`
-		<span>${encode({
-      text: 'Test',
-      href: '/spaces/test/environments/env/entries/entry-id?focusedLocale=en-US',
-      origin: 'example.com',
-    })}</span>`);
+		<span>${
+      'Test' +
+      encode({
+        ...metadata,
+        origin: 'example.com',
+      })
+    }</span>`);
 
       const elements = getAllTaggedElements(dom);
       expect(elements).toEqual([]);
     });
 
     it('should recognize auto-tagged elements', () => {
-      const dom = html(`
-		<span id="entry-1">${encode({
-      text: 'Test',
-      href: '/spaces/test/environments/env/entries/entry-id?focusedField=field-id&focusedLocale=en-US',
-    })}</span>`);
+      const dom = html(`<span id="entry-1">${'Test' + encode(metadata)}</span>`);
 
       const elements = getAllTaggedElements(dom);
       expect(elements).toEqual([dom.getElementById('entry-1')]);
@@ -162,10 +131,7 @@ describe('getAllTaggedElements', () => {
     it('does not override elements that are manually tagged', () => {
       const dom = html(`<div>
 	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
-		  ${encode({
-        text: 'Hello',
-        href: '/spaces/test/environments/env/entries/entry-id?focusedField=field-id&focusedLocale=en-US',
-      })}
+		  ${'Hello' + encode(metadata)}
 		</div>
 	  </div>`);
 
@@ -184,10 +150,7 @@ describe('getAllTaggedElements', () => {
     it('ignore manually tagged elements if requested', () => {
       const dom = html(`<div>
 	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
-		  ${encode({
-        text: 'Hello',
-        href: '/spaces/test/environments/env/entries/entry-id?focusedField=field-id&focusedLocale=en-US',
-      })}
+		  ${'Test' + encode(metadata)}
 		</div>
 	  </div>`);
 
@@ -195,7 +158,7 @@ describe('getAllTaggedElements', () => {
 
       expect(elements.length).toEqual(1);
       expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual('entry-id');
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('field-id');
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('title');
       expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
     });
   });
