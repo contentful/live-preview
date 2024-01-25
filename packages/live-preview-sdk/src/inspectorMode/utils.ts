@@ -1,6 +1,11 @@
+import { vercelStegaDecode } from '@vercel/stega';
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
 
-const isTaggedElement = (node: Node): boolean => {
+const isTaggedElement = (node?: Node | null): boolean => {
+  if (!node) {
+    return false;
+  }
+
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
@@ -33,7 +38,7 @@ export function getInspectorModeAttributes(
     return null;
   }
 
-  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID)!;
+  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string;
   const locale = element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale;
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
@@ -53,7 +58,7 @@ export function getInspectorModeAttributes(
 /**
  * Query the document for all tagged elements
  */
-export function getAllTaggedElements(root = window.document): Element[] {
+export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
   // The fastest way to look up & iterate over DOM. Ref:
   // https://stackoverflow.com/a/2579869
   //
@@ -61,13 +66,79 @@ export function getAllTaggedElements(root = window.document): Element[] {
   // FILTER_SKIP: Skip the current node
   // FILTER_REJECT: Skip the current node and all its children
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent ?? '';
+
+      const { origin, href } = (vercelStegaDecode(text) ?? {}) as Record<string, string>;
+
+      if (origin !== 'contentful.com' || !href) {
+        return NodeFilter.FILTER_SKIP;
+      }
+
+      return isTaggedElement(node.parentElement)
+        ? ignoreManual
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_SKIP
+        : NodeFilter.FILTER_ACCEPT;
+    }
+
+    if (ignoreManual) {
+      return NodeFilter.FILTER_SKIP;
+    }
+
     return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
   });
 
   const elements: Element[] = [];
 
   while (walker.nextNode()) {
-    elements.push(walker.currentNode as Element);
+    const node = walker.currentNode;
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      elements.push(walker.currentNode as Element);
+      continue;
+    }
+
+    // Handle Encoded strings
+    const { href } = (vercelStegaDecode(node.textContent ?? '') ?? {}) as Record<string, string>;
+    const el = node.parentElement;
+
+    if (!el) {
+      console.log('skipping no parent');
+      continue;
+    }
+
+    // FIXME: maybe we should encode these attributes as separate attributes
+    // in the encoded string?
+    // const spaceId = href.match(/\/spaces\/([^/]+)\//)?.at(1);
+    // const envId = href.match(/\/environments\/([^/]+)\//)?.at(1);
+    const entryId = href.match(/\/entries\/([^/?]+)/)?.at(1);
+    const assetId = href.match(/\/assets\/([^/?]+)/)?.at(1);
+
+    const params = new URLSearchParams(href.split('?')[1]);
+    const fieldId = params.get('focusedField');
+    const localeCode = params.get('focusedLocale');
+
+    if ((!entryId && !assetId) || !fieldId) {
+      console.log('skipping no entry id or asset id');
+      continue;
+    }
+
+    if (entryId) {
+      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, entryId);
+    }
+
+    if (assetId) {
+      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, assetId);
+    }
+
+    if (localeCode) {
+      el.setAttribute(InspectorModeDataAttributes.LOCALE, localeCode);
+    }
+
+    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, fieldId);
+
+    elements.push(el);
   }
 
   return elements;

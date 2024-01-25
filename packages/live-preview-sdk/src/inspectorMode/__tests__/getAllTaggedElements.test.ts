@@ -1,6 +1,8 @@
+import { vercelStegaEncode } from '@vercel/stega';
 import { describe, it, expect } from 'vitest';
-import { getAllTaggedElements } from '../utils';
+
 import { InspectorModeDataAttributes } from '../types';
+import { getAllTaggedElements } from '../utils';
 
 describe('getAllTaggedElements', () => {
   const dataEntry = InspectorModeDataAttributes.ENTRY_ID;
@@ -88,6 +90,113 @@ describe('getAllTaggedElements', () => {
       const elements = getAllTaggedElements(dom);
 
       expect(elements).toEqual([dom.getElementById('entry')]);
+    });
+  });
+
+  describe.only('Auto-tagging', () => {
+    const encode = ({
+      text,
+      href,
+      origin = 'contentful.com',
+    }: {
+      text: string;
+      href: string;
+      origin?: string;
+    }) => {
+      return (
+        text +
+        vercelStegaEncode({
+          origin,
+          href: 'https://app.contentful.com' + href,
+        })
+      );
+    };
+
+    it('should ignore encoded data if origin does not match', () => {
+      const dom = html(`
+		<span>${encode({
+      text: 'Test',
+      href: '/spaces/test/environment/env/entries/entry-id',
+      origin: 'example.com',
+    })}</span>`);
+
+      const elements = getAllTaggedElements(dom);
+      expect(elements).toEqual([]);
+    });
+
+    it('should ignore encoded data if no entry id is found', () => {
+      const dom = html(`
+		<span>${encode({
+      text: 'Test',
+      href: '/spaces/test/environments/env/entries?focusedField=field-id&focusedLocale=en-US',
+      origin: 'example.com',
+    })}</span>`);
+
+      const elements = getAllTaggedElements(dom);
+      expect(elements).toEqual([]);
+    });
+
+    it('should ignore encoded data if no field id is found', () => {
+      const dom = html(`
+		<span>${encode({
+      text: 'Test',
+      href: '/spaces/test/environments/env/entries/entry-id?focusedLocale=en-US',
+      origin: 'example.com',
+    })}</span>`);
+
+      const elements = getAllTaggedElements(dom);
+      expect(elements).toEqual([]);
+    });
+
+    it('should recognize auto-tagged elements', () => {
+      const dom = html(`
+		<span id="entry-1">${encode({
+      text: 'Test',
+      href: '/spaces/test/environments/env/entries/entry-id?focusedField=field-id&focusedLocale=en-US',
+    })}</span>`);
+
+      const elements = getAllTaggedElements(dom);
+      expect(elements).toEqual([dom.getElementById('entry-1')]);
+    });
+
+    it('does not override elements that are manually tagged', () => {
+      const dom = html(`<div>
+	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
+		  ${encode({
+        text: 'Hello',
+        href: '/spaces/test/environments/env/entries/entry-id?focusedField=field-id&focusedLocale=en-US',
+      })}
+		</div>
+	  </div>`);
+
+      const elements = getAllTaggedElements(dom);
+
+      expect(elements.length).toEqual(1);
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
+        'manual-entry-id'
+      );
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual(
+        'manual-field-id'
+      );
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual(null);
+    });
+
+    it('ignore manually tagged elements if requested', () => {
+      const dom = html(`<div>
+	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
+		  ${encode({
+        text: 'Hello',
+        href: '/spaces/test/environments/env/entries/entry-id?focusedField=field-id&focusedLocale=en-US',
+      })}
+		</div>
+	  </div>`);
+
+      const elements = getAllTaggedElements(dom, true);
+
+      expect(elements.length).toEqual(1);
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual('entry-id');
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('field-id');
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
     });
   });
 });

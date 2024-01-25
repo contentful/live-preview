@@ -5,11 +5,12 @@ import {
   type InspectorModeChangedMessage,
   InspectorModeEventMethods,
 } from './types';
-import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
+import { getAllTaggedElements, getAllTaggedEntries, getInspectorModeAttributes } from './utils';
 
 type InspectorModeOptions = {
   locale: string;
   targetOrigin: string[];
+  ignoreManuallyTaggedElements?: boolean;
 };
 
 export class InspectorMode {
