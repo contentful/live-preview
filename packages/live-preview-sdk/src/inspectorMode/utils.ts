@@ -69,9 +69,9 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent ?? '';
 
-      const { origin } = decode(text) ?? {};
+      const decoded = decode(text);
 
-      if (origin !== 'contentful.com') {
+      if (decoded?.origin !== 'contentful.com') {
         return NodeFilter.FILTER_SKIP;
       }
 
@@ -99,23 +99,32 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
       continue;
     }
 
+    if (!node.textContent) {
+      continue;
+    }
     // Handle Encoded strings
-    const { cf } = decode(node.textContent ?? '') as SourceMapMetadata;
+    const decoded = decode(node.textContent);
+
+    if (!decoded?.contentful) {
+      continue;
+    }
+
+    const { contentful } = decoded;
     const el = node.parentElement;
 
     if (!el) {
       continue;
     }
 
-    if (cf.entityType === 'Entry') {
-      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, cf.entity);
+    if (contentful.entityType === 'Entry') {
+      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, contentful.entity);
     } else {
-      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, cf.entity);
+      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
     }
 
     // TODO: add space/env ids to properly handle cross-space content
-    el.setAttribute(InspectorModeDataAttributes.LOCALE, cf.locale);
-    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, cf.field);
+    el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
+    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
 
     elements.push(el);
   }

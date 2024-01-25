@@ -97,7 +97,7 @@ describe('getAllTaggedElements', () => {
     const metadata: SourceMapMetadata = {
       href: 'contentful.com/test',
       origin: 'contentful.com',
-      cf: {
+      contentful: {
         space: 'test',
         environment: 'master',
         entity: 'entry-id',

@@ -3,7 +3,7 @@ import { vercelStegaDecode, vercelStegaEncode } from '@vercel/stega';
 export type SourceMapMetadata = {
   origin: string;
   href: string;
-  cf: {
+  contentful: {
     space: string;
     environment: string;
     entity: string;

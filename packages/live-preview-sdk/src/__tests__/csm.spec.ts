@@ -77,7 +77,7 @@ describe('Content Source Maps', () => {
         title: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'title',
@@ -89,7 +89,7 @@ describe('Content Source Maps', () => {
         subtitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'subtitle',
@@ -145,7 +145,7 @@ describe('Content Source Maps', () => {
         title: {
           origin: 'contentful.com',
           href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'title',
@@ -157,7 +157,7 @@ describe('Content Source Maps', () => {
         subtitle: {
           origin: 'contentful.com',
           href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'subtitle',
@@ -231,7 +231,7 @@ describe('Content Source Maps', () => {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
-            cf: {
+            contentful: {
               space: 'foo',
               environment: 'master',
               field: 'title',
@@ -245,7 +245,7 @@ describe('Content Source Maps', () => {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/d4e5f6/?focusedField=title&focusedLocale=en-US',
-            cf: {
+            contentful: {
               space: 'foo',
               environment: 'master',
               field: 'title',
@@ -259,7 +259,7 @@ describe('Content Source Maps', () => {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/g7h8i9/?focusedField=title&focusedLocale=en-US',
-            cf: {
+            contentful: {
               space: 'foo',
               environment: 'master',
               field: 'title',
@@ -325,7 +325,7 @@ describe('Content Source Maps', () => {
         akanTitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=ak',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'title',
@@ -337,7 +337,7 @@ describe('Content Source Maps', () => {
         aghemTitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=agq',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'title',
@@ -349,7 +349,7 @@ describe('Content Source Maps', () => {
         spanishTitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=es',
-          cf: {
+          contentful: {
             space: 'foo',
             environment: 'master',
             field: 'title',

@@ -22,7 +22,7 @@ const getHref = (
   field: string,
   locale: string,
   targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
-): string | null => {
+): string => {
   const targetOriginUrl = targetOrigin || 'https://app.contentful.com';
   const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
   const entityRoute = entityType === 'Entry' ? 'entries' : 'assets';
@@ -53,7 +53,7 @@ export const encodeSourceMap = (
     const entityType = 'entry' in source ? 'Entry' : 'Asset';
 
     if (!entity) {
-      graphqlResponse;
+      return graphqlResponse;
     }
 
     const space = spaces[entity.space];
@@ -64,14 +64,14 @@ export const encodeSourceMap = (
 
     const href = getHref(entityId, entityType, space, environment, field, locale, targetOrigin);
 
-    if (href && jsonPointer.has(data, pointer)) {
+    if (jsonPointer.has(data, pointer)) {
       const currentValue = jsonPointer.get(data, pointer);
 
       if (!isUrlOrIsoDate(currentValue)) {
         const encodedValue = encode({
           origin: 'contentful.com',
           href,
-          cf: {
+          contentful: {
             space,
             environment,
             field,
