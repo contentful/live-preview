@@ -2,7 +2,7 @@ import { vercelStegaDecode } from '@vercel/stega';
 import { describe, test, expect } from 'vitest';
 
 import { encodeSourceMap } from '../csm';
-import { SourceMapMetadata } from '../csm/encode';
+import type { SourceMapMetadata } from '../csm/encode';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
 
