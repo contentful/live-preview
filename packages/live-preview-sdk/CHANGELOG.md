@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.16.1...@contentful/live-preview@2.17.0) (2024-01-26)
+
+
+### Features
+
+* recognise auto-tagged elements [TOL-1711] ([#523](https://github.com/contentful/live-preview/issues/523)) ([f40704a](https://github.com/contentful/live-preview/commit/f40704aeb10a2c2749402e6fb47c52af85775afe))
+
+
+
+
+
 ## [2.16.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.16.0...@contentful/live-preview@2.16.1) (2024-01-22)
 
 **Note:** Version bump only for package @contentful/live-preview
