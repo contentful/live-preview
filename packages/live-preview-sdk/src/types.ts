@@ -2,19 +2,19 @@ import type { Asset, Entry } from 'contentful';
 import type { ContentTypeProps } from 'contentful-management';
 
 import { SendMessage } from './helpers';
+import type {
+  InspectorModeAssetAttributes,
+  InspectorModeEntryAttributes,
+} from './inspectorMode/types';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
 
-export type LivePreviewEntryProps = {
-  fieldId: string;
-  entryId: string;
-  locale?: string;
+export type LivePreviewEntryProps = Omit<InspectorModeEntryAttributes, 'locale'> & {
+  locale?: InspectorModeEntryAttributes['locale'];
 };
-export type LivePreviewAssetProps = {
-  fieldId: string;
-  assetId: string;
-  locale?: string;
+export type LivePreviewAssetProps = Omit<InspectorModeAssetAttributes, 'locale'> & {
+  locale?: InspectorModeAssetAttributes['locale'];
 };
 
 export type LivePreviewProps =

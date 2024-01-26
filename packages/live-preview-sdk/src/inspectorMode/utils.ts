@@ -32,24 +32,27 @@ const isTaggedElement = (node?: Node | null): boolean => {
  */
 export function getInspectorModeAttributes(
   element: Element,
-  fallbackLocale: string
+  fallbackLocale: string,
 ): InspectorModeAttributes | null {
   if (!isTaggedElement(element)) {
     return null;
   }
 
-  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string;
-  const locale = element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale;
+  const sharedProps = {
+    fieldId: element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string,
+    locale: element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale,
+    environment: element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? undefined,
+    space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? undefined,
+  };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
-  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
-
   if (entryId) {
-    return { entryId, fieldId, locale };
+    return { ...sharedProps, entryId };
   }
 
+  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
   if (assetId) {
-    return { assetId, fieldId, locale };
+    return { ...sharedProps, assetId };
   }
 
   return null;
@@ -122,9 +125,10 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
       el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
     }
 
-    // TODO: add space/env ids to properly handle cross-space content
     el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
     el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
+    el.setAttribute(InspectorModeDataAttributes.SPACE, contentful.space);
+    el.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, contentful.environment);
 
     elements.push(el);
   }
@@ -140,7 +144,7 @@ export function getAllTaggedEntries(): string[] {
     ...new Set(
       getAllTaggedElements()
         .map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
-        .filter(Boolean) as string[]
+        .filter(Boolean) as string[],
     ),
   ];
 }
