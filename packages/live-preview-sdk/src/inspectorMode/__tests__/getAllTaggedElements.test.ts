@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { getAllTaggedElements } from '../utils';
+
+import { SourceMapMetadata, encode } from '../../csm/encode';
 import { InspectorModeDataAttributes } from '../types';
+import { getAllTaggedElements } from '../utils';
 
 describe('getAllTaggedElements', () => {
   const dataEntry = InspectorModeDataAttributes.ENTRY_ID;
@@ -88,6 +90,76 @@ describe('getAllTaggedElements', () => {
       const elements = getAllTaggedElements(dom);
 
       expect(elements).toEqual([dom.getElementById('entry')]);
+    });
+  });
+
+  describe('Auto-tagging', () => {
+    const metadata: SourceMapMetadata = {
+      href: 'contentful.com/test',
+      origin: 'contentful.com',
+      contentful: {
+        space: 'test',
+        environment: 'master',
+        entity: 'entry-id',
+        entityType: 'Entry',
+        field: 'title',
+        locale: 'en-US',
+      },
+    };
+
+    it('should ignore encoded data if origin does not match', () => {
+      const dom = html(`
+		<span>${
+      'Test' +
+      encode({
+        ...metadata,
+        origin: 'example.com',
+      })
+    }</span>`);
+
+      const elements = getAllTaggedElements(dom);
+      expect(elements).toEqual([]);
+    });
+
+    it('should recognize auto-tagged elements', () => {
+      const dom = html(`<span id="entry-1">${'Test' + encode(metadata)}</span>`);
+
+      const elements = getAllTaggedElements(dom);
+      expect(elements).toEqual([dom.getElementById('entry-1')]);
+    });
+
+    it('does not override elements that are manually tagged', () => {
+      const dom = html(`<div>
+	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
+		  ${'Hello' + encode(metadata)}
+		</div>
+	  </div>`);
+
+      const elements = getAllTaggedElements(dom);
+
+      expect(elements.length).toEqual(1);
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
+        'manual-entry-id'
+      );
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual(
+        'manual-field-id'
+      );
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual(null);
+    });
+
+    it('ignore manually tagged elements if requested', () => {
+      const dom = html(`<div>
+	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
+		  ${'Test' + encode(metadata)}
+		</div>
+	  </div>`);
+
+      const elements = getAllTaggedElements(dom, true);
+
+      expect(elements.length).toEqual(1);
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual('entry-id');
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('title');
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
     });
   });
 });
