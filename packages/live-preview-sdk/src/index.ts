@@ -48,6 +48,10 @@ export interface ContentfulLivePreviewInitConfig {
    * Can be `https://app.contentful.com` or `https://app.eu.contentful.com`
    */
   targetOrigin?: string | string[];
+
+  experimental?: {
+    ignoreManuallyTaggedElements?: boolean;
+  };
 }
 
 export interface ContentfulSubscribeConfig {
@@ -118,7 +122,11 @@ export class ContentfulLivePreview {
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        this.inspectorMode = new InspectorMode({ locale, targetOrigin: this.targetOrigin });
+        this.inspectorMode = new InspectorMode({
+          locale,
+          targetOrigin: this.targetOrigin,
+          ignoreManuallyTaggedElements: config.experimental?.ignoreManuallyTaggedElements,
+        });
       }
 
       if (this.liveUpdatesEnabled) {

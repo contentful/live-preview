@@ -10,6 +10,7 @@ import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
 type InspectorModeOptions = {
   locale: string;
   targetOrigin: string[];
+  ignoreManuallyTaggedElements?: boolean;
 };
 
 export class InspectorMode {

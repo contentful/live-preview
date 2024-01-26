@@ -2,9 +2,9 @@ import { vercelStegaDecode } from '@vercel/stega';
 import { describe, test, expect } from 'vitest';
 
 import { encodeSourceMap } from '../csm';
+import type { SourceMapMetadata } from '../csm/encode';
 
-type Mapping = { origin: string; href: string };
-type Mappings = Record<string, Mapping | Record<string, Mapping> | undefined>;
+type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
 
 type EncodedResponse =
   | {
@@ -77,10 +77,26 @@ describe('Content Source Maps', () => {
         title: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'title',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
         subtitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'subtitle',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
       });
     });
@@ -129,10 +145,26 @@ describe('Content Source Maps', () => {
         title: {
           origin: 'contentful.com',
           href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'title',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
         subtitle: {
           origin: 'contentful.com',
           href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'subtitle',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
       });
     });
@@ -199,18 +231,42 @@ describe('Content Source Maps', () => {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
+            contentful: {
+              space: 'foo',
+              environment: 'master',
+              field: 'title',
+              locale: 'en-US',
+              entity: 'a1b2c3',
+              entityType: 'Entry',
+            },
           },
         },
         1: {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/d4e5f6/?focusedField=title&focusedLocale=en-US',
+            contentful: {
+              space: 'foo',
+              environment: 'master',
+              field: 'title',
+              locale: 'en-US',
+              entity: 'd4e5f6',
+              entityType: 'Entry',
+            },
           },
         },
         2: {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/g7h8i9/?focusedField=title&focusedLocale=en-US',
+            contentful: {
+              space: 'foo',
+              environment: 'master',
+              field: 'title',
+              locale: 'en-US',
+              entity: 'g7h8i9',
+              entityType: 'Entry',
+            },
           },
         },
       });
@@ -269,14 +325,38 @@ describe('Content Source Maps', () => {
         akanTitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=ak',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'title',
+            locale: 'ak',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
         aghemTitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=agq',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'title',
+            locale: 'agq',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
         spanishTitle: {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=es',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'title',
+            locale: 'es',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
         },
       });
     });

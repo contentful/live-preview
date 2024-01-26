@@ -1,6 +1,11 @@
+import { decode } from '../csm/encode';
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
 
-const isTaggedElement = (node: Node): boolean => {
+const isTaggedElement = (node?: Node | null): boolean => {
+  if (!node) {
+    return false;
+  }
+
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
@@ -33,7 +38,7 @@ export function getInspectorModeAttributes(
     return null;
   }
 
-  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID)!;
+  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string;
   const locale = element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale;
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
@@ -53,7 +58,7 @@ export function getInspectorModeAttributes(
 /**
  * Query the document for all tagged elements
  */
-export function getAllTaggedElements(root = window.document): Element[] {
+export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
   // The fastest way to look up & iterate over DOM. Ref:
   // https://stackoverflow.com/a/2579869
   //
@@ -61,13 +66,67 @@ export function getAllTaggedElements(root = window.document): Element[] {
   // FILTER_SKIP: Skip the current node
   // FILTER_REJECT: Skip the current node and all its children
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent ?? '';
+
+      const decoded = decode(text);
+
+      if (decoded?.origin !== 'contentful.com') {
+        return NodeFilter.FILTER_SKIP;
+      }
+
+      return isTaggedElement(node.parentElement)
+        ? ignoreManual
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_SKIP
+        : NodeFilter.FILTER_ACCEPT;
+    }
+
+    if (ignoreManual) {
+      return NodeFilter.FILTER_SKIP;
+    }
+
     return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
   });
 
   const elements: Element[] = [];
 
   while (walker.nextNode()) {
-    elements.push(walker.currentNode as Element);
+    const node = walker.currentNode;
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      elements.push(walker.currentNode as Element);
+      continue;
+    }
+
+    if (!node.textContent) {
+      continue;
+    }
+    // Handle Encoded strings
+    const decoded = decode(node.textContent);
+
+    if (!decoded?.contentful) {
+      continue;
+    }
+
+    const { contentful } = decoded;
+    const el = node.parentElement;
+
+    if (!el) {
+      continue;
+    }
+
+    if (contentful.entityType === 'Entry') {
+      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, contentful.entity);
+    } else {
+      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
+    }
+
+    // TODO: add space/env ids to properly handle cross-space content
+    el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
+    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
+
+    elements.push(el);
   }
 
   return elements;
