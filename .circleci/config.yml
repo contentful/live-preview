@@ -53,7 +53,7 @@ jobs:
       - yarn_install
       - vault/configure-lerna
       - run: |
-          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_WRITE_TOKEN}" > ~/.npmrc
           echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
       - run: yarn version
@@ -68,7 +68,7 @@ jobs:
       - yarn_install
       - vault/configure-lerna
       - run: |
-          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_WRITE_TOKEN}" > ~/.npmrc
           echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
       - run: yarn version:canary
