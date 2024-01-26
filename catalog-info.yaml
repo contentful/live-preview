@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: live-preview
+  description: |
+    A Monorepo for all packages around the live preview SDK functionality (inspectorMode and live updates)
+  annotations:
+    circleci.com/project-slug: github/contentful/live-preview
+    github.com/project-slug: contentful/live-preview
+    backstage.io/source-location: url:https://github.com/contentful/live-preview/
+spec:
+  type: library
+  lifecycle: production
+  owner: group:team-tolkien
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: live-preview-index
+spec:
+  type: url
+  targets:
+    - ./packages/live-preview-sdk/catalog-info.yaml

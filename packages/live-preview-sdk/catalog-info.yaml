@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: live-preview
+  description: |
+    JavaScript library for Contentful's live preview functionality (inspectorMode and live updates)
+  annotations:
+    circleci.com/project-slug: github/contentful/live-preview
+    github.com/project-slug: contentful/live-preview
+    backstage.io/source-location: url:https://github.com/contentful/live-preview/tree/main/packages/live-preview-sdk
+spec:
+  type: library
+  lifecycle: production
+  owner: group:team-tolkien
