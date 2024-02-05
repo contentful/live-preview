@@ -9,7 +9,7 @@ export interface EntitySource {
   id: string;
 }
 
-type Mappings = Record<string, { source: Source }>;
+export type Mappings = Record<string, { source: Source }>;
 
 interface ContentSourceMaps {
   version: number;
