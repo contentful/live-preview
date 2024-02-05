@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.2...@contentful/live-preview@3.0.0-alpha.3) (2024-02-05)
+
+
+### Features
+
+* export csm ([#552](https://github.com/contentful/live-preview/issues/552)) ([4cf6d93](https://github.com/contentful/live-preview/commit/4cf6d9386c3279b5993a14e8617ca90edff8fc80)), closes [#475](https://github.com/contentful/live-preview/issues/475)
+
+
+
+
+
 # [3.0.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.1...@contentful/live-preview@3.0.0-alpha.2) (2024-01-19)
 ## [2.17.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.2...@contentful/live-preview@2.17.3) (2024-02-05)
 
