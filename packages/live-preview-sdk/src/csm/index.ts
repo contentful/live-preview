@@ -21,7 +21,7 @@ const getHref = (
   environment: string,
   field: string,
   locale: string,
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
 ): string => {
   const targetOriginUrl = targetOrigin || 'https://app.contentful.com';
   const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
@@ -32,7 +32,7 @@ const getHref = (
 
 export const encodeSourceMap = (
   graphqlResponse: GraphQLResponse,
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
 ): GraphQLResponse => {
   if (
     !graphqlResponse ||
@@ -68,6 +68,7 @@ export const encodeSourceMap = (
       const currentValue = jsonPointer.get(data, pointer);
 
       if (!isUrlOrIsoDate(currentValue)) {
+        console.log({ currentValue });
         const encodedValue = encode({
           origin: 'contentful.com',
           href,
