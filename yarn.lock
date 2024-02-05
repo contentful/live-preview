@@ -203,11 +203,6 @@
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.3.4.tgz#c5fc9c834dde03d4c4ee189900d304ce1888a74b"
   integrity sha512-PyVSrQa5j1hO4grgA0Ivo/taiOvW0uFN79JB5JkTG8U7DnWGI7Ap2As6zN6/E6YvDqb7w2cYRMSGSQ3qfxu8HQ==
 
-"@contentful/visual-sdk@^1.0.0-alpha.34":
-  version "1.0.0-alpha.34"
-  resolved "https://registry.yarnpkg.com/@contentful/visual-sdk/-/visual-sdk-1.0.0-alpha.34.tgz#c193aaca5b64ecb34c62903594423b9be36de35c"
-  integrity sha512-umPTFWfh3gNNmruyIRD5jgcQQN3KIzSd/6DaoTxPpz+ud3O+g4zYItytJoD0iZaEz1+V9ciVFw+C5+Xe57RvMg==
-
 "@esbuild/aix-ppc64@0.19.11":
   version "0.19.11"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.19.11.tgz#2acd20be6d4f0458bc8c784103495ff24f13b1d3"

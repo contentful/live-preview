@@ -46,7 +46,6 @@
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.0",
     "flatted": "^3.2.9",
-    "@contentful/visual-sdk": "^1.0.0-alpha.34",
     "@vercel/stega": "^0.1.0",
     "graphql-tag": "^2.12.6",
     "json-pointer": "^0.6.2",
