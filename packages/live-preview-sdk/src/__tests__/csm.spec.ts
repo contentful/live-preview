@@ -411,7 +411,26 @@ describe('Content Source Maps', () => {
                     content: [
                       {
                         nodeType: 'text',
-                        value: 'hello, world',
+                        value: 'hello, ',
+                        marks: [],
+                        data: {},
+                      },
+                      {
+                        nodeType: 'embedded-entry-inline',
+                        data: {
+                          target: {
+                            sys: {
+                              id: 'd4e5f6',
+                              type: 'Link',
+                              linkType: 'Entry',
+                            },
+                          },
+                        },
+                        content: [],
+                      },
+                      {
+                        nodeType: 'text',
+                        value: ' world',
                         marks: [],
                         data: {},
                       },
@@ -463,7 +482,25 @@ describe('Content Source Maps', () => {
             entityType: 'Entry',
           },
         },
+        '/rte/json/content/0/content/2/value': {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'rte',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
+        },
       });
+      // should throw an error if we try to access non-text nodes
+      try {
+        jsonPointer.get(encodedGraphQLResponse.data.post, '/rte/json/content/0/content/1/value');
+      } catch (error) {
+        expect((error as Error).message).toBe('Invalid reference token: value');
+      }
     });
 
     test('does not encode dates', () => {
