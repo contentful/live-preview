@@ -30,6 +30,23 @@ const getHref = (
   return `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
 };
 
+const findRichTextNodes = (data: any, currentPath = '/'): string[] => {
+  const textNodes = [];
+  const node = jsonPointer.get(data, currentPath);
+
+  if (node.content) {
+    for (let i = 0; i < node.content.length; i++) {
+      if (node.content[i].nodeType === 'text') {
+        textNodes.push(`${currentPath}/content/${i}/value`);
+      } else {
+        textNodes.push(...findRichTextNodes(data, `${currentPath}/content/${i}`));
+      }
+    }
+  }
+
+  return textNodes;
+};
+
 export const encodeSourceMap = (
   graphqlResponse: GraphQLResponse,
   targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
@@ -68,7 +85,6 @@ export const encodeSourceMap = (
       const currentValue = jsonPointer.get(data, pointer);
 
       if (!isUrlOrIsoDate(currentValue)) {
-        console.log({ currentValue });
         const encodedValue = encode({
           origin: 'contentful.com',
           href,
@@ -81,11 +97,30 @@ export const encodeSourceMap = (
             entityType,
           },
         });
-        jsonPointer.set(data, pointer, `${encodedValue}${currentValue}`);
+
+        // if we have a rich object then we add encoding to all text nodes
+        if (typeof currentValue === 'object' && currentValue.nodeType) {
+          // we are a rich text
+          // - remove original mapping
+          const source = mappings[pointer];
+          delete mappings[pointer];
+
+          // - add mapping to all text nodes
+          const textNodes = findRichTextNodes(data, pointer);
+
+          for (const textNode of textNodes) {
+            mappings[textNode] = source;
+            const currentTextNodeValue = jsonPointer.get(data, textNode);
+            jsonPointer.set(data, textNode, `${encodedValue}${currentTextNodeValue}`);
+          }
+        } else {
+          jsonPointer.set(data, pointer, `${encodedValue}${currentValue}`);
+        }
       }
     } else {
       debug.error(`Pointer ${pointer} not found in GraphQL data or href could not be generated.`);
     }
   }
+
   return graphqlResponse;
 };
