@@ -4,11 +4,59 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 # [3.0.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.1...@contentful/live-preview@3.0.0-alpha.2) (2024-01-19)
+## [2.17.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.2...@contentful/live-preview@2.17.3) (2024-02-05)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [2.17.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.1...@contentful/live-preview@2.17.2) (2024-01-26)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [2.17.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.0...@contentful/live-preview@2.17.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* pass experimental flags from LivePreviewProvider [TOL-1711] ([#525](https://github.com/contentful/live-preview/issues/525)) ([b9e4bf3](https://github.com/contentful/live-preview/commit/b9e4bf374999d10729ec57f8c4d950862528e5cf))
+
+
+
+
+
+# [2.17.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.16.1...@contentful/live-preview@2.17.0) (2024-01-26)
+
+
+### Features
+
+* recognise auto-tagged elements [TOL-1711] ([#523](https://github.com/contentful/live-preview/issues/523)) ([f40704a](https://github.com/contentful/live-preview/commit/f40704aeb10a2c2749402e6fb47c52af85775afe))
+
+
+
+
+
+## [2.16.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.16.0...@contentful/live-preview@2.16.1) (2024-01-22)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+# [2.16.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.2...@contentful/live-preview@2.16.0) (2024-01-22)
 
 
 ### Features
 
 * restore unsub logic ([7161b56](https://github.com/contentful/live-preview/commit/7161b560af5b4d1ca832ad26cc8a34f6796bc0fd))
+* setup gh packages [TOL-1702] ([#512](https://github.com/contentful/live-preview/issues/512)) ([21128c9](https://github.com/contentful/live-preview/commit/21128c9d022a6994fda25a8fd17971ce5d13e735))
 
 
 
@@ -28,6 +76,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [2.15.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.14...@contentful/live-preview@2.15.0-alpha.15) (2024-01-18)
+## [2.15.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.1...@contentful/live-preview@2.15.2) (2024-01-22)
 
 **Note:** Version bump only for package @contentful/live-preview
 

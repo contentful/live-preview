@@ -1,6 +1,8 @@
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
+import { encodeSourceMap } from './csm';
+import { GraphQLResponse } from './csm/types';
 import {
   debug,
   isInsideIframe,
@@ -48,6 +50,10 @@ export interface ContentfulLivePreviewInitConfig {
    * Can be `https://app.contentful.com` or `https://app.eu.contentful.com`
    */
   targetOrigin?: string | string[];
+
+  experimental?: {
+    ignoreManuallyTaggedElements?: boolean;
+  };
 }
 
 export interface ContentfulSubscribeConfig {
@@ -118,7 +124,11 @@ export class ContentfulLivePreview {
 
       // setup the live preview plugins (inspectorMode and liveUpdates)
       if (this.inspectorModeEnabled) {
-        this.inspectorMode = new InspectorMode({ locale, targetOrigin: this.targetOrigin });
+        this.inspectorMode = new InspectorMode({
+          locale,
+          targetOrigin: this.targetOrigin,
+          ignoreManuallyTaggedElements: config.experimental?.ignoreManuallyTaggedElements,
+        });
       }
 
       if (this.liveUpdatesEnabled) {
@@ -295,6 +305,13 @@ export class ContentfulLivePreview {
    */
   static getEntryList(): string[] {
     return getAllTaggedEntries();
+  }
+
+  static encodeSourceMap(
+    graphqlResponse: GraphQLResponse,
+    targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+  ): GraphQLResponse {
+    return encodeSourceMap(graphqlResponse, targetOrigin);
   }
 }
 

@@ -7,10 +7,13 @@ import {
 } from './types';
 import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
 
-export class InspectorMode {
-  private defaultLocale: string;
-  private targetOrigin: string[];
+type InspectorModeOptions = {
+  locale: string;
+  targetOrigin: string[];
+  ignoreManuallyTaggedElements?: boolean;
+};
 
+export class InspectorMode {
   private isScrolling = false;
   private scrollTimeout?: NodeJS.Timeout;
 
@@ -21,18 +24,7 @@ export class InspectorMode {
   private taggedElements: Element[] = [];
   private taggedElementMutationObserver?: MutationObserver;
 
-  constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
-    this.defaultLocale = locale;
-    this.targetOrigin = targetOrigin;
-
-    this.addHoverListener = this.addHoverListener.bind(this);
-    this.addScrollListener = this.addScrollListener.bind(this);
-    this.addMutationListener = this.addMutationListener.bind(this);
-    this.addResizeListener = this.addResizeListener.bind(this);
-
-    this.handleTaggedElement = this.handleTaggedElement.bind(this);
-    this.sendAllElements = this.sendAllElements.bind(this);
-
+  constructor(private options: InspectorModeOptions) {
     // Attach interaction listeners
     this.addHoverListener();
     this.addScrollListener();
@@ -41,17 +33,17 @@ export class InspectorMode {
   }
 
   // Handles incoming messages from Contentful
-  public receiveMessage(data: MessageFromEditor): void {
+  public receiveMessage = (data: MessageFromEditor): void => {
     if (data.method === InspectorModeEventMethods.INSPECTOR_MODE_CHANGED) {
       const { isInspectorActive } = data as InspectorModeChangedMessage;
       if (isInspectorActive) {
         this.sendAllElements();
       }
     }
-  }
+  };
 
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
-  private addHoverListener() {
+  private addHoverListener = () => {
     const onMouseOver = (e: MouseEvent) => {
       const eventTargets = e.composedPath();
 
@@ -71,7 +63,7 @@ export class InspectorMode {
         sendMessageToEditor(
           InspectorModeEventMethods.MOUSE_MOVE,
           { element: null },
-          this.targetOrigin
+          this.options.targetOrigin
         );
       }
     };
@@ -79,14 +71,16 @@ export class InspectorMode {
     window.addEventListener('mouseover', onMouseOver);
 
     return () => window.removeEventListener('mouseover', onMouseOver);
-  }
+  };
 
   /** Sends scroll start and end event to the editor, on end it also sends the tagged elements again */
-  private addScrollListener() {
+  private addScrollListener = () => {
+    const { targetOrigin } = this.options;
+
     const onScroll = () => {
       if (!this.isScrolling) {
         this.isScrolling = true;
-        sendMessageToEditor(InspectorModeEventMethods.SCROLL_START, {}, this.targetOrigin);
+        sendMessageToEditor(InspectorModeEventMethods.SCROLL_START, {}, targetOrigin);
       }
 
       if (this.scrollTimeout) {
@@ -98,7 +92,7 @@ export class InspectorMode {
       // Prevents showing wrong information during scrolling.
       this.scrollTimeout = setTimeout(() => {
         this.isScrolling = false;
-        sendMessageToEditor(InspectorModeEventMethods.SCROLL_END, {}, this.targetOrigin);
+        sendMessageToEditor(InspectorModeEventMethods.SCROLL_END, {}, targetOrigin);
         this.sendAllElements();
         if (this.hoveredElement) {
           this.handleTaggedElement(this.hoveredElement);
@@ -109,14 +103,12 @@ export class InspectorMode {
     window.addEventListener('scroll', onScroll);
 
     return () => window.removeEventListener('scroll', onScroll);
-  }
+  };
 
   /** Detects DOM changes and sends the tagged elements to the editor */
-  private addMutationListener() {
+  private addMutationListener = () => {
     const mutationObserver = new MutationObserver(() => {
-      const taggedElements = getAllTaggedElements().filter(
-        (el) => !!getInspectorModeAttributes(el)
-      );
+      const taggedElements = getAllTaggedElements();
 
       if (this.taggedElements?.length !== taggedElements.length) {
         this.sendAllElements();
@@ -135,14 +127,16 @@ export class InspectorMode {
     });
 
     return () => mutationObserver.disconnect();
-  }
+  };
 
   /** Sends resize start and end event to the editor, on end it also sends the tagged elements again */
-  private addResizeListener() {
+  private addResizeListener = () => {
+    const { targetOrigin } = this.options;
+
     const resizeObserver = new ResizeObserver(() => {
       if (!this.isResizing) {
         this.isResizing = true;
-        sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, this.targetOrigin);
+        sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, targetOrigin);
       }
 
       if (this.resizeTimeout) {
@@ -154,7 +148,7 @@ export class InspectorMode {
       // Prevents showing wrong information during resizing.
       this.resizeTimeout = setTimeout(() => {
         this.isResizing = false;
-        sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, this.targetOrigin);
+        sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, targetOrigin);
         this.sendAllElements();
         if (this.hoveredElement) {
           this.handleTaggedElement(this.hoveredElement);
@@ -165,14 +159,15 @@ export class InspectorMode {
     resizeObserver.observe(document.body);
 
     return () => resizeObserver.disconnect();
-  }
+  };
 
   /**
    * Validates if the element has the inspector mode attributes
    * and sends it then to the editor
    */
-  private handleTaggedElement(element: HTMLElement): boolean {
-    const taggedInformation = getInspectorModeAttributes(element, this.defaultLocale);
+  private handleTaggedElement = (element: HTMLElement): boolean => {
+    const { targetOrigin, locale } = this.options;
+    const taggedInformation = getInspectorModeAttributes(element, locale);
 
     if (!taggedInformation) {
       return false;
@@ -187,22 +182,21 @@ export class InspectorMode {
           coordinates: element.getBoundingClientRect(),
         },
       },
-      this.targetOrigin
+      targetOrigin
     );
 
     return true;
-  }
+  };
 
   /**
    * Finds all elements that have all inspector mode attributes
    * and sends them to the editor
    */
-  private sendAllElements() {
-    const entries = getAllTaggedElements().filter(
-      (element) => !!getInspectorModeAttributes(element, this.defaultLocale)
-    );
+  private sendAllElements = () => {
+    const { targetOrigin } = this.options;
+    const elements = getAllTaggedElements();
 
-    this.taggedElements = entries;
+    this.taggedElements = elements;
     if (this.taggedElementMutationObserver) {
       this.taggedElementMutationObserver.disconnect();
     }
@@ -211,11 +205,11 @@ export class InspectorMode {
       sendMessageToEditor(
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
-          elements: entries.map((e) => ({
+          elements: elements.map((e) => ({
             coordinates: e.getBoundingClientRect(),
           })),
         },
-        this.targetOrigin
+        targetOrigin
       );
     };
 
@@ -236,5 +230,5 @@ export class InspectorMode {
     });
 
     sendTaggedElementsMessage();
-  }
+  };
 }

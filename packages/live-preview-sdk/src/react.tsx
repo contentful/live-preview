@@ -39,7 +39,7 @@ export function useDeepCompareMemoize<T>(value: T): T {
 
 export function useDeepCompareEffectNoCheck(
   callback: EffectCallback,
-  dependencies: DependencyList
+  dependencies: DependencyList,
 ): UseEffectReturn {
   return useEffect(callback, useDeepCompareMemoize(dependencies));
 }
@@ -57,10 +57,11 @@ export function ContentfulLivePreviewProvider({
   enableInspectorMode = true,
   enableLiveUpdates = true,
   targetOrigin,
+  experimental,
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>): ReactElement {
   if (!locale) {
     throw new Error(
-      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`'
+      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`',
     );
   }
 
@@ -70,11 +71,12 @@ export function ContentfulLivePreviewProvider({
     enableInspectorMode,
     enableLiveUpdates,
     targetOrigin,
+    experimental,
   });
 
   const props = useMemo(
     () => ({ locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin }),
-    [locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin]
+    [locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin],
   );
 
   return (
@@ -94,7 +96,7 @@ interface Options {
 
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
-  options?: Options
+  options?: Options,
 ): T;
 /**
  * @deprecated in favor of `options`
@@ -102,7 +104,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
   locale?: string,
-  skip?: boolean
+  skip?: boolean,
 ): T;
 /**
  * Receives updates directly from the Contentful Editor inside the LivePreview
@@ -113,7 +115,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
 export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   data: T,
   optionsOrLocale?: Options | string,
-  skip = false
+  skip = false,
 ): T {
   const [state, setState] = useState({ data, version: 1 });
   const previous = useRef(data);
@@ -178,7 +180,7 @@ type GetInspectorModeProps<T> = (
       }
     | ({
         [K in Exclude<keyof LivePreviewAssetProps, keyof T | 'locale'>]: LivePreviewAssetProps[K];
-      } & { locale?: LivePreviewProps['locale'] })
+      } & { locale?: LivePreviewProps['locale'] }),
 ) => InspectorModeTags;
 
 /**
@@ -190,7 +192,7 @@ export function useContentfulInspectorMode<
     | Pick<LivePreviewEntryProps, 'entryId'>
     | Pick<LivePreviewEntryProps, 'entryId' | 'fieldId'>
     | Pick<LivePreviewAssetProps, 'assetId'>
-    | Pick<LivePreviewAssetProps, 'assetId' | 'fieldId'>
+    | Pick<LivePreviewAssetProps, 'assetId' | 'fieldId'>,
 >(sharedProps?: T): GetInspectorModeProps<T> {
   const config = useContext(ContentfulLivePreviewContext);
 
@@ -202,6 +204,6 @@ export function useContentfulInspectorMode<
 
       return null;
     },
-    [config?.enableInspectorMode, sharedProps]
+    [config?.enableInspectorMode, sharedProps],
   );
 }
