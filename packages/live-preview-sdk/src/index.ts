@@ -1,6 +1,8 @@
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
+import { encodeSourceMap } from './csm';
+import { GraphQLResponse } from './csm/types';
 import {
   debug,
   isInsideIframe,
@@ -303,6 +305,13 @@ export class ContentfulLivePreview {
    */
   static getEntryList(): string[] {
     return getAllTaggedEntries();
+  }
+
+  static encodeSourceMap(
+    graphqlResponse: GraphQLResponse,
+    targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+  ): GraphQLResponse {
+    return encodeSourceMap(graphqlResponse, targetOrigin);
   }
 }
 
