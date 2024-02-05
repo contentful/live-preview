@@ -199,9 +199,9 @@
     chalk "^4.1.0"
 
 "@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.3.0":
-  version "16.3.3"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.3.3.tgz#2eb7c6d01929160c3be79f97571a97ee5fdf80f9"
-  integrity sha512-AoC/fbzRiBPodnUfOXGf5v0hjnqGMcaABT6+HdP7Kn/3n6m12y6Uhhcbj1J8H1rIMxTkTmc5LQhroHJNRNyidg==
+  version "16.3.4"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.3.4.tgz#c5fc9c834dde03d4c4ee189900d304ce1888a74b"
+  integrity sha512-PyVSrQa5j1hO4grgA0Ivo/taiOvW0uFN79JB5JkTG8U7DnWGI7Ap2As6zN6/E6YvDqb7w2cYRMSGSQ3qfxu8HQ==
 
 "@contentful/visual-sdk@^1.0.0-alpha.34":
   version "1.0.0-alpha.34"
