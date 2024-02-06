@@ -2,7 +2,7 @@ import { vercelStegaDecode } from '@vercel/stega';
 import jsonPointer from 'json-pointer';
 import { describe, test, expect } from 'vitest';
 
-import { encodeSourceMap } from '../csm';
+import { encodeGraphQLResponse } from '../csm';
 import type { SourceMapMetadata } from '../csm/encode';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
@@ -73,7 +73,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         '/title': {
           origin: 'contentful.com',
@@ -138,7 +138,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       expect(encodedGraphQLResponse.data.post.title).toBeNull();
       expect(encodedGraphQLResponse.data.post.subtitle).toBeNull();
     });
@@ -179,7 +179,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(
+      const encodedGraphQLResponse = encodeGraphQLResponse(
         graphQLResponse,
         'https://app.eu.contentful.com',
       );
@@ -267,7 +267,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items, {
         '/0': {
           title: {
@@ -362,7 +362,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items[0], {
         '/akanTitle': {
           origin: 'contentful.com',
@@ -433,7 +433,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       expect(encodedGraphQLResponse.data.post.rte).toBeNull();
     });
 
@@ -509,7 +509,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         '/rte/json/content/0/content/0/value': {
           origin: 'contentful.com',
@@ -572,7 +572,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
 
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         '/date': undefined,
@@ -607,7 +607,7 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
 
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         '/url': undefined,
