@@ -309,7 +309,7 @@ export class ContentfulLivePreview {
 
   static encodeSourceMap(
     graphqlResponse: GraphQLResponse,
-    targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+    targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
   ): GraphQLResponse {
     return encodeSourceMap(graphqlResponse, targetOrigin);
   }
@@ -317,4 +317,3 @@ export class ContentfulLivePreview {
 
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 export * from './messages';
-export * from './csm';
