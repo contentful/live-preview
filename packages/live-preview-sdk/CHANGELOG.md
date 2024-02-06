@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.3...@contentful/live-preview@3.0.0-alpha.4) (2024-02-06)
+
+
+### Bug Fixes
+
+* adding rich text csm encoding for text nodes [TOL-1788] ([#554](https://github.com/contentful/live-preview/issues/554)) ([df7c1b5](https://github.com/contentful/live-preview/commit/df7c1b588bec225b26e5979b02690d817c5463f5))
+
+
+
+
+
 # [3.0.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.2...@contentful/live-preview@3.0.0-alpha.3) (2024-02-05)
 
 
