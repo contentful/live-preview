@@ -306,14 +306,8 @@ export class ContentfulLivePreview {
   static getEntryList(): string[] {
     return getAllTaggedEntries();
   }
-
-  static encodeSourceMap(
-    graphqlResponse: GraphQLResponse,
-    targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
-  ): GraphQLResponse {
-    return encodeSourceMap(graphqlResponse, targetOrigin);
-  }
 }
 
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 export * from './messages';
+export * from './csm';
