@@ -102,6 +102,47 @@ describe('Content Source Maps', () => {
       });
     });
 
+    test('it should ignore null values', () => {
+      const graphQLResponse = {
+        data: {
+          post: {
+            title: null,
+            subtitle: null,
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1.0,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['title', 'subtitle'],
+            locales: ['en-US'],
+            entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+            assets: [],
+            mappings: {
+              '/post/title': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+              '/post/subtitle': {
+                source: {
+                  entry: 0,
+                  field: 1,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      expect(encodedGraphQLResponse.data.post.title).toBe(null);
+      expect(encodedGraphQLResponse.data.post.subtitle).toBe(null);
+    });
+
     test('handles EU domain', () => {
       const graphQLResponse = {
         data: {

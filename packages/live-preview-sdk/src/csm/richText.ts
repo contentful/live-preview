@@ -17,6 +17,7 @@ export const encodeRichTextValue = ({
   encodedValue: string;
 }) => {
   const source = mappings[pointer];
+  // remove old pointer to rich text field as we will just be mapping the text nodes
   delete mappings[pointer];
 
   const textNodes = findRichTextNodes(data, pointer);

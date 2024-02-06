@@ -69,7 +69,7 @@ export const encodeSourceMap = (
     if (jsonPointer.has(data, pointer)) {
       const currentValue = jsonPointer.get(data, pointer);
 
-      if (!isUrlOrIsoDate(currentValue)) {
+      if (!isUrlOrIsoDate(currentValue) && currentValue !== null) {
         const encodedValue = encode({
           origin: 'contentful.com',
           href,
