@@ -1,8 +1,6 @@
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
-import { encodeSourceMap } from './csm';
-import { GraphQLResponse } from './csm/types';
 import {
   debug,
   isInsideIframe,
