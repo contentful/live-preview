@@ -1,8 +1,6 @@
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
-import { encodeSourceMap } from './csm';
-import { GraphQLResponse } from './csm/types';
 import {
   debug,
   isInsideIframe,
@@ -78,7 +76,7 @@ export class ContentfulLivePreview {
   static init(config: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
     if (typeof config !== 'object' || !config?.locale) {
       throw new Error(
-        "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)"
+        "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
       );
     }
 
@@ -169,16 +167,16 @@ export class ContentfulLivePreview {
           {
             action: LivePreviewPostMessageMethods.URL_CHANGED,
             taggedElementCount: document.querySelectorAll(
-              `[${InspectorModeDataAttributes.ENTRY_ID}]`
+              `[${InspectorModeDataAttributes.ENTRY_ID}]`,
             ).length,
           } as UrlChangedMessage,
-          this.targetOrigin
+          this.targetOrigin,
         );
       });
 
       // tell the editor that there's a SDK
       const taggedElementCount = document.querySelectorAll(
-        `[${InspectorModeDataAttributes.ENTRY_ID}]`
+        `[${InspectorModeDataAttributes.ENTRY_ID}]`,
       ).length;
       sendMessageToEditor(
         LivePreviewPostMessageMethods.CONNECTED,
@@ -191,7 +189,7 @@ export class ContentfulLivePreview {
           isInspectorEnabled: this.inspectorModeEnabled,
           isLiveUpdatesEnabled: this.liveUpdatesEnabled,
         } as ConnectedMessage,
-        this.targetOrigin
+        this.targetOrigin,
       );
 
       // all set up - ready to go
@@ -204,12 +202,12 @@ export class ContentfulLivePreview {
   static subscribe(config: ContentfulSubscribeConfig): VoidFunction;
   static subscribe(
     event: 'save',
-    config: Pick<ContentfulSubscribeConfig, 'callback'>
+    config: Pick<ContentfulSubscribeConfig, 'callback'>,
   ): VoidFunction;
   static subscribe(event: 'edit', config: ContentfulSubscribeConfig): VoidFunction;
   static subscribe(
     configOrEvent: 'save' | 'edit' | ContentfulSubscribeConfig,
-    config?: ContentfulSubscribeConfig | Pick<ContentfulSubscribeConfig, 'callback'>
+    config?: ContentfulSubscribeConfig | Pick<ContentfulSubscribeConfig, 'callback'>,
   ): VoidFunction {
     if (!this.liveUpdatesEnabled) {
       return () => {
@@ -223,7 +221,7 @@ export class ContentfulLivePreview {
     if (event === 'save') {
       if (!this.saveEvent) {
         throw new Error(
-          'Save event is not initialized, please call `ContentfulLivePreview.init()` first.'
+          'Save event is not initialized, please call `ContentfulLivePreview.init()` first.',
         );
       }
       return this.saveEvent.subscribe(subscribeConfig.callback);
@@ -231,7 +229,7 @@ export class ContentfulLivePreview {
 
     if (!this.liveUpdates) {
       throw new Error(
-        'Live updates are not initialized, please call `ContentfulLivePreview.init()` first.'
+        'Live updates are not initialized, please call `ContentfulLivePreview.init()` first.',
       );
     }
 
@@ -282,7 +280,7 @@ export class ContentfulLivePreview {
         props.fieldId,
         (props as LivePreviewAssetProps).assetId,
         props.locale || this.locale,
-        this.targetOrigin
+        this.targetOrigin,
       );
       return;
     }
@@ -292,7 +290,7 @@ export class ContentfulLivePreview {
         props.fieldId,
         (props as LivePreviewEntryProps).entryId,
         props.locale || this.locale,
-        this.targetOrigin
+        this.targetOrigin,
       );
       return;
     }
@@ -306,14 +304,8 @@ export class ContentfulLivePreview {
   static getEntryList(): string[] {
     return getAllTaggedEntries();
   }
-
-  static encodeSourceMap(
-    graphqlResponse: GraphQLResponse,
-    targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
-  ): GraphQLResponse {
-    return encodeSourceMap(graphqlResponse, targetOrigin);
-  }
 }
 
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 export * from './messages';
+export * from './csm';
