@@ -43,7 +43,9 @@ export const encodeSourceMap = (
     debug.error('GraphQL response does not contain Content Source Maps information.');
     return originalGraphqlResponse;
   }
-  const modifiedGraphqlResponse = clone(originalGraphqlResponse);
+  const modifiedGraphqlResponse = clone(
+    originalGraphqlResponse as unknown as Record<string, unknown>,
+  ) as unknown as GraphQLResponse;
   const { spaces, environments, fields, locales, entries, assets, mappings } =
     modifiedGraphqlResponse.extensions.contentSourceMaps;
   const data = modifiedGraphqlResponse.data;
