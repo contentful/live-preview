@@ -31,7 +31,7 @@ const getHref = (
   return `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
 };
 
-export const encodeSourceMap = (
+export const encodeGraphQLResponse = (
   originalGraphqlResponse: GraphQLResponse,
   targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
 ): GraphQLResponse => {
