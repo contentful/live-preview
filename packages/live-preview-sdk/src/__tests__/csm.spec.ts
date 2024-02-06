@@ -139,8 +139,8 @@ describe('Content Source Maps', () => {
         },
       };
       const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
-      expect(encodedGraphQLResponse.data.post.title).toBe(null);
-      expect(encodedGraphQLResponse.data.post.subtitle).toBe(null);
+      expect(encodedGraphQLResponse.data.post.title).toBeNull();
+      expect(encodedGraphQLResponse.data.post.subtitle).toBeNull();
     });
 
     test('handles EU domain', () => {
@@ -434,7 +434,7 @@ describe('Content Source Maps', () => {
         },
       };
       const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
-      expect(encodedGraphQLResponse.data.post.rte).toBe(null);
+      expect(encodedGraphQLResponse.data.post.rte).toBeNull();
     });
 
     test('works for rich text', () => {
