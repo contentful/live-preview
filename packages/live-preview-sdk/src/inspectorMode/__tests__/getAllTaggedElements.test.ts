@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { SourceMapMetadata, encode } from '../../csm/encode';
+import { SourceMapMetadata, encode } from '@contentful/content-source-maps';
 import { InspectorModeDataAttributes } from '../types';
 import { getAllTaggedElements } from '../utils';
 
@@ -139,10 +139,10 @@ describe('getAllTaggedElements', () => {
 
       expect(elements.length).toEqual(1);
       expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
-        'manual-entry-id'
+        'manual-entry-id',
       );
       expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual(
-        'manual-field-id'
+        'manual-field-id',
       );
       expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual(null);
     });

@@ -1,6 +1,6 @@
 import jsonPointer from 'json-pointer';
 
-import { clone, debug } from '../helpers';
+import { clone } from './utils';
 import { encode } from './encode';
 import { encodeRichTextValue, isRichTextValue } from './richText';
 import { GraphQLResponse } from './types';
@@ -40,7 +40,7 @@ export const encodeGraphQLResponse = (
     !originalGraphqlResponse.extensions ||
     !originalGraphqlResponse.extensions.contentSourceMaps
   ) {
-    debug.error('GraphQL response does not contain Content Source Maps information.');
+    console.error('GraphQL response does not contain Content Source Maps information.');
     return originalGraphqlResponse;
   }
   const modifiedGraphqlResponse = clone(
@@ -92,7 +92,7 @@ export const encodeGraphQLResponse = (
         }
       }
     } else {
-      debug.error(`Pointer ${pointer} not found in GraphQL data or href could not be generated.`);
+      console.error(`Pointer ${pointer} not found in GraphQL data or href could not be generated.`);
     }
   }
 
