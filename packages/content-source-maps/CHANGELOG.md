@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.0...@contentful/content-source-maps@0.2.0-alpha.3) (2024-02-08)
+
+
+### Bug Fixes
+
+* file extensions ([372c778](https://github.com/contentful/live-preview/commit/372c77829f4d2cc363567a58f184b6862ebd9d72))
+* ignore import extension for test files ([d6ba45a](https://github.com/contentful/live-preview/commit/d6ba45a208a59d6d818b3be6917fb6d8ab6fb472))
+* move to vitest from jest ([7106540](https://github.com/contentful/live-preview/commit/7106540a355f6fc497f1a8aab1828e21cc16e4a9))
+
+
+
+
+
 # 0.2.0-alpha.0 (2024-02-08)
 
 
