@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.5...@contentful/live-preview@3.0.0-alpha.6) (2024-02-08)
+
+
+### Features
+
+* extract to csm package ([#557](https://github.com/contentful/live-preview/issues/557)) ([916bfa6](https://github.com/contentful/live-preview/commit/916bfa6606cab397e7033190f5f45cb6aa08adcd))
+
+
+
+
+
 # [3.0.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.4...@contentful/live-preview@3.0.0-alpha.5) (2024-02-06)
 
 **Note:** Version bump only for package @contentful/live-preview
