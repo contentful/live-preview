@@ -37,14 +37,15 @@
     "build:types": "tsc --outDir dist/types",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
-    "test": "jest --watch",
-    "test:ci": "jest",
-    "coverage": "jest --coverage",
+    "test": "vitest --watch",
+    "test:ci": "vitest run",
+    "coverage": "vitest --coverage",
     "prepublish": "yarn build"
   },
   "dependencies": {
     "@vercel/stega": "^0.1.0",
-    "json-pointer": "^0.6.2"
+    "json-pointer": "^0.6.2",
+    "vitest": "^1.2.2"
   },
   "devDependencies": {
     "@swc/cli": "0.1.63",
