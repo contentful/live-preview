@@ -12,14 +12,6 @@ module.exports = {
           "extensions": [".js", ".ts"]
         }
       }
-    },
-    overrides: [
-      {
-        files: ["*.spec.js", "*.spec.ts"],
-        rules: {
-          "import/extensions": "off"
-        }
-      }
-    ]
+    }
   };
   
