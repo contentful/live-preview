@@ -45,10 +45,8 @@
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.0",
-    "@vercel/stega": "^0.1.0",
     "flatted": "^3.2.9",
     "graphql-tag": "^2.12.6",
-    "json-pointer": "^0.6.2",
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {

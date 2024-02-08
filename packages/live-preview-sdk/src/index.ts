@@ -1,5 +1,5 @@
 import { type DocumentNode } from 'graphql';
-
+import { encodeGraphQLResponse } from '@contentful/content-source-maps';
 import { version } from '../package.json';
 import {
   debug,
@@ -308,4 +308,4 @@ export class ContentfulLivePreview {
 
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
 export * from './messages';
-export * from './csm';
+export { encodeGraphQLResponse };
