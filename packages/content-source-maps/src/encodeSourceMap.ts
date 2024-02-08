@@ -1,9 +1,9 @@
 import jsonPointer from 'json-pointer';
 
-import { clone } from './utils';
-import { encode } from './encode';
-import { encodeRichTextValue, isRichTextValue } from './richText';
-import { GraphQLResponse } from './types';
+import { clone } from './utils.js';
+import { encode } from './encode.js';
+import { encodeRichTextValue, isRichTextValue } from './richText.js';
+import { GraphQLResponse } from './types.js';
 
 const isUrlOrIsoDate = (value: string) => {
   // Regular expression for URL validation

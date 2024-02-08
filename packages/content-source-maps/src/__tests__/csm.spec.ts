@@ -1,8 +1,8 @@
 import { vercelStegaDecode } from '@vercel/stega';
 import jsonPointer from 'json-pointer';
 
-import { encodeGraphQLResponse } from '../encodeSourceMap';
-import type { SourceMapMetadata } from '../encode';
+import { encodeGraphQLResponse } from '../encodeSourceMap.js';
+import type { SourceMapMetadata } from '../encode.js';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
 
