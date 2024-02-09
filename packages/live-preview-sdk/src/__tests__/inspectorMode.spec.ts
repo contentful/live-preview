@@ -59,7 +59,7 @@ describe('InspectorMode', () => {
         {
           elements: [],
         },
-        targetOrigin
+        targetOrigin,
       );
     });
   });

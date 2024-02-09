@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { debug } from '../helpers';
 import { validateLiveUpdatesConfiguration } from '../helpers/validation';
@@ -31,17 +31,17 @@ describe('validateLiveUpdatesConfiguration', () => {
 
       expect(debug.error).toHaveBeenCalledTimes(2);
       expect(debug.error).toHaveBeenCalledWith(
-        'Max depth for validation of subscription data is reached, please provide your data in the correct format.'
+        'Max depth for validation of subscription data is reached, please provide your data in the correct format.',
       );
       expect(debug.error).toHaveBeenCalledWith(
         'Live Updates requires the "sys.id" to be present on the provided data',
-        config.data
+        config.data,
       );
 
       expect(result).toEqual({
         isGQL: false,
         isREST: false,
-        sysId: null,
+        sysIds: [],
         isValid: false,
         config,
       });
@@ -65,7 +65,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -90,7 +90,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -117,7 +117,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -141,7 +141,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -165,7 +165,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -193,7 +193,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -215,13 +215,13 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(debug.error).toHaveBeenCalledTimes(1);
         expect(debug.error).toHaveBeenCalledWith(
           'Live Updates requires the "sys.id" to be present on the provided data',
-          data
+          data,
         );
 
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: null,
+          sysIds: [],
           isValid: false,
           config,
         });
@@ -237,13 +237,13 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(debug.error).toHaveBeenCalledTimes(1);
         expect(debug.error).toHaveBeenCalledWith(
           'For live updates as a basic requirement the provided data must include the "fields" property for REST or "__typename" for Graphql, otherwise the data will be treated as invalid and live updates are not applied.',
-          data
+          data,
         );
 
         expect(result).toEqual({
           isGQL: false,
           isREST: false,
-          sysId: '1',
+          sysIds: ['1'],
           isValid: false,
           config,
         });
@@ -278,7 +278,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config,
       });
@@ -310,7 +310,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config: {
           ...config,
@@ -347,13 +347,13 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(debug.error).toHaveBeenCalledTimes(1);
       expect(debug.error).toHaveBeenCalledWith(
         'The provided GraphQL query is invalid, please provide it in the correct format.',
-        config
+        config,
       );
 
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config: {
           ...config,
@@ -387,13 +387,13 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(debug.warn).toHaveBeenCalledTimes(1);
       expect(debug.warn).toHaveBeenCalledWith(
         'The query param is ignored as it can only be used together with GraphQL.',
-        config
+        config,
       );
 
       expect(result).toEqual({
         isGQL: false,
         isREST: true,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config: {
           ...config,

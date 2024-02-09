@@ -17,7 +17,7 @@ const COLLECTION_SUFFIX = 'Collection';
 export function sendMessageToEditor(
   method: PostMessageMethods,
   data: EditorMessage,
-  targetOrigin: string[]
+  targetOrigin: string[],
 ): void {
   const message = {
     ...data,
@@ -88,7 +88,7 @@ export class StorageMap<T> {
       // Attention: Map can not be `JSON.stringify`ed directly
       window.sessionStorage.setItem(
         this.storageKey,
-        JSON.stringify(Array.from(this.value.entries()))
+        JSON.stringify(Array.from(this.value.entries())),
       );
     } catch (err) {
       debug.warn(`StorageMap: Failed to set data for key "${key}" in sessionStorage`);
@@ -159,7 +159,7 @@ export function isInsideIframe(): boolean {
  */
 export function gatherFieldInformation(
   selections: Readonly<SelectionNode[]>,
-  typename: string
+  typename: string,
 ): Generated[] {
   const generated: Array<Generated> = [];
 
@@ -175,8 +175,8 @@ export function gatherFieldInformation(
         generated.push(
           ...gatherFieldInformation(
             selection.selectionSet.selections,
-            getTypeName(selection, typename)
-          )
+            getTypeName(selection, typename),
+          ),
         );
       }
     }

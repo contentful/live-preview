@@ -80,7 +80,7 @@ export type SubscribedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.SUBSCRIBED;
   type: 'GQL' | 'REST';
-  entryId: string;
+  sysIds: string[];
   locale: string;
   event: 'edit' | 'save';
   id: string;
@@ -89,7 +89,7 @@ export type SubscribedMessage = {
 
 export type UnsubscribedMessage = {
   type: 'GQL' | 'REST';
-  entryId: string;
+  sysIds: string[];
   locale: string;
   event: 'edit' | 'save';
   id: string;
@@ -133,6 +133,7 @@ export type EntryUpdatedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   data: Entry | Asset;
   contentType: ContentType;
+  subscriptionId: string;
 };
 
 export type EntrySavedMessage = {
@@ -173,7 +174,7 @@ export function openEntryInEditorUtility(
   fieldId: string,
   entryId: string,
   locale: string,
-  targetOrigin: string[]
+  targetOrigin: string[],
 ): void {
   sendMessageToEditor(
     LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
@@ -183,7 +184,7 @@ export function openEntryInEditorUtility(
       entryId,
       locale,
     },
-    targetOrigin
+    targetOrigin,
   );
 }
 
@@ -191,7 +192,7 @@ export function openAssetInEditorUtility(
   fieldId: string,
   assetId: string,
   locale: string,
-  targetOrigin: string[]
+  targetOrigin: string[],
 ): void {
   sendMessageToEditor(
     LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
@@ -201,6 +202,6 @@ export function openAssetInEditorUtility(
       assetId,
       locale,
     },
-    targetOrigin
+    targetOrigin,
   );
 }

@@ -63,7 +63,7 @@ export class InspectorMode {
         sendMessageToEditor(
           InspectorModeEventMethods.MOUSE_MOVE,
           { element: null },
-          this.options.targetOrigin
+          this.options.targetOrigin,
         );
       }
     };
@@ -182,7 +182,7 @@ export class InspectorMode {
           coordinates: element.getBoundingClientRect(),
         },
       },
-      targetOrigin
+      targetOrigin,
     );
 
     return true;
@@ -209,7 +209,7 @@ export class InspectorMode {
             coordinates: e.getBoundingClientRect(),
           })),
         },
-        targetOrigin
+        targetOrigin,
       );
     };
 

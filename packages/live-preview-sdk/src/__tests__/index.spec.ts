@@ -70,7 +70,7 @@ describe('ContentfulLivePreview', () => {
       it('doenst call the InspectorMode and LiveUpdates for invalid events', () => {
         // Not from live-preview
         window.dispatchEvent(
-          new MessageEvent('message', { data: { from: 'anywhere', value: 'any' } })
+          new MessageEvent('message', { data: { from: 'anywhere', value: 'any' } }),
         );
 
         // Invalid data
