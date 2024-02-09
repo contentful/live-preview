@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.3...@contentful/content-source-maps@0.2.0-alpha.4) (2024-02-09)
+
+
+### Features
+
+* export getHref from CSM ([1a1a34d](https://github.com/contentful/live-preview/commit/1a1a34d7bace7580813367630f226cdfcbf99453))
+
+
+
+
+
 # [0.2.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.0...@contentful/content-source-maps@0.2.0-alpha.3) (2024-02-08)
 
 
