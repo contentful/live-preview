@@ -15,7 +15,7 @@ const isUrlOrIsoDate = (value: string) => {
   return urlRegex.test(value) || isoDateRegex.test(value);
 };
 
-const getHref = (
+export const getHref = (
   entityId: string,
   entityType: 'Entry' | 'Asset',
   space: string,
