@@ -44,6 +44,7 @@
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
+    "@contentful/content-source-maps": "0.2.0-alpha.4",
     "@contentful/rich-text-types": "^16.2.0",
     "flatted": "^3.2.9",
     "graphql-tag": "^2.12.6",

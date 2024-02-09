@@ -100,5 +100,5 @@ export interface Subscription {
   locale?: string;
   callback: SubscribeCallback;
   gqlParams?: GraphQLParams;
-  sysId: string;
+  sysIds: string[];
 }

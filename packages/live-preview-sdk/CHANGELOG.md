@@ -22,15 +22,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [3.0.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.4...@contentful/live-preview@3.0.0-alpha.5) (2024-02-06)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+
 # [3.0.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.3...@contentful/live-preview@3.0.0-alpha.4) (2024-02-06)
 
 
 ### Bug Fixes
 
 * adding rich text csm encoding for text nodes [TOL-1788] ([#554](https://github.com/contentful/live-preview/issues/554)) ([df7c1b5](https://github.com/contentful/live-preview/commit/df7c1b588bec225b26e5979b02690d817c5463f5))
-
-
-
 
 
 # [3.0.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.2...@contentful/live-preview@3.0.0-alpha.3) (2024-02-05)
@@ -45,6 +51,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [3.0.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.1...@contentful/live-preview@3.0.0-alpha.2) (2024-01-19)
+
 ## [2.17.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.2...@contentful/live-preview@2.17.3) (2024-02-05)
 
 **Note:** Version bump only for package @contentful/live-preview
@@ -97,7 +104,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * restore unsub logic ([7161b56](https://github.com/contentful/live-preview/commit/7161b560af5b4d1ca832ad26cc8a34f6796bc0fd))
+* restore unsub logic ([7161b56](https://github.com/contentful/live-preview/commit/7161b560af5b4d1ca832ad26cc8a34f6796bc0fd))
 * setup gh packages [TOL-1702] ([#512](https://github.com/contentful/live-preview/issues/512)) ([21128c9](https://github.com/contentful/live-preview/commit/21128c9d022a6994fda25a8fd17971ce5d13e735))
+
 
 
 
@@ -117,6 +126,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [2.15.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.14...@contentful/live-preview@2.15.0-alpha.15) (2024-01-18)
+
 ## [2.15.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.1...@contentful/live-preview@2.15.2) (2024-01-22)
 
 **Note:** Version bump only for package @contentful/live-preview
@@ -171,6 +181,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+
 # [2.13.0-alpha.10](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.9...@contentful/live-preview@2.13.0-alpha.10) (2023-12-21)
 
 **Note:** Version bump only for package @contentful/live-preview
@@ -202,6 +213,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
+* return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
 * implement CSM transformation to encoded strings for GraphQL [TOL-1706] ([#473](https://github.com/contentful/live-preview/issues/473)) ([c29aa4c](https://github.com/contentful/live-preview/commit/c29aa4c2eb9c7a636227e50944c43d42afea50db))
 
 
@@ -223,6 +235,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
+* only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
 * expose live preview props types ([#474](https://github.com/contentful/live-preview/issues/474)) ([1275dd3](https://github.com/contentful/live-preview/commit/1275dd3760e34cc77a684ba137243011ee1e850d))
 
 
@@ -230,11 +243,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [2.13.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0-alpha.4) (2023-11-28)
+# [2.13.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0-alpha.4) (2023-11-28)
 # [2.13.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0) (2023-12-13)
 
 
 ### Features
 
+* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
+* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
 * remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
 * remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
 * adding support for asset editor field tagging [TOL-1683] ([#463](https://github.com/contentful/live-preview/issues/463)) ([f366953](https://github.com/contentful/live-preview/commit/f366953ad9a98dbcb133e06415d516165fab1155))

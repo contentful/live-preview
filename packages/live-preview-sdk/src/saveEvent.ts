@@ -14,7 +14,7 @@ export class SaveEvent {
   public subscribe(cb: SubscribeCallback): VoidFunction {
     if (this.subscription) {
       debug.log(
-        'There is already a subscription for the save event, the existing one will be replaced.'
+        'There is already a subscription for the save event, the existing one will be replaced.',
       );
     }
 
@@ -35,7 +35,7 @@ export class SaveEvent {
   }
 
   public receiveMessage(
-    message: Omit<MessageFromEditor, 'from' | 'source'> | EntrySavedMessage
+    message: Omit<MessageFromEditor, 'from' | 'source'> | EntrySavedMessage,
   ): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
       const { entity } = message as EntrySavedMessage;
