@@ -4,8 +4,20 @@
   "version": "0.2.0-alpha.5",
   "description": "Base SDK for building Content Source Maps with Contentful",
   "license": "MIT",
-  "main": "dist/index.js",
-  "type": "module",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/live-preview.git"
@@ -14,19 +26,6 @@
     "url": "https://github.com/contentful/live-preview/issues"
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
-  "module": "dist/esm/index.js",
-  "types": "dist/types/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "require": "./dist/cjs/index.js",
-      "default": "./dist/esm/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "start": "yarn concurrently \"yarn:start:*\"",
     "start:cjs": "yarn build:cjs -w",
