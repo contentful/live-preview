@@ -7,7 +7,7 @@ export type SourceMapMetadata = {
     space: string;
     environment: string;
     entity: string;
-    entityType: 'Entry' | 'Asset';
+    entityType: string;
     field: string;
     locale: string;
   };

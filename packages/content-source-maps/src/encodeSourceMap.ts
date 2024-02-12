@@ -17,7 +17,7 @@ const isUrlOrIsoDate = (value: string) => {
 
 export const getHref = (
   entityId: string,
-  entityType: 'Entry' | 'Asset',
+  entityType: string,
   space: string,
   environment: string,
   field: string,
