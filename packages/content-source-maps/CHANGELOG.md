@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.4...@contentful/content-source-maps@0.2.0-alpha.5) (2024-02-12)
+
+
+### Bug Fixes
+
+* types ([8b6122d](https://github.com/contentful/live-preview/commit/8b6122d88abb78fa9bb413006d2f5d4f2817e8c4))
+
+
+
+
+
 # [0.2.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.3...@contentful/content-source-maps@0.2.0-alpha.4) (2024-02-09)
 
 
