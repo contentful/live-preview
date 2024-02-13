@@ -1,6 +1,6 @@
 # Next.js GraphQL Contentful live preview SDK example
 
-This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that runs only on the server.
+This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that runs **only** on the server.
 
 You will have to setup a revalidate endpoint in order for us to invalidate your page cache as shown [here](./app/api/revalidate/route.ts)
 
