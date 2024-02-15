@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.7](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.6...@contentful/content-source-maps@0.2.0-alpha.7) (2024-02-15)
+
+
+### Features
+
+* expose split fn ([c498a4e](https://github.com/contentful/live-preview/commit/c498a4e01a961e6fb86f8155619002ecccfbc1b6))
+
+
+
+
+
 # [0.2.0-alpha.6](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.5...@contentful/content-source-maps@0.2.0-alpha.6) (2024-02-12)
 
 **Note:** Version bump only for package @contentful/content-source-maps
