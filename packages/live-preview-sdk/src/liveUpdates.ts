@@ -35,15 +35,20 @@ export class LiveUpdates {
   /** Receives the data from the message event handler and calls the subscriptions */
   public async receiveMessage(message: MessageFromEditor): Promise<void> {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED) {
-      const { data, subscriptionId } = message as EntryUpdatedMessage;
+      const { data, entityId } = message as EntryUpdatedMessage;
 
-      const subscription = this.subscriptions.get(subscriptionId);
+      // console.log('hey sdk outside', { subscriptionId, subs: this.subscriptions });
+      console.log('hey sdk outside', { subs: this.subscriptions, data, entityId });
+      const [subscriptionId, subscription] =
+        [...this.subscriptions.entries()].find(([_, s]) => s.sysIds.includes(entityId)) ?? [];
 
-      if (subscription) {
-        subscription.callback(data);
+      if (subscription && subscriptionId) {
         subscription.data = data;
         this.subscriptions.set(subscriptionId, subscription);
+        subscription.callback(data);
+        console.log('hey if', { subscriptionId, subs: this.subscriptions });
       } else {
+        console.log('hey else', { subscriptionId, subs: this.subscriptions });
         debug.error('Received an update for an unknown subscription', {
           subscriptionId,
           data,
@@ -111,6 +116,7 @@ export class LiveUpdates {
         /* noop */
       };
     }
+    // debugger;
 
     const id = generateUID();
     const locale = config.locale ?? this.defaultLocale;

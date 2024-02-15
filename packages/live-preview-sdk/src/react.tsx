@@ -147,6 +147,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
 
   useDeepCompareEffectNoCheck(() => {
     if (previous.current !== data) {
+      console.log('hey previous.current', { previous: previous.current, data, state });
       // update content from external
       setState({ data, version: 1 });
       previous.current = data;
@@ -166,6 +167,7 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
         // Update the state and adding a version number to it, as some deep nested updates
         // are not proceeded correctly otherwise
         update.current((prevState) => ({ data: updatedData as T, version: prevState.version + 1 }));
+        console.log('hey callback', { updatedData, data, state });
       },
     });
   }, [data, shouldSubscribe, options.locale, options.query]);

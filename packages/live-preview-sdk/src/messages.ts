@@ -133,7 +133,7 @@ export type EntryUpdatedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   data: Entry | Asset;
   contentType: ContentType;
-  subscriptionId: string;
+  entityId: string;
 };
 
 export type EntrySavedMessage = {
