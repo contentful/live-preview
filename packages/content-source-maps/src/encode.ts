@@ -1,4 +1,4 @@
-import { vercelStegaDecode, vercelStegaEncode } from '@vercel/stega';
+import { vercelStegaDecode, vercelStegaEncode, vercelStegaSplit } from '@vercel/stega';
 
 export type SourceMapMetadata = {
   origin: string;
@@ -19,4 +19,13 @@ export function encode(metadata: SourceMapMetadata): string {
 
 export function decode(text: string): SourceMapMetadata | undefined {
   return vercelStegaDecode(text);
+}
+
+export function split(text: string): {
+  /** The original string with encoded substring removed */
+  cleaned: string;
+  /** The encoded substring from the original string */
+  encoded: string;
+} {
+  return vercelStegaSplit(text);
 }
