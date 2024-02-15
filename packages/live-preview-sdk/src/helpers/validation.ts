@@ -17,37 +17,34 @@ function has(object: Record<string, unknown>, key: string) {
   return object != null && hasOwnProperty.call(object, key);
 }
 
-function validateData(d: Argument, maxDepth: number): Omit<ValidationResult, 'isValid' | 'config'> {
+function validateData(
+  d: Argument,
+  maxDepth: number,
+): { isGQL: boolean; sysId: string | null; isREST: boolean } {
   if (maxDepth === 0) {
     debug.error(
       'Max depth for validation of subscription data is reached, please provide your data in the correct format.',
     );
-    return { isGQL: false, sysIds: [], isREST: false };
+    return { isGQL: false, sysId: null, isREST: false };
   }
 
   if (Array.isArray(d)) {
-    const result: Omit<ValidationResult, 'isValid' | 'config'> = {
-      isGQL: false,
-      sysIds: [],
-      isREST: false,
-    };
-
     for (const value of d) {
-      const currentResult = validateData(value, maxDepth - 1);
+      const result = validateData(value, maxDepth - 1);
 
-      result.isGQL = result.isGQL || currentResult.isGQL;
-      result.isREST = result.isREST || currentResult.isREST;
-      result.sysIds = [...result.sysIds, ...currentResult.sysIds];
+      if (Object.values(result).includes(true)) {
+        return result;
+      }
     }
 
-    return result;
+    return { isGQL: false, sysId: null, isREST: false };
   } else {
     const isGQL = has(d, '__typename');
     const sysId = d.sys?.id ?? null;
     const isREST = has(d, 'fields');
 
     if (isGQL || sysId || isREST) {
-      return { isGQL, sysIds: sysId ? [sysId] : [], isREST };
+      return { isGQL, sysId, isREST };
     }
 
     // maybe it's nested
@@ -96,11 +93,11 @@ type ValidatedConfig = {
 type ValidationResult = (
   | {
       isValid: true;
-      sysIds: string[];
+      sysId: string;
     }
   | {
       isValid: false;
-      sysIds: string[];
+      sysId: string | null;
     }
 ) & { isGQL: boolean; isREST: boolean; config: ValidatedConfig };
 
@@ -111,17 +108,17 @@ type ValidationResult = (
 export function validateLiveUpdatesConfiguration(
   originalConfig: ContentfulSubscribeConfig,
 ): ValidationResult {
-  const { isGQL, isREST, sysIds } = validateData(originalConfig.data, 10);
+  const { isGQL, isREST, sysId } = validateData(originalConfig.data, 10);
   const config = validatedConfig(originalConfig, isREST);
 
-  if (sysIds.length === 0) {
+  if (!sysId) {
     debug.error(
       'Live Updates requires the "sys.id" to be present on the provided data',
       config.data,
     );
     return {
       isValid: false,
-      sysIds,
+      sysId,
       isGQL,
       isREST,
       config,
@@ -135,7 +132,7 @@ export function validateLiveUpdatesConfiguration(
     );
     return {
       isValid: false,
-      sysIds,
+      sysId,
       isGQL,
       isREST,
       config,
@@ -145,7 +142,7 @@ export function validateLiveUpdatesConfiguration(
   return {
     isGQL,
     isREST,
-    sysIds,
+    sysId,
     isValid: true,
     config,
   };

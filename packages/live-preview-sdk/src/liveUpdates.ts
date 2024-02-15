@@ -34,22 +34,34 @@ export class LiveUpdates {
 
   /** Receives the data from the message event handler and calls the subscriptions */
   public async receiveMessage(message: MessageFromEditor): Promise<void> {
-    if (message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED) {
-      const { data, subscriptionId } = message as EntryUpdatedMessage;
+    if (
+      ('action' in message && message.action === 'ENTRY_UPDATED') ||
+      message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED
+    ) {
+      const { data } = message as EntryUpdatedMessage;
 
-      const subscription = this.subscriptions.get(subscriptionId);
+      await Promise.all(
+        [...this.subscriptions].map(async ([, s]) => {
+          try {
+            // Only if there was an update, trigger the callback to avoid unnecessary re-renders
+            if (s.sysId === data.sys.id) {
+              s.callback(data);
+            }
+          } catch (error) {
+            this.sendErrorMessage({
+              message: (error as Error).message,
+              payload: { data: s.data, update: data },
+              type: 'SUBSCRIPTION_UPDATE_FAILED',
+            });
 
-      if (subscription) {
-        subscription.callback(data);
-        subscription.data = data;
-        this.subscriptions.set(subscriptionId, subscription);
-      } else {
-        debug.error('Received an update for an unknown subscription', {
-          subscriptionId,
-          data,
-          subscriptions: this.subscriptions,
-        });
-      }
+            debug.error('Failed to apply live update', {
+              error,
+              subscribedData: s.data,
+              updateFromEditor: data,
+            });
+          }
+        }),
+      );
     }
   }
 
@@ -98,13 +110,13 @@ export class LiveUpdates {
    * Will be called once initially for the restored data
    */
   public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysIds, isREST, config } =
+    const { isGQL, isValid, sysId, isREST, config } =
       validateLiveUpdatesConfiguration(originalConfig);
 
     if (!isValid) {
       this.sendErrorMessage({
         message: 'Failed to subscribe',
-        payload: { isGQL, isValid, sysIds, isREST },
+        payload: { isGQL, isValid, sysId, isREST },
         type: 'SUBSCRIPTION_SETUP_FAILED',
       });
       return () => {
@@ -117,7 +129,7 @@ export class LiveUpdates {
 
     this.subscriptions.set(id, {
       ...config,
-      sysIds,
+      sysId,
       gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
     });
 
@@ -134,7 +146,7 @@ export class LiveUpdates {
     const message: Omit<SubscribedMessage, 'action'> | UnsubscribedMessage = {
       type: isGQL ? 'GQL' : 'REST',
       locale,
-      sysIds,
+      entryId: sysId,
       event: 'edit',
       id,
       config: stringify(config),
