@@ -41,7 +41,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: false,
-        sysIds: [],
+        sysId: null,
         isValid: false,
         config,
       });
@@ -65,7 +65,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysIds: ['123'],
+          sysId: '123',
           isValid: true,
           config,
         });
@@ -90,7 +90,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysIds: ['123'],
+          sysId: '123',
           isValid: true,
           config,
         });
@@ -117,7 +117,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysIds: ['123'],
+          sysId: '123',
           isValid: true,
           config,
         });
@@ -141,7 +141,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysIds: ['123'],
+          sysId: '123',
           isValid: true,
           config,
         });
@@ -165,7 +165,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysIds: ['123'],
+          sysId: '123',
           isValid: true,
           config,
         });
@@ -193,7 +193,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysIds: ['123'],
+          sysId: '123',
           isValid: true,
           config,
         });
@@ -221,7 +221,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysIds: [],
+          sysId: null,
           isValid: false,
           config,
         });
@@ -243,7 +243,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: false,
-          sysIds: ['1'],
+          sysId: '1',
           isValid: false,
           config,
         });
@@ -278,7 +278,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysIds: ['123'],
+        sysId: '123',
         isValid: true,
         config,
       });
@@ -310,7 +310,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysIds: ['123'],
+        sysId: '123',
         isValid: true,
         config: {
           ...config,
@@ -353,7 +353,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysIds: ['123'],
+        sysId: '123',
         isValid: true,
         config: {
           ...config,
@@ -393,7 +393,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: true,
-        sysIds: ['123'],
+        sysId: '123',
         isValid: true,
         config: {
           ...config,
