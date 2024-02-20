@@ -1,4 +1,9 @@
-import { vercelStegaDecode, vercelStegaEncode, vercelStegaSplit } from '@vercel/stega';
+import {
+  vercelStegaCombine,
+  vercelStegaDecode,
+  vercelStegaEncode,
+  vercelStegaSplit,
+} from '@vercel/stega';
 
 export type SourceMapMetadata = {
   origin: string;
@@ -12,6 +17,10 @@ export type SourceMapMetadata = {
     locale: string;
   };
 };
+
+export function combine(text: string, metadata: SourceMapMetadata): string {
+  return vercelStegaCombine(text, metadata);
+}
 
 export function encode(metadata: SourceMapMetadata): string {
   return vercelStegaEncode(metadata);
