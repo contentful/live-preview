@@ -1,4 +1,4 @@
-import { validateDataForLiveUpdates } from '@contentful/live-preview-updates';
+import { utils } from '@contentful/live-preview-updates';
 import { stringify } from 'flatted';
 
 import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
@@ -69,9 +69,10 @@ export class LiveUpdates {
    * Will be called once initially for the restored data
    */
   public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysIds, isREST, config } = validateDataForLiveUpdates(originalConfig);
+    const { isGQL, isValid, sysIds, isREST, config } =
+      utils.validateDataForLiveUpdates(originalConfig);
 
-    if (!isValid) {
+    if (!isValid || !config) {
       this.sendErrorMessage({
         message: 'Failed to subscribe',
         payload: { isGQL, isValid, sysIds, isREST },

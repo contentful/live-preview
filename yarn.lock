@@ -471,10 +471,10 @@
   dependencies:
     chalk "^4.1.0"
 
-"@contentful/live-preview-updates@0.1.0-alpha.20":
-  version "0.1.0-alpha.20"
-  resolved "https://registry.yarnpkg.com/@contentful/live-preview-updates/-/live-preview-updates-0.1.0-alpha.20.tgz#81bba7a9c1b13366d12f225f8a94876ebde62ea7"
-  integrity sha512-gvLTx2RBkOMDOyttTycHqKfACqL8oO6i1Gv+nPxV3VvKeb/HdZPcmypRSCDbvxTzpNbzybqOa9bx0jNzbpdDPw==
+"@contentful/live-preview-updates@0.1.0-alpha.21":
+  version "0.1.0-alpha.21"
+  resolved "https://registry.yarnpkg.com/@contentful/live-preview-updates/-/live-preview-updates-0.1.0-alpha.21.tgz#3d3457c4de3a7b622c60b8800abb0f02274f6b62"
+  integrity sha512-JGA6MQrY3TB4BjCNE7HSH17Y096YN7xCG/6wTUZZHqA6tpWZLDh8AtWc/DSOzm6ZV984UvLmaRzh598awIvdcA==
   dependencies:
     "@contentful/content-source-maps" "^0.2.0-alpha.5"
     lodash "^4.17.21"
