@@ -471,6 +471,14 @@
   dependencies:
     chalk "^4.1.0"
 
+"@contentful/live-preview-updates@0.1.0-alpha.20":
+  version "0.1.0-alpha.20"
+  resolved "https://registry.yarnpkg.com/@contentful/live-preview-updates/-/live-preview-updates-0.1.0-alpha.20.tgz#81bba7a9c1b13366d12f225f8a94876ebde62ea7"
+  integrity sha512-gvLTx2RBkOMDOyttTycHqKfACqL8oO6i1Gv+nPxV3VvKeb/HdZPcmypRSCDbvxTzpNbzybqOa9bx0jNzbpdDPw==
+  dependencies:
+    "@contentful/content-source-maps" "^0.2.0-alpha.5"
+    lodash "^4.17.21"
+
 "@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.3.0":
   version "16.3.4"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.3.4.tgz#c5fc9c834dde03d4c4ee189900d304ce1888a74b"

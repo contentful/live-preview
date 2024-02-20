@@ -1,7 +1,7 @@
+import { validateDataForLiveUpdates } from '@contentful/live-preview-updates';
 import { stringify } from 'flatted';
 
 import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
-import { validateLiveUpdatesConfiguration } from './helpers/validation';
 import type {
   ContentfulSubscribeConfig,
   EditorMessage,
@@ -69,8 +69,7 @@ export class LiveUpdates {
    * Will be called once initially for the restored data
    */
   public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysIds, isREST, config } =
-      validateLiveUpdatesConfiguration(originalConfig);
+    const { isGQL, isValid, sysIds, isREST, config } = validateDataForLiveUpdates(originalConfig);
 
     if (!isValid) {
       this.sendErrorMessage({
