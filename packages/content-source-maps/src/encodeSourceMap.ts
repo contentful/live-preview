@@ -1,7 +1,7 @@
 import jsonPointer from 'json-pointer';
 
 import { clone } from './utils.js';
-import { combine } from './encode.js';
+import { SourceMapMetadata, combine } from './encode.js';
 import { encodeRichTextValue, isRichTextValue } from './richText.js';
 import { GraphQLResponse } from './types.js';
 
@@ -62,7 +62,7 @@ export const encodeGraphQLResponse = (
       const currentValue = jsonPointer.get(data, pointer);
 
       if (currentValue !== null) {
-        const encodedValue = combine(currentValue, {
+        const hiddenStrings: SourceMapMetadata = {
           origin: 'contentful.com',
           href,
           contentful: {
@@ -73,11 +73,12 @@ export const encodeGraphQLResponse = (
             entity: entityId,
             entityType,
           },
-        });
+        };
 
         if (isRichTextValue(currentValue)) {
-          encodeRichTextValue({ pointer, mappings, data, encodedValue });
+          encodeRichTextValue({ pointer, mappings, data, hiddenStrings });
         } else {
+          const encodedValue = combine(currentValue, hiddenStrings);
           jsonPointer.set(data, pointer, encodedValue);
         }
       }
