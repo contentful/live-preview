@@ -1,6 +1,7 @@
 import jsonPointer from 'json-pointer';
 
 import { Mappings } from './types.js';
+import { SourceMapMetadata, combine } from './encode.js';
 
 export const isRichTextValue = (value: unknown): boolean =>
   !!(value && typeof value === 'object' && 'nodeType' in value && value.nodeType);
@@ -9,12 +10,12 @@ export const encodeRichTextValue = ({
   pointer,
   mappings,
   data,
-  encodedValue,
+  hiddenStrings,
 }: {
   pointer: string;
   mappings: Mappings;
   data: any;
-  encodedValue: string;
+  hiddenStrings: SourceMapMetadata;
 }) => {
   const source = mappings[pointer];
   // remove old pointer to rich text field as we will just be mapping the text nodes
@@ -24,7 +25,8 @@ export const encodeRichTextValue = ({
   for (const textNode of textNodes) {
     mappings[textNode] = source;
     const currentTextNodeValue = jsonPointer.get(data, textNode);
-    jsonPointer.set(data, textNode, `${encodedValue}${currentTextNodeValue}`);
+    const encodedValue = combine(currentTextNodeValue, hiddenStrings);
+    jsonPointer.set(data, textNode, encodedValue);
   }
 };
 

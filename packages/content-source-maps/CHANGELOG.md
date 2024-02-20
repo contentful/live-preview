@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.9](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.8...@contentful/content-source-maps@0.2.0-alpha.9) (2024-02-20)
+
+
+### Bug Fixes
+
+* csm combine method for rich text ([c38139d](https://github.com/contentful/live-preview/commit/c38139d3efcd96e9b73b1b5c119cfef303fa27fe))
+
+
+
+
+
+# [0.2.0-alpha.8](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.7...@contentful/content-source-maps@0.2.0-alpha.8) (2024-02-20)
+
+
+### Features
+
+* use stega combine method ([#583](https://github.com/contentful/live-preview/issues/583)) ([51883b2](https://github.com/contentful/live-preview/commit/51883b24f156217f290af21e0c3dc521aee27e60))
+
+
+
+
+
 # [0.2.0-alpha.7](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.6...@contentful/content-source-maps@0.2.0-alpha.7) (2024-02-15)
 
 
