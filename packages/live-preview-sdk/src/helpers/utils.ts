@@ -1,4 +1,5 @@
 import { DocumentNode, SelectionNode } from 'graphql';
+import gql from 'graphql-tag';
 
 import { version } from '../../package.json';
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
@@ -189,7 +190,9 @@ export function gatherFieldInformation(
  * Parses the GraphQL query information and extracts the information,
  * we're using for processing the live updates (requested fields, alias)
  */
-export function parseGraphQLParams(query: DocumentNode): Params {
+export function parseGraphQLParams(rawQuery: DocumentNode | string): Params {
+  // If the query is a string, we need to parse it first
+  const query = typeof rawQuery === 'string' ? gql(rawQuery) : rawQuery;
   const generated: Array<Generated> = [];
 
   for (const def of query.definitions) {
