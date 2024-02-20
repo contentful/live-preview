@@ -1,19 +1,9 @@
 import jsonPointer from 'json-pointer';
 
 import { clone } from './utils.js';
-import { encode } from './encode.js';
+import { combine } from './encode.js';
 import { encodeRichTextValue, isRichTextValue } from './richText.js';
 import { GraphQLResponse } from './types.js';
-
-const isUrlOrIsoDate = (value: string) => {
-  // Regular expression for URL validation
-  const urlRegex = /^(http|https):\/\/[^ "]+$/;
-  // Regular expression for ISO 8601 date validation
-  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?([+-]\d{2}:\d{2}|Z)?$/;
-
-  // Check if the string matches URL or ISO 8601 date format
-  return urlRegex.test(value) || isoDateRegex.test(value);
-};
 
 export const getHref = (
   entityId: string,
@@ -71,8 +61,8 @@ export const encodeGraphQLResponse = (
     if (jsonPointer.has(data, pointer)) {
       const currentValue = jsonPointer.get(data, pointer);
 
-      if (!isUrlOrIsoDate(currentValue) && currentValue !== null) {
-        const encodedValue = encode({
+      if (currentValue !== null) {
+        const encodedValue = combine(currentValue, {
           origin: 'contentful.com',
           href,
           contentful: {
@@ -88,7 +78,7 @@ export const encodeGraphQLResponse = (
         if (isRichTextValue(currentValue)) {
           encodeRichTextValue({ pointer, mappings, data, encodedValue });
         } else {
-          jsonPointer.set(data, pointer, `${encodedValue}${currentValue}`);
+          jsonPointer.set(data, pointer, encodedValue);
         }
       }
     } else {
