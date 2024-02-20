@@ -1,4 +1,4 @@
-import { decode } from '@contentful/content-source-maps';
+//import { decode } from '@contentful/content-source-maps';
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
 
 const isTaggedElement = (node?: Node | null): boolean => {
@@ -58,89 +58,92 @@ export function getInspectorModeAttributes(
 /**
  * Query the document for all tagged elements
  */
-export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
+export function getAllTaggedElements(_root = window.document, _ignoreManual?: boolean): Element[] {
   // The fastest way to look up & iterate over DOM. Ref:
   // https://stackoverflow.com/a/2579869
   // Initialize a TreeWalker to traverse all nodes, using a filter function to determine which nodes to consider.
   // Terminology:
   // FILTER_SKIP: Skip the current node
   // FILTER_REJECT: Skip the current node and all its children
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
-    // If the node is a text node, decode its content.
-    if (node.nodeType === Node.TEXT_NODE) {
-      const text = node.textContent ?? '';
+  // @TODO: will re-enable in next PR
+  // const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
+  //   // If the node is a text node, decode its content.
 
-      // Decode the text content to check for Inspector Mode CSM
-      const decoded = decode(text);
+  //   if (node.nodeType === Node.TEXT_NODE) {
+  //     const text = node.textContent ?? '';
 
-      // Skip the node if it does not have Inspector Mode CSM
-      if (decoded?.origin !== 'contentful.com') {
-        return NodeFilter.FILTER_SKIP;
-      }
+  //     // Decode the text content to check for Inspector Mode CSM
+  //     const decoded = decode(text);
 
-      return isTaggedElement(node.parentElement)
-        ? ignoreManual
-          ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_SKIP
-        : NodeFilter.FILTER_ACCEPT;
-    }
+  //     // Skip the node if it does not have Inspector Mode CSM
+  //     if (decoded?.origin !== 'contentful.com') {
+  //       return NodeFilter.FILTER_SKIP;
+  //     }
 
-    // For non-text nodes, if ignoreManual is true, skip manually tagged elements.
-    if (ignoreManual) {
-      return NodeFilter.FILTER_SKIP;
-    }
+  //     return isTaggedElement(node.parentElement)
+  //       ? ignoreManual
+  //         ? NodeFilter.FILTER_ACCEPT
+  //         : NodeFilter.FILTER_SKIP
+  //       : NodeFilter.FILTER_ACCEPT;
+  //   }
 
-    // Accept the node if it is tagged according to the isTaggedElement function, else skip.
-    return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-  });
+  //   // For non-text nodes, if ignoreManual is true, skip manually tagged elements.
+  //   if (ignoreManual) {
+  //     return NodeFilter.FILTER_SKIP;
+  //   }
+
+  //   // Accept the node if it is tagged according to the isTaggedElement function, else skip.
+  //   return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+  // });
 
   const elements: Element[] = [];
 
   // Iterate over the nodes accepted by the TreeWalker.
-  while (walker.nextNode()) {
-    const node = walker.currentNode;
+  // @TODO: will re-enable in next PR
+  // while (walker.nextNode()) {
+  //   const node = walker.currentNode;
 
-    // Add element nodes directly to the elements array.
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      elements.push(walker.currentNode as Element);
-      continue;
-    }
+  //   // Add element nodes directly to the elements array.
+  //   if (node.nodeType === Node.ELEMENT_NODE) {
+  //     elements.push(walker.currentNode as Element);
+  //     continue;
+  //   }
 
-    // Skip nodes without text content.
-    if (!node.textContent) {
-      continue;
-    }
+  //   // Skip nodes without text content.
+  //   if (!node.textContent) {
+  //     continue;
+  //   }
 
-    // Decode the text content for further processing.
-    const decoded = decode(node.textContent);
+  //   // Decode the text content for further processing.
+  //   const decoded = decode(node.textContent);
 
-    // Skip if the decoded CSM is not from Contentful.
-    if (!decoded?.contentful) {
-      continue;
-    }
+  //   // Skip if the decoded CSM is not from Contentful.
+  //   if (!decoded?.contentful) {
+  //     continue;
+  //   }
 
-    const { contentful } = decoded;
-    const el = node.parentElement;
+  //   const { contentful } = decoded;
+  //   const el = node.parentElement;
 
-    // Skip if the parent element does not exist.
-    if (!el) {
-      continue;
-    }
+  //   // Skip if the parent element does not exist.
+  //   if (!el) {
+  //     continue;
+  //   }
 
-    // Set attributes on the element based on the decoded CSM data.
-    if (contentful.entityType === 'Entry') {
-      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, contentful.entity);
-    } else {
-      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
-    }
+  //   // Set attributes on the element based on the decoded CSM data.
+  //   if (contentful.entityType === 'Entry') {
+  //     el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, contentful.entity);
+  //   } else {
+  //     el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
+  //   }
 
-    // TODO: add space/env ids to properly handle cross-space content
-    el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
-    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
+  //   // TODO: add space/env ids to properly handle cross-space content
+  //   el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
+  //   el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
 
-    // Add the element to the elements array after setting attributes.
-    elements.push(el);
-  }
+  //   // Add the element to the elements array after setting attributes.
+  //   elements.push(el);
+  // }
 
   return elements;
 }
