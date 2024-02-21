@@ -161,6 +161,7 @@ type ValidationResult = (
 ) & { isGQL: boolean; isREST: boolean; sysIds: string[]; config: ValidatedConfig };
 
 /**
+ * @TODO: We are going to remove this in this ticket https://contentful.atlassian.net/browse/TOL-1872?atlOrigin=eyJpIjoiNDY2ZjMyZGY0NzMyNGFiMTg1ODY1MjgwOGM3MzQ0OTkiLCJwIjoiaiJ9
  * **Basic** validating of the subscribed configuration
  * Is it GraphQL or REST and does it contain the sys information
  */
