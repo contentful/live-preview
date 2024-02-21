@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from 'graphql-tag';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { debug } from '../helpers';
-import { validateLiveUpdatesConfiguration } from '../helpers/validation';
+import { debug } from '../helpers/index.js';
+import { validateLiveUpdatesConfiguration } from '../helpers/validation.js';
 
 vi.mock('../helpers/debug');
 

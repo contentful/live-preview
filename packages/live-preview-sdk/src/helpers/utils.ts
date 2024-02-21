@@ -1,10 +1,10 @@
 import { DocumentNode, SelectionNode } from 'graphql';
 
 import { version } from '../../package.json';
-import { LIVE_PREVIEW_SDK_SOURCE } from '../constants';
-import type { EditorMessage, MessageFromSDK } from '../messages';
-import { PostMessageMethods } from '../messages';
-import { debug } from './debug';
+import { LIVE_PREVIEW_SDK_SOURCE } from '../constants.js';
+import type { EditorMessage, MessageFromSDK } from '../messages.js';
+import { PostMessageMethods } from '../messages.js';
+import { debug } from './debug.js';
 
 type Params = Map<string, { alias: Map<string, string>; fields: Set<string> }>;
 type Generated = { __typename: string; alias?: string; name: string };

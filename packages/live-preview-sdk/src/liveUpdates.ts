@@ -1,7 +1,13 @@
 import { stringify } from 'flatted';
 
-import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
-import { validateLiveUpdatesConfiguration } from './helpers/validation';
+import {
+  StorageMap,
+  debug,
+  generateUID,
+  parseGraphQLParams,
+  sendMessageToEditor,
+} from './helpers/index.js';
+import { validateLiveUpdatesConfiguration } from './helpers/validation.js';
 import type {
   ContentfulSubscribeConfig,
   EditorMessage,
@@ -11,9 +17,9 @@ import type {
   PostMessageMethods,
   SubscribedMessage,
   UnsubscribedMessage,
-} from './index';
-import { LivePreviewPostMessageMethods } from './messages';
-import { Argument, Entity, Subscription, hasSysInformation } from './types';
+} from './index.js';
+import { LivePreviewPostMessageMethods } from './messages.js';
+import { Argument, Entity, Subscription, hasSysInformation } from './types.js';
 
 /**
  * LiveUpdates for the Contentful Live Preview mode

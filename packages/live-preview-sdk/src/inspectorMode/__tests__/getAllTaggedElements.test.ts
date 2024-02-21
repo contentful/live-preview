@@ -1,10 +1,10 @@
 import { SourceMapMetadata, encode } from '@contentful/content-source-maps';
 import { describe, expect, it } from 'vitest';
 
-import { InspectorModeDataAttributes } from '../types';
-import { getAllTaggedElements } from '../utils';
+import { InspectorModeDataAttributes } from '../types.js';
+import { getAllTaggedElements } from '../utils.js';
 
-describe.skip('getAllTaggedElements', () => {
+describe('getAllTaggedElements', () => {
   const dataEntry = InspectorModeDataAttributes.ENTRY_ID;
   const dataAsset = InspectorModeDataAttributes.ASSET_ID;
   const dataField = InspectorModeDataAttributes.FIELD_ID;

@@ -1,8 +1,8 @@
 import type { Asset, Entry } from 'contentful';
 import type { SysLink } from 'contentful-management';
 
-import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
-import { sendMessageToEditor } from './helpers';
+import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
+import { sendMessageToEditor } from './helpers/index.js';
 import {
   InspectorModeEventMethods,
   type InspectorModeAttributes,
@@ -11,8 +11,8 @@ import {
   type InspectorModeResizeMessage,
   type InspectorModeScrollMessage,
   type InspectorModeTaggedElementsMessage,
-} from './inspectorMode/types';
-import type { Argument, ContentType, EntityReferenceMap } from './types';
+} from './inspectorMode/types.js';
+import type { Argument, ContentType, EntityReferenceMap } from './types.js';
 
 enum LivePreviewPostMessageMethods {
   CONNECTED = 'CONNECTED',

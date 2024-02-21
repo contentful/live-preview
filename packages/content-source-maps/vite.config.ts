@@ -17,5 +17,5 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
   },
-  plugins: [dts()],
+  plugins: [dts({ rollupTypes: true })],
 });
