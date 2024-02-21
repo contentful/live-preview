@@ -1,7 +1,13 @@
-import { utils } from '@contentful/live-preview-updates';
 import { stringify } from 'flatted';
 
-import { StorageMap, debug, generateUID, parseGraphQLParams, sendMessageToEditor } from './helpers';
+import {
+  StorageMap,
+  debug,
+  generateUID,
+  parseGraphQLParams,
+  sendMessageToEditor,
+} from './helpers/index.js';
+import { validateLiveUpdatesConfiguration } from './helpers/validation.js';
 import type {
   ContentfulSubscribeConfig,
   EditorMessage,
@@ -11,9 +17,9 @@ import type {
   PostMessageMethods,
   SubscribedMessage,
   UnsubscribedMessage,
-} from './index';
-import { LivePreviewPostMessageMethods } from './messages';
-import { Entity, Subscription } from './types';
+} from './index.js';
+import { LivePreviewPostMessageMethods } from './messages.js';
+import { Entity, Subscription } from './types.js';
 
 /**
  * LiveUpdates for the Contentful Live Preview mode
@@ -70,7 +76,7 @@ export class LiveUpdates {
    */
   public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
     const { isGQL, isValid, sysIds, isREST, config } =
-      utils.validateDataForLiveUpdates(originalConfig);
+      validateLiveUpdatesConfiguration(originalConfig);
 
     if (!isValid || !config) {
       this.sendErrorMessage({

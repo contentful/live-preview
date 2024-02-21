@@ -1,10 +1,10 @@
 {
   "name": "@contentful/live-preview",
-  "version": "3.0.0-alpha.14",
+  "version": "3.0.0-alpha.16",
   "author": "Contentful GmbH",
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
-  "source": "./src/index.tsx",
+  "source": "./src/index.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -44,8 +44,7 @@
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
-    "@contentful/live-preview-updates": "0.1.0-alpha.21",
-    "@contentful/content-source-maps": "0.2.0-alpha.9",
+    "@contentful/content-source-maps": "0.2.0-alpha.11",
     "@contentful/rich-text-types": "^16.2.0",
     "flatted": "^3.2.9",
     "graphql-tag": "^2.12.6",
@@ -58,18 +57,14 @@
     "@types/node": "^20.1.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react-swc": "^3.0.0",
+    "@vitejs/plugin-react-swc": "3.6.0",
     "contentful": "^10.3.4",
     "contentful-management": "^11.0.1",
     "graphql": "^16.6.0",
     "jsdom": "^24.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "type-fest": "^4.0.0",
-    "typescript": "^5.0.2",
-    "vite": "^5.0.2",
-    "vite-plugin-dts": "2.3.0",
-    "vitest": "^1.0.4"
+    "type-fest": "^4.0.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",

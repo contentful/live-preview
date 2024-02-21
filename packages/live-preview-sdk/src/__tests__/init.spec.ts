@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @vitest-environment jsdom
-import { describe, it, expect, vi, Mock, beforeEach } from 'vitest';
+import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { isInsideIframe } from '../helpers';
-import { ContentfulLivePreview } from '../index';
-import { InspectorMode } from '../inspectorMode';
-import { LiveUpdates } from '../liveUpdates';
+import { isInsideIframe } from '../helpers/index.js';
+import { ContentfulLivePreview } from '../index.js';
+import { InspectorMode } from '../inspectorMode/index.js';
+import { LiveUpdates } from '../liveUpdates.js';
 
 vi.mock('../helpers');
 
@@ -63,7 +63,7 @@ describe('init', () => {
 
   it('warns about invalid init call (missing locale)', () => {
     expect(ContentfulLivePreview.init).toThrow(
-      "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)"
+      "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
     );
   });
 

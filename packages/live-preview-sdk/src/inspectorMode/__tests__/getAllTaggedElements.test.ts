@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-
 import { SourceMapMetadata, encode } from '@contentful/content-source-maps';
-import { InspectorModeDataAttributes } from '../types';
-import { getAllTaggedElements } from '../utils';
+import { describe, expect, it } from 'vitest';
+
+import { InspectorModeDataAttributes } from '../types.js';
+import { getAllTaggedElements } from '../utils.js';
 
 describe('getAllTaggedElements', () => {
   const dataEntry = InspectorModeDataAttributes.ENTRY_ID;
@@ -19,7 +19,7 @@ describe('getAllTaggedElements', () => {
       const dom = html(`
 		<div>
 		  <!-- Entries -->
-		  <div 
+		  <div
 		    id="entry-1"
 			${dataEntry}="entry-1"
 			${dataField}="field-1"></div>
@@ -31,7 +31,7 @@ describe('getAllTaggedElements', () => {
 			${dataLocale}="locale-2"></div>
 
 		  <!-- Assets -->
-		  <div 
+		  <div
 		    id="asset-1"
 			${dataAsset}="asset-1"
 			${dataField}="field-1"></div>
@@ -79,7 +79,7 @@ describe('getAllTaggedElements', () => {
 		<div>
 		  <!-- Keep -->
 		  <div id="entry" ${dataEntry}="entry-id" ${dataField}="field-id"></div>
-			
+
 		  <!-- Ignore -->
 		  <div ${dataField}="field-1"></div>
 

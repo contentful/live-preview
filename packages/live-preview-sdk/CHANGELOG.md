@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.16](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.15...@contentful/live-preview@3.0.0-alpha.16) (2024-02-21)
+
+
+### Features
+
+* restore csm in LP & fix build ([#585](https://github.com/contentful/live-preview/issues/585)) ([20f12a2](https://github.com/contentful/live-preview/commit/20f12a23b7cd1921a23c806e6acf0bc5085d9a45))
+
+
+
+
+
+# [3.0.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.14...@contentful/live-preview@3.0.0-alpha.15) (2024-02-20)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
 # [3.0.0-alpha.14](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.13...@contentful/live-preview@3.0.0-alpha.14) (2024-02-20)
 
 **Note:** Version bump only for package @contentful/live-preview

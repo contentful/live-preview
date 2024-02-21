@@ -1,5 +1,6 @@
 import { decode } from '@contentful/content-source-maps';
-import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
+
+import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
 
 const isTaggedElement = (node?: Node | null): boolean => {
   if (!node) {
@@ -67,6 +68,7 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
   // FILTER_REJECT: Skip the current node and all its children
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
     // If the node is a text node, decode its content.
+
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent ?? '';
 

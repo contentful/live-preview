@@ -8,12 +8,12 @@ import {
   pollUrlChanges,
   sendMessageToEditor,
   setDebugMode,
-} from './helpers';
-import { isValidMessage } from './helpers/validateMessage';
-import { InspectorMode } from './inspectorMode';
-import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types';
-import { getAllTaggedEntries } from './inspectorMode/utils';
-import { LiveUpdates } from './liveUpdates';
+} from './helpers/index.js';
+import { isValidMessage } from './helpers/validateMessage.js';
+import { InspectorMode } from './inspectorMode/index.js';
+import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types.js';
+import { getAllTaggedEntries } from './inspectorMode/utils.js';
+import { LiveUpdates } from './liveUpdates.js';
 import {
   LivePreviewPostMessageMethods,
   openAssetInEditorUtility,
@@ -23,15 +23,15 @@ import {
   type MessageFromEditor,
   type PostMessageMethods,
   type UrlChangedMessage,
-} from './messages';
-import { SaveEvent } from './saveEvent';
+} from './messages.js';
+import { SaveEvent } from './saveEvent.js';
 import type {
   Argument,
   LivePreviewAssetProps,
   LivePreviewEntryProps,
   LivePreviewProps,
   SubscribeCallback,
-} from './types';
+} from './types.js';
 
 export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
@@ -307,7 +307,7 @@ export class ContentfulLivePreview {
   }
 }
 
-export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
+export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
 
-export * from './messages';
+export * from './messages.js';
 export { encodeGraphQLResponse };

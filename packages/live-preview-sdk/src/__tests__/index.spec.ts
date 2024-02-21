@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { Mock, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { isInsideIframe, sendMessageToEditor } from '../helpers';
-import { ContentfulLivePreview } from '../index';
-import { InspectorMode } from '../inspectorMode';
-import { InspectorModeDataAttributes } from '../inspectorMode/types';
-import { LiveUpdates } from '../liveUpdates';
-import { SaveEvent } from '../saveEvent';
+import { isInsideIframe, sendMessageToEditor } from '../helpers/index.js';
+import { ContentfulLivePreview } from '../index.js';
+import { InspectorMode } from '../inspectorMode/index.js';
+import { InspectorModeDataAttributes } from '../inspectorMode/types.js';
+import { LiveUpdates } from '../liveUpdates.js';
+import { SaveEvent } from '../saveEvent.js';
 
 vi.mock('../inspectorMode');
 vi.mock('../liveUpdates');

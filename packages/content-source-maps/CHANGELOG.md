@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.11](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.10...@contentful/content-source-maps@0.2.0-alpha.11) (2024-02-21)
+
+
+### Features
+
+* restore csm in LP & fix build ([#585](https://github.com/contentful/live-preview/issues/585)) ([20f12a2](https://github.com/contentful/live-preview/commit/20f12a23b7cd1921a23c806e6acf0bc5085d9a45))
+
+
+
+
+
+# [0.2.0-alpha.10](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.9...@contentful/content-source-maps@0.2.0-alpha.10) (2024-02-20)
+
+**Note:** Version bump only for package @contentful/content-source-maps
+
+
+
+
+
 # [0.2.0-alpha.9](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.8...@contentful/content-source-maps@0.2.0-alpha.9) (2024-02-20)
 
 
