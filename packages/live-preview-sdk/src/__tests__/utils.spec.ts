@@ -1,6 +1,6 @@
-import { describe, test, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
-import { clone, generateUID, setProtocolToHttps } from '../helpers';
+import { clone, generateUID, setProtocolToHttps } from '../helpers/index.js';
 
 describe('generateUID', () => {
   test('generates unique IDs', () => {

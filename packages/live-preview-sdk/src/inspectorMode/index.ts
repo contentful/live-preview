@@ -1,11 +1,11 @@
-import { sendMessageToEditor } from '../helpers';
-import { type MessageFromEditor } from '../messages';
+import { sendMessageToEditor } from '../helpers/index.js';
+import { type MessageFromEditor } from '../messages.js';
 import {
   InspectorModeDataAttributes,
   InspectorModeEventMethods,
   type InspectorModeChangedMessage,
-} from './types';
-import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
+} from './types.js';
+import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
 
 type InspectorModeOptions = {
   locale: string;

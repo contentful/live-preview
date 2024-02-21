@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
-import { isValidMessage } from '../helpers/validateMessage';
+import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants.js';
+import { isValidMessage } from '../helpers/validateMessage.js';
 
 describe('isValidMessage', () => {
   it('should return false because the event.data is missing', () => {
@@ -12,7 +12,7 @@ describe('isValidMessage', () => {
   });
   it('should return false because the event.source is wrong', () => {
     expect(
-      isValidMessage({ data: { any: 'data', source: 'webpack' } } as MessageEvent)
+      isValidMessage({ data: { any: 'data', source: 'webpack' } } as MessageEvent),
     ).toBeFalsy();
   });
   it('should return false because the event.from is wrong', () => {
@@ -23,12 +23,12 @@ describe('isValidMessage', () => {
   });
   it('should return true because the event.source is valid', () => {
     expect(
-      isValidMessage({ data: { any: 'data', source: LIVE_PREVIEW_EDITOR_SOURCE } } as MessageEvent)
+      isValidMessage({ data: { any: 'data', source: LIVE_PREVIEW_EDITOR_SOURCE } } as MessageEvent),
     ).toBeTruthy();
   });
   it('should return true because the event.from is valid', () => {
     expect(
-      isValidMessage({ data: { any: 'data', from: 'live-preview' } } as MessageEvent)
+      isValidMessage({ data: { any: 'data', from: 'live-preview' } } as MessageEvent),
     ).toBeTruthy();
   });
 });

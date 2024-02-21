@@ -1,10 +1,9 @@
 import { DocumentNode } from 'graphql';
-import gql from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
-import type { ContentfulSubscribeConfig } from '..';
-
-import { Argument, SubscribeCallback } from '../types';
-import { debug } from './debug';
+import type { ContentfulSubscribeConfig } from '../index.js';
+import { Argument, SubscribeCallback } from '../types.js';
+import { debug } from './debug.js';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 

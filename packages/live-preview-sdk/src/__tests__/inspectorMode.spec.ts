@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants';
-import { sendMessageToEditor } from '../helpers';
-import { InspectorMode } from '../inspectorMode';
-import { InspectorModeEventMethods, LivePreviewPostMessageMethods } from '../messages';
+import { LIVE_PREVIEW_EDITOR_SOURCE } from '../constants.js';
+import { sendMessageToEditor } from '../helpers/index.js';
+import { InspectorMode } from '../inspectorMode/index.js';
+import { InspectorModeEventMethods, LivePreviewPostMessageMethods } from '../messages.js';
 
 vi.mock('../helpers');
 

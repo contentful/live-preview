@@ -15,10 +15,15 @@ import {
 import { DocumentNode } from 'graphql';
 import isEqual from 'lodash.isequal';
 
-import { debounce } from './helpers';
-import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index';
-import type { InspectorModeTags } from './inspectorMode/types';
-import { Argument, LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps } from './types';
+import { debounce } from './helpers/index.js';
+import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index.js';
+import type { InspectorModeTags } from './inspectorMode/types.js';
+import {
+  Argument,
+  LivePreviewAssetProps,
+  LivePreviewEntryProps,
+  LivePreviewProps,
+} from './types.js';
 
 type UseEffectParams = Parameters<typeof useEffect>;
 type EffectCallback = UseEffectParams[0];

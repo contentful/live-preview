@@ -1,7 +1,7 @@
-import { debug } from './helpers';
-import { getAllTaggedEntries } from './inspectorMode/utils';
-import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages';
-import { SubscribeCallback } from './types';
+import { debug } from './helpers/index.js';
+import { getAllTaggedEntries } from './inspectorMode/utils.js';
+import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages.js';
+import { SubscribeCallback } from './types.js';
 
 export class SaveEvent {
   locale: string;

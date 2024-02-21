@@ -1,9 +1,9 @@
 import jsonPointer from 'json-pointer';
 
-import { clone } from './utils.js';
 import { SourceMapMetadata, combine } from './encode.js';
 import { encodeRichTextValue, isRichTextValue } from './richText.js';
 import { GraphQLResponse } from './types.js';
+import { clone } from './utils.js';
 
 export const getHref = (
   entityId: string,
