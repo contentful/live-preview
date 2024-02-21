@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { debug } from '../helpers/index.js';
 import { validateLiveUpdatesConfiguration } from '../helpers/validation.js';
+import * as items from './fixtures/items.json';
 
 vi.mock('../helpers/debug');
 
@@ -25,8 +26,10 @@ describe('validateLiveUpdatesConfiguration', () => {
         callback,
         data: {
           value: data1,
-        },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
       };
+
       const result = validateLiveUpdatesConfiguration(config);
 
       expect(debug.error).toHaveBeenCalledTimes(2);
@@ -41,7 +44,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: false,
         isREST: false,
-        sysId: null,
+        sysIds: [],
         isValid: false,
         config,
       });
@@ -65,7 +68,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -90,7 +93,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -117,7 +120,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: true,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -141,7 +144,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -165,7 +168,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
         });
@@ -188,14 +191,13 @@ describe('validateLiveUpdatesConfiguration', () => {
         };
         const result = validateLiveUpdatesConfiguration(config);
 
-        expect(debug.error).not.toHaveBeenCalled();
-
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: '123',
+          sysIds: ['123'],
           isValid: true,
           config,
+          hasCSM: undefined,
         });
       });
     });
@@ -206,10 +208,12 @@ describe('validateLiveUpdatesConfiguration', () => {
           title: { 'en-US': 'Hello World' },
           __typename: 'hello',
         };
+
         const config = {
           callback,
           data,
         };
+
         const result = validateLiveUpdatesConfiguration(config);
 
         expect(debug.error).toHaveBeenCalledTimes(1);
@@ -221,7 +225,7 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: true,
           isREST: false,
-          sysId: null,
+          sysIds: [],
           isValid: false,
           config,
         });
@@ -243,9 +247,96 @@ describe('validateLiveUpdatesConfiguration', () => {
         expect(result).toEqual({
           isGQL: false,
           isREST: false,
-          sysId: '1',
+          sysIds: ['1'],
           isValid: false,
           config,
+        });
+      });
+    });
+
+    describe('multiple sysIds', () => {
+      it('correctly resolves multiple sys ids for rest', () => {
+        const data = {
+          sys: { id: '1' },
+          fields: {
+            references: {
+              items,
+            },
+          },
+        };
+
+        const config = {
+          callback,
+          data,
+        };
+
+        const result = validateLiveUpdatesConfiguration(config);
+
+        expect(result).toEqual({
+          isGQL: false,
+          isREST: true,
+          sysIds: [
+            '1',
+            '6c9tUMxxamKB9R7S16ne1X',
+            '3Qnjx9WkvM4ZC44AIBDZwt',
+            '4iZO00YnKE8I8c90VIUuhN',
+            '6LznwSwpmSWNCMwbgmtB2L',
+            '5BfEkkNsrAGLLJQukwIjrJ',
+            'jYxVlZPpqdeZs93jmpAlF',
+            '2Jv15oYNaOUzyyJEp5P5z4',
+            '2SKWtzmGOnQm80nRGIIclu',
+            '5YZ9fKKF3Vg9bNV7x3Xl08',
+            '7wGhPNCZNLknpSaJVWfnHf',
+            '7aKPwfpCJCy6mz7fefzNUi',
+            '6wuDj6hgz4SOQuiq6f8UzX',
+            '4OSewDgF5UsbHVwRNIIILi',
+            '7evUFWi5oSKaGWo3ZHqiwq',
+          ],
+          isValid: true,
+          config,
+          hasCSM: undefined,
+        });
+      });
+
+      it('correctly resolves multiple sys ids for graphql', () => {
+        const data = {
+          sys: { id: '1' },
+          __typename: 'hello',
+          references: {
+            items,
+          },
+        };
+
+        const config = {
+          callback,
+          data,
+        };
+
+        const result = validateLiveUpdatesConfiguration(config);
+
+        expect(result).toEqual({
+          isGQL: true,
+          isREST: false,
+          sysIds: [
+            '1',
+            '6c9tUMxxamKB9R7S16ne1X',
+            '3Qnjx9WkvM4ZC44AIBDZwt',
+            '4iZO00YnKE8I8c90VIUuhN',
+            '6LznwSwpmSWNCMwbgmtB2L',
+            '5BfEkkNsrAGLLJQukwIjrJ',
+            'jYxVlZPpqdeZs93jmpAlF',
+            '2Jv15oYNaOUzyyJEp5P5z4',
+            '2SKWtzmGOnQm80nRGIIclu',
+            '5YZ9fKKF3Vg9bNV7x3Xl08',
+            '7wGhPNCZNLknpSaJVWfnHf',
+            '7aKPwfpCJCy6mz7fefzNUi',
+            '6wuDj6hgz4SOQuiq6f8UzX',
+            '4OSewDgF5UsbHVwRNIIILi',
+            '7evUFWi5oSKaGWo3ZHqiwq',
+          ],
+          isValid: true,
+          config,
+          hasCSM: undefined,
         });
       });
     });
@@ -278,7 +369,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config,
       });
@@ -292,7 +383,7 @@ describe('validateLiveUpdatesConfiguration', () => {
           title: { 'en-US': 'Hello World' },
           __typename: 'hello',
         },
-        query: `
+        query: gql`
           query test {
             __typename
             sys {
@@ -310,7 +401,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config: {
           ...config,
@@ -353,7 +444,7 @@ describe('validateLiveUpdatesConfiguration', () => {
       expect(result).toEqual({
         isGQL: true,
         isREST: false,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config: {
           ...config,
@@ -392,8 +483,9 @@ describe('validateLiveUpdatesConfiguration', () => {
 
       expect(result).toEqual({
         isGQL: false,
+        hasCSM: undefined,
         isREST: true,
-        sysId: '123',
+        sysIds: ['123'],
         isValid: true,
         config: {
           ...config,

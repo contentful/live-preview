@@ -19,7 +19,7 @@ import type {
   UnsubscribedMessage,
 } from './index.js';
 import { LivePreviewPostMessageMethods } from './messages.js';
-import { Argument, Entity, Subscription, hasSysInformation } from './types.js';
+import { Entity, Subscription } from './types.js';
 
 /**
  * LiveUpdates for the Contentful Live Preview mode
@@ -44,62 +44,21 @@ export class LiveUpdates {
       ('action' in message && message.action === 'ENTRY_UPDATED') ||
       message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED
     ) {
-      const { data } = message as EntryUpdatedMessage;
+      const { data, subscriptionId } = message as EntryUpdatedMessage;
 
-      await Promise.all(
-        [...this.subscriptions].map(async ([, s]) => {
-          try {
-            // Only if there was an update, trigger the callback to avoid unnecessary re-renders
-            if (s.sysId === data.sys.id) {
-              s.callback(data);
-            }
-          } catch (error) {
-            this.sendErrorMessage({
-              message: (error as Error).message,
-              payload: { data: s.data, update: data },
-              type: 'SUBSCRIPTION_UPDATE_FAILED',
-            });
+      const subscription = this.subscriptions.get(subscriptionId);
 
-            debug.error('Failed to apply live update', {
-              error,
-              subscribedData: s.data,
-              updateFromEditor: data,
-            });
-          }
-        }),
-      );
-    }
-  }
-
-  private async restore(data: Argument, locale: string, id: string): Promise<void> {
-    if (!data) {
-      return;
-    }
-
-    const restoreLogic = (item: Entity) => {
-      if (hasSysInformation(item)) {
-        const restoredItem = this.storage.get(item.sys.id, locale);
-        if (restoredItem) {
-          return restoredItem;
-        }
+      if (subscription) {
+        subscription.callback(data);
+        subscription.data = data;
+        this.subscriptions.set(subscriptionId, subscription);
+      } else {
+        debug.error('Received an update for an unknown subscription', {
+          subscriptionId,
+          data,
+          subscriptions: this.subscriptions,
+        });
       }
-      return item;
-    };
-
-    let restoredData;
-    if (Array.isArray(data)) {
-      restoredData = data.map(restoreLogic);
-    } else {
-      const restored = restoreLogic(data);
-      if (restored !== data) {
-        restoredData = restored;
-      }
-    }
-
-    // ensure callback is only called for active subscriptions
-    const subscription = this.subscriptions.get(id);
-    if (subscription && restoredData) {
-      subscription.callback(restoredData);
     }
   }
 
@@ -116,13 +75,13 @@ export class LiveUpdates {
    * Will be called once initially for the restored data
    */
   public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysId, isREST, config } =
+    const { isGQL, isValid, sysIds, isREST, config } =
       validateLiveUpdatesConfiguration(originalConfig);
 
-    if (!isValid) {
+    if (!isValid || !config) {
       this.sendErrorMessage({
         message: 'Failed to subscribe',
-        payload: { isGQL, isValid, sysId, isREST },
+        payload: { isGQL, isValid, sysIds, isREST },
         type: 'SUBSCRIPTION_SETUP_FAILED',
       });
       return () => {
@@ -135,24 +94,16 @@ export class LiveUpdates {
 
     this.subscriptions.set(id, {
       ...config,
-      sysId,
+      sysIds,
       gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
     });
-
-    setTimeout(() => {
-      // Restore function is being called immediately after the subscription is added,
-      // which might cause the callback to be called even if the subscription is removed immediately afterward.
-      // To fix this, we wrap the restore call in a setTimeout,
-      // allowing the unsubscribe function to be executed before the callback is called.
-      this.restore(config.data, locale, id);
-    }, 0);
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.
     const message: Omit<SubscribedMessage, 'action'> | UnsubscribedMessage = {
       type: isGQL ? 'GQL' : 'REST',
       locale,
-      entryId: sysId,
+      sysIds,
       event: 'edit',
       id,
       config: stringify(config),
