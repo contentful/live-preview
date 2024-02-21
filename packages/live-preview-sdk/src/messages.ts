@@ -81,6 +81,8 @@ export type SubscribedMessage = {
   action: LivePreviewPostMessageMethods.SUBSCRIBED;
   type: 'GQL' | 'REST';
   sysIds: string[];
+  /** @deprecated use method instead */
+  entryId: string;
   locale: string;
   event: 'edit' | 'save';
   id: string;
@@ -90,6 +92,8 @@ export type SubscribedMessage = {
 export type UnsubscribedMessage = {
   type: 'GQL' | 'REST';
   sysIds: string[];
+  /** @deprecated use method instead */
+  entryId: string;
   locale: string;
   event: 'edit' | 'save';
   id: string;
