@@ -1,6 +1,11 @@
-import { decode } from '@contentful/content-source-maps';
+import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
 
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
+
+type AutoTaggedElement<T = Node> = {
+  element: T;
+  sourceMap: SourceMapMetadata;
+};
 
 const isTaggedElement = (node?: Node | null): boolean => {
   if (!node) {
@@ -56,6 +61,71 @@ export function getInspectorModeAttributes(
   return null;
 }
 
+function createSelector(key: InspectorModeDataAttributes, value: string) {
+  return `[${key}="${value}"]`;
+}
+
+function hasTaggedParent(element: Element | null, sourceMap: SourceMapMetadata) {
+  const selector = [
+    createSelector(
+      sourceMap.contentful.entityType === 'Asset'
+        ? InspectorModeDataAttributes.ASSET_ID
+        : InspectorModeDataAttributes.ENTRY_ID,
+      sourceMap.contentful.entity,
+    ),
+    createSelector(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field),
+    createSelector(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale),
+  ].join('');
+
+  return element?.closest(selector);
+}
+
+function isImg(node: Node): node is HTMLImageElement {
+  return node.nodeName === 'IMG';
+}
+
+/**
+ * Parses the content of the node
+ * For the `img` element use the information from `alt` otherwise use the `textContent`
+ */
+function getSourceMap(node: Node): SourceMapMetadata | null | undefined {
+  if (isImg(node)) {
+    return decode(node.alt);
+  }
+
+  if (node.nodeType === Node.TEXT_NODE) {
+    return decode(node.textContent || '');
+  }
+
+  return null;
+}
+
+/**
+ * Check if both sourcemaps are identical
+ * Based on how they're generated it's enough to check the URL
+ */
+function isSameSourceMap(a: SourceMapMetadata, b: SourceMapMetadata): boolean {
+  return a.href === b.href;
+}
+
+/**
+ * Validates that both elements & sourceMap informationare the same
+ */
+function isSameElement(a: AutoTaggedElement, b: AutoTaggedElement): boolean {
+  if (!isSameSourceMap(a.sourceMap, b.sourceMap)) {
+    return false;
+  }
+
+  if (a.element !== b.element) {
+    return false;
+  }
+
+  return true;
+}
+
+/** Some elements don't makes sense to be tagged as they're not visible */
+const IGNORE_TAGS = ['SCRIPT', 'HEAD'];
+
 /**
  * Query the document for all tagged elements
  */
@@ -67,24 +137,25 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
   // FILTER_SKIP: Skip the current node
   // FILTER_REJECT: Skip the current node and all its children
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
-    // If the node is a text node, decode its content.
+    // Ignore tags that are not visible on the page
+    if (
+      node.nodeType === Node.ELEMENT_NODE &&
+      IGNORE_TAGS.includes((node as HTMLElement).tagName)
+    ) {
+      return NodeFilter.FILTER_REJECT;
+    }
 
-    if (node.nodeType === Node.TEXT_NODE) {
-      const text = node.textContent ?? '';
-
-      // Decode the text content to check for Inspector Mode CSM
-      const decoded = decode(text);
-
-      // Skip the node if it does not have Inspector Mode CSM
-      if (decoded?.origin !== 'contentful.com') {
+    // Detect auto-tagged nodes
+    const sourceMap = getSourceMap(node);
+    if (sourceMap?.origin === 'contentful.com') {
+      // Ignore if the parent is already tagged with the same information
+      if (
+        (isTaggedElement(node.parentElement) || hasTaggedParent(node.parentElement, sourceMap)) &&
+        !ignoreManual
+      ) {
         return NodeFilter.FILTER_SKIP;
       }
-
-      return isTaggedElement(node.parentElement)
-        ? ignoreManual
-          ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_SKIP
-        : NodeFilter.FILTER_ACCEPT;
+      return NodeFilter.FILTER_ACCEPT;
     }
 
     // For non-text nodes, if ignoreManual is true, skip manually tagged elements.
@@ -96,55 +167,93 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
   });
 
-  const elements: Element[] = [];
+  const taggedElements: Element[] = [];
+  const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
   // Iterate over the nodes accepted by the TreeWalker.
   while (walker.nextNode()) {
     const node = walker.currentNode;
 
-    // Add element nodes directly to the elements array.
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      elements.push(walker.currentNode as Element);
-      continue;
-    }
-
-    // Skip nodes without text content.
-    if (!node.textContent) {
+    // Add already tagged element nodes directly to the elements array.
+    if (isTaggedElement(node)) {
+      taggedElements.push(walker.currentNode as Element);
       continue;
     }
 
     // Decode the text content for further processing.
-    const decoded = decode(node.textContent);
+    const sourceMap = getSourceMap(node);
 
     // Skip if the decoded CSM is not from Contentful.
-    if (!decoded?.contentful) {
+    if (!sourceMap?.contentful) {
       continue;
     }
 
-    const { contentful } = decoded;
-    const el = node.parentElement;
+    // Tag img tags directly, no need for further checks
+    if (isImg(node)) {
+      elementsForTagging.push({ element: node, sourceMap });
+      continue;
+    }
 
     // Skip if the parent element does not exist.
+    const el = node.parentElement;
     if (!el) {
       continue;
     }
 
-    // Set attributes on the element based on the decoded CSM data.
-    if (contentful.entityType === 'Entry') {
-      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, contentful.entity);
-    } else {
-      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
+    // Skip if the parent is already selected for tagging with the same information
+    if (
+      elementsForTagging.some(
+        (et) => et.element.contains(node) && isSameSourceMap(et.sourceMap, sourceMap),
+      )
+    ) {
+      continue;
     }
 
-    // TODO: add space/env ids to properly handle cross-space content
-    el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
-    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
+    // Check if the sibling text nodes have the same information, if yes apply it on their wrapper element
+    // TODO: perf improvement: if the csm contains the type information, we could do this only for rich-text
+    const siblings = el.parentElement?.children;
+    if (siblings && siblings.length > 1) {
+      const taggedSiblings: string[] = [];
 
-    // Add the element to the elements array after setting attributes.
-    elements.push(el);
+      for (const sibling of siblings) {
+        for (const childNode of sibling.childNodes) {
+          const siblingSourceMap = getSourceMap(childNode);
+          if (siblingSourceMap?.contentful) {
+            taggedSiblings.push(siblingSourceMap.href);
+          }
+        }
+      }
+
+      if (taggedSiblings.length > 1 && taggedSiblings.length !== new Set(taggedSiblings).size) {
+        elementsForTagging.push({ element: el.parentElement, sourceMap: sourceMap });
+        continue;
+      }
+    }
+
+    // No sibling element with the same information, add the element directly
+    elementsForTagging.push({ element: el, sourceMap: sourceMap });
   }
 
-  return elements;
+  // Filter duplicate elements, so we don't tag them again and again
+  const uniqElementsForTagging = elementsForTagging.filter(
+    (el, index) => elementsForTagging.findIndex((et) => isSameElement(el, et)) === index,
+  );
+
+  // Add the data- attributes to the auto-tagged elements
+  // Do this after the tree walker is finished, otherwise the MutationObserver picks it already up again
+  // and we have multiple tree walkers running parallel
+  for (const { element, sourceMap } of uniqElementsForTagging) {
+    if (sourceMap.contentful.entityType === 'Asset') {
+      element.setAttribute(InspectorModeDataAttributes.ASSET_ID, sourceMap.contentful.entity);
+    } else {
+      element.setAttribute(InspectorModeDataAttributes.ENTRY_ID, sourceMap.contentful.entity);
+    }
+    element.setAttribute(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field);
+    element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
+    taggedElements.push(element);
+  }
+
+  return taggedElements;
 }
 
 /**

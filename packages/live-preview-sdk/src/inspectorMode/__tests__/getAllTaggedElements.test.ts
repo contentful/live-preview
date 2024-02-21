@@ -1,4 +1,4 @@
-import { SourceMapMetadata, encode } from '@contentful/content-source-maps';
+import { SourceMapMetadata, combine } from '@contentful/content-source-maps';
 import { describe, expect, it } from 'vitest';
 
 import { InspectorModeDataAttributes } from '../types.js';
@@ -9,6 +9,34 @@ describe('getAllTaggedElements', () => {
   const dataAsset = InspectorModeDataAttributes.ASSET_ID;
   const dataField = InspectorModeDataAttributes.FIELD_ID;
   const dataLocale = InspectorModeDataAttributes.LOCALE;
+
+  function createSourceMapFixture(
+    entityId: string,
+    overrides?: {
+      origin?: string;
+      contentful?: Partial<Omit<SourceMapMetadata['contentful'], 'entity'>>;
+    },
+  ): SourceMapMetadata {
+    const origin = overrides?.origin ?? 'contentful.com';
+    const space = overrides?.contentful?.space ?? 'master';
+    const environment = overrides?.contentful?.environment ?? 'master';
+    const entityType = overrides?.contentful?.entityType ?? 'Entry';
+    const locale = overrides?.contentful?.locale ?? 'en-US';
+    const field = overrides?.contentful?.field ?? 'title';
+
+    return {
+      href: `https://app.${origin}/spaces/${space}/environments/${environment}/entries/${entityId}?focusedField=${field}&focusedLocale=${locale}`,
+      origin,
+      contentful: {
+        space,
+        environment,
+        entity: entityId,
+        entityType,
+        field,
+        locale,
+      },
+    };
+  }
 
   const html = (text: string) => {
     return new DOMParser().parseFromString(text, 'text/html');
@@ -94,44 +122,88 @@ describe('getAllTaggedElements', () => {
   });
 
   describe('Auto-tagging', () => {
-    const metadata: SourceMapMetadata = {
-      href: 'contentful.com/test',
-      origin: 'contentful.com',
-      contentful: {
-        space: 'test',
-        environment: 'master',
-        entity: 'entry-id',
-        entityType: 'Entry',
-        field: 'title',
-        locale: 'en-US',
-      },
-    };
+    const metadata = createSourceMapFixture('test-entry-id');
 
     it('should ignore encoded data if origin does not match', () => {
-      const dom = html(`
-		<span>${
-      'Test' +
-      encode({
-        ...metadata,
-        origin: 'example.com',
-      })
-    }</span>`);
+      const dom = html(
+        `<span>${combine('Test', createSourceMapFixture('ignore_origin', { origin: 'example.com' }))}</span>`,
+      );
 
       const elements = getAllTaggedElements(dom);
       expect(elements).toEqual([]);
     });
 
     it('should recognize auto-tagged elements', () => {
-      const dom = html(`<span id="entry-1">${'Test' + encode(metadata)}</span>`);
+      const dom = html(`<span id="entry-1">${combine('Test', metadata)}</span>`);
 
       const elements = getAllTaggedElements(dom);
+
+      expect(elements).toHaveLength(1);
       expect(elements).toEqual([dom.getElementById('entry-1')]);
+    });
+
+    describe('grouping information', () => {
+      it('should group sibling elements with the same information', () => {
+        const dom = html(`
+          <div id="richtext">
+            <p id="node-1">${combine('Hello', metadata)}</p>
+            <p id="node-2">${combine('World', metadata)}</p>
+            <p id="node-3">${combine('!', metadata)}</p>
+            <p id="node-4">${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</p>
+          </div>
+        `);
+
+        const elements = getAllTaggedElements(dom);
+
+        expect(elements).toHaveLength(1);
+        expect(elements).toEqual([dom.getElementById('richtext')]);
+      });
+
+      it('should not tag nested elements with the same information', () => {
+        const dom = html(`
+          <p id="node-1">${combine('Hello', metadata)}<strong>${combine('World', metadata)}</strong>!</p>
+      `);
+
+        const elements = getAllTaggedElements(dom);
+
+        expect(elements).toHaveLength(1);
+        expect(elements).toEqual([dom.getElementById('node-1')]);
+      });
+
+      it('should tag elements with different information separately', () => {
+        const referenceMetadata = createSourceMapFixture('reference');
+        const globeMetadata = createSourceMapFixture('globe', {
+          contentful: { entityType: 'Asset' },
+        });
+
+        const dom = html(`
+        <div id="richtext">
+          <p id="node-1">${combine('Hello', metadata)}</p>
+          <p id="node-2">${combine('World', metadata)}</p>
+          <span id="node-3">
+            <div id="reference">${combine('Hallo Welt from germany', referenceMetadata)}</div>
+          </span>
+          <span id="node-4">
+            <img id="globe" src="./imgp.jpg" alt="${combine('globe', globeMetadata)}" />
+          </span>
+        </div>
+      `);
+
+        const elements = getAllTaggedElements(dom);
+
+        expect(elements).toHaveLength(3);
+        expect(elements).toEqual([
+          dom.getElementById('richtext'),
+          dom.getElementById('reference'),
+          dom.getElementById('globe'),
+        ]);
+      });
     });
 
     it('does not override elements that are manually tagged', () => {
       const dom = html(`<div>
 	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
-		  ${'Hello' + encode(metadata)}
+		  ${combine('Hello', metadata)}
 		</div>
 	  </div>`);
 
@@ -150,14 +222,16 @@ describe('getAllTaggedElements', () => {
     it('ignore manually tagged elements if requested', () => {
       const dom = html(`<div>
 	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">
-		  ${'Test' + encode(metadata)}
+		  ${combine('Test', metadata)}
 		</div>
 	  </div>`);
 
       const elements = getAllTaggedElements(dom, true);
 
       expect(elements.length).toEqual(1);
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual('entry-id');
+      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
+        'test-entry-id',
+      );
       expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('title');
       expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
     });
