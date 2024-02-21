@@ -17,5 +17,9 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
   },
-  plugins: [dts({ rollupTypes: true })],
+  plugins: [
+    dts({
+      exclude: ['**/__tests__/**'],
+    }),
+  ],
 });

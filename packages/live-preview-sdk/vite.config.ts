@@ -37,6 +37,7 @@ export default defineConfig({
     react(),
     dts({
       entryRoot: 'src',
+      exclude: ['**/__tests__/**'],
     }),
   ],
 });
