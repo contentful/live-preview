@@ -82,7 +82,7 @@ export type SubscribedMessage = {
   type: 'GQL' | 'REST';
   sysIds: string[];
   /** @deprecated use method instead */
-  entryId: string;
+  entryId?: string;
   locale: string;
   event: 'edit' | 'save';
   id: string;
@@ -93,7 +93,7 @@ export type UnsubscribedMessage = {
   type: 'GQL' | 'REST';
   sysIds: string[];
   /** @deprecated use method instead */
-  entryId: string;
+  entryId?: string;
   locale: string;
   event: 'edit' | 'save';
   id: string;
