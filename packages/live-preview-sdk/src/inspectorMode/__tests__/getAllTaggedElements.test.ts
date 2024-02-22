@@ -200,6 +200,35 @@ describe('getAllTaggedElements', () => {
       });
     });
 
+    it('should tag the images correctly by prefering the wrapping picture or figure', () => {
+      const img1 = createSourceMapFixture('img1', { contentful: { entityType: 'Asset' } });
+      const img2 = createSourceMapFixture('img2', { contentful: { entityType: 'Asset' } });
+      const img3 = createSourceMapFixture('img3', { contentful: { entityType: 'Asset' } });
+
+      const dom = html(`
+        <div>
+          <figure id="img1">
+            <img src="/elephant.jpg" alt="${combine('Elephant at sunset', img1)}" />
+            <figcaption>${combine('An elephant at sunset', img1)}</figcaption>
+          </figure>
+          <picture id="img2">
+            <source srcset="/lion-potrait.jpg" media="(orientation: portrait)" />
+            <img src="/lion-298-332.jpg" alt="${combine('A lion staring at the sun', img2)}" />
+          </picture>
+          <img id="img3" src="./monkey.jpg" alt="${combine('A monkey throwing a cocosnut at a lion', img3)}" />
+        </div>
+      `);
+
+      const elements = getAllTaggedElements(dom);
+
+      expect(elements).toHaveLength(3);
+      expect(elements).toEqual([
+        dom.getElementById('img1'),
+        dom.getElementById('img2'),
+        dom.getElementById('img3'),
+      ]);
+    });
+
     it('does not override elements that are manually tagged', () => {
       const dom = html(`<div>
 	    <div id="entry" ${dataEntry}="manual-entry-id" ${dataField}="manual-field-id">

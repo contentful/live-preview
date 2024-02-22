@@ -190,7 +190,9 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
 
     // Tag img tags directly, no need for further checks
     if (isImg(node)) {
-      elementsForTagging.push({ element: node, sourceMap });
+      // check for parent `figure/picture` to add the tagging there, otherwise use the image directly
+      const element = node.closest('figure') || node.closest('picture') || node;
+      elementsForTagging.push({ element, sourceMap });
       continue;
     }
 
