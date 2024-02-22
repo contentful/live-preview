@@ -148,7 +148,7 @@ describe('getAllTaggedElements', () => {
           <div id="richtext">
             <p id="node-1">${combine('Hello', metadata)}</p>
             <p id="node-2">${combine('World', metadata)}</p>
-            <p id="node-3">${combine('!', metadata)}</p>
+            <p id="node-3"><b>${combine('!', metadata)}</b></p>
             <p id="node-4">${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</p>
           </div>
         `);
