@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.19](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.18...@contentful/live-preview@3.0.0-alpha.19) (2024-02-22)
+
+
+### Bug Fixes
+
+* **content-sourcemap:** tag only wrapper around richtext [TOL-1832] ([#588](https://github.com/contentful/live-preview/issues/588)) ([c2035a5](https://github.com/contentful/live-preview/commit/c2035a56f6407fafc0cbfc26290c5c5b9009a377))
+
+
+
+
+
 # [3.0.0-alpha.18](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.17...@contentful/live-preview@3.0.0-alpha.18) (2024-02-21)
 
 **Note:** Version bump only for package @contentful/live-preview
