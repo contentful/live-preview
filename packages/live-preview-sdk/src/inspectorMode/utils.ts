@@ -216,11 +216,9 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
       const taggedSiblings: string[] = [];
 
       for (const sibling of siblings) {
-        for (const childNode of sibling.childNodes) {
-          const siblingSourceMap = getSourceMap(childNode);
-          if (siblingSourceMap?.contentful) {
-            taggedSiblings.push(siblingSourceMap.href);
-          }
+        const siblingSourceMap = decode(sibling.textContent || '');
+        if (siblingSourceMap?.contentful) {
+          taggedSiblings.push(siblingSourceMap.href);
         }
       }
 
