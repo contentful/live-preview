@@ -38,24 +38,28 @@ const isTaggedElement = (node?: Node | null): boolean => {
  */
 export function getInspectorModeAttributes(
   element: Element,
-  fallbackLocale: string,
+  fallbackProps: Pick<InspectorModeAttributes, 'environment' | 'locale' | 'space'>,
 ): InspectorModeAttributes | null {
   if (!isTaggedElement(element)) {
     return null;
   }
 
-  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string;
-  const locale = element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale;
+  const sharedProps = {
+    fieldId: element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string,
+    locale: element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackProps.locale,
+    environment:
+      element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
+    space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
+  };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
-  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
-
   if (entryId) {
-    return { entryId, fieldId, locale };
+    return { ...sharedProps, entryId };
   }
 
+  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
   if (assetId) {
-    return { assetId, fieldId, locale };
+    return { ...sharedProps, assetId };
   }
 
   return null;
@@ -248,6 +252,8 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     }
     element.setAttribute(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field);
     element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
+    element.setAttribute(InspectorModeDataAttributes.SPACE, sourceMap.contentful.space);
+    element.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, sourceMap.contentful.environment);
     taggedElements.push(element);
   }
 

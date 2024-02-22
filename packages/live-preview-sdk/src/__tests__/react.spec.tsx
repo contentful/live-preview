@@ -248,6 +248,38 @@ describe('useContentfulInspectorMode', () => {
       });
     });
 
+    it('should provide a helper function to generate the correct tags (with space & environment)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { entryId: '1' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title', space: '12345', environment: 'develop' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-space': '12345',
+        'data-contentful-environment': 'develop',
+      });
+    });
+
+    it('should provide a helper function to generate the correct tags (with initial space & environment)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { entryId: '1', space: '99999', environment: 'main' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-space': '99999',
+        'data-contentful-environment': 'main',
+      });
+    });
+
     it('should return null because the inspector mode is disabled', () => {
       const { result } = renderHook((data) => useContentfulInspectorMode(data), {
         initialProps: { locale, entryId: '1' },
