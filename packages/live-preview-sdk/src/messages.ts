@@ -11,6 +11,8 @@ import {
   type InspectorModeResizeMessage,
   type InspectorModeScrollMessage,
   type InspectorModeTaggedElementsMessage,
+  type InspectorModeEntryAttributes,
+  type InspectorModeAssetAttributes,
 } from './inspectorMode/types.js';
 import type { Argument, ContentType, EntityReferenceMap } from './types.js';
 
@@ -175,37 +177,29 @@ export type MessageFromEditor = (
 };
 
 export function openEntryInEditorUtility(
-  fieldId: string,
-  entryId: string,
-  locale: string,
+  props: InspectorModeEntryAttributes,
   targetOrigin: string[],
 ): void {
   sendMessageToEditor(
     LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
     {
       action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
-      fieldId,
-      entryId,
-      locale,
-    },
+      ...props,
+    } as TaggedFieldClickMessage,
     targetOrigin,
   );
 }
 
 export function openAssetInEditorUtility(
-  fieldId: string,
-  assetId: string,
-  locale: string,
+  props: InspectorModeAssetAttributes,
   targetOrigin: string[],
 ): void {
   sendMessageToEditor(
     LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
     {
       action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
-      fieldId,
-      assetId,
-      locale,
-    },
+      ...props,
+    } as TaggedFieldClickMessage,
     targetOrigin,
   );
 }
