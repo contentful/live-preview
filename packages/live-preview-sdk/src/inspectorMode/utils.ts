@@ -130,6 +130,50 @@ function isSameElement(a: AutoTaggedElement, b: AutoTaggedElement): boolean {
 /** Some elements don't makes sense to be tagged as they're not visible */
 const IGNORE_TAGS = ['SCRIPT', 'HEAD'];
 
+function getParent(
+  child: Element,
+  sourceMap: SourceMapMetadata,
+  limit = 3,
+): { element: Element; counters: { sameInformation: number; tagged: number; all: number } } | null {
+  if (limit === 0) {
+    return null;
+  }
+
+  const element = child.parentElement;
+  if (element) {
+    const counters = {
+      sameInformation: 0,
+      tagged: 0,
+      all: 0,
+    };
+
+    let sibling = child.nextElementSibling;
+    while (sibling) {
+      const siblingSourceMap = decode(sibling.textContent || '');
+      if (siblingSourceMap) {
+        counters.tagged += 1;
+        if (siblingSourceMap.href === sourceMap.href) {
+          counters.sameInformation = +1;
+        }
+      }
+      counters.all += 1;
+      sibling = sibling.nextElementSibling;
+    }
+
+    const parentInformation = getParent(element, sourceMap, limit - 1);
+    if (parentInformation && parentInformation.counters.sameInformation >= 1) {
+      return parentInformation;
+    }
+
+    if (counters.sameInformation >= 1) {
+      // at least one more siblings has the same information
+      return { element, counters };
+    }
+  }
+
+  return null;
+}
+
 /**
  * Query the document for all tagged elements
  */
@@ -217,21 +261,10 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
 
     // Check if the sibling text nodes have the same information, if yes apply it on their wrapper element
     // TODO: perf improvement: if the csm contains the type information, we could do this only for rich-text
-    const siblings = el.parentElement?.children;
-    if (siblings && siblings.length > 1) {
-      const taggedSiblings: string[] = [];
-
-      for (const sibling of siblings) {
-        const siblingSourceMap = decode(sibling.textContent || '');
-        if (siblingSourceMap?.contentful) {
-          taggedSiblings.push(siblingSourceMap.href);
-        }
-      }
-
-      if (taggedSiblings.length > 1 && taggedSiblings.length !== new Set(taggedSiblings).size) {
-        elementsForTagging.push({ element: el.parentElement, sourceMap: sourceMap });
-        continue;
-      }
+    const wrapper = getParent(el, sourceMap);
+    if (wrapper) {
+      elementsForTagging.push({ element: wrapper.element, sourceMap: sourceMap });
+      continue;
     }
 
     // No sibling element with the same information, add the element directly

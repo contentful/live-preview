@@ -159,6 +159,22 @@ describe('getAllTaggedElements', () => {
         expect(elements).toEqual([dom.getElementById('richtext')]);
       });
 
+      it('should group sibling elements with the same information (nested structure)', () => {
+        const dom = html(`
+          <div id="richtext">
+            <p id="node-1"><span>${combine('Hello', metadata)}</span></p>
+            <p id="node-2"><span>${combine('World', metadata)}</span></p>
+            <p id="node-3"><b>${combine('!', metadata)}</b></p>
+            <p id="node-4"><span>${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</span></p>
+          </div>
+        `);
+
+        const elements = getAllTaggedElements(dom);
+
+        expect(elements).toHaveLength(1);
+        expect(elements).toEqual([dom.getElementById('richtext')]);
+      });
+
       it('should not tag nested elements with the same information', () => {
         const dom = html(`
           <p id="node-1">${combine('Hello', metadata)}<strong>${combine('World', metadata)}</strong>!</p>
@@ -263,6 +279,94 @@ describe('getAllTaggedElements', () => {
       );
       expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('title');
       expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
+    });
+
+    it('works performant on larger pages', () => {
+      const dom = html(`
+      <div id="root">
+        <div id="parent_tagged">
+          ${new Array(10)
+            .fill('x')
+            .map((_, index) => {
+              const sourceMap = createSourceMapFixture('parent_tagged');
+              const content = combine(
+                `Parent should be tagged even if this is the "${index}" element.`,
+                sourceMap,
+              );
+              return `<p>${content}</p>`;
+            })
+            .join('')}
+        </div>
+        <div id="flat_list">
+          ${new Array(10)
+            .fill('x')
+            .map((_, index) => {
+              const sourceMap = createSourceMapFixture(`flat_item-${index}`);
+              const content = combine(
+                `Every item in the flat list should be tagged. This is the ${index} element.`,
+                sourceMap,
+              );
+              return `<p>${content}</p>`;
+            })
+            .join('')}
+        </div>
+        <div id="richtext">
+          ${new Array(30)
+            .fill('x')
+            .map((_, index) => {
+              const sourceMap = createSourceMapFixture(`rte-nested-${index}`);
+              const inlineItems = new Array(10).fill('x').map((_, nestedIndex) => {
+                const tag = nestedIndex % 2 === 0 ? 'strong' : 'b';
+                const content = combine(
+                  `Richtext nested content with tag ${tag} ${index} ${nestedIndex}`,
+                  sourceMap,
+                );
+                return `<${tag}>${content}</${tag}>`;
+              });
+
+              const inlineContent = inlineItems.join(' ');
+
+              return `<p id="richtext-paragraph-${index}">${inlineContent}</p>`;
+            })
+            .join('\n')}
+        </div>
+        <div id="img">
+          <img
+            src="./picture.jpg"
+            alt="${combine('Some alt text for the picture', createSourceMapFixture('img-1', { contentful: { entityType: 'Asset' } }))}"
+          />
+        </div>
+        <div id="picture">
+          <picture>
+            <source srcset="/lion-potrait.jpg" media="(orientation: portrait)" />
+            <img
+              src="/lion-298-332.jpg"
+              alt="${combine('A lion staring at the sun', createSourceMapFixture('img-2', { contentful: { entityType: 'Asset' } }))}"
+            />
+          </picture>
+        </div>
+        <div id="figure">
+          <figure>
+            <span>
+              <span>
+                <img
+                  src="/elephant.jpg"
+                  alt="${combine('Elephant at sunset', createSourceMapFixture('img-3', { contentful: { entityType: 'Asset' } }))})}"
+                />
+              </span>
+            </span>
+            <figcaption>${combine('An elephant at sunset', createSourceMapFixture('img-3', { contentful: { entityType: 'Asset' } }))})}</figcaption>
+          </figure>
+        </div>
+      </div>
+    `);
+
+      const starTime = performance.now();
+      const elements = getAllTaggedElements(dom, true);
+      const diff = performance.now() - starTime;
+
+      expect(elements).toHaveLength(1 + 10 + 30 + 3);
+      expect(diff).toBeLessThanOrEqual(100);
     });
   });
 });
