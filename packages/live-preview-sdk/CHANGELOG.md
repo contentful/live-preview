@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.22](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.21...@contentful/live-preview@3.0.0-alpha.22) (2024-02-23)
+
+
+### Bug Fixes
+
+* **inspectorMode:** img tagging with CSM [] ([#592](https://github.com/contentful/live-preview/issues/592)) ([f3f179b](https://github.com/contentful/live-preview/commit/f3f179bb4ca17454b15267339f8e6311ae1eba0e))
+
+
+
+
+
 # [3.0.0-alpha.21](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.20...@contentful/live-preview@3.0.0-alpha.21) (2024-02-23)
 
 
