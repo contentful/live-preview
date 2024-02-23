@@ -9,6 +9,8 @@ import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
 
 type InspectorModeOptions = {
   locale: string;
+  space?: string;
+  environment?: string;
   targetOrigin: string[];
   ignoreManuallyTaggedElements?: boolean;
 };
@@ -121,6 +123,8 @@ export class InspectorMode {
         InspectorModeDataAttributes.ENTRY_ID,
         InspectorModeDataAttributes.FIELD_ID,
         InspectorModeDataAttributes.LOCALE,
+        InspectorModeDataAttributes.SPACE,
+        InspectorModeDataAttributes.ENVIRONMENT,
       ],
       childList: true,
       subtree: true,
@@ -166,8 +170,8 @@ export class InspectorMode {
    * and sends it then to the editor
    */
   private handleTaggedElement = (element: HTMLElement): boolean => {
-    const { targetOrigin, locale } = this.options;
-    const taggedInformation = getInspectorModeAttributes(element, locale);
+    const { targetOrigin, locale, space, environment } = this.options;
+    const taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
 
     if (!taggedInformation) {
       return false;
@@ -222,6 +226,8 @@ export class InspectorMode {
           InspectorModeDataAttributes.ENTRY_ID,
           InspectorModeDataAttributes.FIELD_ID,
           InspectorModeDataAttributes.LOCALE,
+          InspectorModeDataAttributes.SPACE,
+          InspectorModeDataAttributes.ENVIRONMENT,
         ],
         childList: true,
         subtree: true,

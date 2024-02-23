@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.21](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.20...@contentful/live-preview@3.0.0-alpha.21) (2024-02-23)
+
+
+### Features
+
+* **inspectorMode:** support tagging for cross space references [] ([#591](https://github.com/contentful/live-preview/issues/591)) ([486ae4c](https://github.com/contentful/live-preview/commit/486ae4c63703aba38fbb86e26dcdacec3768c27d))
+
+
+
+
+
 # [3.0.0-alpha.20](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.19...@contentful/live-preview@3.0.0-alpha.20) (2024-02-22)
 
 

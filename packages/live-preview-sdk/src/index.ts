@@ -41,6 +41,11 @@ const DEFAULT_ORIGINS = ['https://app.contentful.com', 'https://app.eu.contentfu
 
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
+  /** Id of the contentful space */
+  space?: string;
+  /** Id of the contentful environment */
+  environment?: string;
+
   debugMode?: boolean;
   enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
@@ -70,6 +75,8 @@ export class ContentfulLivePreview {
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
   static locale: string;
+  static space?: string;
+  static environment?: string;
   static sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
   static targetOrigin: string[];
 
@@ -86,6 +93,8 @@ export class ContentfulLivePreview {
       enableInspectorMode,
       enableLiveUpdates,
       locale,
+      environment,
+      space,
       targetOrigin = DEFAULT_ORIGINS,
     } = config;
 
@@ -113,6 +122,8 @@ export class ContentfulLivePreview {
       }
 
       this.locale = locale;
+      this.space = space;
+      this.environment = environment;
 
       this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
 
@@ -125,6 +136,8 @@ export class ContentfulLivePreview {
       if (this.inspectorModeEnabled) {
         this.inspectorMode = new InspectorMode({
           locale,
+          space,
+          environment,
           targetOrigin: this.targetOrigin,
           ignoreManuallyTaggedElements: config.experimental?.ignoreManuallyTaggedElements,
         });
@@ -239,26 +252,37 @@ export class ContentfulLivePreview {
 
   // Static method to render live preview data-attributes to HTML element output
   static getProps(props: LivePreviewProps): InspectorModeTags {
-    const { fieldId, locale } = props;
+    const { fieldId, locale, environment, space } = props;
 
     if (!this.inspectorModeEnabled) {
       return null;
     }
 
-    if ((props as LivePreviewAssetProps).assetId !== undefined && fieldId) {
-      return {
+    if (fieldId) {
+      const sharedProps = {
+        ...(locale ? { [InspectorModeDataAttributes.LOCALE]: locale } : {}),
+        ...(environment ? { [InspectorModeDataAttributes.ENVIRONMENT]: environment } : {}),
+        ...(space ? { [InspectorModeDataAttributes.SPACE]: space } : {}),
         [InspectorModeDataAttributes.FIELD_ID]: fieldId,
-        [InspectorModeDataAttributes.ASSET_ID]: (props as LivePreviewAssetProps).assetId,
-        [InspectorModeDataAttributes.LOCALE]: locale,
       };
-    }
 
-    if ((props as LivePreviewEntryProps).entryId !== undefined && fieldId) {
-      return {
-        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
-        [InspectorModeDataAttributes.ENTRY_ID]: (props as LivePreviewEntryProps).entryId,
-        [InspectorModeDataAttributes.LOCALE]: locale,
-      };
+      if (locale) {
+        sharedProps[InspectorModeDataAttributes.LOCALE] = locale;
+      }
+
+      if ((props as LivePreviewAssetProps).assetId !== undefined) {
+        return {
+          ...sharedProps,
+          [InspectorModeDataAttributes.ASSET_ID]: (props as LivePreviewAssetProps).assetId,
+        };
+      }
+
+      if ((props as LivePreviewEntryProps).entryId !== undefined) {
+        return {
+          ...sharedProps,
+          [InspectorModeDataAttributes.ENTRY_ID]: (props as LivePreviewEntryProps).entryId,
+        };
+      }
     }
 
     debug.warn('Missing property for inspector mode', { ...props });
@@ -276,11 +300,18 @@ export class ContentfulLivePreview {
   }
 
   static openEntryInEditor(props: LivePreviewProps): void {
+    const defaultProps = {
+      locale: this.locale,
+      environment: this.environment,
+      space: this.space,
+    };
+
     if ((props as LivePreviewAssetProps).assetId !== undefined && props.fieldId) {
       openAssetInEditorUtility(
-        props.fieldId,
-        (props as LivePreviewAssetProps).assetId,
-        props.locale || this.locale,
+        {
+          ...defaultProps,
+          ...(props as LivePreviewAssetProps),
+        },
         this.targetOrigin,
       );
       return;
@@ -288,9 +319,10 @@ export class ContentfulLivePreview {
 
     if ((props as LivePreviewEntryProps).entryId !== undefined && props.fieldId) {
       openEntryInEditorUtility(
-        props.fieldId,
-        (props as LivePreviewEntryProps).entryId,
-        props.locale || this.locale,
+        {
+          ...defaultProps,
+          ...(props as LivePreviewEntryProps),
+        },
         this.targetOrigin,
       );
       return;

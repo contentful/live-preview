@@ -141,6 +141,30 @@ describe('ContentfulLivePreview', () => {
       });
     });
 
+    it('returns the expected props with all available props', () => {
+      const entryId = 'test-entry-id';
+      const fieldId = 'test-field-id';
+      const locale = 'test-locale';
+      const space = 'test-space';
+      const environment = 'test-environment';
+
+      const result = ContentfulLivePreview.getProps({
+        entryId,
+        fieldId,
+        locale,
+        space,
+        environment,
+      });
+
+      expect(result).toStrictEqual({
+        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+        [InspectorModeDataAttributes.ENTRY_ID]: entryId,
+        [InspectorModeDataAttributes.LOCALE]: locale,
+        [InspectorModeDataAttributes.SPACE]: space,
+        [InspectorModeDataAttributes.ENVIRONMENT]: environment,
+      });
+    });
+
     it('returns null if it is disabled', () => {
       ContentfulLivePreview.toggleInspectorMode();
 
