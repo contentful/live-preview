@@ -35,6 +35,7 @@
   "scripts": {
     "start": "vite build --watch",
     "build": "vite build",
+    "benchmark": "vitest bench",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
     "test": "vitest",
