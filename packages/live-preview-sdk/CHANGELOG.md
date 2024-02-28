@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.23](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.22...@contentful/live-preview@3.0.0-alpha.23) (2024-02-28)
+
+
+### Bug Fixes
+
+* **content-source-maps:** improve tagging for richtext [] ([#593](https://github.com/contentful/live-preview/issues/593)) ([b2f97cc](https://github.com/contentful/live-preview/commit/b2f97cc60bbcac43bc90785e0e605a49a8db0af4))
+
+
+
+
+
 # [3.0.0-alpha.22](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.21...@contentful/live-preview@3.0.0-alpha.22) (2024-02-23)
 
 
