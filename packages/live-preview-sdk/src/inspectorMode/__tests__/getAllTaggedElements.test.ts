@@ -1,42 +1,15 @@
-import { SourceMapMetadata, combine } from '@contentful/content-source-maps';
+import { combine } from '@contentful/content-source-maps';
 import { describe, expect, it } from 'vitest';
 
 import { InspectorModeDataAttributes } from '../types.js';
 import { getAllTaggedElements } from '../utils.js';
+import { createSourceMapFixture } from './fixtures/contentSourceMap.js';
 
 describe('getAllTaggedElements', () => {
   const dataEntry = InspectorModeDataAttributes.ENTRY_ID;
   const dataAsset = InspectorModeDataAttributes.ASSET_ID;
   const dataField = InspectorModeDataAttributes.FIELD_ID;
   const dataLocale = InspectorModeDataAttributes.LOCALE;
-
-  function createSourceMapFixture(
-    entityId: string,
-    overrides?: {
-      origin?: string;
-      contentful?: Partial<Omit<SourceMapMetadata['contentful'], 'entity'>>;
-    },
-  ): SourceMapMetadata {
-    const origin = overrides?.origin ?? 'contentful.com';
-    const space = overrides?.contentful?.space ?? 'master';
-    const environment = overrides?.contentful?.environment ?? 'master';
-    const entityType = overrides?.contentful?.entityType ?? 'Entry';
-    const locale = overrides?.contentful?.locale ?? 'en-US';
-    const field = overrides?.contentful?.field ?? 'title';
-
-    return {
-      href: `https://app.${origin}/spaces/${space}/environments/${environment}/entries/${entityId}?focusedField=${field}&focusedLocale=${locale}`,
-      origin,
-      contentful: {
-        space,
-        environment,
-        entity: entityId,
-        entityType,
-        field,
-        locale,
-      },
-    };
-  }
 
   const html = (text: string) => {
     return new DOMParser().parseFromString(text, 'text/html');
@@ -150,6 +123,22 @@ describe('getAllTaggedElements', () => {
             <p id="node-2">${combine('World', metadata)}</p>
             <p id="node-3"><b>${combine('!', metadata)}</b></p>
             <p id="node-4">${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</p>
+          </div>
+        `);
+
+        const elements = getAllTaggedElements(dom);
+
+        expect(elements).toHaveLength(1);
+        expect(elements).toEqual([dom.getElementById('richtext')]);
+      });
+
+      it('should group sibling elements with the same information (nested structure)', () => {
+        const dom = html(`
+          <div id="richtext">
+            <p id="node-1"><span>${combine('Hello', metadata)}</span></p>
+            <p id="node-2"><span>${combine('World', metadata)}</span></p>
+            <p id="node-3"><b>${combine('!', metadata)}</b></p>
+            <p id="node-4"><span>${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</span></p>
           </div>
         `);
 

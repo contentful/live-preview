@@ -1,4 +1,5 @@
 import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
+import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
 
@@ -65,45 +66,6 @@ export function getInspectorModeAttributes(
   return null;
 }
 
-function createSelector(key: InspectorModeDataAttributes, value: string) {
-  return `[${key}="${value}"]`;
-}
-
-function hasTaggedParent(element: Element | null, sourceMap: SourceMapMetadata) {
-  const selector = [
-    createSelector(
-      sourceMap.contentful.entityType === 'Asset'
-        ? InspectorModeDataAttributes.ASSET_ID
-        : InspectorModeDataAttributes.ENTRY_ID,
-      sourceMap.contentful.entity,
-    ),
-    createSelector(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field),
-    createSelector(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale),
-  ].join('');
-
-  return element?.closest(selector);
-}
-
-function isImg(node: Node): node is HTMLImageElement {
-  return node.nodeName === 'IMG';
-}
-
-/**
- * Parses the content of the node
- * For the `img` element use the information from `alt` otherwise use the `textContent`
- */
-function getSourceMap(node: Node): SourceMapMetadata | null | undefined {
-  if (isImg(node)) {
-    return decode(node.alt);
-  }
-
-  if (node.nodeType === Node.TEXT_NODE) {
-    return decode(node.textContent || '');
-  }
-
-  return null;
-}
-
 /**
  * Check if both sourcemaps are identical
  * Based on how they're generated it's enough to check the URL
@@ -127,87 +89,112 @@ function isSameElement(a: AutoTaggedElement, b: AutoTaggedElement): boolean {
   return true;
 }
 
-/** Some elements don't makes sense to be tagged as they're not visible */
-const IGNORE_TAGS = ['SCRIPT', 'HEAD'];
+function getParent(
+  child: Element,
+  sourceMap: SourceMapMetadata,
+  limit = 3,
+): { element: Element; counters: { sameInformation: number; tagged: number; all: number } } | null {
+  if (limit === 0) {
+    return null;
+  }
+
+  const element = child.parentElement;
+  if (element) {
+    const counters = {
+      sameInformation: 0,
+      tagged: 0,
+      all: 0,
+    };
+
+    let sibling = child.nextElementSibling;
+    while (sibling) {
+      const siblingSourceMap = decode(sibling.textContent || '');
+      if (siblingSourceMap) {
+        counters.tagged += 1;
+        if (siblingSourceMap.href === sourceMap.href) {
+          counters.sameInformation = +1;
+        }
+      }
+      counters.all += 1;
+      sibling = sibling.nextElementSibling;
+    }
+
+    const parentInformation = getParent(element, sourceMap, limit - 1);
+    if (parentInformation && parentInformation.counters.sameInformation >= 1) {
+      return parentInformation;
+    }
+
+    if (counters.sameInformation >= 1) {
+      // at least one more siblings has the same information
+      return { element, counters };
+    }
+  }
+
+  return null;
+}
+
+function findStegaNodes(container: HTMLElement) {
+  let baseArray: HTMLElement[] = [];
+  if (typeof container.matches === 'function' && container.matches('*')) {
+    baseArray = [container];
+  }
+
+  return [
+    ...baseArray,
+    ...Array.from(container.querySelectorAll<HTMLElement>('*:not(script,style,meta,title)')),
+  ]
+    .map((node) => ({ node, text: getNodeText(node) }))
+    .filter(({ text }) => !!(text && text.match(VERCEL_STEGA_REGEX)));
+}
+
+function getNodeText(node: HTMLElement): string {
+  if (node.matches('input[type=submit], input[type=button], input[type=reset]')) {
+    return (node as HTMLInputElement).value;
+  }
+
+  if (node.matches('img, video')) {
+    return (node as HTMLImageElement).alt;
+  }
+
+  return Array.from(node.childNodes)
+    .filter((child) => child.nodeType === Node.TEXT_NODE && Boolean(child.textContent))
+    .map((c) => c.textContent)
+    .join('');
+}
+
+function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean {
+  for (const tagged of taggedElements) {
+    if (tagged === node || tagged.contains(node)) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 /**
  * Query the document for all tagged elements
  */
 export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
-  // The fastest way to look up & iterate over DOM. Ref:
-  // https://stackoverflow.com/a/2579869
-  // Initialize a TreeWalker to traverse all nodes, using a filter function to determine which nodes to consider.
-  // Terminology:
-  // FILTER_SKIP: Skip the current node
-  // FILTER_REJECT: Skip the current node and all its children
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
-    // Ignore tags that are not visible on the page
-    if (
-      node.nodeType === Node.ELEMENT_NODE &&
-      IGNORE_TAGS.includes((node as HTMLElement).tagName)
-    ) {
-      return NodeFilter.FILTER_REJECT;
-    }
+  const manualTagged = ignoreManual
+    ? []
+    : root.querySelectorAll(
+        `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
+      );
 
-    // Detect auto-tagged nodes
-    const sourceMap = getSourceMap(node);
-    if (sourceMap?.origin === 'contentful.com') {
-      // Ignore if the parent is already tagged with the same information
-      if (
-        (isTaggedElement(node.parentElement) || hasTaggedParent(node.parentElement, sourceMap)) &&
-        !ignoreManual
-      ) {
-        return NodeFilter.FILTER_SKIP;
-      }
-      return NodeFilter.FILTER_ACCEPT;
-    }
-
-    // For non-text nodes, if ignoreManual is true, skip manually tagged elements.
-    if (ignoreManual) {
-      return NodeFilter.FILTER_SKIP;
-    }
-
-    // Accept the node if it is tagged according to the isTaggedElement function, else skip.
-    return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-  });
-
-  const taggedElements: Element[] = [];
+  const taggedElements: Element[] = [...manualTagged];
   const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
-  // Iterate over the nodes accepted by the TreeWalker.
-  while (walker.nextNode()) {
-    const node = walker.currentNode;
+  const stegaNodes = findStegaNodes('body' in root ? root.body : root);
 
-    // Add already tagged element nodes directly to the elements array.
-    if (isTaggedElement(node)) {
-      taggedElements.push(walker.currentNode as Element);
+  for (const { node, text } of stegaNodes) {
+    const sourceMap = decode(text);
+    if (!sourceMap || !sourceMap.origin.includes('contentful.com')) {
       continue;
     }
 
-    // Decode the text content for further processing.
-    const sourceMap = getSourceMap(node);
-
-    // Skip if the decoded CSM is not from Contentful.
-    if (!sourceMap?.contentful) {
-      continue;
-    }
-
-    // Tag img tags directly, no need for further checks
-    if (isImg(node)) {
-      // check for parent `figure/picture` to add the tagging there, otherwise use the image directly
-      const element = node.closest('figure') || node.closest('picture') || node;
-      elementsForTagging.push({ element, sourceMap });
-      continue;
-    }
-
-    // Skip if the parent element does not exist.
-    const el = node.parentElement;
-    if (!el) {
-      continue;
-    }
-
-    // Skip if the parent is already selected for tagging with the same information
     if (
+      hasTaggedParent(node, taggedElements) ||
       elementsForTagging.some(
         (et) => et.element.contains(node) && isSameSourceMap(et.sourceMap, sourceMap),
       )
@@ -215,27 +202,20 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
       continue;
     }
 
-    // Check if the sibling text nodes have the same information, if yes apply it on their wrapper element
-    // TODO: perf improvement: if the csm contains the type information, we could do this only for rich-text
-    const siblings = el.parentElement?.children;
-    if (siblings && siblings.length > 1) {
-      const taggedSiblings: string[] = [];
-
-      for (const sibling of siblings) {
-        const siblingSourceMap = decode(sibling.textContent || '');
-        if (siblingSourceMap?.contentful) {
-          taggedSiblings.push(siblingSourceMap.href);
-        }
-      }
-
-      if (taggedSiblings.length > 1 && taggedSiblings.length !== new Set(taggedSiblings).size) {
-        elementsForTagging.push({ element: el.parentElement, sourceMap: sourceMap });
-        continue;
-      }
+    if (node.matches('img')) {
+      const element = node.closest('figure') || node.closest('picture') || node;
+      elementsForTagging.push({ element, sourceMap });
+      continue;
     }
 
-    // No sibling element with the same information, add the element directly
-    elementsForTagging.push({ element: el, sourceMap: sourceMap });
+    // TODO: Performance optimisation: only do for richtext
+    const wrapper = getParent(node, sourceMap);
+    if (wrapper) {
+      elementsForTagging.push({ element: wrapper.element, sourceMap: sourceMap });
+    } else {
+      // No sibling element with the same information, add the element directly
+      elementsForTagging.push({ element: node, sourceMap: sourceMap });
+    }
   }
 
   // Filter duplicate elements, so we don't tag them again and again
