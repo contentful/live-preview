@@ -1,3 +1,5 @@
+import { WidgetId } from './types.js';
+
 /**
  * Clones the incoming element into a new one, to prevent modification on the original object
  * Hint: It uses the structuredClone which is only available in modern browsers,
@@ -15,3 +17,13 @@ export function clone<T extends Record<string, unknown> | Array<unknown>>(incomi
     return incoming;
   }
 }
+
+export const SUPPORTED_WIDGETS: WidgetId[] = [
+  'singleLine',
+  'tagEditor',
+  'listInput',
+  'checkbox',
+  'richTextEditor',
+  'multipleLine',
+  'markdown',
+];
