@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.12](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.11...@contentful/content-source-maps@0.2.0-alpha.12) (2024-03-07)
+
+
+### Bug Fixes
+
+* array symbol field csm ([#610](https://github.com/contentful/live-preview/issues/610)) ([3c2826a](https://github.com/contentful/live-preview/commit/3c2826a107f945493dd2275c2a611dd6528cfe0d))
+
+
+
+
+
 # [0.2.0-alpha.11](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0-alpha.10...@contentful/content-source-maps@0.2.0-alpha.11) (2024-02-21)
 
 
