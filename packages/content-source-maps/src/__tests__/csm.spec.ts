@@ -4,6 +4,7 @@ import { describe, expect, test } from 'vitest';
 
 import type { SourceMapMetadata } from '../encode.js';
 import { encodeGraphQLResponse } from '../encodeSourceMap.js';
+import { GraphQLResponse } from '../types.js';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
 
@@ -37,8 +38,8 @@ function testEncodingDecoding(encodedResponse: EncodedResponse, mappings: Mappin
 
 describe('Content Source Maps', () => {
   describe('GraphQL', () => {
-    test('basic example', () => {
-      const graphQLResponse = {
+    test('works for Symbol fields', () => {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             title: 'Title of the post',
@@ -102,8 +103,62 @@ describe('Content Source Maps', () => {
       });
     });
 
+    test('works for lists of Symbol fields', () => {
+      const graphQLResponse: GraphQLResponse = {
+        data: {
+          post: {
+            list: ['lorem', 'ipsum', 'dolor', 'sid'],
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1.0,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['list'],
+            locales: ['en-US'],
+            entries: [
+              {
+                space: 0,
+                environment: 0,
+                id: 'a1b2c3',
+              },
+            ],
+            assets: [],
+            mappings: {
+              '/post/list': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+      expect(Array.isArray(encodedGraphQLResponse.data.post.list)).toBeTruthy();
+      encodedGraphQLResponse.data.post.list.forEach((item: string) => {
+        const decodedItem = vercelStegaDecode(item);
+        const expectedValue = {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=list&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'list',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
+        };
+        expect(decodedItem).toEqual(expectedValue);
+      });
+    });
+
     test('it should ignore null values', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             title: null,
@@ -144,7 +199,7 @@ describe('Content Source Maps', () => {
     });
 
     test('handles EU domain', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             title: 'Title of the post',
@@ -212,7 +267,7 @@ describe('Content Source Maps', () => {
     });
 
     test('collections', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           postCollection: {
             items: [
@@ -315,7 +370,7 @@ describe('Content Source Maps', () => {
     });
 
     test('aliasing with multiple locales', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           postCollection: {
             items: [
@@ -404,7 +459,7 @@ describe('Content Source Maps', () => {
     });
 
     test('it should ignore null rich text values', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             // the graphql api won't return the json object if json empty
@@ -438,7 +493,7 @@ describe('Content Source Maps', () => {
     });
 
     test('works for rich text', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             rte: {
@@ -545,7 +600,7 @@ describe('Content Source Maps', () => {
     });
 
     test('does not encode dates', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             date: '2023-12-13T00:00:00.000+01:00',
@@ -580,7 +635,7 @@ describe('Content Source Maps', () => {
     });
 
     test('does not encode URLs', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             url: 'https://test.com',

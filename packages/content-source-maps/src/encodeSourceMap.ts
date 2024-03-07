@@ -75,12 +75,25 @@ export const encodeGraphQLResponse = (
           },
         };
 
+        //@TODO - refactor based on field type instead of checking the field value
+        // Handle Rich Text
         if (isRichTextValue(currentValue)) {
           encodeRichTextValue({ pointer, mappings, data, hiddenStrings });
-        } else {
-          const encodedValue = combine(currentValue, hiddenStrings);
-          jsonPointer.set(data, pointer, encodedValue);
+          continue;
         }
+
+        //@TODO - refactor based on field type instead of checking the field value
+        // Handle Array (list)
+        if (Array.isArray(currentValue)) {
+          const encodedValues = currentValue.map((value) => combine(value, hiddenStrings));
+          jsonPointer.set(data, pointer, encodedValues);
+          continue;
+        }
+
+        //@TODO - refactor based on field type instead of checking the field value
+        // Handle simple field values as the default case
+        const encodedValue = combine(currentValue, hiddenStrings);
+        jsonPointer.set(data, pointer, encodedValue);
       }
     } else {
       console.error(`Pointer ${pointer} not found in GraphQL data or href could not be generated.`);
