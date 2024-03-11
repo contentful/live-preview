@@ -47,7 +47,7 @@
     "lerna": "^8.0.0",
     "lint-staged": "^15.0.1",
     "prettier": "3.2.4",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
