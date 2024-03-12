@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.25](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.24...@contentful/live-preview@3.0.0-alpha.25) (2024-03-12)
+
+
+### Features
+
+* export split function ([6e5f043](https://github.com/contentful/live-preview/commit/6e5f04328464b8023088debf393ffc47c655af89))
+
+
+
+
+
 # [3.0.0-alpha.24](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.23...@contentful/live-preview@3.0.0-alpha.24) (2024-03-07)
 
 **Note:** Version bump only for package @contentful/live-preview
