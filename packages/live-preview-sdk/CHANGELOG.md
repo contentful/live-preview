@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.26](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.25...@contentful/live-preview@3.0.0-alpha.26) (2024-03-13)
+
+
+### Bug Fixes
+
+* handle empty rich text field [TOL-1708] ([#493](https://github.com/contentful/live-preview/issues/493)) ([19e7c3a](https://github.com/contentful/live-preview/commit/19e7c3af17a2b48f592e5d91983ce91d260db789))
+* pass experimental flags from LivePreviewProvider [TOL-1711] ([#525](https://github.com/contentful/live-preview/issues/525)) ([b9e4bf3](https://github.com/contentful/live-preview/commit/b9e4bf374999d10729ec57f8c4d950862528e5cf))
+
+
+### Features
+
+* adding support for asset editor field tagging [TOL-1683] ([#463](https://github.com/contentful/live-preview/issues/463)) ([f366953](https://github.com/contentful/live-preview/commit/f366953ad9a98dbcb133e06415d516165fab1155))
+* expose live preview props types ([#474](https://github.com/contentful/live-preview/issues/474)) ([1275dd3](https://github.com/contentful/live-preview/commit/1275dd3760e34cc77a684ba137243011ee1e850d))
+* implement CSM transformation to encoded strings for GraphQL [TOL-1706] ([#473](https://github.com/contentful/live-preview/issues/473)) ([c29aa4c](https://github.com/contentful/live-preview/commit/c29aa4c2eb9c7a636227e50944c43d42afea50db))
+* recognise auto-tagged elements [TOL-1711] ([#523](https://github.com/contentful/live-preview/issues/523)) ([f40704a](https://github.com/contentful/live-preview/commit/f40704aeb10a2c2749402e6fb47c52af85775afe))
+* setup gh packages [TOL-1702] ([#512](https://github.com/contentful/live-preview/issues/512)) ([21128c9](https://github.com/contentful/live-preview/commit/21128c9d022a6994fda25a8fd17971ce5d13e735))
+
+
+
+
+
 ## [2.17.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.2...@contentful/live-preview@2.17.3) (2024-02-05)
 
 **Note:** Version bump only for package @contentful/live-preview
