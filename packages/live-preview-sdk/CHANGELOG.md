@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.27](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.26...@contentful/live-preview@3.0.0-alpha.27) (2024-03-13)
+
+
+### Features
+
+* localhost as target origin ([#623](https://github.com/contentful/live-preview/issues/623)) ([98754d6](https://github.com/contentful/live-preview/commit/98754d63535c47da1cb6b63594369d9a58c195b2))
+
+
+
+
+
 # [3.0.0-alpha.26](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.25...@contentful/live-preview@3.0.0-alpha.26) (2024-03-13)
 
 
