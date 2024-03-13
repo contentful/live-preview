@@ -80,7 +80,6 @@ describe('getAllTaggedElements', () => {
 		<div>
 		  <!-- Keep -->
 		  <div id="entry" ${dataEntry}="entry-id" ${dataField}="field-id"></div>
-
 		  <!-- Ignore -->
 		  <div ${dataField}="field-1"></div>
 

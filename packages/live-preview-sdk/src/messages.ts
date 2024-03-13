@@ -5,14 +5,14 @@ import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './cons
 import { sendMessageToEditor } from './helpers/index.js';
 import {
   InspectorModeEventMethods,
+  type InspectorModeAssetAttributes,
   type InspectorModeAttributes,
   type InspectorModeChangedMessage,
+  type InspectorModeEntryAttributes,
   type InspectorModeMouseMoveMessage,
   type InspectorModeResizeMessage,
   type InspectorModeScrollMessage,
   type InspectorModeTaggedElementsMessage,
-  type InspectorModeEntryAttributes,
-  type InspectorModeAssetAttributes,
 } from './inspectorMode/types.js';
 import type { Argument, ContentType, EntityReferenceMap } from './types.js';
 

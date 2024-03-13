@@ -3,232 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [3.0.0-alpha.25](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.24...@contentful/live-preview@3.0.0-alpha.25) (2024-03-12)
-
-
-### Features
-
-* export split function ([6e5f043](https://github.com/contentful/live-preview/commit/6e5f04328464b8023088debf393ffc47c655af89))
-
-
-
-
-
-# [3.0.0-alpha.24](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.23...@contentful/live-preview@3.0.0-alpha.24) (2024-03-07)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.23](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.22...@contentful/live-preview@3.0.0-alpha.23) (2024-02-28)
-
-
-### Bug Fixes
-
-* **content-source-maps:** improve tagging for richtext [] ([#593](https://github.com/contentful/live-preview/issues/593)) ([b2f97cc](https://github.com/contentful/live-preview/commit/b2f97cc60bbcac43bc90785e0e605a49a8db0af4))
-
-
-
-
-
-# [3.0.0-alpha.22](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.21...@contentful/live-preview@3.0.0-alpha.22) (2024-02-23)
-
-
-### Bug Fixes
-
-* **inspectorMode:** img tagging with CSM [] ([#592](https://github.com/contentful/live-preview/issues/592)) ([f3f179b](https://github.com/contentful/live-preview/commit/f3f179bb4ca17454b15267339f8e6311ae1eba0e))
-
-
-
-
-
-# [3.0.0-alpha.21](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.20...@contentful/live-preview@3.0.0-alpha.21) (2024-02-23)
-
-
-### Features
-
-* **inspectorMode:** support tagging for cross space references [] ([#591](https://github.com/contentful/live-preview/issues/591)) ([486ae4c](https://github.com/contentful/live-preview/commit/486ae4c63703aba38fbb86e26dcdacec3768c27d))
-
-
-
-
-
-# [3.0.0-alpha.20](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.19...@contentful/live-preview@3.0.0-alpha.20) (2024-02-22)
-
-
-### Bug Fixes
-
-* **csm:** group elements correctly together [] ([#590](https://github.com/contentful/live-preview/issues/590)) ([4831843](https://github.com/contentful/live-preview/commit/4831843a48d3626cf4dde9c644394ebf4df986f5))
-
-
-
-
-
-# [3.0.0-alpha.19](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.18...@contentful/live-preview@3.0.0-alpha.19) (2024-02-22)
-
-
-### Bug Fixes
-
-* **content-sourcemap:** tag only wrapper around richtext [TOL-1832] ([#588](https://github.com/contentful/live-preview/issues/588)) ([c2035a5](https://github.com/contentful/live-preview/commit/c2035a56f6407fafc0cbfc26290c5c5b9009a377))
-
-
-
-
-
-# [3.0.0-alpha.18](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.17...@contentful/live-preview@3.0.0-alpha.18) (2024-02-21)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.17](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.16...@contentful/live-preview@3.0.0-alpha.17) (2024-02-21)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.16](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.15...@contentful/live-preview@3.0.0-alpha.16) (2024-02-21)
-
-
-### Features
-
-* restore csm in LP & fix build ([#585](https://github.com/contentful/live-preview/issues/585)) ([20f12a2](https://github.com/contentful/live-preview/commit/20f12a23b7cd1921a23c806e6acf0bc5085d9a45))
-
-
-
-
-
-# [3.0.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.14...@contentful/live-preview@3.0.0-alpha.15) (2024-02-20)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.14](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.13...@contentful/live-preview@3.0.0-alpha.14) (2024-02-20)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.12...@contentful/live-preview@3.0.0-alpha.13) (2024-02-20)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.12](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.11...@contentful/live-preview@3.0.0-alpha.12) (2024-02-19)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.11](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.10...@contentful/live-preview@3.0.0-alpha.11) (2024-02-15)
-
-
-### Bug Fixes
-
-* revert sysIds change ([bee051a](https://github.com/contentful/live-preview/commit/bee051a012980de054870a7de5b33bb3e0795624))
-* update tests ([2a56adb](https://github.com/contentful/live-preview/commit/2a56adb05589ad01a33c7a4cb9786b0d4c3dee55))
-
-
-
-
-
-# [3.0.0-alpha.10](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.9...@contentful/live-preview@3.0.0-alpha.10) (2024-02-15)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.9](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.8...@contentful/live-preview@3.0.0-alpha.9) (2024-02-12)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.7...@contentful/live-preview@3.0.0-alpha.8) (2024-02-12)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.6...@contentful/live-preview@3.0.0-alpha.7) (2024-02-09)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.5...@contentful/live-preview@3.0.0-alpha.6) (2024-02-08)
-
-
-### Features
-
-* extract to csm package ([#557](https://github.com/contentful/live-preview/issues/557)) ([916bfa6](https://github.com/contentful/live-preview/commit/916bfa6606cab397e7033190f5f45cb6aa08adcd))
-
-
-
-
-
-# [3.0.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.4...@contentful/live-preview@3.0.0-alpha.5) (2024-02-06)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [3.0.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.4...@contentful/live-preview@3.0.0-alpha.5) (2024-02-06)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-
-# [3.0.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.3...@contentful/live-preview@3.0.0-alpha.4) (2024-02-06)
-
-
-### Bug Fixes
-
-* adding rich text csm encoding for text nodes [TOL-1788] ([#554](https://github.com/contentful/live-preview/issues/554)) ([df7c1b5](https://github.com/contentful/live-preview/commit/df7c1b588bec225b26e5979b02690d817c5463f5))
-
-
-# [3.0.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.2...@contentful/live-preview@3.0.0-alpha.3) (2024-02-05)
-
-
-### Features
-
-* export csm ([#552](https://github.com/contentful/live-preview/issues/552)) ([4cf6d93](https://github.com/contentful/live-preview/commit/4cf6d9386c3279b5993a14e8617ca90edff8fc80)), closes [#475](https://github.com/contentful/live-preview/issues/475)
-
-
-
-
-
-# [3.0.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.1...@contentful/live-preview@3.0.0-alpha.2) (2024-01-19)
-
 ## [2.17.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.2...@contentful/live-preview@2.17.3) (2024-02-05)
 
 **Note:** Version bump only for package @contentful/live-preview
@@ -280,29 +54,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* restore unsub logic ([7161b56](https://github.com/contentful/live-preview/commit/7161b560af5b4d1ca832ad26cc8a34f6796bc0fd))
-* restore unsub logic ([7161b56](https://github.com/contentful/live-preview/commit/7161b560af5b4d1ca832ad26cc8a34f6796bc0fd))
 * setup gh packages [TOL-1702] ([#512](https://github.com/contentful/live-preview/issues/512)) ([21128c9](https://github.com/contentful/live-preview/commit/21128c9d022a6994fda25a8fd17971ce5d13e735))
 
 
 
 
-
-
-# [3.0.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.16...@contentful/live-preview@3.0.0-alpha.1) (2024-01-19)
-
-
-### Reverts
-
-* Revert "chore(visual-sdk): remove as it's no longer needed [] (#510)" ([bb3f174](https://github.com/contentful/live-preview/commit/bb3f174ab065a7a0e9c13422c897259769ef3875)), closes [#510](https://github.com/contentful/live-preview/issues/510)
-* Revert "feat(live-updates): send unsubscribed message to cleanup subscriptions on the counter part [] (#509)" ([1664262](https://github.com/contentful/live-preview/commit/1664262729925badaebbad7af48dad80cbec650a)), closes [#509](https://github.com/contentful/live-preview/issues/509)
-* Revert "chore(release): updated release notes and package versions [ci skip]" ([6457dd2](https://github.com/contentful/live-preview/commit/6457dd2516bc43124cc1cf0c79eb6969b7b20554))
-
-
-
-
-
-# [2.15.0-alpha.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.14...@contentful/live-preview@2.15.0-alpha.15) (2024-01-18)
 
 ## [2.15.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.1...@contentful/live-preview@2.15.2) (2024-01-22)
 
@@ -312,41 +68,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [2.15.0-alpha.14](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0-alpha.13...@contentful/live-preview@2.15.0-alpha.14) (2024-01-10)
-
-
-### Features
-
-* remove csm until stega is approved ([1d304fd](https://github.com/contentful/live-preview/commit/1d304fd01a5a1efd73eaddaa9f30d6e2f75d547e))
-
-
-
-
-
-# [2.15.0-alpha.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.11...@contentful/live-preview@2.15.0-alpha.13) (2024-01-09)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [2.15.0-alpha.12](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.1...@contentful/live-preview@2.15.0-alpha.12) (2024-01-08)
-
-
-### Features
-
-* only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
-* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
-* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
-* return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
-
-
-
-
-
-
-**Note:** Version bump only for package @contentful/live-preview
 ## [2.15.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.15.0...@contentful/live-preview@2.15.1) (2024-01-04)
 
 
@@ -358,90 +79,39 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-
-# [2.13.0-alpha.10](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.9...@contentful/live-preview@2.13.0-alpha.10) (2023-12-21)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [2.13.0-alpha.9](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.8...@contentful/live-preview@2.13.0-alpha.9) (2023-12-21)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [2.13.0-alpha.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.7...@contentful/live-preview@2.13.0-alpha.8) (2023-12-12)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [2.13.0-alpha.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.6...@contentful/live-preview@2.13.0-alpha.7) (2023-12-08)
 # [2.15.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.14.0...@contentful/live-preview@2.15.0) (2024-01-02)
 
 
 ### Features
 
-* return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
-* return localised data to preview ([f401ee5](https://github.com/contentful/live-preview/commit/f401ee5bea167392c465882d6fe88c4e8909b335))
 * implement CSM transformation to encoded strings for GraphQL [TOL-1706] ([#473](https://github.com/contentful/live-preview/issues/473)) ([c29aa4c](https://github.com/contentful/live-preview/commit/c29aa4c2eb9c7a636227e50944c43d42afea50db))
 
 
 
 
 
-# [2.13.0-alpha.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.5...@contentful/live-preview@2.13.0-alpha.6) (2023-12-06)
-
-**Note:** Version bump only for package @contentful/live-preview
-
-
-
-
-
-# [2.13.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.4...@contentful/live-preview@2.13.0-alpha.5) (2023-12-05)
 # [2.14.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0...@contentful/live-preview@2.14.0) (2023-12-14)
 
 
 ### Features
 
-* only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
-* only call callback when necessary [] ([113f319](https://github.com/contentful/live-preview/commit/113f319ad91195654b6610d0b428a72d81466192))
 * expose live preview props types ([#474](https://github.com/contentful/live-preview/issues/474)) ([1275dd3](https://github.com/contentful/live-preview/commit/1275dd3760e34cc77a684ba137243011ee1e850d))
 
 
 
 
 
-# [2.13.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0-alpha.4) (2023-11-28)
-# [2.13.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0-alpha.4) (2023-11-28)
 # [2.13.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.5...@contentful/live-preview@2.13.0) (2023-12-13)
 
 
 ### Features
 
-* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
-* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
-* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
-* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
 * adding support for asset editor field tagging [TOL-1683] ([#463](https://github.com/contentful/live-preview/issues/463)) ([f366953](https://github.com/contentful/live-preview/commit/f366953ad9a98dbcb133e06415d516165fab1155))
 
 
 
 
 
-# [2.13.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.2...@contentful/live-preview@2.13.0-alpha.3) (2023-11-28)
-
-
-### Features
-
-* remove unused code ([#424](https://github.com/contentful/live-preview/issues/424)) ([b031b36](https://github.com/contentful/live-preview/commit/b031b36c5e41ad156ab6d7feecf19be82ec6b38c))
 ## [2.12.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.4...@contentful/live-preview@2.12.5) (2023-11-28)
 
 

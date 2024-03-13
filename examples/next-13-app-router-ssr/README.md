@@ -1,9 +1,8 @@
 # Next.js GraphQL Contentful live preview SDK example
 
-This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that runs only on the server.
+This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that runs **only** on the server.
 
 The live preview SDK will be in an seperate [script](./public/_live-preview.ts), reload the page after **related** content changes and enables the inspector mode for your application.
-
 
 It's important that you use the CPA (Content Preview API) when using this functionality.
 
