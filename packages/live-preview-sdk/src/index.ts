@@ -37,7 +37,11 @@ export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
 export const VERSION = version;
 
-const DEFAULT_ORIGINS = ['https://app.contentful.com', 'https://app.eu.contentful.com'];
+const DEFAULT_ORIGINS = [
+  'https://app.contentful.com',
+  'https://app.eu.contentful.com',
+  'http://localhost:3001', // for local debugging for Contentful engineers
+];
 
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
