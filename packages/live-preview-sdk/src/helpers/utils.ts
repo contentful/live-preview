@@ -28,16 +28,10 @@ export function sendMessageToEditor(
     version,
   } as MessageFromSDK;
 
-  debug.log('Send message', message);
+  debug.log(`Send message`, message);
 
   targetOrigin.forEach((origin) => {
-    if (origin.startsWith('http://localhost:')) {
-      //use window.top and not window.parent because of tests with cypress
-      //https://github.com/cypress-io/cypress/issues/969
-      window.top?.postMessage(message, origin);
-    } else {
-      window.parent?.postMessage(message, origin);
-    }
+    window.top?.postMessage(message, origin);
   });
 }
 
@@ -153,15 +147,9 @@ export function clone<T extends Record<string, unknown> | Array<unknown>>(incomi
 /** Detects if the current page is shown inside an iframe */
 export function isInsideIframe(): boolean {
   try {
-    if (origin.startsWith('http://localhost:')) {
-      //use window.top and not window.parent because of tests with cypress
-      //https://github.com/cypress-io/cypress/issues/969
-      return window.top?.location.href !== window.location.href;
-    } else {
-      return window.parent?.location.href !== window.location.href;
-    }
+    return window.top?.location.href !== window.location.href;
   } catch (err) {
-    // window.top.location.href is not accessible for non same origin iframes
+    // window.top.location.href is not accessable for non same origin iframes
     return true;
   }
 }
