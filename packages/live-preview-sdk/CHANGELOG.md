@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.30](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.29...@contentful/live-preview@3.0.0-alpha.30) (2024-03-14)
+
+
+### Bug Fixes
+
+* use window parent and top ([0700e29](https://github.com/contentful/live-preview/commit/0700e294e7143d5e8aa0ba8a8104c7dae4d542ab))
+
+
+
+
+
 # [3.0.0-alpha.29](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.28...@contentful/live-preview@3.0.0-alpha.29) (2024-03-14)
 
 
