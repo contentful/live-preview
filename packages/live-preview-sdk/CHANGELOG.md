@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.33](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.32...@contentful/live-preview@3.0.0-alpha.33) (2024-03-14)
+
+
+### Bug Fixes
+
+* removing cypress code ([3b10ae4](https://github.com/contentful/live-preview/commit/3b10ae4225a3a47fc50cdc6e4c03dd2c2c23949f))
+
+
+
+
+
 # [3.0.0-alpha.32](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.31...@contentful/live-preview@3.0.0-alpha.32) (2024-03-14)
 
 
