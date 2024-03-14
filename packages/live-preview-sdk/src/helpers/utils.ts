@@ -28,7 +28,7 @@ export function sendMessageToEditor(
     version,
   } as MessageFromSDK;
 
-  debug.log('Send message', message);
+  debug.log(`Send message to ${JSON.stringify(targetOrigin)}`, message);
 
   targetOrigin.forEach((origin) => {
     window.top?.postMessage(message, origin);

@@ -158,7 +158,7 @@ export class ContentfulLivePreview {
           return;
         }
 
-        debug.log('Received message', event.data);
+        debug.log(`Received message from ${event.source}`, event.data);
 
         if (
           ('action' in event.data && event.data.action === 'DEBUG_MODE_ENABLED') ||
