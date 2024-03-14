@@ -28,7 +28,7 @@ export function sendMessageToEditor(
     version,
   } as MessageFromSDK;
 
-  debug.log(`Send message to ${JSON.stringify(targetOrigin)}`, message);
+  debug.log('Send message', message);
 
   targetOrigin.forEach((origin) => {
     if (origin.startsWith('http://localhost:')) {
