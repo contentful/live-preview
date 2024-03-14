@@ -31,9 +31,13 @@ export function sendMessageToEditor(
   debug.log(`Send message to ${JSON.stringify(targetOrigin)}`, message);
 
   targetOrigin.forEach((origin) => {
-    //use window.parent and not window.top because of tests with cypress
-    //https://github.com/cypress-io/cypress/issues/969
-    window.parent?.postMessage(message, origin);
+    if (origin.startsWith('http://localhost:')) {
+      //use window.top and not window.parent because of tests with cypress
+      //https://github.com/cypress-io/cypress/issues/969
+      window.top?.postMessage(message, origin);
+    } else {
+      window.parent?.postMessage(message, origin);
+    }
   });
 }
 
