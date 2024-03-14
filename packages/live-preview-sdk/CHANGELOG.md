@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.29](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.28...@contentful/live-preview@3.0.0-alpha.29) (2024-03-14)
+
+
+### Bug Fixes
+
+* window messaging for cypress ([40162ed](https://github.com/contentful/live-preview/commit/40162edbc1ea29a12f8f5b7948a1b2a9ab5394bf))
+
+
+
+
+
 # [3.0.0-alpha.28](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.27...@contentful/live-preview@3.0.0-alpha.28) (2024-03-14)
 
 **Note:** Version bump only for package @contentful/live-preview
