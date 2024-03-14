@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.32](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.31...@contentful/live-preview@3.0.0-alpha.32) (2024-03-14)
+
+
+### Bug Fixes
+
+* remove debugging code ([ea88bc6](https://github.com/contentful/live-preview/commit/ea88bc6611b83d1c3a2dbd7f962533ff593e5fb1))
+
+
+
+
+
 # [3.0.0-alpha.31](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.30...@contentful/live-preview@3.0.0-alpha.31) (2024-03-14)
 
 
