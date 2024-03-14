@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.31](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.30...@contentful/live-preview@3.0.0-alpha.31) (2024-03-14)
+
+
+### Bug Fixes
+
+* is inside iframe window ([72b7e05](https://github.com/contentful/live-preview/commit/72b7e0587180eaa2aaf14a752f4854f78ed1c858))
+
+
+
+
+
 # [3.0.0-alpha.30](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.29...@contentful/live-preview@3.0.0-alpha.30) (2024-03-14)
 
 
