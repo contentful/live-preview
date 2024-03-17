@@ -33,5 +33,11 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react(), dts()],
+  plugins: [
+    react(),
+    dts({
+      entryRoot: 'src',
+      exclude: ['**/__tests__/**'],
+    }),
+  ],
 });

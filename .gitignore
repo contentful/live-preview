@@ -45,3 +45,5 @@ dist-ssr
 
 # Sub packages
 react/dist/*
+
+.nx

@@ -1,0 +1,147 @@
+{
+  "items": [
+    {
+      "__typename": "FooterMenu",
+      "sys": {
+        "id": "6c9tUMxxamKB9R7S16ne1X"
+      },
+      "menuItemsCollection": {
+        "items": [
+          {
+            "groupName": "Products",
+            "featuredPagesCollection": {
+              "items": [
+                {
+                  "__typename": "Page",
+                  "slug": "classic-card",
+                  "sys": {
+                    "id": "3Qnjx9WkvM4ZC44AIBDZwt"
+                  },
+                  "pageName": "Classic",
+                  "pageContent": {
+                    "__typename": "TopicProduct",
+                    "sys": {
+                      "id": "4iZO00YnKE8I8c90VIUuhN"
+                    }
+                  }
+                },
+                {
+                  "__typename": "Page",
+                  "slug": "black-card",
+                  "sys": {
+                    "id": "6LznwSwpmSWNCMwbgmtB2L"
+                  },
+                  "pageName": "Black",
+                  "pageContent": {
+                    "__typename": "TopicProduct",
+                    "sys": {
+                      "id": "5BfEkkNsrAGLLJQukwIjrJ"
+                    }
+                  }
+                },
+                {
+                  "__typename": "Page",
+                  "slug": "corporate-card",
+                  "sys": {
+                    "id": "jYxVlZPpqdeZs93jmpAlF"
+                  },
+                  "pageName": "Corporate",
+                  "pageContent": {
+                    "__typename": "TopicProduct",
+                    "sys": {
+                      "id": "2Jv15oYNaOUzyyJEp5P5z4"
+                    }
+                  }
+                },
+                {
+                  "__typename": "Page",
+                  "slug": "pricing",
+                  "sys": {
+                    "id": "2SKWtzmGOnQm80nRGIIclu"
+                  },
+                  "pageName": "Pricing",
+                  "pageContent": {
+                    "__typename": "ComponentProductTable",
+                    "sys": {
+                      "id": "5YZ9fKKF3Vg9bNV7x3Xl08"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "groupName": "Customers",
+            "featuredPagesCollection": {
+              "items": [
+                {
+                  "__typename": "Page",
+                  "slug": "about-us33",
+                  "sys": {
+                    "id": "7wGhPNCZNLknpSaJVWfnHf"
+                  },
+                  "pageName": "About us",
+                  "pageContent": null
+                }
+              ]
+            }
+          },
+          {
+            "groupName": "Company",
+            "featuredPagesCollection": {
+              "items": [
+                {
+                  "__typename": "Page",
+                  "slug": "about-us33",
+                  "sys": {
+                    "id": "7wGhPNCZNLknpSaJVWfnHf"
+                  },
+                  "pageName": "About us",
+                  "pageContent": null
+                },
+                {
+                  "__typename": "Page",
+                  "slug": "this-should-be-updated",
+                  "sys": {
+                    "id": "7aKPwfpCJCy6mz7fefzNUi"
+                  },
+                  "pageName": "This should be updated",
+                  "pageContent": {
+                    "__typename": "TopicProduct",
+                    "sys": {
+                      "id": "6wuDj6hgz4SOQuiq6f8UzX"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "legalLinks": {
+        "featuredPagesCollection": {
+          "items": [
+            {
+              "__typename": "Page",
+              "slug": "accessibility",
+              "sys": {
+                "id": "4OSewDgF5UsbHVwRNIIILi"
+              },
+              "pageName": "Accessibility",
+              "pageContent": {
+                "__typename": "TopicBusinessInfo",
+                "sys": {
+                  "id": "7evUFWi5oSKaGWo3ZHqiwq"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "twitterLink": "https://twitter.com/",
+      "facebookLink": "https://facebook.com/",
+      "linkedinLink": "https://linkedin.com/",
+      "instagramLink": "https://instagram.com/"
+    }
+  ]
+}

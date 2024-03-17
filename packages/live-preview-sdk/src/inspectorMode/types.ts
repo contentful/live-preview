@@ -1,14 +1,17 @@
 import type { SetRequired } from 'type-fest';
 
-export type InspectorModeEntryTags = {
-  [InspectorModeDataAttributes.ENTRY_ID]: string;
+type InspectorModeSharedTags = {
   [InspectorModeDataAttributes.FIELD_ID]: string;
   [InspectorModeDataAttributes.LOCALE]?: string;
+  [InspectorModeDataAttributes.ENVIRONMENT]?: string;
+  [InspectorModeDataAttributes.SPACE]?: string;
 };
-export type InspectorModeAssetTags = {
+
+export type InspectorModeEntryTags = InspectorModeSharedTags & {
+  [InspectorModeDataAttributes.ENTRY_ID]: string;
+};
+export type InspectorModeAssetTags = InspectorModeSharedTags & {
   [InspectorModeDataAttributes.ASSET_ID]: string;
-  [InspectorModeDataAttributes.FIELD_ID]: string;
-  [InspectorModeDataAttributes.LOCALE]?: string;
 };
 export type InspectorModeTags = InspectorModeEntryTags | InspectorModeAssetTags | null;
 
@@ -17,6 +20,8 @@ export const enum InspectorModeDataAttributes {
   ENTRY_ID = 'data-contentful-entry-id',
   ASSET_ID = 'data-contentful-asset-id',
   LOCALE = 'data-contentful-locale',
+  SPACE = 'data-contentful-space',
+  ENVIRONMENT = 'data-contentful-environment',
 }
 
 export enum InspectorModeEventMethods {
@@ -29,15 +34,17 @@ export enum InspectorModeEventMethods {
   INSPECTOR_MODE_CHANGED = 'INSPECTOR_MODE_CHANGED',
 }
 
-export type InspectorModeEntryAttributes = {
-  entryId: string;
+type InspectorModeSharedAttributes = {
   fieldId: string;
   locale: string;
+  space?: string;
+  environment?: string;
 };
-export type InspectorModeAssetAttributes = {
+export type InspectorModeEntryAttributes = InspectorModeSharedAttributes & {
+  entryId: string;
+};
+export type InspectorModeAssetAttributes = InspectorModeSharedAttributes & {
   assetId: string;
-  fieldId: string;
-  locale: string;
 };
 
 export type InspectorModeAttributes = InspectorModeEntryAttributes | InspectorModeAssetAttributes;

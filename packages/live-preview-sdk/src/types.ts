@@ -1,21 +1,24 @@
 import type { Asset, Entry } from 'contentful';
 import type { ContentTypeProps } from 'contentful-management';
 
-import { SendMessage } from './helpers';
+import type {
+  InspectorModeAssetAttributes,
+  InspectorModeEntryAttributes,
+} from './inspectorMode/types.js';
 
 export type ContentType = ContentTypeProps;
 export const ASSET_TYPENAME = 'Asset';
 
-export type LivePreviewEntryProps = {
-  fieldId: string;
-  entryId: string;
-  locale?: string;
-};
-export type LivePreviewAssetProps = {
-  fieldId: string;
-  assetId: string;
-  locale?: string;
-};
+type WithOptional<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>;
+
+export type LivePreviewEntryProps = WithOptional<
+  InspectorModeEntryAttributes,
+  'locale' | 'environment' | 'space'
+>;
+export type LivePreviewAssetProps = WithOptional<
+  InspectorModeAssetAttributes,
+  'locale' | 'environment' | 'space'
+>;
 
 export type LivePreviewProps =
   | (LivePreviewEntryProps & { assetId?: never })
@@ -62,7 +65,6 @@ export type UpdateEntryProps = {
   locale: string;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
 };
 
 export type UpdateFieldProps = {
@@ -72,7 +74,6 @@ export type UpdateFieldProps = {
   locale: string;
   entityReferenceMap: EntityReferenceMap;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
 };
 
 export type UpdateReferenceFieldProps = {
@@ -81,7 +82,6 @@ export type UpdateReferenceFieldProps = {
   entityReferenceMap: EntityReferenceMap;
   locale: string;
   gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
 };
 
 /**
@@ -105,5 +105,5 @@ export interface Subscription {
   locale?: string;
   callback: SubscribeCallback;
   gqlParams?: GraphQLParams;
-  sysId: string;
+  sysIds: string[];
 }

@@ -1,8 +1,8 @@
 import jsonPointer from 'json-pointer';
 
-import { debug } from '../helpers';
-import { encode } from './encode';
-import { GraphQLResponse } from './types';
+import { debug } from '../helpers/index.js';
+import { encode } from './encode.js';
+import { GraphQLResponse } from './types.js';
 
 const isUrlOrIsoDate = (value: string) => {
   // Regular expression for URL validation
@@ -21,7 +21,7 @@ const getHref = (
   environment: string,
   field: string,
   locale: string,
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
 ): string => {
   const targetOriginUrl = targetOrigin || 'https://app.contentful.com';
   const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
@@ -32,7 +32,7 @@ const getHref = (
 
 export const encodeSourceMap = (
   graphqlResponse: GraphQLResponse,
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com'
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
 ): GraphQLResponse => {
   if (
     !graphqlResponse ||

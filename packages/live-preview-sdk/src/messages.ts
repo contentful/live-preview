@@ -1,20 +1,20 @@
-import type { RequestEntitiesMessage, RequestedEntitiesMessage } from '@contentful/visual-sdk';
-import { PostMessageMethods as StorePostMessageMethods } from '@contentful/visual-sdk';
 import type { Asset, Entry } from 'contentful';
 import type { SysLink } from 'contentful-management';
 
-import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
-import { sendMessageToEditor } from './helpers';
+import type { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
+import { sendMessageToEditor } from './helpers/index.js';
 import {
+  InspectorModeEventMethods,
+  type InspectorModeAssetAttributes,
   type InspectorModeAttributes,
   type InspectorModeChangedMessage,
-  InspectorModeEventMethods,
+  type InspectorModeEntryAttributes,
   type InspectorModeMouseMoveMessage,
   type InspectorModeResizeMessage,
   type InspectorModeScrollMessage,
   type InspectorModeTaggedElementsMessage,
-} from './inspectorMode/types';
-import type { ContentType, EntityReferenceMap } from './types';
+} from './inspectorMode/types.js';
+import type { Argument, ContentType, EntityReferenceMap } from './types.js';
 
 enum LivePreviewPostMessageMethods {
   CONNECTED = 'CONNECTED',
@@ -27,6 +27,7 @@ enum LivePreviewPostMessageMethods {
   TAGGED_FIELD_CLICKED = 'TAGGED_FIELD_CLICKED',
   URL_CHANGED = 'URL_CHANGED',
   SUBSCRIBED = 'SUBSCRIBED',
+  UNSUBSCRIBED = 'UNSUBSCRIBED',
 
   ENTRY_UPDATED = 'ENTRY_UPDATED',
   ENTRY_SAVED = 'ENTRY_SAVED',
@@ -42,18 +43,9 @@ enum LivePreviewPostMessageMethods {
   UNKNOWN_REFERENCE_LOADED = 'UNKNOWN_REFERENCE_LOADED',
 }
 
-export {
-  StorePostMessageMethods,
-  LivePreviewPostMessageMethods,
-  RequestEntitiesMessage,
-  RequestedEntitiesMessage,
-  InspectorModeEventMethods,
-};
+export { InspectorModeChangedMessage, InspectorModeEventMethods, LivePreviewPostMessageMethods };
 
-export type PostMessageMethods =
-  | LivePreviewPostMessageMethods
-  | StorePostMessageMethods
-  | InspectorModeEventMethods;
+export type PostMessageMethods = LivePreviewPostMessageMethods | InspectorModeEventMethods;
 
 export type ConnectedMessage = {
   /** @deprecated use method instead */
@@ -90,9 +82,24 @@ export type SubscribedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.SUBSCRIBED;
   type: 'GQL' | 'REST';
-  entryId: string;
+  sysIds: string[];
+  /** @deprecated use method instead */
+  entryId?: string;
   locale: string;
   event: 'edit' | 'save';
+  id: string;
+  config: string;
+};
+
+export type UnsubscribedMessage = {
+  type: 'GQL' | 'REST';
+  sysIds: string[];
+  /** @deprecated use method instead */
+  entryId?: string;
+  locale: string;
+  event: 'edit' | 'save';
+  id: string;
+  config: string;
 };
 
 export type ErrorMessage = {
@@ -101,7 +108,7 @@ export type ErrorMessage = {
   /** Error message */
   message: string;
   /** Additional information that could be helpful about this error (e.g. entryId) */
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 };
 
 export type EditorMessage =
@@ -110,7 +117,7 @@ export type EditorMessage =
   | UnknownEntityMessage
   | UrlChangedMessage
   | SubscribedMessage
-  | RequestEntitiesMessage
+  | UnsubscribedMessage
   | ErrorMessage
   | InspectorModeMouseMoveMessage
   | InspectorModeScrollMessage
@@ -130,16 +137,15 @@ export type EntryUpdatedMessage = {
   /** @deprecated use method instead */
   action: LivePreviewPostMessageMethods.ENTRY_UPDATED;
   method: LivePreviewPostMessageMethods.ENTRY_UPDATED;
-  entity: Entry | Asset;
+  data: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
+  subscriptionId: string;
 };
 
 export type EntrySavedMessage = {
   method: LivePreviewPostMessageMethods.ENTRY_SAVED;
   entity: Entry | Asset;
   contentType: ContentType;
-  entityReferenceMap: EntityReferenceMap;
 };
 
 /** @deprecated use RequestEntitiesMessage instead */
@@ -162,8 +168,8 @@ export type MessageFromEditor = (
   | UnknownReferenceLoaded
   | InspectorModeChangedMessage
   | DebugModeEnabledMessage
-  | RequestedEntitiesMessage
 ) & {
+  data: Argument;
   method: PostMessageMethods;
   /** @deprecated use source instead */
   from: 'live-preview';
@@ -171,37 +177,29 @@ export type MessageFromEditor = (
 };
 
 export function openEntryInEditorUtility(
-  fieldId: string,
-  entryId: string,
-  locale: string,
-  targetOrigin: string[]
+  props: InspectorModeEntryAttributes,
+  targetOrigin: string[],
 ): void {
   sendMessageToEditor(
     LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
     {
       action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
-      fieldId,
-      entryId,
-      locale,
-    },
-    targetOrigin
+      ...props,
+    } as TaggedFieldClickMessage,
+    targetOrigin,
   );
 }
 
 export function openAssetInEditorUtility(
-  fieldId: string,
-  assetId: string,
-  locale: string,
-  targetOrigin: string[]
+  props: InspectorModeAssetAttributes,
+  targetOrigin: string[],
 ): void {
   sendMessageToEditor(
     LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
     {
       action: LivePreviewPostMessageMethods.TAGGED_FIELD_CLICKED,
-      fieldId,
-      assetId,
-      locale,
-    },
-    targetOrigin
+      ...props,
+    } as TaggedFieldClickMessage,
+    targetOrigin,
   );
 }

@@ -1,8 +1,10 @@
 import { vercelStegaDecode } from '@vercel/stega';
+import jsonPointer from 'json-pointer';
 import { describe, expect, test } from 'vitest';
 
-import type { SourceMapMetadata } from '../csm/encode.js';
-import { encodeSourceMap } from '../csm/index.js';
+import type { SourceMapMetadata } from '../encode.js';
+import { encodeGraphQLResponse } from '../encodeSourceMap.js';
+import { GraphQLResponse } from '../types.js';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
 
@@ -20,14 +22,14 @@ function testEncodingDecoding(encodedResponse: EncodedResponse, mappings: Mappin
         return;
       }
       for (const [key, expectedValue] of Object.entries(itemMappings)) {
-        const encodedValue = item[key];
+        const encodedValue = jsonPointer.get(item, key);
         const decodedValue = vercelStegaDecode(encodedValue);
         expect(decodedValue).toEqual(expectedValue);
       }
     });
   } else {
     for (const [key, expectedValue] of Object.entries(mappings)) {
-      const encodedValue = encodedResponse[key];
+      const encodedValue = jsonPointer.get(encodedResponse, key);
       const decodedValue = vercelStegaDecode(encodedValue);
       expect(decodedValue).toEqual(expectedValue);
     }
@@ -36,8 +38,8 @@ function testEncodingDecoding(encodedResponse: EncodedResponse, mappings: Mappin
 
 describe('Content Source Maps', () => {
   describe('GraphQL', () => {
-    test('basic example', () => {
-      const graphQLResponse = {
+    test('works for Symbol fields', () => {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             title: 'Title of the post',
@@ -72,9 +74,9 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
-        title: {
+        '/title': {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
           contentful: {
@@ -86,7 +88,7 @@ describe('Content Source Maps', () => {
             entityType: 'Entry',
           },
         },
-        subtitle: {
+        '/subtitle': {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
           contentful: {
@@ -101,8 +103,103 @@ describe('Content Source Maps', () => {
       });
     });
 
+    test('works for lists of Symbol fields', () => {
+      const graphQLResponse: GraphQLResponse = {
+        data: {
+          post: {
+            list: ['lorem', 'ipsum', 'dolor', 'sid'],
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1.0,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['list'],
+            locales: ['en-US'],
+            entries: [
+              {
+                space: 0,
+                environment: 0,
+                id: 'a1b2c3',
+              },
+            ],
+            assets: [],
+            mappings: {
+              '/post/list': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+      expect(Array.isArray(encodedGraphQLResponse.data.post.list)).toBeTruthy();
+      encodedGraphQLResponse.data.post.list.forEach((item: string) => {
+        const decodedItem = vercelStegaDecode(item);
+        const expectedValue = {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=list&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'list',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
+        };
+        expect(decodedItem).toEqual(expectedValue);
+      });
+    });
+
+    test('it should ignore null values', () => {
+      const graphQLResponse: GraphQLResponse = {
+        data: {
+          post: {
+            title: null,
+            subtitle: null,
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1.0,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['title', 'subtitle'],
+            locales: ['en-US'],
+            entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+            assets: [],
+            mappings: {
+              '/post/title': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+              '/post/subtitle': {
+                source: {
+                  entry: 0,
+                  field: 1,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+      expect(encodedGraphQLResponse.data.post.title).toBeNull();
+      expect(encodedGraphQLResponse.data.post.subtitle).toBeNull();
+    });
+
     test('handles EU domain', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             title: 'Title of the post',
@@ -137,12 +234,12 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(
+      const encodedGraphQLResponse = encodeGraphQLResponse(
         graphQLResponse,
         'https://app.eu.contentful.com',
       );
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
-        title: {
+        '/title': {
           origin: 'contentful.com',
           href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
           contentful: {
@@ -154,7 +251,7 @@ describe('Content Source Maps', () => {
             entityType: 'Entry',
           },
         },
-        subtitle: {
+        '/subtitle': {
           origin: 'contentful.com',
           href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
           contentful: {
@@ -170,7 +267,7 @@ describe('Content Source Maps', () => {
     });
 
     test('collections', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           postCollection: {
             items: [
@@ -225,9 +322,9 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items, {
-        0: {
+        '/0': {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
@@ -241,7 +338,7 @@ describe('Content Source Maps', () => {
             },
           },
         },
-        1: {
+        '/1': {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/d4e5f6/?focusedField=title&focusedLocale=en-US',
@@ -255,7 +352,7 @@ describe('Content Source Maps', () => {
             },
           },
         },
-        2: {
+        '/2': {
           title: {
             origin: 'contentful.com',
             href: 'https://app.contentful.com/spaces/foo/environments/master/entries/g7h8i9/?focusedField=title&focusedLocale=en-US',
@@ -273,7 +370,7 @@ describe('Content Source Maps', () => {
     });
 
     test('aliasing with multiple locales', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           postCollection: {
             items: [
@@ -320,9 +417,9 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
       testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items[0], {
-        akanTitle: {
+        '/akanTitle': {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=ak',
           contentful: {
@@ -334,7 +431,7 @@ describe('Content Source Maps', () => {
             entityType: 'Entry',
           },
         },
-        aghemTitle: {
+        '/aghemTitle': {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=agq',
           contentful: {
@@ -346,7 +443,7 @@ describe('Content Source Maps', () => {
             entityType: 'Entry',
           },
         },
-        spanishTitle: {
+        '/spanishTitle': {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=es',
           contentful: {
@@ -361,8 +458,149 @@ describe('Content Source Maps', () => {
       });
     });
 
+    test('it should ignore null rich text values', () => {
+      const graphQLResponse: GraphQLResponse = {
+        data: {
+          post: {
+            // the graphql api won't return the json object if json empty
+            // instead it will just have the field value as null
+            rte: null,
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['rte'],
+            locales: ['en-US'],
+            entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+            assets: [],
+            mappings: {
+              '/post/rte/json': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+      expect(encodedGraphQLResponse.data.post.rte).toBeNull();
+    });
+
+    test('works for rich text', () => {
+      const graphQLResponse: GraphQLResponse = {
+        data: {
+          post: {
+            rte: {
+              json: {
+                nodeType: 'document',
+                data: {},
+                content: [
+                  {
+                    nodeType: 'paragraph',
+                    data: {},
+                    content: [
+                      {
+                        nodeType: 'text',
+                        value: 'hello, ',
+                        marks: [],
+                        data: {},
+                      },
+                      {
+                        nodeType: 'embedded-entry-inline',
+                        data: {
+                          target: {
+                            sys: {
+                              id: 'd4e5f6',
+                              type: 'Link',
+                              linkType: 'Entry',
+                            },
+                          },
+                        },
+                        content: [],
+                      },
+                      {
+                        nodeType: 'text',
+                        value: ' world',
+                        marks: [],
+                        data: {},
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            version: 1,
+            spaces: ['foo'],
+            environments: ['master'],
+            fields: ['rte'],
+            locales: ['en-US'],
+            entries: [
+              {
+                space: 0,
+                environment: 0,
+                id: 'a1b2c3',
+              },
+            ],
+            assets: [],
+            mappings: {
+              '/post/rte/json': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+      testEncodingDecoding(encodedGraphQLResponse.data.post, {
+        '/rte/json/content/0/content/0/value': {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'rte',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
+        },
+        '/rte/json/content/0/content/2/value': {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US',
+          contentful: {
+            space: 'foo',
+            environment: 'master',
+            field: 'rte',
+            locale: 'en-US',
+            entity: 'a1b2c3',
+            entityType: 'Entry',
+          },
+        },
+      });
+      // should throw an error if we try to access non-text nodes
+      try {
+        jsonPointer.get(encodedGraphQLResponse.data.post, '/rte/json/content/0/content/1/value');
+      } catch (error) {
+        expect((error as Error).message).toBe('Invalid reference token: value');
+      }
+    });
+
     test('does not encode dates', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             date: '2023-12-13T00:00:00.000+01:00',
@@ -389,15 +627,15 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
 
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
-        date: undefined,
+        '/date': undefined,
       });
     });
 
     test('does not encode URLs', () => {
-      const graphQLResponse = {
+      const graphQLResponse: GraphQLResponse = {
         data: {
           post: {
             url: 'https://test.com',
@@ -424,10 +662,10 @@ describe('Content Source Maps', () => {
           },
         },
       };
-      const encodedGraphQLResponse = encodeSourceMap(graphQLResponse);
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
 
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
-        url: undefined,
+        '/url': undefined,
       });
     });
   });

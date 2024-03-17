@@ -44,7 +44,7 @@ async function fetchGraphQL(query: string, draftMode = false): Promise<FetchResp
         }`,
       },
       body: JSON.stringify({ query }),
-    }
+    },
   ).then((response) => response.json());
 }
 
@@ -65,7 +65,7 @@ export async function getPreviewPostBySlug(slug: string): Promise<Post | undefin
         }
       }
     }`,
-    true
+    true,
   );
   return extractPost(entry);
 }
@@ -78,7 +78,7 @@ export async function getAllPostsWithSlug(): Promise<Post[] | undefined> {
           ${POST_GRAPHQL_FIELDS}
         }
       }
-    }`
+    }`,
   );
   return extractPostEntries(entries);
 }
@@ -92,7 +92,7 @@ export async function getAllPostsForHome(draftMode: boolean): Promise<Post[] | u
         }
       }
     }`,
-    draftMode
+    draftMode,
   );
 
   console.log(entries);
@@ -101,19 +101,19 @@ export async function getAllPostsForHome(draftMode: boolean): Promise<Post[] | u
 
 export async function getPost(
   slug: string,
-  draftMode: boolean
+  draftMode: boolean,
 ): Promise<{ post: Post | undefined }> {
   const entry = await fetchGraphQL(
     `query {
       postCollection(where: { slug: "${slug}" }, preview: ${
-      draftMode ? 'true' : 'false'
-    }, limit: 1) {
+        draftMode ? 'true' : 'false'
+      }, limit: 1) {
         items {
           ${POST_GRAPHQL_FIELDS}
         }
       }
     }`,
-    draftMode
+    draftMode,
   );
   return {
     post: extractPost(entry),

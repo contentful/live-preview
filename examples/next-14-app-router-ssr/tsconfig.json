@@ -16,12 +16,12 @@
     "incremental": true,
     "plugins": [
       {
-        "name": "next"
-      }
+        "name": "next",
+      },
     ],
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["./*"],
+    },
   },
   "include": [
     "next-env.d.ts",
@@ -29,7 +29,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "public/*.ts",
-    "vite.config.ts"
+    "vite.config.ts",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

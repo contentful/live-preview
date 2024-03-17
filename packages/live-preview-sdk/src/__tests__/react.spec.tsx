@@ -1,18 +1,16 @@
 // @vitest-environment jsdom
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
-import { describe, it, vi, afterEach, expect, beforeEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { ContentfulLivePreview } from '../index.js';
 import {
   ContentfulLivePreviewProvider,
-  useContentfulLiveUpdates,
   useContentfulInspectorMode,
-} from '../react';
-
-import { ContentfulLivePreview } from '..';
-
-import { Argument } from '../types';
+  useContentfulLiveUpdates,
+} from '../react.js';
+import { Argument } from '../types.js';
 
 const locale = 'en-US';
 
@@ -24,9 +22,9 @@ describe('ContentfulLivePreviewProvider', () => {
 
     expect(
       // @ts-expect-error -- case locale not provided (e.g. JavaScript usage)
-      () => render(<ContentfulLivePreviewProvider>Hello World</ContentfulLivePreviewProvider>)
+      () => render(<ContentfulLivePreviewProvider>Hello World</ContentfulLivePreviewProvider>),
     ).toThrowError(
-      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`'
+      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`',
     );
 
     spy.mockRestore();
@@ -247,6 +245,38 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+      });
+    });
+
+    it('should provide a helper function to generate the correct tags (with space & environment)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { entryId: '1' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title', space: '12345', environment: 'develop' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-space': '12345',
+        'data-contentful-environment': 'develop',
+      });
+    });
+
+    it('should provide a helper function to generate the correct tags (with initial space & environment)', () => {
+      const { result } = renderHook((data) => useContentfulInspectorMode(data), {
+        initialProps: { entryId: '1', space: '99999', environment: 'main' },
+        wrapper: ({ children }) => (
+          <ContentfulLivePreviewProvider locale={locale}>{children}</ContentfulLivePreviewProvider>
+        ),
+      });
+
+      expect(result.current({ fieldId: 'title' })).toEqual({
+        'data-contentful-entry-id': '1',
+        'data-contentful-field-id': 'title',
+        'data-contentful-space': '99999',
+        'data-contentful-environment': 'main',
       });
     });
 
