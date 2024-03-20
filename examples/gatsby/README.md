@@ -1,4 +1,4 @@
-🚧 **Gatsby support is currently under development. Inspector mode is already supported, but some fields with live updates might not be working correctly**
+🚧 ** Please be aware that Gatsby support is currently limited. While Inspector Mode is operational, there is a known issue with live updates not functioning as expected.**
 
 # Gatsby Contentful live preview SDK example
 
