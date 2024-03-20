@@ -396,79 +396,16 @@ That's it! You should now be able to use the Contentful live preview SDK with Ne
 
 #### Integrating with Gatsby
 
-🚧 **Gatsby support is currently under development. Inspector mode is already supported, but some fields with live updates might not be working correctly**
+🚧 **Please be aware that Gatsby support is currently limited. While Inspector Mode is operational, there is a known issue with live updates not functioning as expected.**
 
-To use the Contentful live preview SDK with Gatsby, you can start with the [gatsby starter contentful homepage](https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-contentful-homepage)
-
-1. Add the @contentful/live-preview package to your Gatsby project by running one of the following commands:
-
-```bash
-yarn add @contentful/live-preview
-```
-
-or
-
-```bash
-npm install @contentful/live-preview
-```
-
-2. In your gatsby-browser.js file, import the live preview styles and initialize the SDK:
-
-```tsx
-import React from 'react';
-import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
-
-export const wrapRootElement = ({ element }) => (
-  <ContentfulLivePreviewProvider locale="en-US">{element}</ContentfulLivePreviewProvider>
-);
-```
-
-3. In order to tag fields and use live updates, you need to add the contentful_id property to the GraphQL schema. For example, to extend the HomepageHero interface:
-
-```graphql
-interface HomepageHero implements Node & HomepageBlock {
-  id: ID!
-  contentful_id: String! # add this property
-  heading: String!
-  text: String
-}
-
-type ContentfulHomepageHero implements Node & HomepageHero & HomepageBlock @dontInfer {
-  id: ID!
-  contentful_id: String! # and also here
-  heading: String!
-  text: String
-}
-```
-
-4. Update the corresponding component to load the contentful_id property:
-
-```jsx
-export const query = graphql`
-  fragment HomepageHeroContent on HomepageHero {
-    __typename
-    id
-    contentful_id # add this property
-    heading
-    text
-  }
-`;
-```
-
-5. Add tagging and live updates to your component:
+Gatsby-source-contentful applies transformations to data received from Contentful, which affects the functionality of live updates. To ensure live updates operate properly, it's essential that Contentful data maintains its original structure. However, Inspector Mode remains fully compatible with Gatsby:
 
 ```jsx
 export default function Hero({ contentful_id, ...props }) {
   const inspectorProps = useContentfulInspectorMode();
-  // Live updates for this component
-  const data = useContentfulLiveUpdates({
-    ...props,
-    sys: { id: props.contentful_id },
-  });
 
   return (
     <Section>
-      <Heading as="h1">{data.heading}</Heading>
       {/* Text is tagged and can be clicked to open the editor */}
       <Text
         as="p"
@@ -476,17 +413,12 @@ export default function Hero({ contentful_id, ...props }) {
           entryId: contentful_id,
           fieldId: 'text',
         })}>
-        {data.text}
+        {text}
       </Text>
     </Section>
   );
 }
 ```
-
-6. In Contentful, define the preview environment and configure the preview URL for your Gatsby site. Once you open an entry with a configured preview URL, you can use the live preview and all its features.
-
-That's it! You should now be able to use the Contentful live preview SDK with Gatsby.
-
 ### Further Examples
 
 For further examples see the [./examples](./examples/) directory.
