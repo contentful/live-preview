@@ -1,9 +1,6 @@
 import React from 'react';
 import { graphql, PageProps } from 'gatsby';
-import {
-  useContentfulInspectorMode,
-  useContentfulLiveUpdates,
-} from '@contentful/live-preview/react';
+import { useContentfulInspectorMode } from '@contentful/live-preview/react';
 
 type DataProps = {
   contentfulPost: {
@@ -14,10 +11,6 @@ type DataProps = {
 
 const PostTemplate: React.FC<PageProps<DataProps>> = ({ data: { contentfulPost } }) => {
   const inspectorProps = useContentfulInspectorMode();
-  const updatedPost = useContentfulLiveUpdates({
-    ...contentfulPost,
-    sys: { id: contentfulPost.contentful_id },
-  });
 
   return (
     <div>
@@ -27,7 +20,7 @@ const PostTemplate: React.FC<PageProps<DataProps>> = ({ data: { contentfulPost }
           fieldId: 'title',
         })}
       >
-        {updatedPost.title || ''}
+        {contentfulPost.title || ''}
       </h1>
     </div>
   );
