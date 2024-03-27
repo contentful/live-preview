@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.34](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.33...@contentful/live-preview@3.0.0-alpha.34) (2024-03-27)
+
+
+### Features
+
+* support editor interface and field types for CSM [TOL-1836] ([#609](https://github.com/contentful/live-preview/issues/609)) ([40be7a4](https://github.com/contentful/live-preview/commit/40be7a4d7749d18182827157f2fbcc16ce22ddd7))
+
+
+
+
+
 # [3.0.0-alpha.33](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.32...@contentful/live-preview@3.0.0-alpha.33) (2024-03-14)
 
 
