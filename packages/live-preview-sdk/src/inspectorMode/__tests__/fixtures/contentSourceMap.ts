@@ -13,6 +13,11 @@ export function createSourceMapFixture(
   const entityType = overrides?.contentful?.entityType ?? 'Entry';
   const locale = overrides?.contentful?.locale ?? 'en-US';
   const field = overrides?.contentful?.field ?? 'title';
+  const editorInterface = overrides?.contentful?.editorInterface ?? {
+    widgetNamespace: 'builtin',
+    widgetId: 'singleLine',
+  };
+  const fieldType = overrides?.contentful?.fieldType ?? 'Symbol';
 
   return {
     href: `https://app.${origin}/spaces/${space}/environments/${environment}/entries/${entityId}?focusedField=${field}&focusedLocale=${locale}`,
@@ -24,6 +29,8 @@ export function createSourceMapFixture(
       entityType,
       field,
       locale,
+      editorInterface,
+      fieldType,
     },
   };
 }

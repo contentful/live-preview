@@ -15,6 +15,11 @@ export type SourceMapMetadata = {
     entityType: string;
     field: string;
     locale: string;
+    editorInterface: {
+      widgetNamespace: string;
+      widgetId: string;
+    };
+    fieldType: string;
   };
 };
 
