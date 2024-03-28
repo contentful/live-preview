@@ -197,7 +197,7 @@ export class InspectorMode {
    * and sends them to the editor
    */
   private sendAllElements = () => {
-    const { targetOrigin } = this.options;
+    const { targetOrigin, locale, space, environment } = this.options;
     const elements = getAllTaggedElements();
 
     this.taggedElements = elements;
@@ -210,6 +210,7 @@ export class InspectorMode {
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
           elements: elements.map((e) => ({
+            attributes: getInspectorModeAttributes(e, { locale, space, environment }),
             coordinates: e.getBoundingClientRect(),
           })),
         },
