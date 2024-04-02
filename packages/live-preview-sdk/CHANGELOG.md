@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.35](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.34...@contentful/live-preview@3.0.0-alpha.35) (2024-04-02)
+
+
+### Features
+
+* send attributes & space/env info to editor ([#646](https://github.com/contentful/live-preview/issues/646)) ([cd0d0f3](https://github.com/contentful/live-preview/commit/cd0d0f310674c6cf0c250d0a69e7d52bc50b867a))
+
+
+
+
+
 # [3.0.0-alpha.34](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.33...@contentful/live-preview@3.0.0-alpha.34) (2024-03-27)
 
 
