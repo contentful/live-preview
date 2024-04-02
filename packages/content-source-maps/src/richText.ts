@@ -3,9 +3,6 @@ import jsonPointer from 'json-pointer';
 import { SourceMapMetadata, combine } from './encode.js';
 import { Mappings } from './types.js';
 
-export const isRichTextValue = (value: unknown): boolean =>
-  !!(value && typeof value === 'object' && 'nodeType' in value && value.nodeType);
-
 export const encodeRichTextValue = ({
   pointer,
   mappings,
