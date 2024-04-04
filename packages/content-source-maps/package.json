@@ -1,0 +1,48 @@
+{
+  "name": "@contentful/content-source-maps",
+  "author": "Contentful GmbH",
+  "version": "1.0.0-alpha.14",
+  "description": "Base SDK for building Content Source Maps with Contentful",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/live-preview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/live-preview/issues"
+  },
+  "homepage": "https://github.com/contentful/live-preview#readme",
+  "scripts": {
+    "start": "vite build --watch",
+    "build": "vite build",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "tsc": "tsc --noEmit",
+    "test": "vitest --watch",
+    "test:ci": "vitest run",
+    "coverage": "vitest --coverage",
+    "prepublish": "yarn build"
+  },
+  "dependencies": {
+    "@vercel/stega": "^0.1.0",
+    "json-pointer": "^0.6.2"
+  },
+  "devDependencies": {
+    "chokidar": "3.6.0"
+  }
+}

@@ -1,8 +1,8 @@
 import { vercelStegaDecode } from '@vercel/stega';
-import { describe, test, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
-import { encodeSourceMap } from '../csm';
-import type { SourceMapMetadata } from '../csm/encode';
+import type { SourceMapMetadata } from '../csm/encode.js';
+import { encodeSourceMap } from '../csm/index.js';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
 
@@ -139,7 +139,7 @@ describe('Content Source Maps', () => {
       };
       const encodedGraphQLResponse = encodeSourceMap(
         graphQLResponse,
-        'https://app.eu.contentful.com'
+        'https://app.eu.contentful.com',
       );
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         title: {

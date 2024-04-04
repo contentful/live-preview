@@ -3,10 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.17.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.3...@contentful/live-preview@2.17.4) (2024-03-25)
+# [3.0.0-alpha.37](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.36...@contentful/live-preview@3.0.0-alpha.37) (2024-04-04)
 
 **Note:** Version bump only for package @contentful/live-preview
 
+
+
+
+
+# [3.0.0-alpha.36](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.35...@contentful/live-preview@3.0.0-alpha.36) (2024-04-04)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [2.17.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.3...@contentful/live-preview@2.17.4) (2024-03-25)
+
+**Note:** Version bump only for package @contentful/live-preview
 
 
 
@@ -131,6 +146,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [2.13.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.1...@contentful/live-preview@2.13.0-alpha.2) (2023-11-16)
 ## [2.12.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.3...@contentful/live-preview@2.12.4) (2023-11-27)
 
 **Note:** Version bump only for package @contentful/live-preview
@@ -139,6 +155,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [2.13.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.13.0-alpha.0...@contentful/live-preview@2.13.0-alpha.1) (2023-11-16)
 ## [2.12.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.2...@contentful/live-preview@2.12.3) (2023-11-27)
 
 **Note:** Version bump only for package @contentful/live-preview
@@ -147,6 +164,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [2.13.0-alpha.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.0...@contentful/live-preview@2.13.0-alpha.0) (2023-11-16)
+
+
+### Features
+
+* remove merge function ([#421](https://github.com/contentful/live-preview/issues/421)) ([f7ca2f1](https://github.com/contentful/live-preview/commit/f7ca2f1693a50ebde62d73909f3ec616c1da7b37))
 ## [2.12.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.12.1...@contentful/live-preview@2.12.2) (2023-11-20)
 
 **Note:** Version bump only for package @contentful/live-preview

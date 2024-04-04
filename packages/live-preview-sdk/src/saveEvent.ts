@@ -1,7 +1,7 @@
-import { debug } from './helpers';
-import { getAllTaggedEntries } from './inspectorMode/utils';
-import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages';
-import { SubscribeCallback } from './types';
+import { debug } from './helpers/index.js';
+import { getAllTaggedEntries } from './inspectorMode/utils.js';
+import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages.js';
+import { SubscribeCallback } from './types.js';
 
 export class SaveEvent {
   locale: string;
@@ -14,7 +14,7 @@ export class SaveEvent {
   public subscribe(cb: SubscribeCallback): VoidFunction {
     if (this.subscription) {
       debug.log(
-        'There is already a subscription for the save event, the existing one will be replaced.'
+        'There is already a subscription for the save event, the existing one will be replaced.',
       );
     }
 
@@ -34,7 +34,9 @@ export class SaveEvent {
     };
   }
 
-  public receiveMessage(message: Omit<MessageFromEditor, 'from' | 'source'>): void {
+  public receiveMessage(
+    message: Omit<MessageFromEditor, 'from' | 'source'> | EntrySavedMessage,
+  ): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
       const { entity } = message as EntrySavedMessage;
       const entries = getAllTaggedEntries();

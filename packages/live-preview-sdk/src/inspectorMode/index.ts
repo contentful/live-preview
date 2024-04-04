@@ -1,14 +1,16 @@
-import { sendMessageToEditor } from '../helpers';
-import { type MessageFromEditor } from '../messages';
+import { sendMessageToEditor } from '../helpers/index.js';
+import { type MessageFromEditor } from '../messages.js';
 import {
   InspectorModeDataAttributes,
-  type InspectorModeChangedMessage,
   InspectorModeEventMethods,
-} from './types';
-import { getAllTaggedElements, getInspectorModeAttributes } from './utils';
+  type InspectorModeChangedMessage,
+} from './types.js';
+import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
 
 type InspectorModeOptions = {
   locale: string;
+  space?: string;
+  environment?: string;
   targetOrigin: string[];
   ignoreManuallyTaggedElements?: boolean;
 };
@@ -63,7 +65,7 @@ export class InspectorMode {
         sendMessageToEditor(
           InspectorModeEventMethods.MOUSE_MOVE,
           { element: null },
-          this.options.targetOrigin
+          this.options.targetOrigin,
         );
       }
     };
@@ -121,6 +123,8 @@ export class InspectorMode {
         InspectorModeDataAttributes.ENTRY_ID,
         InspectorModeDataAttributes.FIELD_ID,
         InspectorModeDataAttributes.LOCALE,
+        InspectorModeDataAttributes.SPACE,
+        InspectorModeDataAttributes.ENVIRONMENT,
       ],
       childList: true,
       subtree: true,
@@ -166,8 +170,8 @@ export class InspectorMode {
    * and sends it then to the editor
    */
   private handleTaggedElement = (element: HTMLElement): boolean => {
-    const { targetOrigin, locale } = this.options;
-    const taggedInformation = getInspectorModeAttributes(element, locale);
+    const { targetOrigin, locale, space, environment } = this.options;
+    const taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
 
     if (!taggedInformation) {
       return false;
@@ -182,7 +186,7 @@ export class InspectorMode {
           coordinates: element.getBoundingClientRect(),
         },
       },
-      targetOrigin
+      targetOrigin,
     );
 
     return true;
@@ -193,7 +197,7 @@ export class InspectorMode {
    * and sends them to the editor
    */
   private sendAllElements = () => {
-    const { targetOrigin } = this.options;
+    const { targetOrigin, locale, space, environment } = this.options;
     const elements = getAllTaggedElements();
 
     this.taggedElements = elements;
@@ -206,10 +210,11 @@ export class InspectorMode {
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
           elements: elements.map((e) => ({
+            attributes: getInspectorModeAttributes(e, { locale, space, environment }),
             coordinates: e.getBoundingClientRect(),
           })),
         },
-        targetOrigin
+        targetOrigin,
       );
     };
 
@@ -222,6 +227,8 @@ export class InspectorMode {
           InspectorModeDataAttributes.ENTRY_ID,
           InspectorModeDataAttributes.FIELD_ID,
           InspectorModeDataAttributes.LOCALE,
+          InspectorModeDataAttributes.SPACE,
+          InspectorModeDataAttributes.ENVIRONMENT,
         ],
         childList: true,
         subtree: true,

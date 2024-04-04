@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, Mock, afterEach, beforeAll } from 'vitest';
+import { Mock, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { sendMessageToEditor, isInsideIframe } from '../helpers';
-import { ContentfulLivePreview } from '../index';
-import { InspectorMode } from '../inspectorMode';
-import { InspectorModeDataAttributes } from '../inspectorMode/types';
-import { LiveUpdates } from '../liveUpdates';
-import { SaveEvent } from '../saveEvent';
+import { isInsideIframe, sendMessageToEditor } from '../helpers/index.js';
+import { ContentfulLivePreview, LIVE_PREVIEW_EDITOR_SOURCE } from '../index.js';
+import { InspectorMode } from '../inspectorMode/index.js';
+import { InspectorModeDataAttributes } from '../inspectorMode/types.js';
+import { LiveUpdates } from '../liveUpdates.js';
+import { SaveEvent } from '../saveEvent.js';
 
 vi.mock('../inspectorMode');
 vi.mock('../liveUpdates');
@@ -58,7 +58,7 @@ describe('ContentfulLivePreview', () => {
   describe('init', () => {
     describe('should bind the message listeners', () => {
       it('provide the data to InspectorMode and LiveUpdates', () => {
-        const data = { from: 'live-preview', value: 'any' };
+        const data = { source: LIVE_PREVIEW_EDITOR_SOURCE, value: 'any' };
         window.dispatchEvent(new MessageEvent('message', { data }));
 
         expect(receiveMessageInspectorMode).toHaveBeenCalledTimes(1);
@@ -70,7 +70,7 @@ describe('ContentfulLivePreview', () => {
       it('doenst call the InspectorMode and LiveUpdates for invalid events', () => {
         // Not from live-preview
         window.dispatchEvent(
-          new MessageEvent('message', { data: { from: 'anywhere', value: 'any' } })
+          new MessageEvent('message', { data: { from: 'anywhere', value: 'any' } }),
         );
 
         // Invalid data
@@ -138,6 +138,30 @@ describe('ContentfulLivePreview', () => {
         [InspectorModeDataAttributes.FIELD_ID]: fieldId,
         [InspectorModeDataAttributes.ENTRY_ID]: entryId,
         [InspectorModeDataAttributes.LOCALE]: locale,
+      });
+    });
+
+    it('returns the expected props with all available props', () => {
+      const entryId = 'test-entry-id';
+      const fieldId = 'test-field-id';
+      const locale = 'test-locale';
+      const space = 'test-space';
+      const environment = 'test-environment';
+
+      const result = ContentfulLivePreview.getProps({
+        entryId,
+        fieldId,
+        locale,
+        space,
+        environment,
+      });
+
+      expect(result).toStrictEqual({
+        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+        [InspectorModeDataAttributes.ENTRY_ID]: entryId,
+        [InspectorModeDataAttributes.LOCALE]: locale,
+        [InspectorModeDataAttributes.SPACE]: space,
+        [InspectorModeDataAttributes.ENVIRONMENT]: environment,
       });
     });
 

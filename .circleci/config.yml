@@ -56,9 +56,8 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_WRITE_TOKEN}" > ~/.npmrc
           echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
-      - run: yarn lerna version --no-private --conventional-commits --create-release
-          github --yes
-      - run: yarn lerna publish from-git --yes
+      - run: yarn version
+      - run: yarn publish
 
   prerelease:
     executor: linux-node
@@ -72,8 +71,8 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_WRITE_TOKEN}" > ~/.npmrc
           echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
-      - run: yarn lerna version --no-private --conventional-commits --conventional-prerelease
-      - run: yarn lerna publish from-git --yes
+      - run: yarn version:canary
+      - run: yarn publish:canary
 
 workflows:
   version: 2

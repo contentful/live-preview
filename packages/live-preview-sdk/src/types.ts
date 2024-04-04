@@ -1,109 +1,38 @@
-import type { Asset, Entry } from 'contentful';
 import type { ContentTypeProps } from 'contentful-management';
 
-import { SendMessage } from './helpers';
+import type {
+  InspectorModeAssetAttributes,
+  InspectorModeEntryAttributes,
+} from './inspectorMode/types.js';
 
 export type ContentType = ContentTypeProps;
-export const ASSET_TYPENAME = 'Asset';
 
-export type LivePreviewEntryProps = {
-  fieldId: string;
-  entryId: string;
-  locale?: string;
-};
-export type LivePreviewAssetProps = {
-  fieldId: string;
-  assetId: string;
-  locale?: string;
-};
+type WithOptional<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>;
+
+export type LivePreviewEntryProps = WithOptional<
+  InspectorModeEntryAttributes,
+  'locale' | 'environment' | 'space'
+>;
+export type LivePreviewAssetProps = WithOptional<
+  InspectorModeAssetAttributes,
+  'locale' | 'environment' | 'space'
+>;
 
 export type LivePreviewProps =
   | (LivePreviewEntryProps & { assetId?: never })
   | (LivePreviewAssetProps & { entryId?: never });
-
-export interface SysProps {
-  id: string;
-  [key: string]: unknown;
-}
 
 // We had Record<string, any> before, but this will not work with stricter typings
 // e.g. contentful client SDK - getEntry & getEntries
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Entity = Record<any, any>;
 
-export interface EntityWithSys extends Entity {
-  sys: SysProps;
-  __typename?: string;
-}
-
-export function hasSysInformation(entity: unknown): entity is EntityWithSys {
-  return !!(
-    entity &&
-    typeof entity === 'object' &&
-    'sys' in entity &&
-    (entity as EntityWithSys).sys.id
-  );
-}
-
 export type Argument = Entity | Entity[];
 export type SubscribeCallback = (data: Argument) => void;
-
-export interface CollectionItem {
-  sys: SysProps;
-  __typename?: string;
-}
-
-export class EntityReferenceMap extends Map<string, Entry | Asset> {}
-
-export type UpdateEntryProps = {
-  contentType: ContentType;
-  dataFromPreviewApp: Entity & { sys: SysProps };
-  updateFromEntryEditor: Entry;
-  locale: string;
-  entityReferenceMap: EntityReferenceMap;
-  gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
-};
-
-export type UpdateFieldProps = {
-  dataFromPreviewApp: Entity;
-  updateFromEntryEditor: Entry;
-  name: string;
-  locale: string;
-  entityReferenceMap: EntityReferenceMap;
-  gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
-};
-
-export type UpdateReferenceFieldProps = {
-  referenceFromPreviewApp: (Entity & { __typename?: string }) | null | undefined;
-  updatedReference?: (Pick<Entry, 'sys'> | Pick<Asset, 'sys'>) & { __typename?: string };
-  entityReferenceMap: EntityReferenceMap;
-  locale: string;
-  gqlParams?: GraphQLParams;
-  sendMessage: SendMessage;
-};
-
-/**
- * Generated params based on the DocumentNode of the query
- */
-export interface GraphQLParam {
-  /** Map with aliases (name, alias) */
-  alias: Map<string, string>;
-  /** Set with all requested fields for this __typename */
-  fields: Set<string>;
-}
-
-/**
- * Map with the aliases for GraphQL fields
- * clustered by `__typename`
- */
-export type GraphQLParams = Map<string, GraphQLParam>;
 
 export interface Subscription {
   data: Argument;
   locale?: string;
   callback: SubscribeCallback;
-  gqlParams?: GraphQLParams;
-  sysId: string;
+  sysIds: string[];
 }

@@ -15,17 +15,22 @@ import {
 import { DocumentNode } from 'graphql';
 import isEqual from 'lodash.isequal';
 
-import { debounce } from './helpers';
-import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index';
-import type { InspectorModeTags } from './inspectorMode/types';
-import { Argument, LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps } from './types';
+import { debounce } from './helpers/index.js';
+import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index.js';
+import type { InspectorModeTags } from './inspectorMode/types.js';
+import {
+  Argument,
+  LivePreviewAssetProps,
+  LivePreviewEntryProps,
+  LivePreviewProps,
+} from './types.js';
 
 type UseEffectParams = Parameters<typeof useEffect>;
 type EffectCallback = UseEffectParams[0];
 type DependencyList = UseEffectParams[1];
 type UseEffectReturn = ReturnType<typeof useEffect>;
 
-export function useDeepCompareMemoize<T>(value: T) {
+export function useDeepCompareMemoize<T>(value: T): T {
   const ref = useRef<T>(value);
   const signalRef = useRef<number>(0);
 
@@ -53,6 +58,8 @@ const ContentfulLivePreviewContext = createContext<ContentfulLivePreviewInitConf
 export function ContentfulLivePreviewProvider({
   children,
   locale,
+  space,
+  environment,
   debugMode = false,
   enableInspectorMode = true,
   enableLiveUpdates = true,
@@ -67,6 +74,8 @@ export function ContentfulLivePreviewProvider({
 
   ContentfulLivePreview.init({
     locale,
+    space,
+    environment,
     debugMode,
     enableInspectorMode,
     enableLiveUpdates,
@@ -75,8 +84,16 @@ export function ContentfulLivePreviewProvider({
   });
 
   const props = useMemo(
-    () => ({ locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin }),
-    [locale, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin],
+    () => ({
+      locale,
+      space,
+      environment,
+      debugMode,
+      enableInspectorMode,
+      enableLiveUpdates,
+      targetOrigin,
+    }),
+    [locale, space, environment, debugMode, enableInspectorMode, enableLiveUpdates, targetOrigin],
   );
 
   return (
@@ -174,25 +191,28 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
 }
 
 type GetInspectorModeProps<T> = (
-  props:
+  props: (
     | {
-        [K in Exclude<keyof LivePreviewEntryProps, keyof T | 'locale'>]: LivePreviewEntryProps[K];
+        [K in Exclude<
+          keyof LivePreviewEntryProps,
+          keyof T | 'locale' | 'environment' | 'space'
+        >]: LivePreviewEntryProps[K];
       }
-    | ({
-        [K in Exclude<keyof LivePreviewAssetProps, keyof T | 'locale'>]: LivePreviewAssetProps[K];
-      } & { locale?: LivePreviewProps['locale'] }),
+    | {
+        [K in Exclude<
+          keyof LivePreviewAssetProps,
+          keyof T | 'locale' | 'environment' | 'space'
+        >]: LivePreviewAssetProps[K];
+      }
+  ) &
+    Pick<LivePreviewProps, 'environment' | 'locale' | 'space'>,
 ) => InspectorModeTags;
 
 /**
  * Generates the function to build the required properties for the inspector mode (field tagging)
  */
 export function useContentfulInspectorMode<
-  T =
-    | undefined
-    | Pick<LivePreviewEntryProps, 'entryId'>
-    | Pick<LivePreviewEntryProps, 'entryId' | 'fieldId'>
-    | Pick<LivePreviewAssetProps, 'assetId'>
-    | Pick<LivePreviewAssetProps, 'assetId' | 'fieldId'>,
+  T = undefined | Partial<LivePreviewAssetProps> | Partial<LivePreviewEntryProps>,
 >(sharedProps?: T): GetInspectorModeProps<T> {
   const config = useContext(ContentfulLivePreviewContext);
 

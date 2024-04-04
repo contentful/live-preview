@@ -1,47 +1,55 @@
-import './styles.css';
-
+import { encodeGraphQLResponse, split } from '@contentful/content-source-maps';
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
 import {
-  sendMessageToEditor,
-  pollUrlChanges,
-  setDebugMode,
   debug,
   isInsideIframe,
-} from './helpers';
-import { isValidMessage } from './helpers/validateMessage';
-import { InspectorMode } from './inspectorMode';
-import { type InspectorModeTags, InspectorModeDataAttributes } from './inspectorMode/types';
-import { getAllTaggedEntries } from './inspectorMode/utils';
-import { LiveUpdates } from './liveUpdates';
+  pollUrlChanges,
+  sendMessageToEditor,
+  setDebugMode,
+} from './helpers/index.js';
+import { isValidMessage } from './helpers/validateMessage.js';
+import { InspectorMode } from './inspectorMode/index.js';
+import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types.js';
+import { getAllTaggedEntries } from './inspectorMode/utils.js';
+import { LiveUpdates } from './liveUpdates.js';
 import {
+  LivePreviewPostMessageMethods,
+  openAssetInEditorUtility,
+  openEntryInEditorUtility,
   type ConnectedMessage,
   type EditorMessage,
   type MessageFromEditor,
   type PostMessageMethods,
   type UrlChangedMessage,
-  LivePreviewPostMessageMethods,
-  openEntryInEditorUtility,
-  openAssetInEditorUtility,
-} from './messages';
-import { SaveEvent } from './saveEvent';
+} from './messages.js';
+import { SaveEvent } from './saveEvent.js';
 import type {
   Argument,
   LivePreviewAssetProps,
   LivePreviewEntryProps,
   LivePreviewProps,
   SubscribeCallback,
-} from './types';
+} from './types.js';
 
 export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
 export const VERSION = version;
 
-const DEFAULT_ORIGINS = ['https://app.contentful.com', 'https://app.eu.contentful.com'];
+const DEFAULT_ORIGINS = [
+  'https://app.contentful.com',
+  'https://app.eu.contentful.com',
+  'http://localhost:3001', // for local debugging for Contentful engineers
+];
 
 export interface ContentfulLivePreviewInitConfig {
   locale: string;
+  /** Id of the contentful space */
+  space?: string;
+  /** Id of the contentful environment */
+  environment?: string;
+
   debugMode?: boolean;
   enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
@@ -71,6 +79,8 @@ export class ContentfulLivePreview {
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
   static locale: string;
+  static space?: string;
+  static environment?: string;
   static sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
   static targetOrigin: string[];
 
@@ -78,7 +88,7 @@ export class ContentfulLivePreview {
   static init(config: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
     if (typeof config !== 'object' || !config?.locale) {
       throw new Error(
-        "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)"
+        "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
       );
     }
 
@@ -87,6 +97,8 @@ export class ContentfulLivePreview {
       enableInspectorMode,
       enableLiveUpdates,
       locale,
+      environment,
+      space,
       targetOrigin = DEFAULT_ORIGINS,
     } = config;
 
@@ -114,6 +126,8 @@ export class ContentfulLivePreview {
       }
 
       this.locale = locale;
+      this.space = space;
+      this.environment = environment;
 
       this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
 
@@ -126,6 +140,8 @@ export class ContentfulLivePreview {
       if (this.inspectorModeEnabled) {
         this.inspectorMode = new InspectorMode({
           locale,
+          space,
+          environment,
           targetOrigin: this.targetOrigin,
           ignoreManuallyTaggedElements: config.experimental?.ignoreManuallyTaggedElements,
         });
@@ -144,10 +160,7 @@ export class ContentfulLivePreview {
 
         debug.log('Received message', event.data);
 
-        if (
-          ('action' in event.data && event.data.action === 'DEBUG_MODE_ENABLED') ||
-          event.data.method === LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED
-        ) {
+        if (event.data.method === LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED) {
           setDebugMode(true);
           return;
         }
@@ -169,16 +182,16 @@ export class ContentfulLivePreview {
           {
             action: LivePreviewPostMessageMethods.URL_CHANGED,
             taggedElementCount: document.querySelectorAll(
-              `[${InspectorModeDataAttributes.ENTRY_ID}]`
+              `[${InspectorModeDataAttributes.ENTRY_ID}]`,
             ).length,
           } as UrlChangedMessage,
-          this.targetOrigin
+          this.targetOrigin,
         );
       });
 
       // tell the editor that there's a SDK
       const taggedElementCount = document.querySelectorAll(
-        `[${InspectorModeDataAttributes.ENTRY_ID}]`
+        `[${InspectorModeDataAttributes.ENTRY_ID}]`,
       ).length;
       sendMessageToEditor(
         LivePreviewPostMessageMethods.CONNECTED,
@@ -191,7 +204,7 @@ export class ContentfulLivePreview {
           isInspectorEnabled: this.inspectorModeEnabled,
           isLiveUpdatesEnabled: this.liveUpdatesEnabled,
         } as ConnectedMessage,
-        this.targetOrigin
+        this.targetOrigin,
       );
 
       // all set up - ready to go
@@ -204,12 +217,12 @@ export class ContentfulLivePreview {
   static subscribe(config: ContentfulSubscribeConfig): VoidFunction;
   static subscribe(
     event: 'save',
-    config: Pick<ContentfulSubscribeConfig, 'callback'>
+    config: Pick<ContentfulSubscribeConfig, 'callback'>,
   ): VoidFunction;
   static subscribe(event: 'edit', config: ContentfulSubscribeConfig): VoidFunction;
   static subscribe(
     configOrEvent: 'save' | 'edit' | ContentfulSubscribeConfig,
-    config?: ContentfulSubscribeConfig | Pick<ContentfulSubscribeConfig, 'callback'>
+    config?: ContentfulSubscribeConfig | Pick<ContentfulSubscribeConfig, 'callback'>,
   ): VoidFunction {
     if (!this.liveUpdatesEnabled) {
       return () => {
@@ -223,7 +236,7 @@ export class ContentfulLivePreview {
     if (event === 'save') {
       if (!this.saveEvent) {
         throw new Error(
-          'Save event is not initialized, please call `ContentfulLivePreview.init()` first.'
+          'Save event is not initialized, please call `ContentfulLivePreview.init()` first.',
         );
       }
       return this.saveEvent.subscribe(subscribeConfig.callback);
@@ -231,7 +244,7 @@ export class ContentfulLivePreview {
 
     if (!this.liveUpdates) {
       throw new Error(
-        'Live updates are not initialized, please call `ContentfulLivePreview.init()` first.'
+        'Live updates are not initialized, please call `ContentfulLivePreview.init()` first.',
       );
     }
 
@@ -240,26 +253,37 @@ export class ContentfulLivePreview {
 
   // Static method to render live preview data-attributes to HTML element output
   static getProps(props: LivePreviewProps): InspectorModeTags {
-    const { fieldId, locale } = props;
+    const { fieldId, locale, environment, space } = props;
 
     if (!this.inspectorModeEnabled) {
       return null;
     }
 
-    if ((props as LivePreviewAssetProps).assetId !== undefined && fieldId) {
-      return {
+    if (fieldId) {
+      const sharedProps = {
+        ...(locale ? { [InspectorModeDataAttributes.LOCALE]: locale } : {}),
+        ...(environment ? { [InspectorModeDataAttributes.ENVIRONMENT]: environment } : {}),
+        ...(space ? { [InspectorModeDataAttributes.SPACE]: space } : {}),
         [InspectorModeDataAttributes.FIELD_ID]: fieldId,
-        [InspectorModeDataAttributes.ASSET_ID]: (props as LivePreviewAssetProps).assetId,
-        [InspectorModeDataAttributes.LOCALE]: locale,
       };
-    }
 
-    if ((props as LivePreviewEntryProps).entryId !== undefined && fieldId) {
-      return {
-        [InspectorModeDataAttributes.FIELD_ID]: fieldId,
-        [InspectorModeDataAttributes.ENTRY_ID]: (props as LivePreviewEntryProps).entryId,
-        [InspectorModeDataAttributes.LOCALE]: locale,
-      };
+      if (locale) {
+        sharedProps[InspectorModeDataAttributes.LOCALE] = locale;
+      }
+
+      if ((props as LivePreviewAssetProps).assetId !== undefined) {
+        return {
+          ...sharedProps,
+          [InspectorModeDataAttributes.ASSET_ID]: (props as LivePreviewAssetProps).assetId,
+        };
+      }
+
+      if ((props as LivePreviewEntryProps).entryId !== undefined) {
+        return {
+          ...sharedProps,
+          [InspectorModeDataAttributes.ENTRY_ID]: (props as LivePreviewEntryProps).entryId,
+        };
+      }
     }
 
     debug.warn('Missing property for inspector mode', { ...props });
@@ -277,22 +301,30 @@ export class ContentfulLivePreview {
   }
 
   static openEntryInEditor(props: LivePreviewProps): void {
+    const defaultProps = {
+      locale: this.locale,
+      environment: this.environment,
+      space: this.space,
+    };
+
     if ((props as LivePreviewAssetProps).assetId !== undefined && props.fieldId) {
       openAssetInEditorUtility(
-        props.fieldId,
-        (props as LivePreviewAssetProps).assetId,
-        props.locale || this.locale,
-        this.targetOrigin
+        {
+          ...defaultProps,
+          ...(props as LivePreviewAssetProps),
+        },
+        this.targetOrigin,
       );
       return;
     }
 
     if ((props as LivePreviewEntryProps).entryId !== undefined && props.fieldId) {
       openEntryInEditorUtility(
-        props.fieldId,
-        (props as LivePreviewEntryProps).entryId,
-        props.locale || this.locale,
-        this.targetOrigin
+        {
+          ...defaultProps,
+          ...(props as LivePreviewEntryProps),
+        },
+        this.targetOrigin,
       );
       return;
     }
@@ -308,5 +340,7 @@ export class ContentfulLivePreview {
   }
 }
 
-export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants';
-export * from './messages';
+export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
+
+export * from './messages.js';
+export { encodeGraphQLResponse, split };

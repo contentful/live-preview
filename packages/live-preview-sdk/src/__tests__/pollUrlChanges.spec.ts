@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { pollUrlChanges } from '../helpers';
+import { pollUrlChanges } from '../helpers/index.js';
 
 describe('pollUrlChanges', () => {
   beforeEach(() => {

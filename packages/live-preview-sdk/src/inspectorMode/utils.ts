@@ -1,5 +1,12 @@
-import { decode } from '../csm/encode';
-import { InspectorModeAttributes, InspectorModeDataAttributes } from './types';
+import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
+import { VERCEL_STEGA_REGEX } from '@vercel/stega';
+
+import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
+
+type AutoTaggedElement<T = Node> = {
+  element: T;
+  sourceMap: SourceMapMetadata;
+};
 
 const isTaggedElement = (node?: Node | null): boolean => {
   if (!node) {
@@ -32,104 +39,207 @@ const isTaggedElement = (node?: Node | null): boolean => {
  */
 export function getInspectorModeAttributes(
   element: Element,
-  fallbackLocale: string
+  fallbackProps: Pick<InspectorModeAttributes, 'environment' | 'locale' | 'space'>,
 ): InspectorModeAttributes | null {
   if (!isTaggedElement(element)) {
     return null;
   }
 
-  const fieldId = element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string;
-  const locale = element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackLocale;
+  const sharedProps = {
+    fieldId: element.getAttribute(InspectorModeDataAttributes.FIELD_ID) as string,
+    locale: element.getAttribute(InspectorModeDataAttributes.LOCALE) ?? fallbackProps.locale,
+    environment:
+      element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
+    space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
+  };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
-  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
-
   if (entryId) {
-    return { entryId, fieldId, locale };
+    return { ...sharedProps, entryId };
   }
 
+  const assetId = element.getAttribute(InspectorModeDataAttributes.ASSET_ID);
   if (assetId) {
-    return { assetId, fieldId, locale };
+    return { ...sharedProps, assetId };
   }
 
   return null;
 }
 
 /**
+ * Check if both sourcemaps are identical
+ * Based on how they're generated it's enough to check the URL
+ */
+function isSameSourceMap(a: SourceMapMetadata, b: SourceMapMetadata): boolean {
+  return a.href === b.href;
+}
+
+/**
+ * Validates that both elements & sourceMap informationare the same
+ */
+function isSameElement(a: AutoTaggedElement, b: AutoTaggedElement): boolean {
+  if (!isSameSourceMap(a.sourceMap, b.sourceMap)) {
+    return false;
+  }
+
+  if (a.element !== b.element) {
+    return false;
+  }
+
+  return true;
+}
+
+function getParent(
+  child: Element,
+  sourceMap: SourceMapMetadata,
+  limit = 3,
+): { element: Element; counters: { sameInformation: number; tagged: number; all: number } } | null {
+  if (limit === 0) {
+    return null;
+  }
+
+  const element = child.parentElement;
+  if (element) {
+    const counters = {
+      sameInformation: 0,
+      tagged: 0,
+      all: 0,
+    };
+
+    let sibling = child.nextElementSibling;
+    while (sibling) {
+      const siblingSourceMap = decode(sibling.textContent || '');
+      if (siblingSourceMap) {
+        counters.tagged += 1;
+        if (siblingSourceMap.href === sourceMap.href) {
+          counters.sameInformation = +1;
+        }
+      }
+      counters.all += 1;
+      sibling = sibling.nextElementSibling;
+    }
+
+    const parentInformation = getParent(element, sourceMap, limit - 1);
+    if (parentInformation && parentInformation.counters.sameInformation >= 1) {
+      return parentInformation;
+    }
+
+    if (counters.sameInformation >= 1) {
+      // at least one more siblings has the same information
+      return { element, counters };
+    }
+  }
+
+  return null;
+}
+
+function findStegaNodes(container: HTMLElement) {
+  let baseArray: HTMLElement[] = [];
+  if (typeof container.matches === 'function' && container.matches('*')) {
+    baseArray = [container];
+  }
+
+  return [
+    ...baseArray,
+    ...Array.from(container.querySelectorAll<HTMLElement>('*:not(script,style,meta,title)')),
+  ]
+    .map((node) => ({ node, text: getNodeText(node) }))
+    .filter(({ text }) => !!(text && text.match(VERCEL_STEGA_REGEX)));
+}
+
+function getNodeText(node: HTMLElement): string {
+  if (node.matches('input[type=submit], input[type=button], input[type=reset]')) {
+    return (node as HTMLInputElement).value;
+  }
+
+  if (node.matches('img, video')) {
+    return (node as HTMLImageElement).alt;
+  }
+
+  return Array.from(node.childNodes)
+    .filter((child) => child.nodeType === Node.TEXT_NODE && Boolean(child.textContent))
+    .map((c) => c.textContent)
+    .join('');
+}
+
+function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean {
+  for (const tagged of taggedElements) {
+    if (tagged === node || tagged.contains(node)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Query the document for all tagged elements
  */
 export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
-  // The fastest way to look up & iterate over DOM. Ref:
-  // https://stackoverflow.com/a/2579869
-  //
-  // Terminology:
-  // FILTER_SKIP: Skip the current node
-  // FILTER_REJECT: Skip the current node and all its children
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL, (node) => {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const text = node.textContent ?? '';
+  const manualTagged = ignoreManual
+    ? []
+    : root.querySelectorAll(
+        `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
+      );
 
-      const decoded = decode(text);
+  const taggedElements: Element[] = [...manualTagged];
+  const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
-      if (decoded?.origin !== 'contentful.com') {
-        return NodeFilter.FILTER_SKIP;
-      }
+  const stegaNodes = findStegaNodes('body' in root ? root.body : root);
 
-      return isTaggedElement(node.parentElement)
-        ? ignoreManual
-          ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_SKIP
-        : NodeFilter.FILTER_ACCEPT;
-    }
-
-    if (ignoreManual) {
-      return NodeFilter.FILTER_SKIP;
-    }
-
-    return isTaggedElement(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-  });
-
-  const elements: Element[] = [];
-
-  while (walker.nextNode()) {
-    const node = walker.currentNode;
-
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      elements.push(walker.currentNode as Element);
+  for (const { node, text } of stegaNodes) {
+    const sourceMap = decode(text);
+    if (!sourceMap || !sourceMap.origin.includes('contentful.com')) {
       continue;
     }
 
-    if (!node.textContent) {
-      continue;
-    }
-    // Handle Encoded strings
-    const decoded = decode(node.textContent);
-
-    if (!decoded?.contentful) {
-      continue;
-    }
-
-    const { contentful } = decoded;
-    const el = node.parentElement;
-
-    if (!el) {
+    if (
+      hasTaggedParent(node, taggedElements) ||
+      elementsForTagging.some(
+        (et) => et.element.contains(node) && isSameSourceMap(et.sourceMap, sourceMap),
+      )
+    ) {
       continue;
     }
 
-    if (contentful.entityType === 'Entry') {
-      el.setAttribute(InspectorModeDataAttributes.ENTRY_ID, contentful.entity);
+    if (node.matches('img')) {
+      const element = node.closest('figure') || node.closest('picture') || node;
+      elementsForTagging.push({ element, sourceMap });
+      continue;
+    }
+
+    // TODO: Performance optimisation: only do for richtext
+    const wrapper = getParent(node, sourceMap);
+    if (wrapper) {
+      elementsForTagging.push({ element: wrapper.element, sourceMap: sourceMap });
     } else {
-      el.setAttribute(InspectorModeDataAttributes.ASSET_ID, contentful.entity);
+      // No sibling element with the same information, add the element directly
+      elementsForTagging.push({ element: node, sourceMap: sourceMap });
     }
-
-    // TODO: add space/env ids to properly handle cross-space content
-    el.setAttribute(InspectorModeDataAttributes.LOCALE, contentful.locale);
-    el.setAttribute(InspectorModeDataAttributes.FIELD_ID, contentful.field);
-
-    elements.push(el);
   }
 
-  return elements;
+  // Filter duplicate elements, so we don't tag them again and again
+  const uniqElementsForTagging = elementsForTagging.filter(
+    (el, index) => elementsForTagging.findIndex((et) => isSameElement(el, et)) === index,
+  );
+
+  // Add the data- attributes to the auto-tagged elements
+  // Do this after the tree walker is finished, otherwise the MutationObserver picks it already up again
+  // and we have multiple tree walkers running parallel
+  for (const { element, sourceMap } of uniqElementsForTagging) {
+    if (sourceMap.contentful.entityType === 'Asset') {
+      element.setAttribute(InspectorModeDataAttributes.ASSET_ID, sourceMap.contentful.entity);
+    } else {
+      element.setAttribute(InspectorModeDataAttributes.ENTRY_ID, sourceMap.contentful.entity);
+    }
+    element.setAttribute(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field);
+    element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
+    element.setAttribute(InspectorModeDataAttributes.SPACE, sourceMap.contentful.space);
+    element.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, sourceMap.contentful.environment);
+    taggedElements.push(element);
+  }
+
+  return taggedElements;
 }
 
 /**
@@ -140,7 +250,7 @@ export function getAllTaggedEntries(): string[] {
     ...new Set(
       getAllTaggedElements()
         .map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
-        .filter(Boolean) as string[]
+        .filter(Boolean) as string[],
     ),
   ];
 }
