@@ -47,7 +47,6 @@ describe('InspectorMode', () => {
       inspectorMode.receiveMessage({
         data: {},
         action: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
-        from: 'live-preview',
         method: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED,
         source: LIVE_PREVIEW_EDITOR_SOURCE,
         isInspectorActive: true,

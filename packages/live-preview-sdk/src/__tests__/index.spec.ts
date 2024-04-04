@@ -2,7 +2,7 @@
 import { Mock, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { isInsideIframe, sendMessageToEditor } from '../helpers/index.js';
-import { ContentfulLivePreview } from '../index.js';
+import { ContentfulLivePreview, LIVE_PREVIEW_EDITOR_SOURCE } from '../index.js';
 import { InspectorMode } from '../inspectorMode/index.js';
 import { InspectorModeDataAttributes } from '../inspectorMode/types.js';
 import { LiveUpdates } from '../liveUpdates.js';
@@ -58,7 +58,7 @@ describe('ContentfulLivePreview', () => {
   describe('init', () => {
     describe('should bind the message listeners', () => {
       it('provide the data to InspectorMode and LiveUpdates', () => {
-        const data = { from: 'live-preview', value: 'any' };
+        const data = { source: LIVE_PREVIEW_EDITOR_SOURCE, value: 'any' };
         window.dispatchEvent(new MessageEvent('message', { data }));
 
         expect(receiveMessageInspectorMode).toHaveBeenCalledTimes(1);

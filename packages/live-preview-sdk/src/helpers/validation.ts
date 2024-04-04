@@ -2,7 +2,6 @@ import { DocumentNode } from 'graphql';
 import { gql } from 'graphql-tag';
 
 import type { ContentfulSubscribeConfig } from '../index.js';
-
 import { Argument, SubscribeCallback } from '../types.js';
 import { debug } from './debug.js';
 

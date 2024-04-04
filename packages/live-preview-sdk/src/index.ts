@@ -160,10 +160,7 @@ export class ContentfulLivePreview {
 
         debug.log('Received message', event.data);
 
-        if (
-          ('action' in event.data && event.data.action === 'DEBUG_MODE_ENABLED') ||
-          event.data.method === LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED
-        ) {
+        if (event.data.method === LivePreviewPostMessageMethods.DEBUG_MODE_ENABLED) {
           setDebugMode(true);
           return;
         }

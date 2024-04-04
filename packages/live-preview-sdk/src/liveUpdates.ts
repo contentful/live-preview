@@ -1,12 +1,6 @@
 import { stringify } from 'flatted';
 
-import {
-  StorageMap,
-  debug,
-  generateUID,
-  parseGraphQLParams,
-  sendMessageToEditor,
-} from './helpers/index.js';
+import { debug, generateUID, sendMessageToEditor } from './helpers/index.js';
 import { validateLiveUpdatesConfiguration } from './helpers/validation.js';
 import type {
   ContentfulSubscribeConfig,
@@ -19,7 +13,7 @@ import type {
   UnsubscribedMessage,
 } from './index.js';
 import { LivePreviewPostMessageMethods } from './messages.js';
-import { Entity, Subscription } from './types.js';
+import { Subscription } from './types.js';
 
 /**
  * LiveUpdates for the Contentful Live Preview mode
@@ -27,23 +21,17 @@ import { Entity, Subscription } from './types.js';
  */
 export class LiveUpdates {
   private subscriptions = new Map<string, Subscription>();
-  private storage: StorageMap<Entity>;
   private defaultLocale: string;
   private sendMessage: (method: PostMessageMethods, data: EditorMessage) => void;
 
   constructor({ locale, targetOrigin }: { locale: string; targetOrigin: string[] }) {
     this.defaultLocale = locale;
     this.sendMessage = (method, data) => sendMessageToEditor(method, data, targetOrigin);
-    this.storage = new StorageMap<Entity>('live-updates', new Map());
-    window.addEventListener('beforeunload', () => this.clearStorage());
   }
 
   /** Receives the data from the message event handler and calls the subscriptions */
   public async receiveMessage(message: MessageFromEditor): Promise<void> {
-    if (
-      ('action' in message && message.action === 'ENTRY_UPDATED') ||
-      message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED
-    ) {
+    if (message.method === LivePreviewPostMessageMethods.ENTRY_UPDATED) {
       const { data, subscriptionId } = message as EntryUpdatedMessage;
 
       const subscription = this.subscriptions.get(subscriptionId);
@@ -60,10 +48,6 @@ export class LiveUpdates {
         });
       }
     }
-  }
-
-  private clearStorage(): void {
-    this.storage.clear();
   }
 
   private sendErrorMessage(error: ErrorMessage): void {
@@ -95,7 +79,6 @@ export class LiveUpdates {
     this.subscriptions.set(id, {
       ...config,
       sysIds,
-      gqlParams: config.query ? parseGraphQLParams(config.query) : undefined,
     });
 
     // Tell the editor that there is a subscription
@@ -109,10 +92,7 @@ export class LiveUpdates {
       config: stringify(config),
     };
 
-    this.sendMessage(LivePreviewPostMessageMethods.SUBSCRIBED, {
-      action: LivePreviewPostMessageMethods.SUBSCRIBED,
-      ...message,
-    } as SubscribedMessage);
+    this.sendMessage(LivePreviewPostMessageMethods.SUBSCRIBED, message);
 
     return () => {
       this.sendMessage(LivePreviewPostMessageMethods.UNSUBSCRIBED, message);
