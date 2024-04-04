@@ -15,20 +15,12 @@ describe('isValidMessage', () => {
       isValidMessage({ data: { any: 'data', source: 'webpack' } } as MessageEvent),
     ).toBeFalsy();
   });
-  it('should return false because the event.from is wrong', () => {
-    expect(isValidMessage({ data: { any: 'data', from: 'webpack' } } as MessageEvent)).toBeFalsy();
-  });
-  it('should return false because neither event.from and event.source is provided', () => {
+  it('should return false because event.source is not provided', () => {
     expect(isValidMessage({ data: { any: 'data' } } as MessageEvent)).toBeFalsy();
   });
   it('should return true because the event.source is valid', () => {
     expect(
       isValidMessage({ data: { any: 'data', source: LIVE_PREVIEW_EDITOR_SOURCE } } as MessageEvent),
-    ).toBeTruthy();
-  });
-  it('should return true because the event.from is valid', () => {
-    expect(
-      isValidMessage({ data: { any: 'data', from: 'live-preview' } } as MessageEvent),
     ).toBeTruthy();
   });
 });

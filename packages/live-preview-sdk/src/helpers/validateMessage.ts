@@ -5,10 +5,6 @@ export function isValidMessage(event: MessageEvent<unknown>): boolean {
     return false;
   }
 
-  if ('from' in event.data && event.data.from === 'live-preview') {
-    return true;
-  }
-
   if ('source' in event.data && event.data.source === LIVE_PREVIEW_EDITOR_SOURCE) {
     return true;
   }
