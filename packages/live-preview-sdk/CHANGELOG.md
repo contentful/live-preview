@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@2.17.4...@contentful/live-preview@3.0.0) (2024-04-05)
+
+
+### Features
+
+* fix current version ([#658](https://github.com/contentful/live-preview/issues/658)) ([41ed0cd](https://github.com/contentful/live-preview/commit/41ed0cd0a10caf0d3c81c9f6ba3d99b6e980618a))
+* revert version ([#659](https://github.com/contentful/live-preview/issues/659)) ([5989dc4](https://github.com/contentful/live-preview/commit/5989dc424ddff94a3970b8d855ca4d0ff642eb34))
+* stability fixes ([#622](https://github.com/contentful/live-preview/issues/622)) ([8960a40](https://github.com/contentful/live-preview/commit/8960a40f82bdb5f15796a436da9a1cb6327681c3))
+
+
+### BREAKING CHANGES
+
+* Stability fixes & CSM
+* Removed merge logic & introduced CSM
+
+
+
+
+
 # [3.0.0-alpha.37](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.0-alpha.36...@contentful/live-preview@3.0.0-alpha.37) (2024-04-04)
 
 **Note:** Version bump only for package @contentful/live-preview
