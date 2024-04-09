@@ -8,17 +8,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* fix current version ([#658](https://github.com/contentful/live-preview/issues/658)) ([41ed0cd](https://github.com/contentful/live-preview/commit/41ed0cd0a10caf0d3c81c9f6ba3d99b6e980618a))
-* revert version ([#659](https://github.com/contentful/live-preview/issues/659)) ([5989dc4](https://github.com/contentful/live-preview/commit/5989dc424ddff94a3970b8d855ca4d0ff642eb34))
-* stability fixes ([#622](https://github.com/contentful/live-preview/issues/622)) ([8960a40](https://github.com/contentful/live-preview/commit/8960a40f82bdb5f15796a436da9a1cb6327681c3))
+* Added support for tagging Cross Space References [#591](https://github.com/contentful/live-preview/pull/591)
+* Support for re-ordering and removing Third Party Content
+* Better typings for inspector mode
+
+### Performance
+
+* Callback is only triggered if a corresponding subscription is found to avoid unnecessary rerenders
 
 
 ### BREAKING CHANGES
 
-* Stability fixes & CSM
-* Removed merge logic & introduced CSM
-
-
+* The stylesheet has been removed (`import from '@contentful/live-preview/styles.css'`)
+* Remove deprecated types
 
 
 
