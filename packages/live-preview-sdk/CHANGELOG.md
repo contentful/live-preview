@@ -19,7 +19,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### BREAKING CHANGES
 
-* Visual SDK has been removed [#510](https://github.com/contentful/live-preview/pull/510)
 * The stylesheet has been removed (`import from '@contentful/live-preview/styles.css'`)
 * Remove deprecated types
 
