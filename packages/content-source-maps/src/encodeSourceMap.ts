@@ -21,9 +21,9 @@ export const getHref = (
   return `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
 };
 
-const isBuiltinNamespace = (namespace: WidgetNamespace) =>
+export const isBuiltinNamespace = (namespace: WidgetNamespace) =>
   ['builtin', 'sidebar-builtin', 'editor-builtin'].includes(namespace);
-const isSupportedWidget = (widgetId: WidgetId) => SUPPORTED_WIDGETS.includes(widgetId);
+export const isSupportedWidget = (widgetId: WidgetId) => SUPPORTED_WIDGETS.includes(widgetId);
 
 export const encodeGraphQLResponse = (
   originalGraphqlResponse: GraphQLResponse,
