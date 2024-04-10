@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.1.0...@contentful/content-source-maps@0.2.0) (2024-04-10)
+
+
+### Features
+
+* export editor interface utils ([#669](https://github.com/contentful/live-preview/issues/669)) ([16dccb6](https://github.com/contentful/live-preview/commit/16dccb68a875663237951e6e4820ab705d8c1c63))
+
+
+
+
+
 # 0.1.0 (2024-04-05)
 
 
