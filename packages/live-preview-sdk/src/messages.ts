@@ -48,8 +48,10 @@ export type UrlChangedMessage = {
 };
 
 export type SubscribedMessage = {
-  type: 'GQL' | 'REST';
-  sysIds: string[];
+  /** @deprecated */
+  type?: 'GQL' | 'REST';
+  /** @deprecated */
+  sysIds?: string[];
   /** @deprecated use sysIds instead */
   entryId?: string;
   locale: string;
@@ -69,22 +71,12 @@ export type UnsubscribedMessage = {
   config: string;
 };
 
-export type ErrorMessage = {
-  /** Error type */
-  type: string;
-  /** Error message */
-  message: string;
-  /** Additional information that could be helpful about this error (e.g. entryId) */
-  payload: Record<string, unknown>;
-};
-
 export type EditorMessage =
   | ConnectedMessage
   | TaggedFieldClickMessage
   | UrlChangedMessage
   | SubscribedMessage
   | UnsubscribedMessage
-  | ErrorMessage
   | InspectorModeMouseMoveMessage
   | InspectorModeScrollMessage
   | InspectorModeResizeMessage

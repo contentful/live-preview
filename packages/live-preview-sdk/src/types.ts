@@ -34,5 +34,4 @@ export interface Subscription {
   data: Argument;
   locale?: string;
   callback: SubscribeCallback;
-  sysIds: string[];
 }
