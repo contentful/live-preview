@@ -1,12 +1,10 @@
 import { stringify } from 'flatted';
 
 import { debug, generateUID, sendMessageToEditor } from './helpers/index.js';
-import { validateLiveUpdatesConfiguration } from './helpers/validation.js';
 import type {
   ContentfulSubscribeConfig,
   EditorMessage,
   EntryUpdatedMessage,
-  ErrorMessage,
   MessageFromEditor,
   PostMessageMethods,
   SubscribedMessage,
@@ -50,43 +48,22 @@ export class LiveUpdates {
     }
   }
 
-  private sendErrorMessage(error: ErrorMessage): void {
-    this.sendMessage(LivePreviewPostMessageMethods.ERROR, error);
-  }
-
   /**
    * Subscribe to data changes from the Editor, returns a function to unsubscribe
    * Will be called once initially for the restored data
    */
-  public subscribe(originalConfig: ContentfulSubscribeConfig): VoidFunction {
-    const { isGQL, isValid, sysIds, isREST, config } =
-      validateLiveUpdatesConfiguration(originalConfig);
-
-    if (!isValid || !config) {
-      this.sendErrorMessage({
-        message: 'Failed to subscribe',
-        payload: { isGQL, isValid, sysIds, isREST },
-        type: 'SUBSCRIPTION_SETUP_FAILED',
-      });
-      return () => {
-        /* noop */
-      };
-    }
-
+  public subscribe(config: ContentfulSubscribeConfig): VoidFunction {
     const id = generateUID();
     const locale = config.locale ?? this.defaultLocale;
 
     this.subscriptions.set(id, {
       ...config,
-      sysIds,
     });
 
     // Tell the editor that there is a subscription
     // It's possible that the `type` is not 100% accurate as we don't know how it will be merged in the future.
     const message: Omit<SubscribedMessage, 'action'> | UnsubscribedMessage = {
-      type: isGQL ? 'GQL' : 'REST',
       locale,
-      sysIds,
       event: 'edit',
       id,
       config: stringify(config),
