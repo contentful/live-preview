@@ -4,24 +4,7 @@ import {
   vercelStegaEncode,
   vercelStegaSplit,
 } from '@vercel/stega';
-
-export type SourceMapMetadata = {
-  origin: string;
-  href: string;
-  contentful: {
-    space: string;
-    environment: string;
-    entity: string;
-    entityType: string;
-    field: string;
-    locale: string;
-    editorInterface: {
-      widgetNamespace: string;
-      widgetId: string;
-    };
-    fieldType: string;
-  };
-};
+import type { SourceMapMetadata } from './types.js';
 
 export function combine(text: string, metadata: SourceMapMetadata): string {
   return vercelStegaCombine(text, metadata);

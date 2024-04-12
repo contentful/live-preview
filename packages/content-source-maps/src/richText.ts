@@ -1,7 +1,7 @@
-import jsonPointer from 'json-pointer';
+import { get, set } from 'json-pointer';
 
-import { SourceMapMetadata, combine } from './encode.js';
-import { Mappings } from './types.js';
+import { combine } from './encode.js';
+import type { SourceMapMetadata, CPAMappings, GraphQLMappings } from './types.js';
 
 export const encodeRichTextValue = ({
   pointer,
@@ -10,7 +10,7 @@ export const encodeRichTextValue = ({
   hiddenStrings,
 }: {
   pointer: string;
-  mappings: Mappings;
+  mappings: CPAMappings | GraphQLMappings;
   data: any;
   hiddenStrings: SourceMapMetadata;
 }) => {
@@ -21,15 +21,15 @@ export const encodeRichTextValue = ({
   const textNodes = findRichTextNodes(data, pointer);
   for (const textNode of textNodes) {
     mappings[textNode] = source;
-    const currentTextNodeValue = jsonPointer.get(data, textNode);
+    const currentTextNodeValue = get(data, textNode);
     const encodedValue = combine(currentTextNodeValue, hiddenStrings);
-    jsonPointer.set(data, textNode, encodedValue);
+    set(data, textNode, encodedValue);
   }
 };
 
-const findRichTextNodes = (data: Node, currentPath = '/'): string[] => {
+const findRichTextNodes = (data: Node, currentPath = ''): string[] => {
   const textNodes = [];
-  const node = jsonPointer.get(data, currentPath);
+  const node = get(data, currentPath);
 
   if (node.content) {
     for (let i = 0; i < node.content.length; i++) {
