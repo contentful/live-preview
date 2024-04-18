@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0...@contentful/content-source-maps@0.3.0) (2024-04-18)
+
+
+### Features
+
+* cpa csm response ([#671](https://github.com/contentful/live-preview/issues/671)) ([8c19c6e](https://github.com/contentful/live-preview/commit/8c19c6edde05b474e57251020fbbccb7a4c53d71))
+
+
+
+
+
 # [0.2.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.1.0...@contentful/content-source-maps@0.2.0) (2024-04-10)
 
 

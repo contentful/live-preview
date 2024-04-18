@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.2...@contentful/live-preview@3.1.0) (2024-04-18)
+
+
+### Features
+
+* cpa csm response ([#671](https://github.com/contentful/live-preview/issues/671)) ([8c19c6e](https://github.com/contentful/live-preview/commit/8c19c6edde05b474e57251020fbbccb7a4c53d71))
+
+
+
+
+
 ## [3.0.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.1...@contentful/live-preview@3.0.2) (2024-04-15)
 
 **Note:** Version bump only for package @contentful/live-preview
