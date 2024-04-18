@@ -1,0 +1,152 @@
+import { has, get } from 'json-pointer';
+import type { CPAEntry, CPAEntryCollection, EditorInterfaceSource, FieldType } from '../types.js';
+import {
+  clone,
+  createSourceMapMetadata,
+  encodeField,
+  isBuiltinNamespace,
+  isSupportedWidget,
+} from '../utils.js';
+
+const applyEncoding = (
+  target: CPAEntry,
+  fieldTypes: FieldType[],
+  editorInterfaces: EditorInterfaceSource[],
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
+) => {
+  if (!target.fields) {
+    return;
+  }
+  const { contentSourceMaps } = target.sys;
+  if (!contentSourceMaps) {
+    console.error('Content source maps data is missing');
+    return;
+  }
+  const { mappings } = contentSourceMaps;
+
+  for (const pointer in mappings) {
+    const { source } = mappings[pointer];
+    const space = target.sys.space.sys.id;
+    const environment = target.sys.environment.sys.id;
+    const entityId = target.sys.id;
+    const entityType = target.sys.type;
+    const fieldType = fieldTypes[source.fieldType];
+    const editorInterface = editorInterfaces[source.editorInterface];
+
+    // Skip unsupported widgets
+    if (
+      isBuiltinNamespace(editorInterface.widgetNamespace) &&
+      !isSupportedWidget(editorInterface.widgetId)
+    ) {
+      continue;
+    }
+
+    if (has(target, pointer)) {
+      const currentValue = get(target, pointer);
+      if (currentValue === null) {
+        return;
+      }
+      const fieldParts = pointer.split('/'); // Split the pointer into parts
+      const field = fieldParts.pop(); // Get the last part, which is the field name
+      if (!field) {
+        console.error('Field name could not be extracted from the pointer', pointer);
+        return;
+      }
+      const locale = target.sys.locale;
+
+      // Determine if we are dealing with multiple locale values in the response or just a single locale
+      if (locale) {
+        const hiddenStrings = createSourceMapMetadata({
+          entityId,
+          entityType,
+          space,
+          environment,
+          field,
+          locale,
+          editorInterface,
+          fieldType,
+          targetOrigin,
+        });
+
+        encodeField(fieldType, currentValue, hiddenStrings, target, pointer, mappings);
+      } else {
+        const locales = Object.keys(currentValue);
+        locales.forEach((locale) => {
+          const hiddenStrings = createSourceMapMetadata({
+            entityId,
+            entityType,
+            space,
+            environment,
+            field,
+            locale,
+            editorInterface,
+            fieldType,
+            targetOrigin,
+          });
+
+          encodeField(
+            fieldType,
+            currentValue,
+            hiddenStrings,
+            target,
+            `${pointer}/${locale}`,
+            mappings,
+            locale,
+          );
+        });
+      }
+    } else {
+      console.error('Pointer not found in the target', pointer, target);
+    }
+  }
+};
+
+export const encodeCPAResponse = (
+  CPAResponse: CPAEntry | CPAEntryCollection,
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
+): CPAEntry | CPAEntryCollection => {
+  const modifiedCPAResponse = clone(
+    CPAResponse as unknown as Record<string, unknown>,
+  ) as unknown as CPAEntry | CPAEntryCollection;
+
+  // Entity collections
+  if (modifiedCPAResponse.sys.type === 'Array') {
+    const collection = modifiedCPAResponse as CPAEntryCollection;
+    if (!collection.sys.contentSourceMapsLookup) {
+      console.error('Content source maps lookup data is missing');
+      return collection;
+    }
+    const {
+      contentSourceMapsLookup: { fieldTypes, editorInterfaces },
+    } = collection.sys;
+    const { items, includes } = collection;
+
+    items.forEach((target) => applyEncoding(target, fieldTypes, editorInterfaces, targetOrigin));
+    if (includes && includes.Entry) {
+      includes.Entry.forEach((entry) =>
+        applyEncoding(entry, fieldTypes, editorInterfaces, targetOrigin),
+      );
+    }
+    if (includes && includes.Asset) {
+      includes.Asset.forEach((asset) =>
+        applyEncoding(asset, fieldTypes, editorInterfaces, targetOrigin),
+      );
+    }
+    // Single entity
+  } else {
+    const entry = modifiedCPAResponse as CPAEntry;
+    if (!entry.sys.contentSourceMapsLookup) {
+      console.error('Content source maps lookup data is missing');
+      return entry;
+    }
+
+    applyEncoding(
+      entry,
+      entry.sys.contentSourceMapsLookup.fieldTypes,
+      entry.sys.contentSourceMapsLookup.editorInterfaces,
+      targetOrigin,
+    );
+  }
+
+  return modifiedCPAResponse;
+};

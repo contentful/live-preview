@@ -2350,6 +2350,18 @@ contentful@^10.3.4:
     json-stringify-safe "^5.0.1"
     type-fest "^4.0.0"
 
+contentful@^10.8.8:
+  version "10.8.8"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.8.8.tgz#f96f6e69c22a35de4891594a4385ec4b93c23c7b"
+  integrity sha512-6U749MMiqPScrvGx3qv8aIeIvmbq1epB6YqxklJhrJY+Y+mtHNLDR2QiID21oO4ornQWdJh2tWY250BRMScdmA==
+  dependencies:
+    "@contentful/rich-text-types" "^16.0.2"
+    axios "^1.6.7"
+    contentful-resolve-response "^1.8.1"
+    contentful-sdk-core "^8.1.0"
+    json-stringify-safe "^5.0.1"
+    type-fest "^4.0.0"
+
 conventional-changelog-angular@7.0.0, conventional-changelog-angular@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/conventional-changelog-angular/-/conventional-changelog-angular-7.0.0.tgz#5eec8edbff15aa9b1680a8dcfbd53e2d7eb2ba7a"
