@@ -2,8 +2,6 @@
 
 This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Remix application. The SDK provides live preview functionality for content changes and the inspector mode for your Contentful space.
 
-The `@contentful/live-preview` SDK comes with its own CSS file, which needs to be included in your project. Due to how Remix treats static assets, you will need a build step to bundle and move the third-party CSS into your public directory. We have used esbuild for this.
-
 ## 1. Installation
 
 Install the dependencies:
