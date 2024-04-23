@@ -18,7 +18,7 @@ export function decode(text: string): SourceMapMetadata | undefined {
   return vercelStegaDecode(text);
 }
 
-export function split(text: string): {
+export function splitEncoding(text: string): {
   /** The original string with encoded substring removed */
   cleaned: string;
   /** The encoded substring from the original string */
