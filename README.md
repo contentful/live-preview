@@ -174,6 +174,15 @@ ContentfulLivePreview.openEntryInEditor({
 });
 ```
 
+## Known issues and limitations
+
+### Live updates limitations:
+
+- GraphQL filters (e.g. filters in the Array field type) or filtering using the [select query parameter](https://www.contentful.com/developers/docs/references/content-preview-api/#/reference/search-parameters/select-operator) on the Content Preview API (CPA).
+- We currently do not support multiple locales within a single GraphQL query or a single CPA response.
+- Live updates works only with untransformed data. Ensure that the response from the CPA or GraphQL is provided to the hook in its original form, with any potential transformations applied afterwards.
+- Cross-space links are not supported with live preview as [Cross-space references](https://www.contentful.com/help/cross-space-references/) resolution is not implemented in the Content Preview API.
+
 ## Example Integrations
 
 ### Vanilla Javascript
