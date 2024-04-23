@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.1.0...@contentful/live-preview@3.2.0) (2024-04-23)
+
+
+### Features
+
+* update documentation + expose csm rest api function ([#687](https://github.com/contentful/live-preview/issues/687)) ([39a2198](https://github.com/contentful/live-preview/commit/39a219802a514d23243c7fa4e45f4da31b393aba))
+
+
+
+
+
 # [3.1.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.0.2...@contentful/live-preview@3.1.0) (2024-04-18)
 
 

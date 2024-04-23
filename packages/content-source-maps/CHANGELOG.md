@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.3.0...@contentful/content-source-maps@0.4.0) (2024-04-23)
+
+
+### Features
+
+* update documentation + expose csm rest api function ([#687](https://github.com/contentful/live-preview/issues/687)) ([39a2198](https://github.com/contentful/live-preview/commit/39a219802a514d23243c7fa4e45f4da31b393aba))
+
+
+
+
+
 # [0.3.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.2.0...@contentful/content-source-maps@0.3.0) (2024-04-18)
 
 
