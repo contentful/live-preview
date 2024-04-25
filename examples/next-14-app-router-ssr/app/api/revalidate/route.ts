@@ -12,7 +12,7 @@ function getQSParamFromURL(key: string, url: string): string | null {
 export async function GET(request: Request) {
   // Parse query string parameters
   const path = getQSParamFromURL('pathname', request.url);
-  console.log({ path });
+
   if (path) {
     revalidatePath(path);
   }
