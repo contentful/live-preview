@@ -1,11 +1,48 @@
 import { sendMessageToEditor } from '../helpers/index.js';
 import { type MessageFromEditor } from '../messages.js';
 import {
-  InspectorModeDataAttributes,
   InspectorModeEventMethods,
+  type InspectorModeAttributes,
   type InspectorModeChangedMessage,
 } from './types.js';
 import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
+
+type TaggedElement = {
+  element: Element;
+  isVisible: boolean;
+  attributes: InspectorModeAttributes;
+  coordinates: DOMRect;
+};
+
+function isEqualElement(previousElement: TaggedElement, currentElement: TaggedElement): boolean {
+  if (previousElement.isVisible !== currentElement.isVisible) {
+    return false;
+  }
+
+  if (previousElement.attributes !== currentElement.attributes) {
+    return false;
+  }
+
+  if (previousElement.coordinates !== currentElement.coordinates) {
+    return false;
+  }
+
+  return previousElement.element === currentElement.element;
+}
+
+function isEqual(previousElements: TaggedElement[], currentElements: TaggedElement[]) {
+  if (previousElements.length !== currentElements.length) {
+    return false;
+  }
+
+  for (const key in previousElements) {
+    if (!isEqualElement(previousElements[key], currentElements[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 type InspectorModeOptions = {
   locale: string;
@@ -15,23 +52,20 @@ type InspectorModeOptions = {
   ignoreManuallyTaggedElements?: boolean;
 };
 
+const DELAY = 150;
+
 export class InspectorMode {
-  private isScrolling = false;
-  private scrollTimeout?: NodeJS.Timeout;
+  private isInteracting = false;
+  private interactionTimeout?: NodeJS.Timeout;
+  private pollInterval?: NodeJS.Timeout;
 
-  private isResizing = false;
-  private resizeTimeout?: NodeJS.Timeout;
-
-  private hoveredElement?: HTMLElement;
-  private taggedElements: Element[] = [];
-  private taggedElementMutationObserver?: MutationObserver;
+  private taggedElements: TaggedElement[] = [];
 
   constructor(private options: InspectorModeOptions) {
-    // Attach interaction listeners
-    this.addHoverListener();
     this.addScrollListener();
-    this.addMutationListener();
     this.addResizeListener();
+    this.addMouseMoveListener();
+    this.listenToChanges();
   }
 
   // Handles incoming messages from Contentful
@@ -44,152 +78,89 @@ export class InspectorMode {
     }
   };
 
-  /** Checks if the hovered element is an tagged entry and then sends it to the editor */
-  private addHoverListener = () => {
-    const onMouseOver = (e: MouseEvent) => {
-      const eventTargets = e.composedPath();
+  // FIXME: Check if someone would scroll and then quickly resize or otherway around
+  // would it crash the inspector mode as the end event is not send?
+  private createInteraction =
+    (
+      targetOrigin: string[],
+      startEvent: InspectorModeEventMethods,
+      endEvent?: InspectorModeEventMethods,
+    ) =>
+    () => {
+      if (!this.isInteracting) {
+        this.isInteracting = true;
+        clearInterval(this.pollInterval);
+        sendMessageToEditor(startEvent, {}, targetOrigin);
+      }
 
-      for (const eventTarget of eventTargets) {
-        const element = eventTarget as HTMLElement;
-        if (element.nodeName === 'BODY') break;
-        if (typeof element?.getAttribute !== 'function') continue;
+      if (this.interactionTimeout) {
+        clearTimeout(this.interactionTimeout);
+      }
 
-        if (this.handleTaggedElement(element)) {
-          return;
+      // Start timeout to trigger the `end` event, if there would be another interaction event,
+      // the existing timeout will be canceled and it starts again.
+      // Prevents showing wrong information during interaction.
+      this.interactionTimeout = setTimeout(() => {
+        this.isInteracting = false;
+        if (endEvent) {
+          sendMessageToEditor(endEvent, {}, targetOrigin);
         }
-      }
-
-      // Clear if no tagged element is hovered
-      if (this.hoveredElement) {
-        this.hoveredElement = undefined;
-        sendMessageToEditor(
-          InspectorModeEventMethods.MOUSE_MOVE,
-          { element: null },
-          this.options.targetOrigin,
-        );
-      }
+        this.sendAllElements();
+        this.listenToChanges();
+      }, DELAY);
     };
-
-    window.addEventListener('mouseover', onMouseOver);
-
-    return () => window.removeEventListener('mouseover', onMouseOver);
-  };
 
   /** Sends scroll start and end event to the editor, on end it also sends the tagged elements again */
   private addScrollListener = () => {
     const { targetOrigin } = this.options;
 
-    const onScroll = () => {
-      if (!this.isScrolling) {
-        this.isScrolling = true;
-        sendMessageToEditor(InspectorModeEventMethods.SCROLL_START, {}, targetOrigin);
-      }
-
-      if (this.scrollTimeout) {
-        clearTimeout(this.scrollTimeout);
-      }
-
-      // Start timeout to trigger the `end` event, if there would be another scroll event,
-      // the existing timeout will be canceled and it starts again.
-      // Prevents showing wrong information during scrolling.
-      this.scrollTimeout = setTimeout(() => {
-        this.isScrolling = false;
-        sendMessageToEditor(InspectorModeEventMethods.SCROLL_END, {}, targetOrigin);
-        this.sendAllElements();
-        if (this.hoveredElement) {
-          this.handleTaggedElement(this.hoveredElement);
-        }
-      }, 150);
-    };
+    const onScroll = this.createInteraction(
+      targetOrigin,
+      InspectorModeEventMethods.SCROLL_START,
+      InspectorModeEventMethods.SCROLL_END,
+    );
 
     window.addEventListener('scroll', onScroll);
 
     return () => window.removeEventListener('scroll', onScroll);
   };
 
-  /** Detects DOM changes and sends the tagged elements to the editor */
-  private addMutationListener = () => {
-    const mutationObserver = new MutationObserver(() => {
-      const taggedElements = getAllTaggedElements();
-
-      if (this.taggedElements?.length !== taggedElements.length) {
-        this.sendAllElements();
-      }
-    });
-
-    mutationObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: [
-        InspectorModeDataAttributes.ENTRY_ID,
-        InspectorModeDataAttributes.FIELD_ID,
-        InspectorModeDataAttributes.LOCALE,
-        InspectorModeDataAttributes.SPACE,
-        InspectorModeDataAttributes.ENVIRONMENT,
-      ],
-      childList: true,
-      subtree: true,
-    });
-
-    return () => mutationObserver.disconnect();
-  };
-
   /** Sends resize start and end event to the editor, on end it also sends the tagged elements again */
   private addResizeListener = () => {
     const { targetOrigin } = this.options;
 
-    const resizeObserver = new ResizeObserver(() => {
-      if (!this.isResizing) {
-        this.isResizing = true;
-        sendMessageToEditor(InspectorModeEventMethods.RESIZE_START, {}, targetOrigin);
-      }
-
-      if (this.resizeTimeout) {
-        clearTimeout(this.resizeTimeout);
-      }
-
-      // Start timeout to trigger the `end` event, if there would be another resize event,
-      // the existing timeout will be canceled and it starts again.
-      // Prevents showing wrong information during resizing.
-      this.resizeTimeout = setTimeout(() => {
-        this.isResizing = false;
-        sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, targetOrigin);
-        this.sendAllElements();
-        if (this.hoveredElement) {
-          this.handleTaggedElement(this.hoveredElement);
-        }
-      }, 150);
-    });
+    const resizeObserver = new ResizeObserver(
+      this.createInteraction(
+        targetOrigin,
+        InspectorModeEventMethods.RESIZE_START,
+        InspectorModeEventMethods.RESIZE_END,
+      ),
+    );
 
     resizeObserver.observe(document.body);
 
     return () => resizeObserver.disconnect();
   };
 
-  /**
-   * Validates if the element has the inspector mode attributes
-   * and sends it then to the editor
-   */
-  private handleTaggedElement = (element: HTMLElement): boolean => {
-    const { targetOrigin, locale, space, environment } = this.options;
-    const taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
+  private addMouseMoveListener = () => {
+    const { targetOrigin } = this.options;
 
-    if (!taggedInformation) {
-      return false;
-    }
+    const onScroll = this.createInteraction(targetOrigin, InspectorModeEventMethods.MOUSE_MOVE);
 
-    this.hoveredElement = element;
-    sendMessageToEditor(
-      InspectorModeEventMethods.MOUSE_MOVE,
-      {
-        element: {
-          attributes: taggedInformation,
-          coordinates: element.getBoundingClientRect(),
-        },
-      },
-      targetOrigin,
-    );
+    window.addEventListener('mousemove', onScroll);
 
-    return true;
+    return () => window.removeEventListener('mousemove', onScroll);
+  };
+
+  // vs mutationobserver on everything (no filter)
+  private listenToChanges = () => {
+    this.pollInterval = setInterval(() => {
+      if (!this.isInteracting) {
+        this.sendAllElements();
+      }
+    }, 1000);
+
+    return () => clearInterval(this.pollInterval);
   };
 
   /**
@@ -200,42 +171,39 @@ export class InspectorMode {
     const { targetOrigin, locale, space, environment } = this.options;
     const elements = getAllTaggedElements();
 
-    this.taggedElements = elements;
-    if (this.taggedElementMutationObserver) {
-      this.taggedElementMutationObserver.disconnect();
+    const height = window.innerHeight || document.documentElement.clientHeight;
+    const width = window.innerWidth || document.documentElement.clientWidth;
+
+    const taggedElements = [];
+    for (const e of elements) {
+      const attributes = getInspectorModeAttributes(e, { locale, space, environment });
+
+      if (attributes) {
+        const coordinates = e.getBoundingClientRect();
+        taggedElements.push({
+          element: e,
+          attributes,
+          coordinates,
+          isVisible:
+            coordinates.top >= 0 &&
+            coordinates.left >= 0 &&
+            coordinates.bottom <= height &&
+            coordinates.right <= width,
+          // FIXME: should we check for opacity too?
+        });
+      }
     }
 
-    const sendTaggedElementsMessage = () => {
+    if (!isEqual(taggedElements, this.taggedElements)) {
+      this.taggedElements = taggedElements;
+
       sendMessageToEditor(
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
-          elements: elements.map((e) => ({
-            attributes: getInspectorModeAttributes(e, { locale, space, environment }),
-            coordinates: e.getBoundingClientRect(),
-          })),
+          elements: this.taggedElements.map((te) => ({ ...te, element: undefined })),
         },
         targetOrigin,
       );
-    };
-
-    this.taggedElementMutationObserver = new MutationObserver(sendTaggedElementsMessage);
-
-    this.taggedElements.forEach((element) => {
-      this.taggedElementMutationObserver?.observe(element, {
-        attributes: true,
-        attributeFilter: [
-          InspectorModeDataAttributes.ENTRY_ID,
-          InspectorModeDataAttributes.FIELD_ID,
-          InspectorModeDataAttributes.LOCALE,
-          InspectorModeDataAttributes.SPACE,
-          InspectorModeDataAttributes.ENVIRONMENT,
-        ],
-        childList: true,
-        subtree: true,
-        characterData: true,
-      });
-    });
-
-    sendTaggedElementsMessage();
+    }
   };
 }
