@@ -1,6 +1,5 @@
 // route handler with secret and slug
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 function getQSParamFromURL(key: string, url: string): string | null {
   if (!url) return '';
