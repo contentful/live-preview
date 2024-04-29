@@ -9,7 +9,7 @@ ContentfulLivePreview.init({
 ContentfulLivePreview.subscribe('save', {
   callback: async () => {
     const pathname = window.location.pathname;
-
-    return fetch(`/api/revalidate?pathname=${pathname}`);
+    await fetch(`/api/revalidate?pathname=${pathname}`);
+    window.location.reload();
   },
 });
