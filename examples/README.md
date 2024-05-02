@@ -10,11 +10,7 @@ This README provides a comprehensive overview of our various example projects to
 ## next-14-app-router-ssr
 
 - Server-Side Rendering (SSR) Focus: This example exclusively utilizes server-side rendering, with minimal client-side interactions limited to loading the Live Preview SDK in a standalone script.
-- Conditional Revalidation: Configured to trigger a revalidation process through a designated endpoint whenever changes are saved in Contentful, refreshing the page to display new content after a brief delay of 5 seconds.
-
-## next-13-app-router-ssr
-
-- Enhanced SSR with Client-Side Reloading: Operates similarly to the next-14-app-router-ssr but includes a script that forcefully reloads the iframe if an entry’s save event is detected in Contentful, effective after 5-seconds. This script supports both Next 13 and Next 14 versions.
+- Conditional Revalidation: Configured to trigger a revalidation process through a designated endpoint whenever changes are saved in Contentful, it then forcefully reloads the iframe, effective after 5-seconds..
 
 ## next-pages-router
 
