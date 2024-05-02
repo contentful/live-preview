@@ -1,5 +1,6 @@
 import { get } from 'json-pointer';
 import { describe, expect, test } from 'vitest';
+
 import { decode } from '../encode.js';
 import { encodeGraphQLResponse } from '../graphql/encodeGraphQLResponse.js';
 import { GraphQLResponse } from '../types.js';
@@ -607,9 +608,56 @@ describe('Content Source Maps with the GraphQL API', () => {
                       marks: [],
                       data: {},
                     },
+                    {
+                      data: {
+                        target: {
+                          sys: {
+                            id: '5Ffob3XoJGrQuKE5uRUugR',
+                            type: 'Link',
+                            linkType: 'Entry',
+                          },
+                        },
+                      },
+                      content: [
+                        {
+                          data: {},
+                          marks: [],
+                          value: 'Hyperlink to another entry',
+                          nodeType: 'text',
+                        },
+                      ],
+                      nodeType: 'entry-hyperlink',
+                    },
+                    {
+                      data: {
+                        uri: 'https://google.de',
+                      },
+                      content: [
+                        {
+                          data: {},
+                          marks: [],
+                          value: 'Hyperlink to external',
+                          nodeType: 'text',
+                        },
+                      ],
+                      nodeType: 'hyperlink',
+                    },
                   ],
                 },
               ],
+            },
+            links: {
+              entries: {
+                hyperlink: [
+                  {
+                    __typename: 'PageBlogPost',
+                    sys: {
+                      id: '5Ffob3XoJGrQuKE5uRUugR',
+                    },
+                    slug: '1exploring-the-intersection-of-technology-and-art',
+                  },
+                ],
+              },
             },
           },
         },
@@ -618,10 +666,14 @@ describe('Content Source Maps with the GraphQL API', () => {
         contentSourceMaps: {
           spaces: ['foo'],
           environments: ['master'],
-          fieldTypes: ['RichText'],
+          fieldTypes: ['RichText', 'Symbol'],
           editorInterfaces: [
             {
               widgetId: 'richTextEditor',
+              widgetNamespace: 'builtin',
+            },
+            {
+              widgetId: 'slugEditor',
               widgetNamespace: 'builtin',
             },
           ],
@@ -638,11 +690,20 @@ describe('Content Source Maps with the GraphQL API', () => {
           mappings: {
             '/post/rte/json': {
               source: {
+                editorInterface: 0,
                 entry: 0,
                 field: 0,
-                locale: 0,
                 fieldType: 0,
-                editorInterface: 0,
+                locale: 0,
+              },
+            },
+            '/post/rte/links/entries/hyperlink/0/slug': {
+              source: {
+                editorInterface: 1,
+                entry: 0,
+                field: 0,
+                fieldType: 1,
+                locale: 0,
               },
             },
           },
@@ -685,7 +746,46 @@ describe('Content Source Maps with the GraphQL API', () => {
           fieldType: 'RichText',
         },
       },
+      // entry hyperlinks
+      '/rte/json/content/0/content/3/content/0/value': {
+        origin: 'contentful.com',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US',
+        contentful: {
+          space: 'foo',
+          environment: 'master',
+          field: 'rte',
+          locale: 'en-US',
+          entity: 'a1b2c3',
+          entityType: 'Entry',
+          editorInterface: {
+            widgetId: 'richTextEditor',
+            widgetNamespace: 'builtin',
+          },
+          fieldType: 'RichText',
+        },
+      },
+      '/rte/links/entries/hyperlink/0/slug': undefined,
+      // external links
+      '/rte/json/content/0/content/4/data/uri': undefined,
+      '/rte/json/content/0/content/4/content/0/value': {
+        origin: 'contentful.com',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US',
+        contentful: {
+          space: 'foo',
+          environment: 'master',
+          field: 'rte',
+          locale: 'en-US',
+          entity: 'a1b2c3',
+          entityType: 'Entry',
+          editorInterface: {
+            widgetId: 'richTextEditor',
+            widgetNamespace: 'builtin',
+          },
+          fieldType: 'RichText',
+        },
+      },
     });
+
     // should throw an error if we try to access non-text nodes
     try {
       get(encodedGraphQLResponse.data.post, '/rte/json/content/0/content/1/value');
