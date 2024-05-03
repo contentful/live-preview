@@ -50,12 +50,17 @@ When rendering the encoded data in your website, inspector mode will activate au
 
 #### 1. Enable Content Source Maps for the CPA
 
-To enable Content Source Maps using the [Contentful Client SDK](https://github.com/contentful/contentful.js), simply integrate the `alpha_withContentSourceMaps` chain modifier as shown below:
+To enable Content Source Maps using the [Contentful Client SDK](https://github.com/contentful/contentful.js), simply enable `withContentSourceMaps` in the client:
 
 ```jsx
-import { getEntries } from 'contentful';
-
-const entries = await client.alpha_withContentSourceMaps.getEntries();
+export const clientPreview = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID!,
+  accessToken: process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN!,
+  host: "preview.contentful.com",
+  alphaFeatures: {
+    withContentSourceMaps: true
+  }
+});
 ```
 
 The CPA will include Content Source Maps within the `sys` object of the response.

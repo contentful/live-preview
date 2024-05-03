@@ -39,7 +39,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@vercel/stega": "^0.1.0",
+    "@vercel/stega": "^0.1.2",
     "json-pointer": "^0.6.2"
   },
   "devDependencies": {
