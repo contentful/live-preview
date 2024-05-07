@@ -103,7 +103,7 @@ export class ContentfulLivePreview {
       locale,
       environment,
       space,
-      targetOrigin = DEFAULT_ORIGINS,
+      targetOrigin,
     } = config;
 
     // Check if running in a browser environment
@@ -133,7 +133,27 @@ export class ContentfulLivePreview {
       this.space = space;
       this.environment = environment;
 
-      this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
+      if (targetOrigin) {
+        this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
+      } else {
+        const ancestorOrigins = window.location.ancestorOrigins;
+        const currentDefaultOrigin = ancestorOrigins
+          ? DEFAULT_ORIGINS.find((origin) => ancestorOrigins.contains(origin))
+          : //less consistent workaround for Firefox, where ancestorOrigins is not supported
+            DEFAULT_ORIGINS.find((origin) => document.referrer.includes(origin));
+        console.log(
+          'hey2',
+          window.location.ancestorOrigins,
+          document.referrer,
+          currentDefaultOrigin,
+        );
+        if (!currentDefaultOrigin) {
+          throw new Error(
+            `The current origin is not supported. Please provide a targetOrigin in the live preview configuration.`,
+          );
+        }
+        this.targetOrigin = [currentDefaultOrigin];
+      }
 
       if (this.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
