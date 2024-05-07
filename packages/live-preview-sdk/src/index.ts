@@ -141,12 +141,6 @@ export class ContentfulLivePreview {
           ? DEFAULT_ORIGINS.find((origin) => ancestorOrigins.contains(origin))
           : //less consistent workaround for Firefox, where ancestorOrigins is not supported
             DEFAULT_ORIGINS.find((origin) => document.referrer.includes(origin));
-        console.log(
-          'hey2',
-          window.location.ancestorOrigins,
-          document.referrer,
-          currentDefaultOrigin,
-        );
         if (!currentDefaultOrigin) {
           throw new Error(
             `The current origin is not supported. Please provide a targetOrigin in the live preview configuration.`,
