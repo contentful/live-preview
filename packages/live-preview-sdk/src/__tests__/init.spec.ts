@@ -84,7 +84,7 @@ describe('init', () => {
     });
 
     it('should use enableLiveUpdates with false to disable the live updates', async () => {
-      await ContentfulLivePreview.init({ ...livePreviewConfig, enableInspectorMode: false });
+      await ContentfulLivePreview.init({ ...livePreviewConfig, enableLiveUpdates: false });
 
       expect(ContentfulLivePreview.inspectorModeEnabled).toBeTruthy();
       expect(ContentfulLivePreview.inspectorMode).toBeInstanceOf(InspectorMode);
