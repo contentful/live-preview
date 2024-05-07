@@ -99,4 +99,8 @@ When rendering the encoded data in your website, inspector mode will activate au
 
 - Markdown support is currently in development.
 - Adding hidden metadata to content can result in problems, e.g. when being used for CSS values, for dates or URL content. You can remove the hidden strings using the `splitEncoding` function from the Live Preview SDK.
-- Hidden strings will not be generated for fields that end with numeric values.
+- Encoding will be skipped on these formats:
+  - Any date format that does not use English letters (e.g. `4/30/24`)
+  - ISO dates (e.g. `2024-04-30T12:34:59Z`)
+  - URL’s
+
