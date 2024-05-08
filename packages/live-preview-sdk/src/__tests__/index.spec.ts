@@ -46,7 +46,7 @@ describe('ContentfulLivePreview', () => {
   beforeAll(() => {
     (isInsideIframe as Mock).mockReturnValue(true);
 
-    ContentfulLivePreview.init({ locale: 'en-US' });
+    ContentfulLivePreview.init({ locale: 'en-US', targetOrigin: '*' });
     // establish the connection, needs to tested here, as we can only init the ContentfulLivePreview once
     expect(sendMessageToEditor).toHaveBeenCalledTimes(1);
   });

@@ -41,7 +41,7 @@ export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
 export const VERSION = version;
 
-const DEFAULT_ORIGINS = [
+const DEFAULT_ALLOWED_ORIGINS = [
   'https://app.contentful.com',
   'https://app.eu.contentful.com',
   'http://localhost:3001', // for local debugging for Contentful engineers
@@ -103,7 +103,7 @@ export class ContentfulLivePreview {
       locale,
       environment,
       space,
-      targetOrigin = DEFAULT_ORIGINS,
+      targetOrigin,
     } = config;
 
     // Check if running in a browser environment
@@ -133,7 +133,7 @@ export class ContentfulLivePreview {
       this.space = space;
       this.environment = environment;
 
-      this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
+      this.initTargetOrigin(targetOrigin);
 
       if (this.initialized) {
         debug.log('You have already initialized the Live Preview SDK.');
@@ -215,6 +215,24 @@ export class ContentfulLivePreview {
       this.initialized = true;
 
       return Promise.resolve(ContentfulLivePreview.inspectorMode);
+    }
+  }
+
+  static initTargetOrigin(targetOrigin?: string | string[]) {
+    if (targetOrigin) {
+      this.targetOrigin = Array.isArray(targetOrigin) ? targetOrigin : [targetOrigin];
+    } else {
+      const ancestorOrigins = window.location.ancestorOrigins;
+      const currentDefaultOrigin = ancestorOrigins
+        ? DEFAULT_ALLOWED_ORIGINS.find((origin) => ancestorOrigins.contains(origin))
+        : //less consistent workaround for Firefox, where ancestorOrigins is not supported
+          DEFAULT_ALLOWED_ORIGINS.find((origin) => document.referrer.includes(origin));
+      if (!currentDefaultOrigin) {
+        throw new Error(
+          `The current origin is not supported. Please provide a targetOrigin in the live preview configuration.`,
+        );
+      }
+      this.targetOrigin = [currentDefaultOrigin];
     }
   }
 
