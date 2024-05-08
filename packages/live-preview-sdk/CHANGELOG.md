@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.3.4...@contentful/live-preview@3.3.5) (2024-05-08)
+
+
+### Bug Fixes
+
+* detect targetOrigin if not provided ([#713](https://github.com/contentful/live-preview/issues/713)) ([be6e3dd](https://github.com/contentful/live-preview/commit/be6e3ddc0becb3d2daf221b9d3f320aa89cc1013))
+
+
+
+
+
 ## [3.3.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.3.3...@contentful/live-preview@3.3.4) (2024-05-06)
 
 **Note:** Version bump only for package @contentful/live-preview
