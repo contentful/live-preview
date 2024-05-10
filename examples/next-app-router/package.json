@@ -11,7 +11,7 @@
   "dependencies": {
     "@contentful/live-preview": "^3.1.0",
     "@contentful/rich-text-react-renderer": "^15.19.4",
-    "next": "14.1.0",
+    "next": "14.1.1",
     "react": "^18",
     "react-dom": "^18"
   },
