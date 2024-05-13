@@ -63,6 +63,8 @@ export type InspectorModeMouseMoveMessage = {
 };
 export type InspectorModeTaggedElementsMessage = {
   elements: Array<InspectorModeElement>;
+  manualTagCount: number;
+  autoTagCount: number;
 };
 
 export type InspectorModeChangedMessage = {

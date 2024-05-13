@@ -176,7 +176,10 @@ function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean 
 /**
  * Query the document for all tagged elements
  */
-export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
+export function getAllTaggedElements(
+  root = window.document,
+  ignoreManual?: boolean,
+): { taggedElements: Element[]; manualTagCount: number; autoTagCount: number } {
   const manualTagged = ignoreManual
     ? []
     : root.querySelectorAll(
@@ -241,7 +244,15 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     taggedElements.push(element);
   }
 
-  return taggedElements;
+  const autoTaggedCount = Array.from(manualTagged).filter((el) =>
+    el.hasAttribute(InspectorModeDataAttributes.AUTO_TAGGED),
+  ).length;
+
+  return {
+    taggedElements,
+    manualTagCount: manualTagged.length - autoTaggedCount,
+    autoTagCount: uniqElementsForTagging.length + autoTaggedCount,
+  };
 }
 
 /**
@@ -251,7 +262,7 @@ export function getAllTaggedEntries(): string[] {
   return [
     ...new Set(
       getAllTaggedElements()
-        .map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
+        .taggedElements.map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
         .filter(Boolean) as string[],
     ),
   ];
