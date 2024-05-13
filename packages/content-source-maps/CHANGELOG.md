@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.4.2...@contentful/content-source-maps@0.5.0) (2024-05-13)
+
+
+### Features
+
+* compile csm to lower target ([#723](https://github.com/contentful/live-preview/issues/723)) ([9d75eb1](https://github.com/contentful/live-preview/commit/9d75eb1223f1a137dcd0eeb9e8327f7e500334e6))
+
+
+
+
+
 ## [0.4.2](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.4.1...@contentful/content-source-maps@0.4.2) (2024-05-03)
 
 **Note:** Version bump only for package @contentful/content-source-maps
