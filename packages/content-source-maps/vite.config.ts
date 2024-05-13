@@ -9,6 +9,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude],
   },
   build: {
+    target: 'es2017',
     sourcemap: true,
     outDir: './dist',
     lib: {
