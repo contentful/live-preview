@@ -51,6 +51,7 @@ export function getInspectorModeAttributes(
     environment:
       element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
     space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
+    autoTagged: element.hasAttribute(InspectorModeDataAttributes.AUTO_TAGGED),
   };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
@@ -236,6 +237,7 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
     element.setAttribute(InspectorModeDataAttributes.SPACE, sourceMap.contentful.space);
     element.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, sourceMap.contentful.environment);
+    element.setAttribute(InspectorModeDataAttributes.AUTO_TAGGED, 'true');
     taggedElements.push(element);
   }
 

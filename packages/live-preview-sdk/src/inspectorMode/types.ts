@@ -22,6 +22,7 @@ export const enum InspectorModeDataAttributes {
   LOCALE = 'data-contentful-locale',
   SPACE = 'data-contentful-space',
   ENVIRONMENT = 'data-contentful-environment',
+  AUTO_TAGGED = 'data-contentful-auto-tagged',
 }
 
 export enum InspectorModeEventMethods {
@@ -39,6 +40,7 @@ type InspectorModeSharedAttributes = {
   locale: string;
   space?: string;
   environment?: string;
+  autoTagged?: boolean;
 };
 export type InspectorModeEntryAttributes = InspectorModeSharedAttributes & {
   entryId: string;
