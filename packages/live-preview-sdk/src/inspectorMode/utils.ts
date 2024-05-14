@@ -51,7 +51,7 @@ export function getInspectorModeAttributes(
     environment:
       element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
     space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
-    autoTagged: element.hasAttribute(InspectorModeDataAttributes.AUTO_TAGGED),
+    manuallyTagged: element.hasAttribute(InspectorModeDataAttributes.MANUALLY_TAGGED),
   };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
@@ -240,12 +240,11 @@ export function getAllTaggedElements(
     element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
     element.setAttribute(InspectorModeDataAttributes.SPACE, sourceMap.contentful.space);
     element.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, sourceMap.contentful.environment);
-    element.setAttribute(InspectorModeDataAttributes.AUTO_TAGGED, 'true');
     taggedElements.push(element);
   }
 
-  const autoTaggedCount = Array.from(manualTagged).filter((el) =>
-    el.hasAttribute(InspectorModeDataAttributes.AUTO_TAGGED),
+  const autoTaggedCount = Array.from(manualTagged).filter(
+    (el) => !el.hasAttribute(InspectorModeDataAttributes.MANUALLY_TAGGED),
   ).length;
 
   return {

@@ -200,6 +200,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -215,6 +216,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -230,6 +232,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -245,6 +248,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -261,6 +265,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-field-id': 'title',
         'data-contentful-space': '12345',
         'data-contentful-environment': 'develop',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -277,6 +282,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-field-id': 'title',
         'data-contentful-space': '99999',
         'data-contentful-environment': 'main',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -306,6 +312,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -321,6 +328,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -336,6 +344,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 
@@ -351,6 +360,7 @@ describe('useContentfulInspectorMode', () => {
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
+        'data-contentful-manually-tagged': true,
       });
     });
 

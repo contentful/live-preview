@@ -138,6 +138,7 @@ describe('ContentfulLivePreview', () => {
         [InspectorModeDataAttributes.FIELD_ID]: fieldId,
         [InspectorModeDataAttributes.ENTRY_ID]: entryId,
         [InspectorModeDataAttributes.LOCALE]: locale,
+        [InspectorModeDataAttributes.MANUALLY_TAGGED]: true,
       });
     });
 
@@ -162,6 +163,7 @@ describe('ContentfulLivePreview', () => {
         [InspectorModeDataAttributes.LOCALE]: locale,
         [InspectorModeDataAttributes.SPACE]: space,
         [InspectorModeDataAttributes.ENVIRONMENT]: environment,
+        [InspectorModeDataAttributes.MANUALLY_TAGGED]: true,
       });
     });
 

@@ -194,7 +194,13 @@ export class ContentfulLivePreview {
       });
 
       // tell the editor that there's a SDK
-      const { taggedElements, manualTagCount, autoTagCount } = getAllTaggedElements();
+      const { taggedElements, manualTagCount, autoTagCount } = this.inspectorModeEnabled
+        ? getAllTaggedElements()
+        : {
+            taggedElements: [],
+            manualTagCount: 0,
+            autoTagCount: 0,
+          };
       const taggedElementCount = taggedElements.length;
 
       sendMessageToEditor(
@@ -289,6 +295,7 @@ export class ContentfulLivePreview {
         ...(environment ? { [InspectorModeDataAttributes.ENVIRONMENT]: environment } : {}),
         ...(space ? { [InspectorModeDataAttributes.SPACE]: space } : {}),
         [InspectorModeDataAttributes.FIELD_ID]: fieldId,
+        [InspectorModeDataAttributes.MANUALLY_TAGGED]: true,
       };
 
       if (locale) {

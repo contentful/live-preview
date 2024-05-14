@@ -22,7 +22,7 @@ export const enum InspectorModeDataAttributes {
   LOCALE = 'data-contentful-locale',
   SPACE = 'data-contentful-space',
   ENVIRONMENT = 'data-contentful-environment',
-  AUTO_TAGGED = 'data-contentful-auto-tagged',
+  MANUALLY_TAGGED = 'data-contentful-manually-tagged',
 }
 
 export enum InspectorModeEventMethods {
