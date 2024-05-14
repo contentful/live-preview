@@ -198,7 +198,8 @@ export class InspectorMode {
    */
   private sendAllElements = () => {
     const { targetOrigin, locale, space, environment } = this.options;
-    const { taggedElements, manualTagCount, autoTagCount } = getAllTaggedElements();
+    const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } =
+      getAllTaggedElements();
 
     this.taggedElements = taggedElements;
     if (this.taggedElementMutationObserver) {
@@ -213,8 +214,8 @@ export class InspectorMode {
             attributes: getInspectorModeAttributes(e, { locale, space, environment }),
             coordinates: e.getBoundingClientRect(),
           })),
-          autoTagCount,
-          manualTagCount,
+          automaticallyTaggedCount,
+          manuallyTaggedCount,
         },
         targetOrigin,
       );

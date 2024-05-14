@@ -179,7 +179,7 @@ function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean 
 export function getAllTaggedElements(
   root = window.document,
   ignoreManual?: boolean,
-): { taggedElements: Element[]; manualTagCount: number; autoTagCount: number } {
+): { taggedElements: Element[]; manuallyTaggedCount: number; automaticallyTaggedCount: number } {
   const manualTagged = ignoreManual
     ? []
     : root.querySelectorAll(
@@ -249,8 +249,8 @@ export function getAllTaggedElements(
 
   return {
     taggedElements,
-    manualTagCount: manualTagged.length - autoTaggedCount,
-    autoTagCount: uniqElementsForTagging.length + autoTaggedCount,
+    manuallyTaggedCount: manualTagged.length - autoTaggedCount,
+    automaticallyTaggedCount: uniqElementsForTagging.length + autoTaggedCount,
   };
 }
 

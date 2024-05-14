@@ -194,12 +194,13 @@ export class ContentfulLivePreview {
       });
 
       // tell the editor that there's a SDK
-      const { taggedElements, manualTagCount, autoTagCount } = this.inspectorModeEnabled
+      const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } = this
+        .inspectorModeEnabled
         ? getAllTaggedElements()
         : {
             taggedElements: [],
-            manualTagCount: 0,
-            autoTagCount: 0,
+            manuallyTaggedCount: 0,
+            automaticallyTaggedCount: 0,
           };
       const taggedElementCount = taggedElements.length;
 
@@ -213,8 +214,8 @@ export class ContentfulLivePreview {
           locale: this.locale,
           isInspectorEnabled: this.inspectorModeEnabled,
           isLiveUpdatesEnabled: this.liveUpdatesEnabled,
-          manualTaggedElementCount: manualTagCount,
-          autoTaggedElementCount: autoTagCount,
+          manuallyTaggedElementCount: manuallyTaggedCount,
+          automaticallyTaggedElementCount: automaticallyTaggedCount,
         } as ConnectedMessage,
         this.targetOrigin,
       );
