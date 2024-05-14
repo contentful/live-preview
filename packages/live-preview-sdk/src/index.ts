@@ -16,7 +16,7 @@ import {
 import { isValidMessage } from './helpers/validateMessage.js';
 import { InspectorMode } from './inspectorMode/index.js';
 import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types.js';
-import { getAllTaggedEntries } from './inspectorMode/utils.js';
+import { getAllTaggedElements, getAllTaggedEntries } from './inspectorMode/utils.js';
 import { LiveUpdates } from './liveUpdates.js';
 import {
   LivePreviewPostMessageMethods,
@@ -194,9 +194,9 @@ export class ContentfulLivePreview {
       });
 
       // tell the editor that there's a SDK
-      const taggedElementCount = document.querySelectorAll(
-        `[${InspectorModeDataAttributes.ENTRY_ID}]`,
-      ).length;
+      const { taggedElements, manualTagCount, autoTagCount } = getAllTaggedElements();
+      const taggedElementCount = taggedElements.length;
+
       sendMessageToEditor(
         LivePreviewPostMessageMethods.CONNECTED,
         {
@@ -207,6 +207,8 @@ export class ContentfulLivePreview {
           locale: this.locale,
           isInspectorEnabled: this.inspectorModeEnabled,
           isLiveUpdatesEnabled: this.liveUpdatesEnabled,
+          manualTaggedElementCount: manualTagCount,
+          autoTaggedElementCount: autoTagCount,
         } as ConnectedMessage,
         this.targetOrigin,
       );
