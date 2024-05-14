@@ -5,6 +5,7 @@ type InspectorModeSharedTags = {
   [InspectorModeDataAttributes.LOCALE]?: string;
   [InspectorModeDataAttributes.ENVIRONMENT]?: string;
   [InspectorModeDataAttributes.SPACE]?: string;
+  [InspectorModeDataAttributes.MANUALLY_TAGGED]?: boolean;
 };
 
 export type InspectorModeEntryTags = InspectorModeSharedTags & {
@@ -40,7 +41,7 @@ type InspectorModeSharedAttributes = {
   locale: string;
   space?: string;
   environment?: string;
-  autoTagged?: boolean;
+  manuallyTagged?: boolean;
 };
 export type InspectorModeEntryAttributes = InspectorModeSharedAttributes & {
   entryId: string;

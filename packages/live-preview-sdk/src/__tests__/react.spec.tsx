@@ -196,7 +196,14 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ entryId: '1', locale, fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          entryId: '1',
+          locale,
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -212,7 +219,13 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ locale, fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          locale,
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -228,7 +241,13 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ entryId: '1', fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          entryId: '1',
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -244,7 +263,12 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -260,7 +284,14 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ fieldId: 'title', space: '12345', environment: 'develop' })).toEqual({
+      expect(
+        result.current({
+          fieldId: 'title',
+          space: '12345',
+          environment: 'develop',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-space': '12345',
@@ -277,7 +308,12 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-entry-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-space': '99999',
@@ -296,7 +332,12 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ fieldId: 'title' })).toBeNull();
+      expect(
+        result.current({
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toBeNull();
     });
   });
   describe('asset', () => {
@@ -308,7 +349,14 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ assetId: '1', locale, fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          assetId: '1',
+          locale,
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -324,7 +372,13 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ locale, fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          locale,
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -340,7 +394,13 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ assetId: '1', fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          assetId: '1',
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -356,7 +416,12 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ fieldId: 'title' })).toEqual({
+      expect(
+        result.current({
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toEqual({
         'data-contentful-asset-id': '1',
         'data-contentful-field-id': 'title',
         'data-contentful-locale': 'en-US',
@@ -374,7 +439,12 @@ describe('useContentfulInspectorMode', () => {
         ),
       });
 
-      expect(result.current({ fieldId: 'title' })).toBeNull();
+      expect(
+        result.current({
+          fieldId: 'title',
+          manuallyTagged: undefined,
+        }),
+      ).toBeNull();
     });
   });
 });
