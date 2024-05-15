@@ -236,14 +236,16 @@ export function getAllTaggedElements(
     taggedElements.push(element);
   }
 
-  const autoTaggedCount = taggedElements.filter(
-    (el) =>
-      !el.hasAttribute(InspectorModeDataAttributes.FIELD_ID) ||
-      !el.hasAttribute(InspectorModeDataAttributes.ENTRY_ID) ||
-      !el.hasAttribute(InspectorModeDataAttributes.ASSET_ID) ||
-      !el.hasAttribute(InspectorModeDataAttributes.LOCALE) ||
-      !el.hasAttribute(InspectorModeDataAttributes.SPACE) ||
+  const autoTaggedCount = taggedElements.filter((el) =>
+    [
+      !el.hasAttribute(InspectorModeDataAttributes.FIELD_ID),
+      !el.hasAttribute(InspectorModeDataAttributes.ENTRY_ID),
+      !el.hasAttribute(InspectorModeDataAttributes.ASSET_ID),
+      !el.hasAttribute(InspectorModeDataAttributes.LOCALE),
+      !el.hasAttribute(InspectorModeDataAttributes.SPACE),
       !el.hasAttribute(InspectorModeDataAttributes.ENVIRONMENT),
+      // it doesn't have any of the manually tagged attributes
+    ].every(Boolean),
   ).length;
 
   return {
