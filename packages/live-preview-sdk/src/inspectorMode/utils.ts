@@ -180,13 +180,13 @@ export function getAllTaggedElements(
   root = window.document,
   ignoreManual?: boolean,
 ): { taggedElements: Element[]; manuallyTaggedCount: number; automaticallyTaggedCount: number } {
-  const manualTagged = ignoreManual
+  const alreadyTagged = ignoreManual
     ? []
     : root.querySelectorAll(
         `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
       );
 
-  const taggedElements: Element[] = [...manualTagged];
+  const taggedElements: Element[] = [...alreadyTagged];
   const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
   const stegaNodes = findStegaNodes('body' in root ? root.body : root);
@@ -243,14 +243,14 @@ export function getAllTaggedElements(
     taggedElements.push(element);
   }
 
-  const autoTaggedCount = Array.from(manualTagged).filter(
+  const autoTaggedCount = Array.from(alreadyTagged).filter(
     (el) => !el.hasAttribute(InspectorModeDataAttributes.MANUALLY_TAGGED),
   ).length;
 
   return {
     taggedElements,
-    manuallyTaggedCount: manualTagged.length - autoTaggedCount,
-    automaticallyTaggedCount: uniqElementsForTagging.length + autoTaggedCount,
+    manuallyTaggedCount: taggedElements.length - autoTaggedCount,
+    automaticallyTaggedCount: autoTaggedCount,
   };
 }
 
