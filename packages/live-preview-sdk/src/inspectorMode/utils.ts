@@ -3,7 +3,7 @@ import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
 
-type AutoTaggedElement<T = Node> = {
+export type AutoTaggedElement<T = Node> = {
   element: T;
   sourceMap: SourceMapMetadata;
 };
@@ -51,7 +51,6 @@ export function getInspectorModeAttributes(
     environment:
       element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
     space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
-    manuallyTagged: element.hasAttribute(InspectorModeDataAttributes.MANUALLY_TAGGED),
   };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
@@ -134,7 +133,7 @@ function getParent(
   return null;
 }
 
-function findStegaNodes(container: HTMLElement) {
+export function findStegaNodes(container: HTMLElement) {
   let baseArray: HTMLElement[] = [];
   if (typeof container.matches === 'function' && container.matches('*')) {
     baseArray = [container];
@@ -179,7 +178,12 @@ function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean 
 export function getAllTaggedElements(
   root = window.document,
   ignoreManual?: boolean,
-): { taggedElements: Element[]; manuallyTaggedCount: number; automaticallyTaggedCount: number } {
+): {
+  taggedElements: Element[];
+  manuallyTaggedCount: number;
+  automaticallyTaggedCount: number;
+  autoTaggedElements: AutoTaggedElement<Element>[];
+} {
   const alreadyTagged = ignoreManual
     ? []
     : root.querySelectorAll(
@@ -227,30 +231,26 @@ export function getAllTaggedElements(
     (el, index) => elementsForTagging.findIndex((et) => isSameElement(el, et)) === index,
   );
 
-  // Add the data- attributes to the auto-tagged elements
-  // Do this after the tree walker is finished, otherwise the MutationObserver picks it already up again
-  // and we have multiple tree walkers running parallel
-  for (const { element, sourceMap } of uniqElementsForTagging) {
-    if (sourceMap.contentful.entityType === 'Asset') {
-      element.setAttribute(InspectorModeDataAttributes.ASSET_ID, sourceMap.contentful.entity);
-    } else {
-      element.setAttribute(InspectorModeDataAttributes.ENTRY_ID, sourceMap.contentful.entity);
-    }
-    element.setAttribute(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field);
-    element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
-    element.setAttribute(InspectorModeDataAttributes.SPACE, sourceMap.contentful.space);
-    element.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, sourceMap.contentful.environment);
+  // Adding auto tagged elements to the tagged elements list
+  for (const { element } of uniqElementsForTagging) {
     taggedElements.push(element);
   }
 
-  const autoTaggedCount = Array.from(alreadyTagged).filter(
-    (el) => !el.hasAttribute(InspectorModeDataAttributes.MANUALLY_TAGGED),
+  const autoTaggedCount = taggedElements.filter(
+    (el) =>
+      !el.hasAttribute(InspectorModeDataAttributes.FIELD_ID) ||
+      !el.hasAttribute(InspectorModeDataAttributes.ENTRY_ID) ||
+      !el.hasAttribute(InspectorModeDataAttributes.ASSET_ID) ||
+      !el.hasAttribute(InspectorModeDataAttributes.LOCALE) ||
+      !el.hasAttribute(InspectorModeDataAttributes.SPACE) ||
+      !el.hasAttribute(InspectorModeDataAttributes.ENVIRONMENT),
   ).length;
 
   return {
     taggedElements,
     manuallyTaggedCount: taggedElements.length - autoTaggedCount,
     automaticallyTaggedCount: autoTaggedCount,
+    autoTaggedElements: uniqElementsForTagging,
   };
 }
 

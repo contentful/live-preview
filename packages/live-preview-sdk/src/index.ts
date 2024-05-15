@@ -296,7 +296,6 @@ export class ContentfulLivePreview {
         ...(environment ? { [InspectorModeDataAttributes.ENVIRONMENT]: environment } : {}),
         ...(space ? { [InspectorModeDataAttributes.SPACE]: space } : {}),
         [InspectorModeDataAttributes.FIELD_ID]: fieldId,
-        [InspectorModeDataAttributes.MANUALLY_TAGGED]: true,
       };
 
       if (locale) {

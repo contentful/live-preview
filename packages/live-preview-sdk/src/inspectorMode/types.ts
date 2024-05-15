@@ -5,7 +5,6 @@ type InspectorModeSharedTags = {
   [InspectorModeDataAttributes.LOCALE]?: string;
   [InspectorModeDataAttributes.ENVIRONMENT]?: string;
   [InspectorModeDataAttributes.SPACE]?: string;
-  [InspectorModeDataAttributes.MANUALLY_TAGGED]?: boolean;
 };
 
 export type InspectorModeEntryTags = InspectorModeSharedTags & {
@@ -23,7 +22,6 @@ export const enum InspectorModeDataAttributes {
   LOCALE = 'data-contentful-locale',
   SPACE = 'data-contentful-space',
   ENVIRONMENT = 'data-contentful-environment',
-  MANUALLY_TAGGED = 'data-contentful-manually-tagged',
 }
 
 export enum InspectorModeEventMethods {
@@ -41,7 +39,6 @@ type InspectorModeSharedAttributes = {
   locale: string;
   space?: string;
   environment?: string;
-  manuallyTagged?: boolean;
 };
 export type InspectorModeEntryAttributes = InspectorModeSharedAttributes & {
   entryId: string;

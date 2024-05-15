@@ -243,14 +243,15 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  </div>`);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom, true);
+      const {
+        taggedElements: elements,
+        autoTaggedElements,
+        manuallyTaggedCount,
+      } = getAllTaggedElements(dom, true);
 
       expect(elements.length).toEqual(1);
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
-        'test-entry-id',
-      );
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('title');
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
+      expect(autoTaggedElements.length).toEqual(1);
+      expect(manuallyTaggedCount).toEqual(0);
     });
   });
 });
