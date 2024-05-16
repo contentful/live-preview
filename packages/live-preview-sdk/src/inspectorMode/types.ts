@@ -39,6 +39,7 @@ type InspectorModeSharedAttributes = {
   locale: string;
   space?: string;
   environment?: string;
+  manuallyTagged?: boolean;
 };
 export type InspectorModeEntryAttributes = InspectorModeSharedAttributes & {
   entryId: string;

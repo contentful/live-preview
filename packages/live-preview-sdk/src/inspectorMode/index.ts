@@ -190,6 +190,7 @@ export class InspectorMode {
         ...(contentful.entityType === 'Asset'
           ? { assetId: contentful.entity }
           : { entryId: contentful.entity }),
+        manuallyTagged: false,
       };
     }
 

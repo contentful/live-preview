@@ -51,6 +51,7 @@ export function getInspectorModeAttributes(
     environment:
       element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
     space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
+    manuallyTagged: true,
   };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
