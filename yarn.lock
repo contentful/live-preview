@@ -2331,10 +2331,11 @@ contentful-sdk-core@^8.1.0:
     qs "^6.11.2"
 
 contentful@^10.3.4, contentful@^10.8.8:
-  version "10.8.10"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.8.10.tgz#92eac498bb1540e30a3fcac0df2eb3d56989dfcb"
-  integrity sha512-2QnMllW9alHrorHX3Q8bjaMLhoVYChikjDglWta92zxqjMHsgOyPCtq+wj0ojX4tgHNvOAS9iYOpxypY7Cf7Fw==
+  version "10.11.0"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.11.0.tgz#5d81168bc1d4f346c99b058234b92e3b36958e45"
+  integrity sha512-WUcUrGY0C+KhL3qRMh6QIZnOw4XvMO2LrWWfG4q7D48UwUHjEHbeYc82c8PamblJEav27ocdwosq6l1b9IqAZA==
   dependencies:
+    "@contentful/content-source-maps" "^0.5.0"
     "@contentful/rich-text-types" "^16.0.2"
     axios "^1.6.7"
     contentful-resolve-response "^1.8.1"
