@@ -103,9 +103,10 @@ export class InspectorMode {
       }, 150);
     };
 
-    window.addEventListener('scroll', onScroll);
+    const options = { capture: true, passive: true };
+    window.addEventListener('scroll', onScroll, options);
 
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll, options);
   };
 
   /** Detects DOM changes and sends the tagged elements to the editor */
