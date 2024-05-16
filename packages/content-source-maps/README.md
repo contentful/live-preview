@@ -18,7 +18,19 @@ The Live Preview SDK transforms the Content Source Maps coming from either the G
 
 ### GraphQL
 
-#### 1. Setting Up GraphQL Queries
+#### 1. Initialize the Live Preview SDK
+
+```
+import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
+
+const CustomApp = ({ Component, pageProps }) => (
+  <ContentfulLivePreviewProvider locale="en-US">
+    <Component {...pageProps}>
+  </ContentfulLivePreviewProvider>
+)
+```
+
+#### 2. Setting Up GraphQL Queries
 
 Enable Content Source Maps in your GraphQL queries as follows:
 
@@ -34,7 +46,7 @@ query @contentSourceMaps {
 
 The GraphQL API will now return the data along with the Content Source Maps in the `extensions` field.
 
-#### 2. Processing GraphQL Response
+#### 3. Processing GraphQL Response
 
 Then, pass the data to the provided function `encodeGraphQLResponse` to encode the response:
 
@@ -48,9 +60,21 @@ When rendering the encoded data in your website, inspector mode will activate au
 
 ### REST (Content Preview API)
 
-#### 1. Enable Content Source Maps for the CPA
+#### 1. Initialize the Live Preview SDK
 
-To enable Content Source Maps using the [Contentful Client SDK](https://github.com/contentful/contentful.js), simply enable `withContentSourceMaps` in the client:
+```
+import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
+
+const CustomApp = ({ Component, pageProps }) => (
+  <ContentfulLivePreviewProvider locale="en-US">
+    <Component {...pageProps}>
+  </ContentfulLivePreviewProvider>
+)
+```
+
+#### 2. Enable Content Source Maps for the CPA
+
+To enable Content Source Maps using the [Contentful Client SDK](https://github.com/contentful/contentful.js), simply enable `includeContentSourceMaps` in the client:
 
 ```jsx
 export const clientPreview = createClient({
@@ -58,24 +82,12 @@ export const clientPreview = createClient({
   accessToken: process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN!,
   host: "preview.contentful.com",
   alphaFeatures: {
-    withContentSourceMaps: true
+    includeContentSourceMaps: true
   }
 });
 ```
 
-The CPA will include Content Source Maps within the `sys` object of the response.
-
-#### 2. Processing CPA Response
-
-Then, pass the data to the provided function `encodeCPAResponse` to encode the response:
-
-```jsx
-import { encodeCPAResponse } from '@contentful/live-preview';
-
-const dataWithAutoTagging = encodeCPAResponse(data);
-```
-
-When rendering the encoded data in your website, inspector mode will activate automatically.
+Inspector mode will now activate automatically. Please make sure to use Contentful.js version v10.11.0 or above.
 
 ## Troubleshooting / Tips
 
