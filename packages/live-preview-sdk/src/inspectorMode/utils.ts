@@ -3,7 +3,7 @@ import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
 import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
 
-type AutoTaggedElement<T = Node> = {
+export type AutoTaggedElement<T = Node> = {
   element: T;
   sourceMap: SourceMapMetadata;
 };
@@ -51,6 +51,7 @@ export function getInspectorModeAttributes(
     environment:
       element.getAttribute(InspectorModeDataAttributes.ENVIRONMENT) ?? fallbackProps.environment,
     space: element.getAttribute(InspectorModeDataAttributes.SPACE) ?? fallbackProps.space,
+    manuallyTagged: true,
   };
 
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
@@ -133,7 +134,7 @@ function getParent(
   return null;
 }
 
-function findStegaNodes(container: HTMLElement) {
+export function findStegaNodes(container: HTMLElement) {
   let baseArray: HTMLElement[] = [];
   if (typeof container.matches === 'function' && container.matches('*')) {
     baseArray = [container];
@@ -175,14 +176,22 @@ function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean 
 /**
  * Query the document for all tagged elements
  */
-export function getAllTaggedElements(root = window.document, ignoreManual?: boolean): Element[] {
-  const manualTagged = ignoreManual
+export function getAllTaggedElements(
+  root = window.document,
+  ignoreManual?: boolean,
+): {
+  taggedElements: Element[];
+  manuallyTaggedCount: number;
+  automaticallyTaggedCount: number;
+  autoTaggedElements: AutoTaggedElement<Element>[];
+} {
+  const alreadyTagged = ignoreManual
     ? []
     : root.querySelectorAll(
         `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
       );
 
-  const taggedElements: Element[] = [...manualTagged];
+  const taggedElements: Element[] = [...alreadyTagged];
   const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
   const stegaNodes = findStegaNodes('body' in root ? root.body : root);
@@ -223,23 +232,31 @@ export function getAllTaggedElements(root = window.document, ignoreManual?: bool
     (el, index) => elementsForTagging.findIndex((et) => isSameElement(el, et)) === index,
   );
 
-  // Add the data- attributes to the auto-tagged elements
-  // Do this after the tree walker is finished, otherwise the MutationObserver picks it already up again
-  // and we have multiple tree walkers running parallel
-  for (const { element, sourceMap } of uniqElementsForTagging) {
-    if (sourceMap.contentful.entityType === 'Asset') {
-      element.setAttribute(InspectorModeDataAttributes.ASSET_ID, sourceMap.contentful.entity);
-    } else {
-      element.setAttribute(InspectorModeDataAttributes.ENTRY_ID, sourceMap.contentful.entity);
-    }
-    element.setAttribute(InspectorModeDataAttributes.FIELD_ID, sourceMap.contentful.field);
-    element.setAttribute(InspectorModeDataAttributes.LOCALE, sourceMap.contentful.locale);
-    element.setAttribute(InspectorModeDataAttributes.SPACE, sourceMap.contentful.space);
-    element.setAttribute(InspectorModeDataAttributes.ENVIRONMENT, sourceMap.contentful.environment);
+  // Adding auto tagged elements to the tagged elements list
+  for (const { element } of uniqElementsForTagging) {
     taggedElements.push(element);
   }
 
-  return taggedElements;
+  const autoTaggedCount = taggedElements.filter(
+    (el) =>
+      ignoreManual ||
+      [
+        !el.hasAttribute(InspectorModeDataAttributes.FIELD_ID),
+        !el.hasAttribute(InspectorModeDataAttributes.ENTRY_ID),
+        !el.hasAttribute(InspectorModeDataAttributes.ASSET_ID),
+        !el.hasAttribute(InspectorModeDataAttributes.LOCALE),
+        !el.hasAttribute(InspectorModeDataAttributes.SPACE),
+        !el.hasAttribute(InspectorModeDataAttributes.ENVIRONMENT),
+        // it doesn't have any of the manually tagged attributes
+      ].every(Boolean),
+  ).length;
+
+  return {
+    taggedElements,
+    manuallyTaggedCount: taggedElements.length - autoTaggedCount,
+    automaticallyTaggedCount: autoTaggedCount,
+    autoTaggedElements: uniqElementsForTagging,
+  };
 }
 
 /**
@@ -249,7 +266,7 @@ export function getAllTaggedEntries(): string[] {
   return [
     ...new Set(
       getAllTaggedElements()
-        .map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
+        .taggedElements.map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
         .filter(Boolean) as string[],
     ),
   ];

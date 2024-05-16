@@ -39,6 +39,7 @@ type InspectorModeSharedAttributes = {
   locale: string;
   space?: string;
   environment?: string;
+  manuallyTagged?: boolean;
 };
 export type InspectorModeEntryAttributes = InspectorModeSharedAttributes & {
   entryId: string;
@@ -61,6 +62,8 @@ export type InspectorModeMouseMoveMessage = {
 };
 export type InspectorModeTaggedElementsMessage = {
   elements: Array<InspectorModeElement>;
+  manuallyTaggedCount: number;
+  automaticallyTaggedCount: number;
 };
 
 export type InspectorModeChangedMessage = {

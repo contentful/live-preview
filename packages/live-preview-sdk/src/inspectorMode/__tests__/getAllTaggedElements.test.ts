@@ -45,7 +45,7 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  `);
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
 
       expect(elements).toEqual([
         dom.getElementById('entry-1'),
@@ -70,7 +70,7 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  `);
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
 
       expect(elements).toEqual([dom.getElementById('entry')]);
     });
@@ -87,7 +87,7 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  `);
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
 
       expect(elements).toEqual([dom.getElementById('entry')]);
     });
@@ -101,14 +101,14 @@ describe('getAllTaggedElements', () => {
         `<span>${combine('Test', createSourceMapFixture('ignore_origin', { origin: 'example.com' }))}</span>`,
       );
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
       expect(elements).toEqual([]);
     });
 
     it('should recognize auto-tagged elements', () => {
       const dom = html(`<span id="entry-1">${combine('Test', metadata)}</span>`);
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
 
       expect(elements).toHaveLength(1);
       expect(elements).toEqual([dom.getElementById('entry-1')]);
@@ -125,7 +125,7 @@ describe('getAllTaggedElements', () => {
           </div>
         `);
 
-        const elements = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements(dom);
 
         expect(elements).toHaveLength(1);
         expect(elements).toEqual([dom.getElementById('richtext')]);
@@ -141,7 +141,7 @@ describe('getAllTaggedElements', () => {
           </div>
         `);
 
-        const elements = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements(dom);
 
         expect(elements).toHaveLength(1);
         expect(elements).toEqual([dom.getElementById('richtext')]);
@@ -152,7 +152,7 @@ describe('getAllTaggedElements', () => {
           <p id="node-1">${combine('Hello', metadata)}<strong>${combine('World', metadata)}</strong>!</p>
       `);
 
-        const elements = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements(dom);
 
         expect(elements).toHaveLength(1);
         expect(elements).toEqual([dom.getElementById('node-1')]);
@@ -177,7 +177,7 @@ describe('getAllTaggedElements', () => {
         </div>
       `);
 
-        const elements = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements(dom);
 
         expect(elements).toHaveLength(3);
         expect(elements).toEqual([
@@ -207,7 +207,7 @@ describe('getAllTaggedElements', () => {
         </div>
       `);
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
 
       expect(elements).toHaveLength(3);
       expect(elements).toEqual([
@@ -224,7 +224,7 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  </div>`);
 
-      const elements = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements(dom);
 
       expect(elements.length).toEqual(1);
       expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
@@ -243,14 +243,15 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  </div>`);
 
-      const elements = getAllTaggedElements(dom, true);
+      const {
+        taggedElements: elements,
+        autoTaggedElements,
+        manuallyTaggedCount,
+      } = getAllTaggedElements(dom, true);
 
       expect(elements.length).toEqual(1);
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
-        'test-entry-id',
-      );
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual('title');
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual('en-US');
+      expect(autoTaggedElements.length).toEqual(1);
+      expect(manuallyTaggedCount).toEqual(0);
     });
   });
 });

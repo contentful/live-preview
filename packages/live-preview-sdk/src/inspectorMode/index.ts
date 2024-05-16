@@ -5,7 +5,7 @@ import {
   InspectorModeEventMethods,
   type InspectorModeChangedMessage,
 } from './types.js';
-import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
+import { AutoTaggedElement, getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
 
 type InspectorModeOptions = {
   locale: string;
@@ -25,6 +25,7 @@ export class InspectorMode {
   private hoveredElement?: HTMLElement;
   private taggedElements: Element[] = [];
   private taggedElementMutationObserver?: MutationObserver;
+  private autoTaggedElements: AutoTaggedElement[] = [];
 
   constructor(private options: InspectorModeOptions) {
     // Attach interaction listeners
@@ -110,7 +111,7 @@ export class InspectorMode {
   /** Detects DOM changes and sends the tagged elements to the editor */
   private addMutationListener = () => {
     const mutationObserver = new MutationObserver(() => {
-      const taggedElements = getAllTaggedElements();
+      const { taggedElements } = getAllTaggedElements();
 
       if (this.taggedElements?.length !== taggedElements.length) {
         this.sendAllElements();
@@ -171,10 +172,26 @@ export class InspectorMode {
    */
   private handleTaggedElement = (element: HTMLElement): boolean => {
     const { targetOrigin, locale, space, environment } = this.options;
-    const taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
+    let taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
 
     if (!taggedInformation) {
-      return false;
+      const autoTaggedElement = this.autoTaggedElements.find((el) => el.element === element);
+
+      if (!autoTaggedElement) {
+        return false;
+      }
+
+      const contentful = autoTaggedElement.sourceMap.contentful;
+      taggedInformation = {
+        fieldId: contentful.field,
+        locale: contentful.locale ?? locale,
+        environment: contentful.environment ?? environment,
+        space: contentful.space ?? space,
+        ...(contentful.entityType === 'Asset'
+          ? { assetId: contentful.entity }
+          : { entryId: contentful.entity }),
+        manuallyTagged: false,
+      };
     }
 
     this.hoveredElement = element;
@@ -198,9 +215,11 @@ export class InspectorMode {
    */
   private sendAllElements = () => {
     const { targetOrigin, locale, space, environment } = this.options;
-    const elements = getAllTaggedElements();
+    const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount, autoTaggedElements } =
+      getAllTaggedElements();
 
-    this.taggedElements = elements;
+    this.taggedElements = taggedElements;
+    this.autoTaggedElements = autoTaggedElements;
     if (this.taggedElementMutationObserver) {
       this.taggedElementMutationObserver.disconnect();
     }
@@ -209,10 +228,12 @@ export class InspectorMode {
       sendMessageToEditor(
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
-          elements: elements.map((e) => ({
+          elements: taggedElements.map((e) => ({
             attributes: getInspectorModeAttributes(e, { locale, space, environment }),
             coordinates: e.getBoundingClientRect(),
           })),
+          automaticallyTaggedCount,
+          manuallyTaggedCount,
         },
         targetOrigin,
       );

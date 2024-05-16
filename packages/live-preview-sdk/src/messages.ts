@@ -37,6 +37,8 @@ export type ConnectedMessage = {
   connected: true;
   locale: string;
   taggedElementCount: number;
+  automaticallyTaggedElementCount: number;
+  manuallyTaggedElementCount: number;
   isInspectorEnabled: boolean;
   isLiveUpdatesEnabled: boolean;
 };

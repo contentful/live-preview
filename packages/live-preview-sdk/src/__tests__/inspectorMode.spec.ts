@@ -57,6 +57,8 @@ describe('InspectorMode', () => {
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
           elements: [],
+          automaticallyTaggedCount: 0,
+          manuallyTaggedCount: 0,
         },
         targetOrigin,
       );
