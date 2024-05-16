@@ -20,7 +20,7 @@ The Live Preview SDK transforms the Content Source Maps coming from either the G
 
 #### 1. Initialize the Live Preview SDK
 
-```
+```jsx
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
@@ -62,7 +62,7 @@ When rendering the encoded data in your website, inspector mode will activate au
 
 #### 1. Initialize the Live Preview SDK
 
-```
+```jsx
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
