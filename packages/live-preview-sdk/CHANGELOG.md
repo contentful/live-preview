@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.3.7...@contentful/live-preview@4.0.0) (2024-05-16)
+
+
+### Features
+
+* remove encode from cpa export ([#724](https://github.com/contentful/live-preview/issues/724)) ([5cc16d2](https://github.com/contentful/live-preview/commit/5cc16d2913b1c1b52cf45f15f2f99dd1a976a738))
+
+
+### BREAKING CHANGES
+
+* Responses for `contentful.js` SDK will now be automatically encoded
+
+
+
+
+
 ## [3.3.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.3.6...@contentful/live-preview@3.3.7) (2024-05-13)
 
 **Note:** Version bump only for package @contentful/live-preview
