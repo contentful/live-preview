@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.0.0...@contentful/live-preview@4.1.0) (2024-05-16)
+
+
+### Features
+
+* sending auto tagged vs manually tagged post messages [] ([#725](https://github.com/contentful/live-preview/issues/725)) ([215f01a](https://github.com/contentful/live-preview/commit/215f01a6379aa8e0b03bb4fad91e7a73d971ee02))
+
+
+
+
+
 # [4.0.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@3.3.7...@contentful/live-preview@4.0.0) (2024-05-16)
 
 
