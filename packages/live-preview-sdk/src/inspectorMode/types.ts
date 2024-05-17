@@ -25,6 +25,7 @@ export const enum InspectorModeDataAttributes {
 }
 
 export enum InspectorModeEventMethods {
+  /** @deprecated handled thorugh `TAGGED_ELEMENTS` */
   MOUSE_MOVE = 'MOUSE_MOVE',
   SCROLL_START = 'SCROLL_START',
   SCROLL_END = 'SCROLL_END',
@@ -53,10 +54,13 @@ export type InspectorModeAttributes = InspectorModeEntryAttributes | InspectorMo
 export type InspectorModeElement = {
   attributes?: InspectorModeAttributes | null;
   coordinates: DOMRect;
+  isVisible: boolean;
+  isHovered: boolean;
 };
 
 export type InspectorModeScrollMessage = Record<string, never>;
 export type InspectorModeResizeMessage = Record<string, never>;
+/** @deprecated will be removed in favor of `InspectorModeTaggedElementsMessage` */
 export type InspectorModeMouseMoveMessage = {
   element: SetRequired<InspectorModeElement, 'attributes'> | null;
 };

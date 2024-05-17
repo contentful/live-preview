@@ -6,7 +6,7 @@ import {
   type InspectorModeAttributes,
   type InspectorModeChangedMessage,
 } from './types.js';
-import { AutoTaggedElement, getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
+import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
 
 type InspectorModeOptions = {
   locale: string;
@@ -17,10 +17,10 @@ type InspectorModeOptions = {
 };
 
 type TaggedElement = {
+  attributes: InspectorModeAttributes;
+  coordinates: DOMRect;
   element: Element;
   isVisible: boolean;
-  coordinates: DOMRect;
-  attributes: InspectorModeAttributes;
 };
 
 export class InspectorMode {
@@ -32,18 +32,43 @@ export class InspectorMode {
   private isResizing = false;
   private resizeTimeout?: NodeJS.Timeout;
 
-  private hoveredElement?: HTMLElement;
+  private hoveredElement?: Element;
   private taggedElements: TaggedElement[] = [];
-  private taggedElementMutationObserver?: MutationObserver;
-  private autoTaggedElements: AutoTaggedElement[] = [];
+  private manuallyTaggedCount: number = 0;
+  private automaticallyTaggedCount: number = 0;
+
+  private io: IntersectionObserver;
 
   constructor(private options: InspectorModeOptions) {
+    this.io = new IntersectionObserver(
+      (entries) => {
+        const taggedElements: TaggedElement[] = this.taggedElements;
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            for (const te of taggedElements) {
+              if (te.element === entry.target) {
+                te.coordinates = entry.intersectionRect;
+                te.isVisible = entry.target.checkVisibility({
+                  checkOpacity: true,
+                  checkVisibilityCSS: true,
+                });
+              }
+            }
+          }
+        }
+
+        this.taggedElements = taggedElements;
+        this.sendTaggedElements();
+      },
+      { threshold: 0.15 },
+    );
+
     // Attach interaction listeners
-    this.addHoverListener();
     this.addScrollListener();
     this.addMutationListener();
     this.addResizeListener();
     this.addMouseMoveListener();
+    this.addHoverListener();
   }
 
   // Handles incoming messages from Contentful
@@ -51,40 +76,9 @@ export class InspectorMode {
     if (data.method === InspectorModeEventMethods.INSPECTOR_MODE_CHANGED) {
       const { isInspectorActive } = data as InspectorModeChangedMessage;
       if (isInspectorActive) {
-        this.sendAllElements();
+        this.updateElements();
       }
     }
-  };
-
-  /** Checks if the hovered element is an tagged entry and then sends it to the editor */
-  private addHoverListener = () => {
-    const onMouseOver = (e: MouseEvent) => {
-      const eventTargets = e.composedPath();
-
-      for (const eventTarget of eventTargets) {
-        const element = eventTarget as HTMLElement;
-        if (element.nodeName === 'BODY') break;
-        if (typeof element?.getAttribute !== 'function') continue;
-
-        if (this.handleTaggedElement(element)) {
-          return;
-        }
-      }
-
-      // Clear if no tagged element is hovered
-      if (this.hoveredElement) {
-        this.hoveredElement = undefined;
-        sendMessageToEditor(
-          InspectorModeEventMethods.MOUSE_MOVE,
-          { element: null },
-          this.options.targetOrigin,
-        );
-      }
-    };
-
-    window.addEventListener('mouseover', onMouseOver);
-
-    return () => window.removeEventListener('mouseover', onMouseOver);
   };
 
   /** Sends scroll start and end event to the editor, on end it also sends the tagged elements again */
@@ -107,10 +101,7 @@ export class InspectorMode {
       this.scrollTimeout = setTimeout(() => {
         this.isScrolling = false;
         sendMessageToEditor(InspectorModeEventMethods.SCROLL_END, {}, targetOrigin);
-        this.sendAllElements();
-        if (this.hoveredElement) {
-          this.handleTaggedElement(this.hoveredElement);
-        }
+        this.updateElements();
       }, this.delay);
     };
 
@@ -126,7 +117,7 @@ export class InspectorMode {
       const { taggedElements } = getAllTaggedElements();
 
       if (this.taggedElements?.length !== taggedElements.length) {
-        this.sendAllElements();
+        this.updateElements();
       }
     });
 
@@ -141,6 +132,8 @@ export class InspectorMode {
         InspectorModeDataAttributes.LOCALE,
         InspectorModeDataAttributes.SPACE,
         InspectorModeDataAttributes.ENVIRONMENT,
+        'class',
+        'style',
       ],
       // Adding or removal of new nodes
       childList: true,
@@ -171,16 +164,57 @@ export class InspectorMode {
       this.resizeTimeout = setTimeout(() => {
         this.isResizing = false;
         sendMessageToEditor(InspectorModeEventMethods.RESIZE_END, {}, targetOrigin);
-        this.sendAllElements();
-        if (this.hoveredElement) {
-          this.handleTaggedElement(this.hoveredElement);
-        }
+        this.updateElements();
       }, this.delay);
     });
 
     resizeObserver.observe(document.body);
 
     return () => resizeObserver.disconnect();
+  };
+
+  private sendTaggedElements = () => {
+    sendMessageToEditor(
+      InspectorModeEventMethods.TAGGED_ELEMENTS,
+      {
+        elements: this.taggedElements.map((taggedElement) => ({
+          ...taggedElement,
+          // We need to remove the actual DOM node before sending it
+          // Prevents: `DataCloneError: Failed to execute 'postMessage' on 'Window': HTMLDivElement object could not be cloned.`
+          element: undefined,
+          isHovered: this.hoveredElement === taggedElement.element,
+        })),
+        automaticallyTaggedCount: this.automaticallyTaggedCount,
+        manuallyTaggedCount: this.manuallyTaggedCount,
+      },
+      this.options.targetOrigin,
+    );
+  };
+
+  /** Checks if the hovered element is an tagged entry and then sends it to the editor */
+  private addHoverListener = () => {
+    const onMouseOver = (e: MouseEvent) => {
+      let match: TaggedElement | undefined;
+
+      const eventTargets = e.composedPath();
+      for (const eventTarget of eventTargets) {
+        const element = eventTarget as HTMLElement;
+        if (element.nodeName === 'BODY') break;
+
+        const taggedElement = this.taggedElements.find((te) => te.element === element);
+        if (taggedElement) {
+          match = taggedElement;
+          break;
+        }
+      }
+
+      this.hoveredElement = match?.element;
+      this.sendTaggedElements();
+    };
+
+    window.addEventListener('mouseover', onMouseOver, { passive: true });
+
+    return () => window.removeEventListener('mouseover', onMouseOver);
   };
 
   /** Checks if through interactions the tagged elements has been changed */
@@ -190,142 +224,33 @@ export class InspectorMode {
         return;
       }
 
-      this.sendAllElements();
+      this.updateElements();
     }, this.delay);
 
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('mousemove', onMouseMove);
     return () => window.removeEventListener('mousemove', onMouseMove);
-  };
-
-  /**
-   * Validates if the element
-   * - is visible
-   * - has the inspector mode attributes
-   * and sends it then to the editor
-   */
-  private handleTaggedElement = (element: HTMLElement): boolean => {
-    if (!this.isVisible(element)) {
-      return false;
-    }
-
-    const { targetOrigin, locale, space, environment } = this.options;
-    let taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
-
-    if (!taggedInformation) {
-      const autoTaggedElement = this.autoTaggedElements.find((el) => el.element === element);
-
-      if (!autoTaggedElement) {
-        return false;
-      }
-
-      const contentful = autoTaggedElement.sourceMap.contentful;
-      taggedInformation = {
-        fieldId: contentful.field,
-        locale: contentful.locale ?? locale,
-        environment: contentful.environment ?? environment,
-        space: contentful.space ?? space,
-        ...(contentful.entityType === 'Asset'
-          ? { assetId: contentful.entity }
-          : { entryId: contentful.entity }),
-        manuallyTagged: false,
-      };
-    }
-
-    this.hoveredElement = element;
-    sendMessageToEditor(
-      InspectorModeEventMethods.MOUSE_MOVE,
-      {
-        element: {
-          attributes: taggedInformation,
-          coordinates: element.getBoundingClientRect(),
-        },
-      },
-      targetOrigin,
-    );
-
-    return true;
-  };
-
-  /**
-   * Checks if the provided element is visible
-   */
-  private isVisible = (element: HTMLElement): boolean => {
-    if ('checkVisibility' in element) {
-      return element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
-    }
-    // Safari does not support element.checkVisibility yet
-    // Type casts are needed as typescript defines checkVisiblity to always exists on HTMLElement
-    const style = window.getComputedStyle(element);
-    return !(
-      style.display === 'none' ||
-      style.visibility === 'hidden' ||
-      style.opacity === '0' ||
-      (element as HTMLElement).hidden ||
-      (element as HTMLElement).offsetParent === null ||
-      (element as HTMLElement).getClientRects().length === 0
-    );
   };
 
   /**
    * Finds all elements that have all inspector mode attributes
    * and sends them to the editor
    */
-  private sendAllElements = () => {
-    const { targetOrigin, locale, space, environment } = this.options;
-    const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount, autoTaggedElements } =
+  private updateElements = () => {
+    const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } =
       getAllTaggedElements();
 
-    this.taggedElements = taggedElements.map((element) => ({
-      element,
-      attributes: getInspectorModeAttributes(element, { locale, space, environment })!,
-      coordinates: element.getBoundingClientRect(),
-      isVisible: this.isVisible(element as HTMLElement),
+    // clear previously watched element
+    this.taggedElements.forEach((te) => this.io.unobserve(te.element));
+    this.taggedElements = taggedElements.map((taggedElement) => ({
+      element: taggedElement,
+      coordinates: taggedElement.getBoundingClientRect(),
+      attributes: getInspectorModeAttributes(taggedElement, this.options)!,
+      isVisible: false,
     }));
-    this.autoTaggedElements = autoTaggedElements;
+    // watch the new ones
+    taggedElements.forEach((te) => this.io.observe(te));
 
-    if (this.taggedElementMutationObserver) {
-      this.taggedElementMutationObserver.disconnect();
-    }
-
-    const sendTaggedElementsMessage = () => {
-      sendMessageToEditor(
-        InspectorModeEventMethods.TAGGED_ELEMENTS,
-        {
-          elements: this.taggedElements.map((taggedElement) => ({
-            ...taggedElement,
-            // We need to remove the actual DOM node before sending it
-            // Prevents: `DataCloneError: Failed to execute 'postMessage' on 'Window': HTMLDivElement object could not be cloned.`
-            element: undefined,
-          })),
-          automaticallyTaggedCount,
-          manuallyTaggedCount,
-        },
-        targetOrigin,
-      );
-    };
-
-    this.taggedElementMutationObserver = new MutationObserver(sendTaggedElementsMessage);
-    // TODO: why do we need this?
-    this.taggedElements.forEach(({ element }) => {
-      this.taggedElementMutationObserver?.observe(element, {
-        // Content source maps
-        characterData: true,
-        // Manual tagging
-        attributes: true,
-        attributeFilter: [
-          InspectorModeDataAttributes.ENTRY_ID,
-          InspectorModeDataAttributes.FIELD_ID,
-          InspectorModeDataAttributes.LOCALE,
-          InspectorModeDataAttributes.SPACE,
-          InspectorModeDataAttributes.ENVIRONMENT,
-        ],
-        // Adding or removal of new nodes
-        childList: true,
-        // Include children
-        subtree: true,
-      });
-    });
-
-    sendTaggedElementsMessage();
+    this.manuallyTaggedCount = manuallyTaggedCount;
+    this.automaticallyTaggedCount = automaticallyTaggedCount;
   };
 }
