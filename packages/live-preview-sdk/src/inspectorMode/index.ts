@@ -1,8 +1,9 @@
-import { sendMessageToEditor } from '../helpers/index.js';
+import { debounce, sendMessageToEditor } from '../helpers/index.js';
 import { type MessageFromEditor } from '../messages.js';
 import {
   InspectorModeDataAttributes,
   InspectorModeEventMethods,
+  type InspectorModeAttributes,
   type InspectorModeChangedMessage,
 } from './types.js';
 import { AutoTaggedElement, getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
@@ -15,7 +16,16 @@ type InspectorModeOptions = {
   ignoreManuallyTaggedElements?: boolean;
 };
 
+type TaggedElement = {
+  element: Element;
+  visible: boolean;
+  coordinates: DOMRect;
+  attributes: InspectorModeAttributes;
+};
+
 export class InspectorMode {
+  private delay = 150;
+
   private isScrolling = false;
   private scrollTimeout?: NodeJS.Timeout;
 
@@ -23,7 +33,7 @@ export class InspectorMode {
   private resizeTimeout?: NodeJS.Timeout;
 
   private hoveredElement?: HTMLElement;
-  private taggedElements: Element[] = [];
+  private taggedElements: TaggedElement[] = [];
   private taggedElementMutationObserver?: MutationObserver;
   private autoTaggedElements: AutoTaggedElement[] = [];
 
@@ -33,6 +43,7 @@ export class InspectorMode {
     this.addScrollListener();
     this.addMutationListener();
     this.addResizeListener();
+    this.addMouseMoveListener();
   }
 
   // Handles incoming messages from Contentful
@@ -100,7 +111,7 @@ export class InspectorMode {
         if (this.hoveredElement) {
           this.handleTaggedElement(this.hoveredElement);
         }
-      }, 150);
+      }, this.delay);
     };
 
     const options = { capture: true, passive: true };
@@ -159,12 +170,26 @@ export class InspectorMode {
         if (this.hoveredElement) {
           this.handleTaggedElement(this.hoveredElement);
         }
-      }, 150);
+      }, this.delay);
     });
 
     resizeObserver.observe(document.body);
 
     return () => resizeObserver.disconnect();
+  };
+
+  /** Checks if through interactions the tagged elements has been changed */
+  private addMouseMoveListener = () => {
+    const onMouseMove = debounce(() => {
+      if (this.isResizing || this.isScrolling) {
+        return;
+      }
+
+      this.sendAllElements();
+    }, this.delay);
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMouseMove);
   };
 
   /**
@@ -219,8 +244,14 @@ export class InspectorMode {
     const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount, autoTaggedElements } =
       getAllTaggedElements();
 
-    this.taggedElements = taggedElements;
+    this.taggedElements = taggedElements.map((element) => ({
+      element,
+      attributes: getInspectorModeAttributes(element, { locale, space, environment })!,
+      coordinates: element.getBoundingClientRect(),
+      visible: true, // FIXME: add checks
+    }));
     this.autoTaggedElements = autoTaggedElements;
+
     if (this.taggedElementMutationObserver) {
       this.taggedElementMutationObserver.disconnect();
     }
@@ -242,7 +273,7 @@ export class InspectorMode {
 
     this.taggedElementMutationObserver = new MutationObserver(sendTaggedElementsMessage);
 
-    this.taggedElements.forEach((element) => {
+    this.taggedElements.forEach(({ element }) => {
       this.taggedElementMutationObserver?.observe(element, {
         attributes: true,
         attributeFilter: [
