@@ -18,7 +18,7 @@ type InspectorModeOptions = {
 
 type TaggedElement = {
   element: Element;
-  visible: boolean;
+  isVisible: boolean;
   coordinates: DOMRect;
   attributes: InspectorModeAttributes;
 };
@@ -131,6 +131,9 @@ export class InspectorMode {
     });
 
     mutationObserver.observe(document.body, {
+      // Content source maps
+      characterData: true,
+      // Manual tagging
       attributes: true,
       attributeFilter: [
         InspectorModeDataAttributes.ENTRY_ID,
@@ -139,7 +142,9 @@ export class InspectorMode {
         InspectorModeDataAttributes.SPACE,
         InspectorModeDataAttributes.ENVIRONMENT,
       ],
+      // Adding or removal of new nodes
       childList: true,
+      // Include children
       subtree: true,
     });
 
@@ -193,10 +198,16 @@ export class InspectorMode {
   };
 
   /**
-   * Validates if the element has the inspector mode attributes
+   * Validates if the element
+   * - is visible
+   * - has the inspector mode attributes
    * and sends it then to the editor
    */
   private handleTaggedElement = (element: HTMLElement): boolean => {
+    if (!this.isVisible(element)) {
+      return false;
+    }
+
     const { targetOrigin, locale, space, environment } = this.options;
     let taggedInformation = getInspectorModeAttributes(element, { locale, space, environment });
 
@@ -236,6 +247,26 @@ export class InspectorMode {
   };
 
   /**
+   * Checks if the provided element is visible
+   */
+  private isVisible = (element: HTMLElement): boolean => {
+    if ('checkVisibility' in element) {
+      return element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+    }
+    // Safari does not support element.checkVisibility yet
+    // Type casts are needed as typescript defines checkVisiblity to always exists on HTMLElement
+    const style = window.getComputedStyle(element);
+    return !(
+      style.display === 'none' ||
+      style.visibility === 'hidden' ||
+      style.opacity === '0' ||
+      (element as HTMLElement).hidden ||
+      (element as HTMLElement).offsetParent === null ||
+      (element as HTMLElement).getClientRects().length === 0
+    );
+  };
+
+  /**
    * Finds all elements that have all inspector mode attributes
    * and sends them to the editor
    */
@@ -248,7 +279,7 @@ export class InspectorMode {
       element,
       attributes: getInspectorModeAttributes(element, { locale, space, environment })!,
       coordinates: element.getBoundingClientRect(),
-      visible: true, // FIXME: add checks
+      isVisible: this.isVisible(element as HTMLElement),
     }));
     this.autoTaggedElements = autoTaggedElements;
 
@@ -260,9 +291,11 @@ export class InspectorMode {
       sendMessageToEditor(
         InspectorModeEventMethods.TAGGED_ELEMENTS,
         {
-          elements: taggedElements.map((e) => ({
-            attributes: getInspectorModeAttributes(e, { locale, space, environment }),
-            coordinates: e.getBoundingClientRect(),
+          elements: this.taggedElements.map((taggedElement) => ({
+            ...taggedElement,
+            // We need to remove the actual DOM node before sending it
+            // Prevents: `DataCloneError: Failed to execute 'postMessage' on 'Window': HTMLDivElement object could not be cloned.`
+            element: undefined,
           })),
           automaticallyTaggedCount,
           manuallyTaggedCount,
@@ -272,9 +305,12 @@ export class InspectorMode {
     };
 
     this.taggedElementMutationObserver = new MutationObserver(sendTaggedElementsMessage);
-
+    // TODO: why do we need this?
     this.taggedElements.forEach(({ element }) => {
       this.taggedElementMutationObserver?.observe(element, {
+        // Content source maps
+        characterData: true,
+        // Manual tagging
         attributes: true,
         attributeFilter: [
           InspectorModeDataAttributes.ENTRY_ID,
@@ -283,9 +319,10 @@ export class InspectorMode {
           InspectorModeDataAttributes.SPACE,
           InspectorModeDataAttributes.ENVIRONMENT,
         ],
+        // Adding or removal of new nodes
         childList: true,
+        // Include children
         subtree: true,
-        characterData: true,
       });
     });
 
