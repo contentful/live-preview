@@ -10,15 +10,18 @@ vi.mock('../helpers');
 
 const locale = 'en-US';
 
-const ObserverMock = vi.fn(() => ({
-  disconnect: vi.fn(),
-  observe: vi.fn(),
-  takeRecords: vi.fn(),
-  unobserve: vi.fn(),
-}));
+const createObserverMock = () =>
+  vi.fn(() => ({
+    disconnect: vi.fn(),
+    observe: vi.fn(),
+    takeRecords: vi.fn(),
+    unobserve: vi.fn(),
+  }));
 
-vi.stubGlobal('ResizeObserver', ObserverMock);
-vi.stubGlobal('MutationObserver', ObserverMock);
+const IntersectionObserver = createObserverMock();
+vi.stubGlobal('ResizeObserver', createObserverMock());
+vi.stubGlobal('MutationObserver', createObserverMock());
+vi.stubGlobal('IntersectionObserver', IntersectionObserver);
 
 describe('InspectorMode', () => {
   let inspectorMode: InspectorMode;
@@ -51,6 +54,10 @@ describe('InspectorMode', () => {
         source: LIVE_PREVIEW_EDITOR_SOURCE,
         isInspectorActive: true,
       });
+
+      // We need to trigger the intersection observer manually
+      // @ts-expect-error no typings available :(
+      IntersectionObserver.mock.calls[0][0]([]);
 
       expect(sendMessageToEditor).toHaveBeenCalledOnce();
       expect(sendMessageToEditor).toHaveBeenCalledWith(

@@ -23,6 +23,7 @@ const livePreviewConfig = {
 
 vi.stubGlobal('ResizeObserver', ObserverMock);
 vi.stubGlobal('MutationObserver', ObserverMock);
+vi.stubGlobal('IntersectionObserver', ObserverMock);
 
 describe('init', () => {
   beforeEach(() => {

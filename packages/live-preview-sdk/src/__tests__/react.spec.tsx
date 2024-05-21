@@ -201,7 +201,6 @@ describe('useContentfulInspectorMode', () => {
           entryId: '1',
           locale,
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-entry-id': '1',
@@ -222,7 +221,6 @@ describe('useContentfulInspectorMode', () => {
         result.current({
           locale,
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-entry-id': '1',
@@ -243,7 +241,6 @@ describe('useContentfulInspectorMode', () => {
         result.current({
           entryId: '1',
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-entry-id': '1',
@@ -263,7 +260,6 @@ describe('useContentfulInspectorMode', () => {
       expect(
         result.current({
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-entry-id': '1',
@@ -285,7 +281,6 @@ describe('useContentfulInspectorMode', () => {
           fieldId: 'title',
           space: '12345',
           environment: 'develop',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-entry-id': '1',
@@ -306,7 +301,6 @@ describe('useContentfulInspectorMode', () => {
       expect(
         result.current({
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-entry-id': '1',
@@ -329,7 +323,6 @@ describe('useContentfulInspectorMode', () => {
       expect(
         result.current({
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toBeNull();
     });
@@ -348,7 +341,6 @@ describe('useContentfulInspectorMode', () => {
           assetId: '1',
           locale,
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-asset-id': '1',
@@ -369,7 +361,6 @@ describe('useContentfulInspectorMode', () => {
         result.current({
           locale,
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-asset-id': '1',
@@ -390,7 +381,6 @@ describe('useContentfulInspectorMode', () => {
         result.current({
           assetId: '1',
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-asset-id': '1',
@@ -410,7 +400,6 @@ describe('useContentfulInspectorMode', () => {
       expect(
         result.current({
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toEqual({
         'data-contentful-asset-id': '1',
@@ -432,7 +421,6 @@ describe('useContentfulInspectorMode', () => {
       expect(
         result.current({
           fieldId: 'title',
-          manuallyTagged: true,
         }),
       ).toBeNull();
     });

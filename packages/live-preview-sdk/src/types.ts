@@ -10,11 +10,11 @@ export type ContentType = ContentTypeProps;
 type WithOptional<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>;
 
 export type LivePreviewEntryProps = WithOptional<
-  InspectorModeEntryAttributes,
+  Omit<InspectorModeEntryAttributes, 'manuallyTagged'>,
   'locale' | 'environment' | 'space'
 >;
 export type LivePreviewAssetProps = WithOptional<
-  InspectorModeAssetAttributes,
+  Omit<InspectorModeAssetAttributes, 'manuallyTagged'>,
   'locale' | 'environment' | 'space'
 >;
 
