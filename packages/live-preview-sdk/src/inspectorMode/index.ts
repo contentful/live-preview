@@ -1,3 +1,5 @@
+import isEqual from 'lodash.isequal';
+
 import { debounce, sendMessageToEditor } from '../helpers/index.js';
 import { type MessageFromEditor } from '../messages.js';
 import {
@@ -24,7 +26,7 @@ type TaggedElement = {
 };
 
 export class InspectorMode {
-  private delay = 150;
+  private delay = 300;
 
   private isScrolling = false;
   private scrollTimeout?: NodeJS.Timeout;
@@ -37,17 +39,22 @@ export class InspectorMode {
   private manuallyTaggedCount: number = 0;
   private automaticallyTaggedCount: number = 0;
 
-  private io: IntersectionObserver;
+  private intersectionObserver: IntersectionObserver;
+
+  private observersCB: VoidFunction[] = [];
+  private cleanupCB: VoidFunction[] = [];
 
   constructor(private options: InspectorModeOptions) {
-    this.io = new IntersectionObserver(
+    this.intersectionObserver = new IntersectionObserver(
       (entries) => {
         const taggedElements: TaggedElement[] = this.taggedElements;
         for (const entry of entries) {
           if (entry.isIntersecting) {
             for (const te of taggedElements) {
               if (te.element === entry.target) {
+                // Update coordinates (in case something is in an scrollable element)
                 te.coordinates = entry.intersectionRect;
+                // Update visibility information
                 te.isVisible = entry.target.checkVisibility({
                   checkOpacity: true,
                   checkVisibilityCSS: true,
@@ -62,22 +69,50 @@ export class InspectorMode {
       },
       { threshold: 0.15 },
     );
-
-    // Attach interaction listeners
-    this.addScrollListener();
-    this.addMutationListener();
-    this.addResizeListener();
-    this.addHoverListener();
   }
+
+  /**
+   * Attaches the event listeners and send the tagged elements once
+   */
+  private init = () => {
+    // Attach interaction listeners
+    this.cleanupCB = [
+      this.addScrollListener(),
+      this.addMutationListener(document.body),
+      this.addResizeListener(),
+      this.addHoverListener(),
+    ];
+
+    // Send the elements once
+    this.updateElements();
+  };
+
+  /**
+   * Cancels all listeners and observers
+   */
+  private cleanup = () => {
+    this.observersCB.forEach((cb) => cb());
+    this.cleanupCB.forEach((cb) => cb());
+  };
 
   // Handles incoming messages from Contentful
   public receiveMessage = (data: MessageFromEditor): void => {
     if (data.method === InspectorModeEventMethods.INSPECTOR_MODE_CHANGED) {
       const { isInspectorActive } = data as InspectorModeChangedMessage;
       if (isInspectorActive) {
-        this.updateElements();
+        this.init();
+      } else {
+        this.cleanup();
       }
     }
+  };
+
+  /** Listen for changes on the element via interscetion and mutation observer */
+  private observe = (element: Element) => {
+    this.intersectionObserver.observe(element);
+    const disconnect = this.addMutationListener(element);
+
+    this.observersCB.push(disconnect, () => this.intersectionObserver.unobserve(element));
   };
 
   /** Sends scroll start and end event to the editor, on end it also sends the tagged elements again */
@@ -111,16 +146,11 @@ export class InspectorMode {
   };
 
   /** Detects DOM changes and sends the tagged elements to the editor */
-  private addMutationListener = () => {
+  private addMutationListener = (element: Element) => {
     const mutationObserver = new MutationObserver(() => {
-      const { taggedElements } = getAllTaggedElements();
-
-      if (this.taggedElements?.length !== taggedElements.length) {
-        this.updateElements();
-      }
+      this.updateElements();
     });
-
-    mutationObserver.observe(document.body, {
+    mutationObserver.observe(element, {
       // Content source maps
       characterData: true,
       // Manual tagging
@@ -172,31 +202,9 @@ export class InspectorMode {
     return () => resizeObserver.disconnect();
   };
 
-  private sendTaggedElements = () => {
-    sendMessageToEditor(
-      InspectorModeEventMethods.TAGGED_ELEMENTS,
-      {
-        elements: this.taggedElements.map((taggedElement) => ({
-          ...taggedElement,
-          // We need to remove the actual DOM node before sending it
-          // Prevents: `DataCloneError: Failed to execute 'postMessage' on 'Window': HTMLDivElement object could not be cloned.`
-          element: undefined,
-          isHovered: this.hoveredElement === taggedElement.element,
-        })),
-        automaticallyTaggedCount: this.automaticallyTaggedCount,
-        manuallyTaggedCount: this.manuallyTaggedCount,
-      },
-      this.options.targetOrigin,
-    );
-  };
-
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
   private addHoverListener = () => {
     const onMouseOverInternal = debounce((eventTargets: EventTarget[]) => {
-      if (this.isResizing || this.isScrolling) {
-        return;
-      }
-
       let match: TaggedElement | undefined;
 
       for (const eventTarget of eventTargets) {
@@ -211,7 +219,7 @@ export class InspectorMode {
       }
 
       this.hoveredElement = match?.element;
-      this.sendTaggedElements();
+      this.updateElements();
     }, this.delay);
 
     const onMouseOver = (e: MouseEvent) => {
@@ -225,6 +233,24 @@ export class InspectorMode {
     return () => window.removeEventListener('mouseover', onMouseOver);
   };
 
+  private sendTaggedElements = () => {
+    sendMessageToEditor(
+      InspectorModeEventMethods.TAGGED_ELEMENTS,
+      {
+        elements: this.taggedElements.map((taggedElement) => ({
+          // Important: do not add `element` as it can't be cloned by sendMessage
+          coordinates: taggedElement.coordinates,
+          isVisible: taggedElement.isVisible,
+          attributes: taggedElement.attributes,
+          isHovered: this.hoveredElement === taggedElement.element,
+        })),
+        automaticallyTaggedCount: this.automaticallyTaggedCount,
+        manuallyTaggedCount: this.manuallyTaggedCount,
+      },
+      this.options.targetOrigin,
+    );
+  };
+
   /**
    * Finds all elements that have all inspector mode attributes
    * and sends them to the editor
@@ -233,17 +259,29 @@ export class InspectorMode {
     const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } =
       getAllTaggedElements();
 
-    // clear previously watched element
-    this.taggedElements.forEach((te) => this.io.unobserve(te.element));
-    this.taggedElements = taggedElements.map((taggedElement) => ({
+    const nextElements = taggedElements.map((taggedElement) => ({
       element: taggedElement,
       coordinates: taggedElement.getBoundingClientRect(),
       attributes: getInspectorModeAttributes(taggedElement, this.options)!,
-      isVisible: false,
+      isVisible: taggedElement.checkVisibility({
+        checkOpacity: true,
+        checkVisibilityCSS: true,
+      }),
     }));
-    // watch the new ones
-    taggedElements.forEach((te) => this.io.observe(te));
 
+    if (isEqual(nextElements, this.taggedElements)) {
+      return;
+    }
+
+    // clear previously watched elements
+    this.observersCB.forEach((cb) => cb());
+    this.observersCB = [];
+
+    // update elements and watch them
+    this.taggedElements = nextElements;
+    taggedElements.forEach((te) => this.observe(te));
+
+    // update the counters for telemetry
     this.manuallyTaggedCount = manuallyTaggedCount;
     this.automaticallyTaggedCount = automaticallyTaggedCount;
   };

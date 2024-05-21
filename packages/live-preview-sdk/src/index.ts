@@ -154,6 +154,7 @@ export class ContentfulLivePreview {
 
       // bind event listeners for interactivity
       window.addEventListener('message', (event: MessageEvent<MessageFromEditor>) => {
+        console.log('>> message', event);
         if (!isValidMessage(event)) {
           return;
         }
