@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.0...@contentful/live-preview@4.1.1) (2024-05-21)
+
+
+### Bug Fixes
+
+* **inspectorMode:** more accurate outlines [TOL-1718] ([#727](https://github.com/contentful/live-preview/issues/727)) ([0418e9d](https://github.com/contentful/live-preview/commit/0418e9d882bf4b49cfea38268ca5ef03d99c966f))
+
+
+
+
+
 # [4.1.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.0.0...@contentful/live-preview@4.1.0) (2024-05-16)
 
 
