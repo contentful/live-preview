@@ -67,7 +67,6 @@ export class InspectorMode {
     this.addScrollListener();
     this.addMutationListener();
     this.addResizeListener();
-    this.addMouseMoveListener();
     this.addHoverListener();
   }
 
@@ -193,10 +192,13 @@ export class InspectorMode {
 
   /** Checks if the hovered element is an tagged entry and then sends it to the editor */
   private addHoverListener = () => {
-    const onMouseOver = (e: MouseEvent) => {
+    const onMouseOverInternal = debounce((eventTargets: EventTarget[]) => {
+      if (this.isResizing || this.isScrolling) {
+        return;
+      }
+
       let match: TaggedElement | undefined;
 
-      const eventTargets = e.composedPath();
       for (const eventTarget of eventTargets) {
         const element = eventTarget as HTMLElement;
         if (element.nodeName === 'BODY') break;
@@ -210,25 +212,17 @@ export class InspectorMode {
 
       this.hoveredElement = match?.element;
       this.sendTaggedElements();
+    }, this.delay);
+
+    const onMouseOver = (e: MouseEvent) => {
+      // Need to debounce the internal logic,
+      // otherwise the eventTargets would be always an empty array
+      onMouseOverInternal(e.composedPath());
     };
 
     window.addEventListener('mouseover', onMouseOver, { passive: true });
 
     return () => window.removeEventListener('mouseover', onMouseOver);
-  };
-
-  /** Checks if through interactions the tagged elements has been changed */
-  private addMouseMoveListener = () => {
-    const onMouseMove = debounce(() => {
-      if (this.isResizing || this.isScrolling) {
-        return;
-      }
-
-      this.updateElements();
-    }, this.delay);
-
-    window.addEventListener('mousemove', onMouseMove);
-    return () => window.removeEventListener('mousemove', onMouseMove);
   };
 
   /**
