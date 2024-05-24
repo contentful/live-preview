@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.1...@contentful/live-preview@4.1.2) (2024-05-24)
+
+
+### Bug Fixes
+
+* inspector mode types ([#732](https://github.com/contentful/live-preview/issues/732)) ([3c8acc8](https://github.com/contentful/live-preview/commit/3c8acc8f4d564075b940845090390cf6f0ab9c60))
+
+
+
+
+
 ## [4.1.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.0...@contentful/live-preview@4.1.1) (2024-05-21)
 
 
