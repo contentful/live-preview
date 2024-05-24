@@ -17,13 +17,7 @@ import isEqual from 'lodash.isequal';
 
 import { debounce } from './helpers/index.js';
 import { ContentfulLivePreview, ContentfulLivePreviewInitConfig } from './index.js';
-import type { InspectorModeTags } from './inspectorMode/types.js';
-import {
-  Argument,
-  LivePreviewAssetProps,
-  LivePreviewEntryProps,
-  LivePreviewProps,
-} from './types.js';
+import { Argument, LivePreviewProps } from './types.js';
 
 type UseEffectParams = Parameters<typeof useEffect>;
 type EffectCallback = UseEffectParams[0];
@@ -190,30 +184,40 @@ export function useContentfulLiveUpdates<T extends Argument | null | undefined>(
   return state.data;
 }
 
-type GetInspectorModeProps<T> = (
-  props: (
-    | {
-        [K in Exclude<
-          keyof LivePreviewEntryProps,
-          keyof T | 'locale' | 'environment' | 'space'
-        >]: LivePreviewEntryProps[K];
-      }
-    | {
-        [K in Exclude<
-          keyof LivePreviewAssetProps,
-          keyof T | 'locale' | 'environment' | 'space'
-        >]: LivePreviewAssetProps[K];
-      }
-  ) &
-    Pick<LivePreviewProps, 'environment' | 'locale' | 'space'>,
-) => InspectorModeTags;
+// types allowed on useContentfulInspectorMode (all are optional)
+type SharedProps = {
+  entryId?: string;
+  assetId?: string;
+  locale?: string;
+  space?: string;
+  environment?: string;
+};
 
-/**
- * Generates the function to build the required properties for the inspector mode (field tagging)
- */
-export function useContentfulInspectorMode<
-  T = undefined | Partial<LivePreviewAssetProps> | Partial<LivePreviewEntryProps>,
->(sharedProps?: T): GetInspectorModeProps<T> {
+//types for ..inspectorProps() (fieldId is required, others are optional)
+type InspectorModeProps = SharedProps & {
+  fieldId: string;
+};
+
+// Defines a conditional type that ensures 'entryId' or 'assetId' is present. This type dynamically extends
+// base type 'T' with optional properties ('locale', 'space', 'environment') based on whether 'U' already
+// includes 'entryId' or 'assetId'. If these keys exist in 'U', 'T' extends them directly; otherwise, 'T'
+// explicitly requires 'entryId' or 'assetId' to fulfill the conditions.
+type RequireEntryOrAssetId<T, U> = U extends { entryId: string } | { assetId: string }
+  ? T & { locale?: string; space?: string; environment?: string }
+  : T &
+      ({ entryId: string } | { assetId: string }) & {
+        locale?: string;
+        space?: string;
+        environment?: string;
+      };
+
+type ConstrainedSharedProps<U> = U extends SharedProps ? U : never;
+
+export function useContentfulInspectorMode<U extends SharedProps>(
+  sharedProps?: ConstrainedSharedProps<U>,
+): (
+  props: RequireEntryOrAssetId<Omit<InspectorModeProps, keyof SharedProps>, U>,
+) => ReturnType<typeof ContentfulLivePreview.getProps> | null {
   const config = useContext(ContentfulLivePreviewContext);
 
   return useCallback(
