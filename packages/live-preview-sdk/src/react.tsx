@@ -198,26 +198,9 @@ type InspectorModeProps = SharedProps & {
   fieldId: string;
 };
 
-// Defines a conditional type that ensures 'entryId' or 'assetId' is present. This type dynamically extends
-// base type 'T' with optional properties ('locale', 'space', 'environment') based on whether 'U' already
-// includes 'entryId' or 'assetId'. If these keys exist in 'U', 'T' extends them directly; otherwise, 'T'
-// explicitly requires 'entryId' or 'assetId' to fulfill the conditions.
-type RequireEntryOrAssetId<T, U> = U extends { entryId: string } | { assetId: string }
-  ? T & { locale?: string; space?: string; environment?: string }
-  : T &
-      ({ entryId: string } | { assetId: string }) & {
-        locale?: string;
-        space?: string;
-        environment?: string;
-      };
-
-type ConstrainedSharedProps<U> = U extends SharedProps ? U : never;
-
-export function useContentfulInspectorMode<U extends SharedProps>(
-  sharedProps?: ConstrainedSharedProps<U>,
-): (
-  props: RequireEntryOrAssetId<Omit<InspectorModeProps, keyof SharedProps>, U>,
-) => ReturnType<typeof ContentfulLivePreview.getProps> | null {
+export function useContentfulInspectorMode(
+  sharedProps?: SharedProps,
+): (props: InspectorModeProps) => ReturnType<typeof ContentfulLivePreview.getProps> | null {
   const config = useContext(ContentfulLivePreviewContext);
 
   return useCallback(
