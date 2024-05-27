@@ -1,6 +1,6 @@
 {
   "name": "@contentful/live-preview",
-  "version": "4.1.2",
+  "version": "4.1.3",
   "author": "Contentful GmbH",
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
