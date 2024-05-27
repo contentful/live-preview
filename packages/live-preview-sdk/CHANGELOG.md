@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.3...@contentful/live-preview@4.1.4) (2024-05-27)
+
+
+### Bug Fixes
+
+* simplify inspector mode types ([#741](https://github.com/contentful/live-preview/issues/741)) ([cecc626](https://github.com/contentful/live-preview/commit/cecc6262f3566e1a0ca09f8ab99785b7d0b4cbf4))
+
+
+
+
+
 ## [4.1.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.2...@contentful/live-preview@4.1.3) (2024-05-27)
 
 **Note:** Version bump only for package @contentful/live-preview
