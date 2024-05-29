@@ -1,4 +1,8 @@
-import { encodeGraphQLResponse, splitEncoding } from '@contentful/content-source-maps';
+import {
+  encodeGraphQLResponse,
+  encodeCPAResponse,
+  splitEncoding,
+} from '@contentful/content-source-maps';
 import { type DocumentNode } from 'graphql';
 
 import { version } from '../package.json';
@@ -370,4 +374,4 @@ export class ContentfulLivePreview {
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
 
 export * from './messages.js';
-export { encodeGraphQLResponse, splitEncoding };
+export { encodeGraphQLResponse, encodeCPAResponse, splitEncoding };
