@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.4...@contentful/live-preview@4.2.0) (2024-05-29)
+
+
+### Features
+
+* export cpa response ([#743](https://github.com/contentful/live-preview/issues/743)) ([2ae0ad8](https://github.com/contentful/live-preview/commit/2ae0ad8428f98529a7c8afe9c0f94989971810b8))
+
+
+
+
+
 ## [4.1.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.3...@contentful/live-preview@4.1.4) (2024-05-27)
 
 
