@@ -2,7 +2,8 @@
 
 # Content Source Maps
 
-Automatically add inspector mode to visual fields such as short text, rich text and assets, eliminating the time and effort required for manually inserting data attributes.
+- Automatically add inspector mode to visual fields such as short text, rich text and assets, eliminating the time and effort required for manually inserting data attributes.
+- Enables integration with [Vercel’s Content Links](https://vercel.com/docs/workflow-collaboration/edit-mode#content-link) feature, enhancing usability and collaboration.
 
 ## Installation
 
@@ -14,11 +15,13 @@ npm install @contentful/live-preview
 
 ## How it works
 
-The Live Preview SDK transforms the Content Source Maps coming from either the GraphQL API or Content Preview API (REST) into hidden metadata. This process employs steganography to conceal metadata within invisible Unicode characters, containing information to activate inspector mode. These invisible Unicode characters will not alter the visual presentation of your content.
+The process employs steganography to conceal metadata within invisible Unicode characters, containing information to activate inspector mode. These invisible Unicode characters will not alter the visual presentation of your content.
 
 ### GraphQL
 
 #### 1. Initialize the Live Preview SDK
+
+This step is only required for Live Preview Inspector Mode (not for Vercel Content Links).
 
 ```jsx
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
@@ -58,9 +61,11 @@ const dataWithAutoTagging = encodeGraphQLResponse(data);
 
 When rendering the encoded data in your website, inspector mode will activate automatically.
 
-### REST (Content Preview API)
+### Content Preview API (REST)
 
 #### 1. Initialize the Live Preview SDK
+
+This step is only required for Live Preview Inspector Mode (not for Vercel Content Links).
 
 ```jsx
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
@@ -89,6 +94,32 @@ export const clientPreview = createClient({
 
 Inspector mode will now activate automatically. Please make sure to use Contentful.js version v10.11.0 or above.
 
+#### When not using the JS Client SDK: Direct CPA usage
+
+Please be aware that without the Contentful Client SDK, certain protections, such as automatically requesting the required `sys.id`, are not enforced. To ensure Content Source Maps function properly, the complete `sys` object needs to be retrieved. Therefore, using a [select](https://www.contentful.com/developers/docs/references/content-preview-api/#/reference/search-parameters/select-operator) operator to exclude this from the response would cause errors.
+
+Add `&includeContentSourceMaps=true` to the URL
+
+```js
+fetch("https://preview.contentful.com/spaces/:spaceId/environments/:envId/entries&includeContentSourceMaps=true",
+ {
+   method: "GET",
+   headers: {
+     Authorization: "Bearer YOUR_ACCESS_TOKEN",
+     Content-Type: "application/json",
+   },
+ }
+)
+```
+
+Use the `encodeCPAResponse` function from the Live Preview SDK by passing it the CPA Response with Content Source Maps. It will return with your content that includes the hidden metadata to enable inspector mode.
+
+```jsx
+import { encodeCPAResponse } from '@contentful/live-preview';
+
+const dataWithAutoTagging = encodeCPAResponse(data);
+```
+
 ## Troubleshooting / Tips
 
 - Under certain circumstances, such as when applying letter-spacing in CSS, fields may display styles that weren't intended. In these cases, you can utilize the `splitEncoding` function provided by the Live Preview SDK to retrieve the content and remove any hidden metadata.
@@ -115,4 +146,3 @@ Inspector mode will now activate automatically. Please make sure to use Contentf
   - Any date format that does not use English letters (e.g. `4/30/24`)
   - ISO dates (e.g. `2024-04-30T12:34:59Z`)
   - URL’s
-

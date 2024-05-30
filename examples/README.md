@@ -27,3 +27,11 @@ This README provides a comprehensive overview of our various example projects to
 ## Gatsby
 
 - Limited Gatsby Support: Currently, while Inspector Mode is operational in Gatsby, there is an issue with live updates. Due to Gatsby's unique processing of data from the Content Preview API into its GraphQL schema, live updates via the Live Preview SDK are not supported.
+
+## Content Source Maps GraphQL
+
+This is an example project that demonstrates how to use Content Source Maps with the Contentful GraphQL API to enable automatic tagging for Inspector Mode. It uses Next.js App Router.
+
+## Content Source Maps CPA
+
+This is an example project that demonstrates how to use Content Source Maps with the Contentful Content Preview API (REST) to enable automatic tagging for Inspector Mode. It uses Next.js Pages Router.
