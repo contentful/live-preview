@@ -198,9 +198,9 @@
     chalk "^5.3.0"
 
 "@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.3.0":
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.5.0.tgz#f82f38d2131ebae10458990cbb7574d9b77b77e7"
-  integrity sha512-Z5fls/6Hs+ETq6vx+sfiq+n+z3dwurPVJukgLvThdvzs4VlChoPkRIKr4WrBdjzLYqUspawlf7XvtuUpp32glw==
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.5.2.tgz#924641091d5ae83b9fb34908745a62d652b44d68"
+  integrity sha512-qD98Amp/vWxCYMtv7yprh4Ry3QHFX50sf+i3E6e/WRquz+aUW2ilqmQqW6ucb4F2dlatUxMbOOhZOFazv2XLjg==
 
 "@esbuild/aix-ppc64@0.20.2":
   version "0.20.2"
