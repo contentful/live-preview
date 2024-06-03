@@ -8,9 +8,9 @@ import {
   type InspectorModeAttributes,
   type InspectorModeChangedMessage,
 } from './types.js';
-import { getAllTaggedElements, getInspectorModeAttributes } from './utils.js';
+import { getAllTaggedElements } from './utils.js';
 
-type InspectorModeOptions = {
+export type InspectorModeOptions = {
   locale: string;
   space?: string;
   environment?: string;
@@ -19,7 +19,7 @@ type InspectorModeOptions = {
 };
 
 type TaggedElement = {
-  attributes: InspectorModeAttributes;
+  attributes: InspectorModeAttributes | null;
   coordinates: DOMRect;
   element: Element;
   isVisible: boolean;
@@ -107,7 +107,7 @@ export class InspectorMode {
     }
   };
 
-  /** Listen for changes on the element via interscetion and mutation observer */
+  /** Listen for changes on the element via intersection and mutation observer */
   private observe = (element: Element) => {
     this.intersectionObserver.observe(element);
     const disconnect = this.addMutationListener(element);
@@ -256,14 +256,15 @@ export class InspectorMode {
    * and sends them to the editor
    */
   private updateElements = () => {
-    const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } =
-      getAllTaggedElements();
+    const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } = getAllTaggedElements({
+      options: this.options,
+    });
 
-    const nextElements = taggedElements.map((taggedElement) => ({
-      element: taggedElement,
-      coordinates: taggedElement.getBoundingClientRect(),
-      attributes: getInspectorModeAttributes(taggedElement, this.options)!,
-      isVisible: taggedElement.checkVisibility({
+    const nextElements = taggedElements.map(({ element, attributes }) => ({
+      element,
+      coordinates: element.getBoundingClientRect(),
+      attributes,
+      isVisible: element.checkVisibility({
         checkOpacity: true,
         checkVisibilityCSS: true,
       }),
@@ -279,7 +280,7 @@ export class InspectorMode {
 
     // update elements and watch them
     this.taggedElements = nextElements;
-    taggedElements.forEach((te) => this.observe(te));
+    taggedElements.forEach(({ element }) => this.observe(element));
 
     // update the counters for telemetry
     this.manuallyTaggedCount = manuallyTaggedCount;

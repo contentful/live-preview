@@ -24,7 +24,10 @@ describe('SaveEvent', () => {
     const callback = vi.fn();
     const entry = { sys: { id: '1' } } as Entry;
 
-    const saveEvent = new SaveEvent({ locale });
+    const saveEvent = new SaveEvent({
+      locale,
+      options: { locale: 'en-US', targetOrigin: ['http://localhost:1234'] },
+    });
     saveEvent.subscribe(callback);
     saveEvent.receiveMessage({
       data: {},
@@ -40,7 +43,10 @@ describe('SaveEvent', () => {
     const callback = vi.fn();
     const entry = { sys: { id: '2' } } as Entry;
 
-    const saveEvent = new SaveEvent({ locale });
+    const saveEvent = new SaveEvent({
+      locale,
+      options: { locale: 'en-US', targetOrigin: ['http://localhost:1234'] },
+    });
     saveEvent.subscribe(callback);
     saveEvent.receiveMessage({
       method: LivePreviewPostMessageMethods.ENTRY_SAVED,

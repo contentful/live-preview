@@ -1,7 +1,7 @@
 import { combine } from '@contentful/content-source-maps';
 import { describe, expect, it } from 'vitest';
 
-import { InspectorModeDataAttributes } from '../types.js';
+import { InspectorModeDataAttributes, InspectorModeEntryAttributes } from '../types.js';
 import { getAllTaggedElements } from '../utils.js';
 import { createSourceMapFixture } from './fixtures/contentSourceMap.js';
 
@@ -45,13 +45,56 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  `);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'locale-1' },
+      });
 
       expect(elements).toEqual([
-        dom.getElementById('entry-1'),
-        dom.getElementById('entry-2'),
-        dom.getElementById('asset-1'),
-        dom.getElementById('asset-2'),
+        {
+          attributes: {
+            entryId: 'entry-1',
+            environment: undefined,
+            fieldId: 'field-1',
+            locale: 'locale-1',
+            space: undefined,
+            manuallyTagged: true,
+          },
+          element: dom.getElementById('entry-1'),
+        },
+        {
+          attributes: {
+            entryId: 'entry-2',
+            environment: undefined,
+            fieldId: 'field-2',
+            locale: 'locale-2',
+            space: undefined,
+            manuallyTagged: true,
+          },
+          element: dom.getElementById('entry-2'),
+        },
+        {
+          attributes: {
+            assetId: 'asset-1',
+            environment: undefined,
+            fieldId: 'field-1',
+            locale: 'locale-1',
+            space: undefined,
+            manuallyTagged: true,
+          },
+          element: dom.getElementById('asset-1'),
+        },
+        {
+          attributes: {
+            assetId: 'asset-2',
+            environment: undefined,
+            fieldId: 'field-2',
+            locale: 'locale-2',
+            space: undefined,
+            manuallyTagged: true,
+          },
+          element: dom.getElementById('asset-2'),
+        },
       ]);
     });
 
@@ -70,9 +113,24 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  `);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'locale-2' },
+      });
 
-      expect(elements).toEqual([dom.getElementById('entry')]);
+      expect(elements).toEqual([
+        {
+          attributes: {
+            entryId: 'entry-id',
+            environment: undefined,
+            fieldId: 'field-id',
+            locale: 'locale-2',
+            space: undefined,
+            manuallyTagged: true,
+          },
+          element: dom.getElementById('entry'),
+        },
+      ]);
     });
 
     it('should ignore elements without entry or asset id', () => {
@@ -87,9 +145,24 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  `);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'locale-2' },
+      });
 
-      expect(elements).toEqual([dom.getElementById('entry')]);
+      expect(elements).toEqual([
+        {
+          attributes: {
+            entryId: 'entry-id',
+            environment: undefined,
+            fieldId: 'field-id',
+            locale: 'locale-2',
+            space: undefined,
+            manuallyTagged: true,
+          },
+          element: dom.getElementById('entry'),
+        },
+      ]);
     });
   });
 
@@ -101,17 +174,34 @@ describe('getAllTaggedElements', () => {
         `<span>${combine('Test', createSourceMapFixture('ignore_origin', { origin: 'example.com' }))}</span>`,
       );
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'en-US' },
+      });
       expect(elements).toEqual([]);
     });
 
     it('should recognize auto-tagged elements', () => {
       const dom = html(`<span id="entry-1">${combine('Test', metadata)}</span>`);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'en-US' },
+      });
 
       expect(elements).toHaveLength(1);
-      expect(elements).toEqual([dom.getElementById('entry-1')]);
+      expect(elements).toEqual([
+        {
+          attributes: {
+            entryId: 'test-entry-id',
+            environment: 'master',
+            fieldId: 'title',
+            locale: 'en-US',
+            space: 'master',
+          },
+          element: dom.getElementById('entry-1'),
+        },
+      ]);
     });
 
     describe('grouping information', () => {
@@ -125,10 +215,24 @@ describe('getAllTaggedElements', () => {
           </div>
         `);
 
-        const { taggedElements: elements } = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements({
+          root: dom,
+          options: { locale: 'en-US' },
+        });
 
         expect(elements).toHaveLength(1);
-        expect(elements).toEqual([dom.getElementById('richtext')]);
+        expect(elements).toEqual([
+          {
+            attributes: {
+              entryId: 'test-entry-id',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('richtext'),
+          },
+        ]);
       });
 
       it('should group sibling elements with the same information (nested structure)', () => {
@@ -141,10 +245,24 @@ describe('getAllTaggedElements', () => {
           </div>
         `);
 
-        const { taggedElements: elements } = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements({
+          root: dom,
+          options: { locale: 'en-US' },
+        });
 
         expect(elements).toHaveLength(1);
-        expect(elements).toEqual([dom.getElementById('richtext')]);
+        expect(elements).toEqual([
+          {
+            attributes: {
+              entryId: 'test-entry-id',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('richtext'),
+          },
+        ]);
       });
 
       it('should not tag nested elements with the same information', () => {
@@ -152,10 +270,24 @@ describe('getAllTaggedElements', () => {
           <p id="node-1">${combine('Hello', metadata)}<strong>${combine('World', metadata)}</strong>!</p>
       `);
 
-        const { taggedElements: elements } = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements({
+          root: dom,
+          options: { locale: 'en-US' },
+        });
 
         expect(elements).toHaveLength(1);
-        expect(elements).toEqual([dom.getElementById('node-1')]);
+        expect(elements).toEqual([
+          {
+            attributes: {
+              entryId: 'test-entry-id',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('node-1'),
+          },
+        ]);
       });
 
       it('should tag elements with different information separately', () => {
@@ -177,13 +309,43 @@ describe('getAllTaggedElements', () => {
         </div>
       `);
 
-        const { taggedElements: elements } = getAllTaggedElements(dom);
+        const { taggedElements: elements } = getAllTaggedElements({
+          root: dom,
+          options: { locale: 'en-US' },
+        });
 
         expect(elements).toHaveLength(3);
         expect(elements).toEqual([
-          dom.getElementById('richtext'),
-          dom.getElementById('reference'),
-          dom.getElementById('globe'),
+          {
+            attributes: {
+              entryId: 'test-entry-id',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('richtext'),
+          },
+          {
+            attributes: {
+              entryId: 'reference',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('reference'),
+          },
+          {
+            attributes: {
+              assetId: 'globe',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('globe'),
+          },
         ]);
       });
     });
@@ -207,13 +369,43 @@ describe('getAllTaggedElements', () => {
         </div>
       `);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'en-US' },
+      });
 
       expect(elements).toHaveLength(3);
       expect(elements).toEqual([
-        dom.getElementById('img1'),
-        dom.getElementById('img2'),
-        dom.getElementById('img3'),
+        {
+          attributes: {
+            assetId: 'img1',
+            environment: 'master',
+            fieldId: 'title',
+            locale: 'en-US',
+            space: 'master',
+          },
+          element: dom.getElementById('img1'),
+        },
+        {
+          attributes: {
+            assetId: 'img2',
+            environment: 'master',
+            fieldId: 'title',
+            locale: 'en-US',
+            space: 'master',
+          },
+          element: dom.getElementById('img2'),
+        },
+        {
+          attributes: {
+            assetId: 'img3',
+            environment: 'master',
+            fieldId: 'title',
+            locale: 'en-US',
+            space: 'master',
+          },
+          element: dom.getElementById('img3'),
+        },
       ]);
     });
 
@@ -224,16 +416,17 @@ describe('getAllTaggedElements', () => {
 		</div>
 	  </div>`);
 
-      const { taggedElements: elements } = getAllTaggedElements(dom);
+      const { taggedElements: elements } = getAllTaggedElements({
+        root: dom,
+        options: { locale: 'locale-2' },
+      });
 
       expect(elements.length).toEqual(1);
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.ENTRY_ID)).toEqual(
+      expect((elements[0].attributes as InspectorModeEntryAttributes).entryId).toEqual(
         'manual-entry-id',
       );
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.FIELD_ID)).toEqual(
-        'manual-field-id',
-      );
-      expect(elements[0].getAttribute(InspectorModeDataAttributes.LOCALE)).toEqual(null);
+      expect(elements[0].attributes?.fieldId).toEqual('manual-field-id');
+      expect(elements[0].attributes?.locale).toEqual('locale-2');
     });
 
     it('ignore manually tagged elements if requested', () => {
@@ -247,7 +440,11 @@ describe('getAllTaggedElements', () => {
         taggedElements: elements,
         autoTaggedElements,
         manuallyTaggedCount,
-      } = getAllTaggedElements(dom, true);
+      } = getAllTaggedElements({
+        root: dom,
+        ignoreManual: true,
+        options: { locale: 'en-US' },
+      });
 
       expect(elements.length).toEqual(1);
       expect(autoTaggedElements.length).toEqual(1);

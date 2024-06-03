@@ -153,7 +153,15 @@ export class ContentfulLivePreview {
 
       if (this.liveUpdatesEnabled) {
         this.liveUpdates = new LiveUpdates({ locale, targetOrigin: this.targetOrigin });
-        this.saveEvent = new SaveEvent({ locale });
+        this.saveEvent = new SaveEvent({
+          locale,
+          options: {
+            locale: this.locale,
+            space: this.space,
+            environment: this.environment,
+            targetOrigin: this.targetOrigin,
+          },
+        });
       }
 
       // bind event listeners for interactivity
@@ -196,7 +204,13 @@ export class ContentfulLivePreview {
       // tell the editor that there's a SDK
       const { taggedElements, manuallyTaggedCount, automaticallyTaggedCount } = this
         .inspectorModeEnabled
-        ? getAllTaggedElements()
+        ? getAllTaggedElements({
+            options: {
+              locale: this.locale,
+              space: this.space,
+              environment: this.environment,
+            },
+          })
         : {
             taggedElements: [],
             manuallyTaggedCount: 0,
@@ -367,7 +381,13 @@ export class ContentfulLivePreview {
    * Returns a list of tagged entries on the page
    */
   static getEntryList(): string[] {
-    return getAllTaggedEntries();
+    return getAllTaggedEntries({
+      options: {
+        locale: this.locale,
+        space: this.space,
+        environment: this.environment,
+      },
+    });
   }
 }
 
