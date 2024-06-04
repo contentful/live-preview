@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.0...@contentful/live-preview@4.2.1) (2024-06-04)
+
+
+### Bug Fixes
+
+* autotagging attributes ([#753](https://github.com/contentful/live-preview/issues/753)) ([c1a527e](https://github.com/contentful/live-preview/commit/c1a527e067d7f2efd0fd80a3c30ba5bf27c3de15))
+
+
+
+
+
 # [4.2.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.1.4...@contentful/live-preview@4.2.0) (2024-05-29)
 
 
