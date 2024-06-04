@@ -89,7 +89,11 @@ describe('getAllTaggedElements', () => {
         </div>
       `);
 
-    const elements = getAllTaggedElements(dom, true);
+    const elements = getAllTaggedElements({
+      root: dom,
+      ignoreManual: true,
+      options: { locale: 'en-US' },
+    });
 
     expect(elements).toHaveLength(1 + 10 + 30 + 3);
   });

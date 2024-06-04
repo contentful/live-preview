@@ -1,14 +1,17 @@
 import { debug } from './helpers/index.js';
+import { InspectorModeOptions } from './inspectorMode/index.js';
 import { getAllTaggedEntries } from './inspectorMode/utils.js';
 import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages.js';
 import { SubscribeCallback } from './types.js';
 
 export class SaveEvent {
   locale: string;
+  options: InspectorModeOptions;
   subscription: SubscribeCallback | undefined;
 
-  constructor({ locale }: { locale: string }) {
+  constructor({ locale, options }: { locale: string; options: InspectorModeOptions }) {
     this.locale = locale;
+    this.options = options;
   }
 
   public subscribe(cb: SubscribeCallback): VoidFunction {
@@ -39,7 +42,7 @@ export class SaveEvent {
   ): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
       const { entity } = message as EntrySavedMessage;
-      const entries = getAllTaggedEntries();
+      const entries = getAllTaggedEntries({ options: this.options });
 
       if (entries.includes(entity.sys.id)) {
         this.subscription(entity);

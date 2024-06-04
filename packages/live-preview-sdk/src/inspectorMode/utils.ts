@@ -1,12 +1,24 @@
 import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
 import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
-import { InspectorModeAttributes, InspectorModeDataAttributes } from './types.js';
+import {
+  InspectorModeAssetAttributes,
+  InspectorModeAttributes,
+  InspectorModeDataAttributes,
+  InspectorModeEntryAttributes,
+  InspectorModeSharedAttributes,
+} from './types.js';
+import { InspectorModeOptions } from './index.js';
 
 export type AutoTaggedElement<T = Node> = {
   element: T;
   sourceMap: SourceMapMetadata;
 };
+
+interface TaggedElement {
+  element: Element;
+  attributes: InspectorModeAttributes | null;
+}
 
 const isTaggedElement = (node?: Node | null): boolean => {
   if (!node) {
@@ -34,10 +46,10 @@ const isTaggedElement = (node?: Node | null): boolean => {
 };
 
 /**
- * Parses the necessary information from the element and returns them.
+ * Parses the necessary manually tagged information from the element and returns them.
  * If **one** of the information is missing it returns null
  */
-export function getInspectorModeAttributes(
+export function getManualInspectorModeAttributes(
   element: Element,
   fallbackProps: Pick<InspectorModeAttributes, 'environment' | 'locale' | 'space'>,
 ): InspectorModeAttributes | null {
@@ -163,9 +175,9 @@ function getNodeText(node: HTMLElement): string {
     .join('');
 }
 
-function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean {
+function hasTaggedParent(node: HTMLElement, taggedElements: TaggedElement[]): boolean {
   for (const tagged of taggedElements) {
-    if (tagged === node || tagged.contains(node)) {
+    if (tagged.element === node || tagged.element.contains(node)) {
       return true;
     }
   }
@@ -176,11 +188,16 @@ function hasTaggedParent(node: HTMLElement, taggedElements: Element[]): boolean 
 /**
  * Query the document for all tagged elements
  */
-export function getAllTaggedElements(
+export function getAllTaggedElements({
   root = window.document,
-  ignoreManual?: boolean,
-): {
-  taggedElements: Element[];
+  options,
+  ignoreManual,
+}: {
+  root?: any;
+  options: Omit<InspectorModeOptions, 'targetOrigin'>;
+  ignoreManual?: boolean;
+}): {
+  taggedElements: TaggedElement[];
   manuallyTaggedCount: number;
   automaticallyTaggedCount: number;
   autoTaggedElements: AutoTaggedElement<Element>[];
@@ -191,7 +208,14 @@ export function getAllTaggedElements(
         `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
       );
 
-  const taggedElements: Element[] = [...alreadyTagged];
+  //Spread operator is necessary to convert the NodeList to an array
+  const taggedElements: TaggedElement[] = [...alreadyTagged]
+    .map((element: Element) => ({
+      element,
+      attributes: getManualInspectorModeAttributes(element, options),
+    }))
+    //filter out elements that don't have the necessary attributes
+    .filter(({ attributes }) => attributes !== null);
   const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
   const stegaNodes = findStegaNodes('body' in root ? root.body : root);
@@ -232,23 +256,28 @@ export function getAllTaggedElements(
     (el, index) => elementsForTagging.findIndex((et) => isSameElement(el, et)) === index,
   );
 
-  // Adding auto tagged elements to the tagged elements list
-  for (const { element } of uniqElementsForTagging) {
-    taggedElements.push(element);
+  for (const { element, sourceMap } of uniqElementsForTagging) {
+    const attributes: InspectorModeSharedAttributes = {
+      fieldId: sourceMap.contentful.field,
+      locale: sourceMap.contentful.locale,
+      space: sourceMap.contentful.space,
+      environment: sourceMap.contentful.environment,
+    };
+
+    if (sourceMap.contentful.entityType === 'Asset') {
+      (attributes as InspectorModeAssetAttributes).assetId = sourceMap.contentful.entity;
+    } else if (sourceMap.contentful.entityType === 'Entry') {
+      (attributes as InspectorModeEntryAttributes).entryId = sourceMap.contentful.entity;
+    }
+
+    taggedElements.push({
+      element,
+      attributes: attributes as InspectorModeAttributes,
+    });
   }
 
   const autoTaggedCount = taggedElements.filter(
-    (el) =>
-      ignoreManual ||
-      [
-        !el.hasAttribute(InspectorModeDataAttributes.FIELD_ID),
-        !el.hasAttribute(InspectorModeDataAttributes.ENTRY_ID),
-        !el.hasAttribute(InspectorModeDataAttributes.ASSET_ID),
-        !el.hasAttribute(InspectorModeDataAttributes.LOCALE),
-        !el.hasAttribute(InspectorModeDataAttributes.SPACE),
-        !el.hasAttribute(InspectorModeDataAttributes.ENVIRONMENT),
-        // it doesn't have any of the manually tagged attributes
-      ].every(Boolean),
+    ({ attributes }) => attributes?.manuallyTagged === false || !attributes?.manuallyTagged,
   ).length;
 
   return {
@@ -262,11 +291,20 @@ export function getAllTaggedElements(
 /**
  * Returns a list of tagged entries on the page
  */
-export function getAllTaggedEntries(): string[] {
+export function getAllTaggedEntries({
+  options,
+}: {
+  options: Omit<InspectorModeOptions, 'targetOrigin'>;
+}): string[] {
   return [
     ...new Set(
-      getAllTaggedElements()
-        .taggedElements.map((element) => element.getAttribute(InspectorModeDataAttributes.ENTRY_ID))
+      getAllTaggedElements({ options })
+        .taggedElements.map((element: TaggedElement) => {
+          if (element.attributes && 'entryId' in element.attributes) {
+            return element.attributes.entryId;
+          }
+          return null;
+        })
         .filter(Boolean) as string[],
     ),
   ];

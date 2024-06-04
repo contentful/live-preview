@@ -35,7 +35,7 @@ export enum InspectorModeEventMethods {
   INSPECTOR_MODE_CHANGED = 'INSPECTOR_MODE_CHANGED',
 }
 
-type InspectorModeSharedAttributes = {
+export type InspectorModeSharedAttributes = {
   fieldId: string;
   locale: string;
   space?: string;
