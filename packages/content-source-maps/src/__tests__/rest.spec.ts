@@ -1,4 +1,6 @@
 import { describe, expect, test } from 'vitest';
+
+import { decode } from '../encode.js';
 import { encodeCPAResponse } from '../rest/encodeCPAResponse.js';
 import type { CPAEntry, CPAEntryCollection } from '../types.js';
 import {
@@ -7,7 +9,6 @@ import {
   createEntry,
   testEncodingDecoding,
 } from './utils.js';
-import { decode } from '../encode.js';
 
 describe('Content Source Maps with the CPA', () => {
   describe('entity collections', () => {
@@ -95,19 +96,19 @@ describe('Content Source Maps with the CPA', () => {
         contentSourceMaps: {
           sys: { type: 'ContentSourceMaps' },
           mappings: {
-            '/fields/title': {
+            'fields/title': {
               source: {
                 fieldType: 0,
                 editorInterface: 0,
               },
             },
-            '/fields/richText': {
+            'fields/richText': {
               source: {
                 fieldType: 1,
                 editorInterface: 1,
               },
             },
-            '/fields/list': {
+            'fields/list': {
               source: {
                 fieldType: 2,
                 editorInterface: 2,
@@ -148,13 +149,13 @@ describe('Content Source Maps with the CPA', () => {
         contentSourceMaps: {
           sys: { type: 'ContentSourceMaps' },
           mappings: {
-            '/fields/title': {
+            'fields/title': {
               source: {
                 fieldType: 0,
                 editorInterface: 0,
               },
             },
-            '/fields/richText': {
+            'fields/richText': {
               source: {
                 fieldType: 1,
                 editorInterface: 1,
@@ -177,7 +178,7 @@ describe('Content Source Maps with the CPA', () => {
         contentSourceMaps: {
           sys: { type: 'ContentSourceMaps' },
           mappings: {
-            '/fields/title': {
+            'fields/title': {
               source: {
                 fieldType: 0,
                 editorInterface: 0,
@@ -412,19 +413,19 @@ describe('Content Source Maps with the CPA', () => {
         contentSourceMaps: {
           sys: { type: 'ContentSourceMaps' },
           mappings: {
-            '/fields/title': {
+            'fields/title': {
               source: {
                 fieldType: 0,
                 editorInterface: 0,
               },
             },
-            '/fields/richText': {
+            'fields/richText': {
               source: {
                 fieldType: 1,
                 editorInterface: 1,
               },
             },
-            '/fields/list': {
+            'fields/list': {
               source: {
                 fieldType: 2,
                 editorInterface: 2,

@@ -3,6 +3,7 @@ import { set } from 'json-pointer';
 import { combine } from './encode.js';
 import { encodeRichTextValue } from './richText.js';
 import type {
+  CPAEntry,
   CPAMappings,
   EditorInterfaceSource,
   FieldType,
@@ -91,7 +92,7 @@ export function encodeField(
   fieldType: FieldType,
   currentValue: any,
   hiddenStrings: SourceMapMetadata,
-  target: GraphQLResponse,
+  target: GraphQLResponse | CPAEntry,
   pointer: string,
   mappings: CPAMappings | GraphQLMappings,
   locale?: string,

@@ -1,4 +1,5 @@
-import { has, get } from 'json-pointer';
+import { get, has } from 'json-pointer';
+
 import type { CPAEntry, CPAEntryCollection, EditorInterfaceSource, FieldType } from '../types.js';
 import {
   clone,
@@ -17,11 +18,14 @@ const applyEncoding = (
   if (!target.fields) {
     return;
   }
+
   const { contentSourceMaps } = target.sys;
+
   if (!contentSourceMaps) {
     console.error('Content source maps data is missing');
     return;
   }
+
   const { mappings } = contentSourceMaps;
 
   for (const pointer in mappings) {
@@ -41,15 +45,17 @@ const applyEncoding = (
       continue;
     }
 
-    if (has(target, pointer)) {
-      const currentValue = get(target, pointer);
+    const formattedPointer = pointer.startsWith('/') ? pointer : `/${pointer}`;
+
+    if (has(target, formattedPointer)) {
+      const currentValue = get(target, formattedPointer);
       if (currentValue === null) {
         return;
       }
-      const fieldParts = pointer.split('/'); // Split the pointer into parts
+      const fieldParts = formattedPointer.split('/'); // Split the pointer into parts
       const field = fieldParts.pop(); // Get the last part, which is the field name
       if (!field) {
-        console.error('Field name could not be extracted from the pointer', pointer);
+        console.error('Field name could not be extracted from the pointer', formattedPointer);
         return;
       }
       const locale = target.sys.locale;
@@ -68,7 +74,7 @@ const applyEncoding = (
           targetOrigin,
         });
 
-        encodeField(fieldType, currentValue, hiddenStrings, target, pointer, mappings);
+        encodeField(fieldType, currentValue, hiddenStrings, target, formattedPointer, mappings);
       } else {
         const locales = Object.keys(currentValue);
         locales.forEach((locale) => {
@@ -89,7 +95,7 @@ const applyEncoding = (
             currentValue,
             hiddenStrings,
             target,
-            `${pointer}/${locale}`,
+            `${formattedPointer}/${locale}`,
             mappings,
             locale,
           );
