@@ -51,7 +51,7 @@ describe('Content Source Maps with the GraphQL API', () => {
           entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
           assets: [],
           mappings: {
-            '/post/title': {
+            '/data/post/title': {
               source: {
                 entry: 0,
                 field: 0,
@@ -60,7 +60,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 editorInterface: 0,
               },
             },
-            '/post/subtitle': {
+            '/data/post/subtitle': {
               source: {
                 entry: 0,
                 field: 1,
@@ -135,7 +135,7 @@ describe('Content Source Maps with the GraphQL API', () => {
           entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
           assets: [],
           mappings: {
-            '/post/list': {
+            '/data/post/list': {
               source: {
                 entry: 0,
                 field: 0,
@@ -246,7 +246,7 @@ describe('Content Source Maps with the GraphQL API', () => {
           entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
           assets: [],
           mappings: {
-            '/post/title': {
+            '/data/post/title': {
               source: {
                 entry: 0,
                 field: 0,
@@ -255,7 +255,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 editorInterface: 0,
               },
             },
-            '/post/subtitle': {
+            '/data/post/subtitle': {
               source: {
                 entry: 0,
                 field: 1,
@@ -347,7 +347,7 @@ describe('Content Source Maps with the GraphQL API', () => {
           ],
           assets: [],
           mappings: {
-            '/postCollection/items/0/title': {
+            '/data/postCollection/items/0/title': {
               source: {
                 entry: 0,
                 field: 0,
@@ -356,7 +356,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 editorInterface: 0,
               },
             },
-            '/postCollection/items/1/title': {
+            '/data/postCollection/items/1/title': {
               source: {
                 entry: 1,
                 field: 0,
@@ -365,7 +365,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 editorInterface: 0,
               },
             },
-            '/postCollection/items/2/title': {
+            '/data/postCollection/items/2/title': {
               source: {
                 entry: 2,
                 field: 0,
@@ -441,7 +441,7 @@ describe('Content Source Maps with the GraphQL API', () => {
           entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
           assets: [],
           mappings: {
-            '/postCollection/items/0/akanTitle': {
+            '/data/postCollection/items/0/akanTitle': {
               source: {
                 entry: 0,
                 field: 0,
@@ -450,7 +450,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 editorInterface: 0,
               },
             },
-            '/postCollection/items/0/aghemTitle': {
+            '/data/postCollection/items/0/aghemTitle': {
               source: {
                 entry: 0,
                 field: 0,
@@ -459,7 +459,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 editorInterface: 0,
               },
             },
-            '/postCollection/items/0/spanishTitle': {
+            '/data/postCollection/items/0/spanishTitle': {
               source: {
                 entry: 0,
                 field: 0,
@@ -688,7 +688,7 @@ describe('Content Source Maps with the GraphQL API', () => {
           ],
           assets: [],
           mappings: {
-            '/post/rte/json': {
+            '/data/post/rte/json': {
               source: {
                 editorInterface: 0,
                 entry: 0,
@@ -697,7 +697,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                 locale: 0,
               },
             },
-            '/post/rte/links/entries/hyperlink/0/slug': {
+            '/data/post/rte/links/entries/hyperlink/0/slug': {
               source: {
                 editorInterface: 1,
                 entry: 0,
@@ -1002,7 +1002,7 @@ describe('Content Source Maps with the GraphQL API', () => {
             ],
             assets: [],
             mappings: {
-              '/post/rte/json': {
+              '/data/post/rte/json': {
                 source: {
                   entry: 0,
                   field: 0,
@@ -1011,7 +1011,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                   editorInterface: 0,
                 },
               },
-              '/post/title': {
+              '/data/post/title': {
                 source: {
                   entry: 0,
                   field: 1,
@@ -1020,7 +1020,7 @@ describe('Content Source Maps with the GraphQL API', () => {
                   editorInterface: 1,
                 },
               },
-              '/post/foo': {
+              '/data/post/foo': {
                 source: {
                   entry: 0,
                   field: 2,
@@ -1113,7 +1113,7 @@ describe('Content Source Maps with the GraphQL API', () => {
             entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
             assets: [],
             mappings: {
-              '/post/title': {
+              '/data/post/title': {
                 source: {
                   entry: 0,
                   field: 0,

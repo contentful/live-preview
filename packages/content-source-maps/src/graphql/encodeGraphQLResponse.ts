@@ -1,4 +1,5 @@
-import { has, get } from 'json-pointer';
+import { get, has } from 'json-pointer';
+
 import type { GraphQLResponse } from '../types.js';
 import {
   clone,
@@ -37,7 +38,7 @@ export const encodeGraphQLResponse = (
     mappings,
     fieldTypes,
   } = modifiedGraphqlResponse.extensions.contentSourceMaps;
-  const target = modifiedGraphqlResponse.data;
+  const target = modifiedGraphqlResponse;
 
   for (const pointer in mappings) {
     const { source } = mappings[pointer];
