@@ -1,17 +1,18 @@
 import { set } from 'json-pointer';
+
 import { combine } from './encode.js';
 import { encodeRichTextValue } from './richText.js';
 import type {
-  SourceMapMetadata,
-  EditorInterfaceSource,
-  WidgetId,
-  WidgetNamespace,
-  FieldType,
   CPAEntry,
   CPAMappings,
+  EditorInterfaceSource,
+  FieldType,
   GraphQLMappings,
+  GraphQLResponse,
+  SourceMapMetadata,
+  WidgetId,
+  WidgetNamespace,
 } from './types.js';
-import { EntrySkeletonType } from 'contentful';
 
 export const createSourceMapMetadata = ({
   entityId,
@@ -91,7 +92,7 @@ export function encodeField(
   fieldType: FieldType,
   currentValue: any,
   hiddenStrings: SourceMapMetadata,
-  target: CPAEntry<EntrySkeletonType>,
+  target: GraphQLResponse | CPAEntry,
   pointer: string,
   mappings: CPAMappings | GraphQLMappings,
   locale?: string,
