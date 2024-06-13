@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.5.0...@contentful/content-source-maps@0.6.0) (2024-06-13)
+
+
+### Features
+
+* add-adjustments-to-pointers [TOL-2036] ([#754](https://github.com/contentful/live-preview/issues/754)) ([24bd1f4](https://github.com/contentful/live-preview/commit/24bd1f46bfa57e60e5690aa3dfc0713c25f820c1))
+
+
+### BREAKING CHANGES
+
+* refactor graphql logic
+* refactor rest responses
+
+
+
+
+
 # [0.5.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.4.2...@contentful/content-source-maps@0.5.0) (2024-05-13)
 
 
