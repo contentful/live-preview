@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@contentful/live-preview": "^3.3.7",
+    "@contentful/live-preview": "^4.2.2",
     "@types/node": "20.2.3",
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
-    "contentful": "^10.11.7",
+    "contentful": "^10.12.0",
     "next": "14.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
