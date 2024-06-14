@@ -138,6 +138,10 @@ const dataWithAutoTagging = encodeCPAResponse(data);
   <ContentfulLivePreviewProvider experimental={{ ignoreManuallyTaggedElements: true }} />
   ```
 
+- Using Apollo GraphQL:
+  - To utilize Apollo Client with GraphQL, consider using [HTTPLink](https://www.apollographql.com/docs/react/networking/advanced-http-networking/#constructor-options). By default, the extensions option (where Content Source Maps live) is disabled. You need to enable this option.
+  - Alternatively, you can create a custom link to add extensions to the response. For guidance on this, refer to [this example](https://www.apollographql.com/docs/react/networking/advanced-http-networking/#modifying-response-data).
+
 ## Limitations
 
 - Markdown support is currently in development.
