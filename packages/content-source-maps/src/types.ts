@@ -132,9 +132,5 @@ export interface CPAEntry<TFields extends EntrySkeletonType = EntrySkeletonType>
 
 export interface CPAEntryCollection<TFields extends EntrySkeletonType = EntrySkeletonType>
   extends ContentfulEntryCollection<TFields> {
-  sys: {
-    type: 'Array';
-    contentSourceMapsLookup?: ContentSourceMapsLookup;
-  };
   items: CPAEntry<TFields>[];
 }

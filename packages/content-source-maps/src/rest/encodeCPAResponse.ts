@@ -116,9 +116,9 @@ export const encodeCPAResponse = (
   ) as unknown as CPAEntry | CPAEntryCollection;
 
   // Entity collections
-  if (modifiedCPAResponse.sys.type === 'Array') {
+  if (modifiedCPAResponse.sys && 'items' in (modifiedCPAResponse as CPAEntryCollection)) {
     const collection = modifiedCPAResponse as CPAEntryCollection;
-    if (!collection.sys.contentSourceMapsLookup) {
+    if (!collection.sys?.contentSourceMapsLookup) {
       console.error('Content source maps lookup data is missing');
       return collection;
     }
