@@ -1,15 +1,16 @@
+import type { Asset, EntrySkeletonType } from 'contentful';
 import { get } from 'json-pointer';
 import { expect } from 'vitest';
-import type { Asset, EntrySkeletonType } from 'contentful';
+
 import { decode } from '../encode.js';
 import type {
-  SourceMapMetadata,
   CPAContentSourceMaps,
   CPAEntry,
   CPAEntryCollection,
   ContentSourceMapsLookup,
   ExtendedAssetSys,
   ExtendedSys,
+  SourceMapMetadata,
 } from '../types.js';
 
 type Mappings = Record<string, SourceMapMetadata | Record<string, SourceMapMetadata> | undefined>;
@@ -158,7 +159,32 @@ export function createCPAEntryCollection({
 }): CPAEntryCollection {
   return {
     sys: {
-      type: 'Array',
+      createdAt: '2024-02-16T12:44:21.109Z',
+      updatedAt: '2024-02-16T12:44:21.109Z',
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: 'spaceId',
+        },
+      },
+      environment: {
+        sys: {
+          type: 'Link',
+          linkType: 'Environment',
+          id: 'master',
+        },
+      },
+      contentType: {
+        sys: {
+          type: 'Link',
+          linkType: 'ContentType',
+          id: 'ctId',
+        },
+      },
+      id: 'entryId',
+      revision: 0,
+      type: 'Entry',
       contentSourceMapsLookup,
     },
     total: items.length + (includes?.Entry?.length ?? 0) + (includes?.Asset?.length ?? 0),
