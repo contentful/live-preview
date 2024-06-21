@@ -8,6 +8,7 @@ metadata:
     circleci.com/project-slug: github/contentful/live-preview
     github.com/project-slug: contentful/live-preview
     backstage.io/source-location: url:https://github.com/contentful/live-preview/
+    contentful.com/ci-alert-slack: prd-creators-tolkien-alerts
 spec:
   type: library
   lifecycle: production
