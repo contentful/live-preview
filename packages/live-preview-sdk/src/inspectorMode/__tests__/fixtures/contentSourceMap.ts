@@ -1,10 +1,12 @@
 import type { SourceMapMetadata } from '@contentful/content-source-maps';
 
+type ContentfulMetadata = Exclude<SourceMapMetadata['contentful'], undefined>;
+
 export function createSourceMapFixture(
   entityId: string,
   overrides?: {
     origin?: string;
-    contentful?: Partial<Omit<SourceMapMetadata['contentful'], 'entity'>>;
+    contentful?: Partial<Omit<ContentfulMetadata, 'entity'>>;
   },
 ): SourceMapMetadata {
   const origin = overrides?.origin ?? 'contentful.com';

@@ -5,7 +5,7 @@ import { encodeRichTextValue } from './richText.js';
 import type {
   CPAEntry,
   CPAMappings,
-  EditorInterfaceSource,
+  CreateSourceMapParams,
   FieldType,
   GraphQLMappings,
   GraphQLResponse,
@@ -24,23 +24,14 @@ export const createSourceMapMetadata = ({
   editorInterface,
   fieldType,
   targetOrigin,
-}: {
-  entityId: string;
-  entityType: string;
-  space: string;
-  environment: string;
-  field: string;
-  locale: string;
-  editorInterface: EditorInterfaceSource;
-  fieldType: string;
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com';
-}): SourceMapMetadata => {
+  platform,
+}: CreateSourceMapParams): SourceMapMetadata => {
   const targetOriginUrl = targetOrigin || 'https://app.contentful.com';
   const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
   const entityRoute = entityType === 'Entry' ? 'entries' : 'assets';
   const href = `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}`;
 
-  return {
+  const result: SourceMapMetadata = {
     origin: 'contentful.com',
     href,
     contentful: {
@@ -54,6 +45,16 @@ export const createSourceMapMetadata = ({
       fieldType,
     },
   };
+
+  if (platform === 'vercel') {
+    delete result.contentful;
+  }
+
+  if (platform === 'contentful') {
+    delete result.href;
+  }
+
+  return result;
 };
 
 export const isBuiltinNamespace = (namespace: WidgetNamespace) =>

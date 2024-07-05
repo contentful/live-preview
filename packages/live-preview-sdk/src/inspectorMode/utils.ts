@@ -1,6 +1,8 @@
 import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
 import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
+import { debug } from '../helpers/debug.js';
+import { InspectorModeOptions } from './index.js';
 import {
   InspectorModeAssetAttributes,
   InspectorModeAttributes,
@@ -8,7 +10,6 @@ import {
   InspectorModeEntryAttributes,
   InspectorModeSharedAttributes,
 } from './types.js';
-import { InspectorModeOptions } from './index.js';
 
 export type AutoTaggedElement<T = Node> = {
   element: T;
@@ -223,6 +224,7 @@ export function getAllTaggedElements({
   for (const { node, text } of stegaNodes) {
     const sourceMap = decode(text);
     if (!sourceMap || !sourceMap.origin.includes('contentful.com')) {
+      debug.warn;
       continue;
     }
 
@@ -257,6 +259,17 @@ export function getAllTaggedElements({
   );
 
   for (const { element, sourceMap } of uniqElementsForTagging) {
+    if (!sourceMap.contentful) {
+      debug.warn(
+        'Element has missing information in their ContentSourceMap, please check if you have restricted the platform for the encoding. (Missing parameter: `contentful`)',
+        {
+          element,
+          sourceMap,
+        },
+      );
+      continue;
+    }
+
     const attributes: InspectorModeSharedAttributes = {
       fieldId: sourceMap.contentful.field,
       locale: sourceMap.contentful.locale,

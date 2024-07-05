@@ -1,6 +1,12 @@
 import { get, has } from 'json-pointer';
 
-import type { CPAEntry, CPAEntryCollection, EditorInterfaceSource, FieldType } from '../types.js';
+import type {
+  CPAEntry,
+  CPAEntryCollection,
+  EditorInterfaceSource,
+  FieldType,
+  CreateSourceMapParams,
+} from '../types.js';
 import {
   clone,
   createSourceMapMetadata,
@@ -13,7 +19,8 @@ const applyEncoding = (
   target: CPAEntry,
   fieldTypes: FieldType[],
   editorInterfaces: EditorInterfaceSource[],
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
+  targetOrigin?: CreateSourceMapParams['targetOrigin'],
+  platform?: CreateSourceMapParams['platform'],
 ) => {
   if (!target.fields) {
     return;
@@ -72,6 +79,7 @@ const applyEncoding = (
           editorInterface,
           fieldType,
           targetOrigin,
+          platform,
         });
 
         encodeField(fieldType, currentValue, hiddenStrings, target, formattedPointer, mappings);
@@ -88,6 +96,7 @@ const applyEncoding = (
             editorInterface,
             fieldType,
             targetOrigin,
+            platform,
           });
 
           encodeField(
@@ -109,7 +118,8 @@ const applyEncoding = (
 
 export const encodeCPAResponse = (
   CPAResponse: CPAEntry | CPAEntryCollection,
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
+  targetOrigin?: CreateSourceMapParams['targetOrigin'],
+  platform?: CreateSourceMapParams['platform'],
 ): CPAEntry | CPAEntryCollection => {
   const modifiedCPAResponse = clone(
     CPAResponse as unknown as Record<string, unknown>,
@@ -127,15 +137,17 @@ export const encodeCPAResponse = (
     } = collection.sys;
     const { items, includes } = collection;
 
-    items.forEach((target) => applyEncoding(target, fieldTypes, editorInterfaces, targetOrigin));
+    items.forEach((target) =>
+      applyEncoding(target, fieldTypes, editorInterfaces, targetOrigin, platform),
+    );
     if (includes && includes.Entry) {
       includes.Entry.forEach((entry) =>
-        applyEncoding(entry, fieldTypes, editorInterfaces, targetOrigin),
+        applyEncoding(entry, fieldTypes, editorInterfaces, targetOrigin, platform),
       );
     }
     if (includes && includes.Asset) {
       includes.Asset.forEach((asset) =>
-        applyEncoding(asset, fieldTypes, editorInterfaces, targetOrigin),
+        applyEncoding(asset, fieldTypes, editorInterfaces, targetOrigin, platform),
       );
     }
     // Single entity
@@ -151,6 +163,7 @@ export const encodeCPAResponse = (
       entry.sys.contentSourceMapsLookup.fieldTypes,
       entry.sys.contentSourceMapsLookup.editorInterfaces,
       targetOrigin,
+      platform,
     );
   }
 

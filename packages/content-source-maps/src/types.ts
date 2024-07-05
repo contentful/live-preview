@@ -6,22 +6,38 @@ import type {
   EntrySkeletonType,
 } from 'contentful';
 
+type ContentfulMetadata = {
+  space: string;
+  environment: string;
+  entity: string;
+  entityType: string;
+  field: string;
+  locale: string;
+  editorInterface: {
+    widgetNamespace: string;
+    widgetId: string;
+  };
+  fieldType: string;
+};
+
 export type SourceMapMetadata = {
   origin: string;
-  href: string;
-  contentful: {
-    space: string;
-    environment: string;
-    entity: string;
-    entityType: string;
-    field: string;
-    locale: string;
-    editorInterface: {
-      widgetNamespace: string;
-      widgetId: string;
-    };
-    fieldType: string;
-  };
+} & (
+  | { href: string; contentful?: ContentfulMetadata }
+  | { href?: string; contentful: ContentfulMetadata }
+);
+
+export type CreateSourceMapParams = {
+  entityId: string;
+  entityType: string;
+  space: string;
+  environment: string;
+  field: string;
+  locale: string;
+  editorInterface: EditorInterfaceSource;
+  fieldType: string;
+  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com';
+  platform?: 'contentful' | 'vercel';
 };
 
 export type Source = {
