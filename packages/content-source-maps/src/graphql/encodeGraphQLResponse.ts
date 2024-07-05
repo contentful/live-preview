@@ -1,6 +1,6 @@
 import { get, has } from 'json-pointer';
 
-import type { GraphQLResponse } from '../types.js';
+import type { CreateSourceMapParams, GraphQLResponse } from '../types.js';
 import {
   clone,
   createSourceMapMetadata,
@@ -11,7 +11,8 @@ import {
 
 export const encodeGraphQLResponse = (
   originalGraphqlResponse: GraphQLResponse,
-  targetOrigin?: 'https://app.contentful.com' | 'https://app.eu.contentful.com',
+  targetOrigin?: CreateSourceMapParams['targetOrigin'],
+  platform?: CreateSourceMapParams['platform'],
 ): GraphQLResponse => {
   if (
     !originalGraphqlResponse ||
@@ -80,6 +81,7 @@ export const encodeGraphQLResponse = (
           editorInterface,
           fieldType,
           targetOrigin,
+          platform,
         });
 
         encodeField(fieldType, currentValue, hiddenStrings, target, pointer, mappings);

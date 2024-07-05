@@ -880,6 +880,156 @@ describe('Content Source Maps with the GraphQL API', () => {
     });
   });
 
+  test('adds only the `href` parameter in the encoding if platform `vercel` is configured', () => {
+    const graphQLResponse: GraphQLResponse = {
+      data: {
+        post: {
+          title: 'Title of the post',
+          subtitle: 'Subtitle of the post',
+        },
+      },
+      extensions: {
+        contentSourceMaps: {
+          spaces: ['foo'],
+          environments: ['master'],
+          fieldTypes: ['Symbol'],
+          editorInterfaces: [
+            {
+              widgetId: 'singleLine',
+              widgetNamespace: 'builtin',
+            },
+          ],
+          fields: ['title', 'subtitle'],
+          locales: ['en-US'],
+          entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+          assets: [],
+          mappings: {
+            '/data/post/title': {
+              source: {
+                entry: 0,
+                field: 0,
+                locale: 0,
+                fieldType: 0,
+                editorInterface: 0,
+              },
+            },
+            '/data/post/subtitle': {
+              source: {
+                entry: 0,
+                field: 1,
+                locale: 0,
+                fieldType: 0,
+                editorInterface: 0,
+              },
+            },
+          },
+        },
+      },
+    };
+    const encodedGraphQLResponse = encodeGraphQLResponse(
+      graphQLResponse,
+      'https://app.contentful.com',
+      'vercel',
+    );
+    testEncodingDecoding(encodedGraphQLResponse.data.post, {
+      '/title': {
+        origin: 'contentful.com',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US',
+      },
+      '/subtitle': {
+        origin: 'contentful.com',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US',
+      },
+    });
+  });
+
+  test('adds only the `contentful` parameter in the encoding if platform `contentful` is configured', () => {
+    const graphQLResponse: GraphQLResponse = {
+      data: {
+        post: {
+          title: 'Title of the post',
+          subtitle: 'Subtitle of the post',
+        },
+      },
+      extensions: {
+        contentSourceMaps: {
+          spaces: ['foo'],
+          environments: ['master'],
+          fieldTypes: ['Symbol'],
+          editorInterfaces: [
+            {
+              widgetId: 'singleLine',
+              widgetNamespace: 'builtin',
+            },
+          ],
+          fields: ['title', 'subtitle'],
+          locales: ['en-US'],
+          entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+          assets: [],
+          mappings: {
+            '/data/post/title': {
+              source: {
+                entry: 0,
+                field: 0,
+                locale: 0,
+                fieldType: 0,
+                editorInterface: 0,
+              },
+            },
+            '/data/post/subtitle': {
+              source: {
+                entry: 0,
+                field: 1,
+                locale: 0,
+                fieldType: 0,
+                editorInterface: 0,
+              },
+            },
+          },
+        },
+      },
+    };
+    const encodedGraphQLResponse = encodeGraphQLResponse(
+      graphQLResponse,
+      'https://app.contentful.com',
+      'contentful',
+    );
+    testEncodingDecoding(encodedGraphQLResponse.data.post, {
+      '/title': {
+        origin: 'contentful.com',
+        contentful: {
+          space: 'foo',
+          environment: 'master',
+          field: 'title',
+          locale: 'en-US',
+          entity: 'a1b2c3',
+          entityType: 'Entry',
+          editorInterface: {
+            widgetId: 'singleLine',
+            widgetNamespace: 'builtin',
+          },
+          fieldType: 'Symbol',
+        },
+      },
+      '/subtitle': {
+        origin: 'contentful.com',
+        contentful: {
+          space: 'foo',
+          environment: 'master',
+          field: 'subtitle',
+          locale: 'en-US',
+          entity: 'a1b2c3',
+          entityType: 'Entry',
+          editorInterface: {
+            widgetId: 'singleLine',
+            widgetNamespace: 'builtin',
+          },
+          fieldType: 'Symbol',
+        },
+      },
+    });
+  });
+
   describe('editor interfaces', () => {
     UNSUPPORTED_WIDGETS.forEach((widget) => {
       test(`does not encode ${widget}`, () => {
