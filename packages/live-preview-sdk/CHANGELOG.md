@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.3...@contentful/live-preview@4.3.0) (2024-07-05)
+
+
+### Features
+
+* **content-source-maps:** allow specify a platform to reduce the payload [] ([#785](https://github.com/contentful/live-preview/issues/785)) ([6bf1922](https://github.com/contentful/live-preview/commit/6bf1922916101951560f9c750aa1030b1aaa3d00))
+
+
+
+
+
 ## [4.2.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.2...@contentful/live-preview@4.2.3) (2024-06-21)
 
 **Note:** Version bump only for package @contentful/live-preview
