@@ -197,6 +197,14 @@
     "@types/conventional-commits-parser" "^5.0.0"
     chalk "^5.3.0"
 
+"@contentful/content-source-maps@^0.6.0":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@contentful/content-source-maps/-/content-source-maps-0.6.1.tgz#a12828d287bdcd9f31c132f2a230bd1ac3005b77"
+  integrity sha512-IjsyhakG17OC5xtIa5agVRsnjjxiJf9HZjpDIV6Ix036Pd5YHJrbyyiF4KNEmLlIqe3hQ0kHGWEs9S/HfECmRQ==
+  dependencies:
+    "@vercel/stega" "^0.1.2"
+    json-pointer "^0.6.2"
+
 "@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.3.0":
   version "16.6.1"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.6.1.tgz#d7a0890b885ab681028aa7f1085e219d8b2c51be"
@@ -2337,9 +2345,9 @@ console-control-strings@^1.1.0:
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
 contentful-management@^11.0.1:
-  version "11.27.4"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.27.4.tgz#2de84f089a022ccb869142e5fa1e4c2c355f5fdd"
-  integrity sha512-YE9RvdH5IydBXdbOmig9Qz1MuLT0AsGbkF8q+koshxASv+I2PGjxzxVRsI6cxW2iAtItcSS2jkaczEs3Gioj9Q==
+  version "11.27.6"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.27.6.tgz#86830b722101298c27ad76bcb51e9aa38e4aaf37"
+  integrity sha512-ywaEwCqevFS2uVAbbkB5a3G4qmGdfgR8Y/2AY2dp5Z6mwz0XZDN1mrDTVjnBAi5DY+lCDJEZfVKq+I6pu8IIJg==
   dependencies:
     "@contentful/rich-text-types" "^16.3.0"
     "@types/json-patch" "0.0.30"
