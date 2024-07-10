@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.0...@contentful/live-preview@4.3.0-alpha.1) (2024-07-10)
+
+
+### Features
+
+* add function to resolve node coordinates [] ([88a704d](https://github.com/contentful/live-preview/commit/88a704d545e54be74e84981a95059a72aef7c82e))
+
+
+
+
+
 # [4.3.0-alpha.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.3...@contentful/live-preview@4.3.0-alpha.0) (2024-07-10)
 
 
