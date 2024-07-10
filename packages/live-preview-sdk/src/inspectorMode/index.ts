@@ -1,3 +1,4 @@
+import axe from 'axe-core';
 import isEqual from 'lodash.isequal';
 
 import { debounce, sendMessageToEditor } from '../helpers/index.js';
@@ -45,6 +46,9 @@ export class InspectorMode {
   private cleanupCB: VoidFunction[] = [];
 
   constructor(private options: InspectorModeOptions) {
+    axe.configure({
+      allowedOrigins: ['<unsafe_all_origins>'],
+    });
     this.intersectionObserver = new IntersectionObserver(
       (entries) => {
         const taggedElements: TaggedElement[] = this.taggedElements;

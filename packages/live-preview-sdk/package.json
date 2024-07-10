@@ -47,6 +47,7 @@
   "dependencies": {
     "@contentful/content-source-maps": "^0.6.1",
     "@contentful/rich-text-types": "^16.2.0",
+    "axe-core": "4.9.1",
     "flatted": "^3.2.9",
     "graphql-tag": "^2.12.6",
     "json-pointer": "^0.6.2",
