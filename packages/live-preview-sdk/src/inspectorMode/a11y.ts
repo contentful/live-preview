@@ -2,10 +2,12 @@ import axe from 'axe-core';
 
 import { debounce, sendMessageToEditor } from '../helpers/index.js';
 import { type MessageFromEditor } from '../messages.js';
-import { InspectorModeEventMethods } from './types.js';
+import { InspectorModeEventMethods, type InspectorModeAttributes } from './types.js';
+import { getAllTaggedElements } from './utils.js';
 
 export type A11yOptions = {
   targetOrigin: string[];
+  locale: string;
 };
 
 type A11yElement = {
@@ -14,6 +16,7 @@ type A11yElement = {
   selector: string[];
   isVisible: boolean;
   isHovered: boolean;
+  attributes?: InspectorModeAttributes | null;
 };
 
 // TODO: some stuff is the same on inspectorMode, we could have a base class to share the observers, ..
@@ -104,8 +107,12 @@ export class A11yMode {
     }
   };
 
-  private updateElements() {
+  private updateElements = () => {
     const resolvedNodes: A11yElement[] = [];
+    const { taggedElements } = getAllTaggedElements({
+      options: { locale: this.options.locale },
+    });
+
     for (const selector of this.originalElements) {
       const resolved = document.querySelector(selector.join(' '));
       if (resolved) {
@@ -118,16 +125,19 @@ export class A11yMode {
             checkVisibilityCSS: true,
           }),
           isHovered: false,
+          attributes: taggedElements.find((te) => resolved === te.element)?.attributes,
         });
       }
     }
 
     this.elements = resolvedNodes;
 
+    console.log('>> resolved elements', this.elements);
+
     this.observersCB.forEach((cb) => cb());
     this.observersCB = [];
     this.elements.forEach(({ element }) => this.observe(element));
-  }
+  };
 
   /** Listen for changes on the element via intersection and mutation observer */
   private observe = (element: Element) => {
