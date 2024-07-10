@@ -104,6 +104,7 @@ export class A11yMode {
 
     if ((data.method as any) === 'A11Y_RESOLVE_NODES') {
       this.originalElements = (data as any).nodes;
+      this.updateElements();
     }
   };
 
@@ -244,6 +245,7 @@ export class A11yMode {
           coordinates: element.coordinates,
           isVisible: element.isVisible,
           isHovered: this.hoveredElement === element.element,
+          selector: element.selector,
         })),
       } as any,
       this.options.targetOrigin,
