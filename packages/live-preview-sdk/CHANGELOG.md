@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.2...@contentful/live-preview@4.3.0-alpha.3) (2024-07-10)
+
+
+### Bug Fixes
+
+* enablement for a11ymode ([3d454ed](https://github.com/contentful/live-preview/commit/3d454ed346fbd425867eba994b34e0cd9925d67c))
+
+
+
+
+
 # [4.3.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.1...@contentful/live-preview@4.3.0-alpha.2) (2024-07-10)
 
 
