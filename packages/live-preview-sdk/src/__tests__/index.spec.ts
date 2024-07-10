@@ -3,7 +3,7 @@ import { Mock, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { isInsideIframe, sendMessageToEditor } from '../helpers/index.js';
 import { ContentfulLivePreview, LIVE_PREVIEW_EDITOR_SOURCE } from '../index.js';
-import { InspectorMode } from '../inspectorMode/index.js';
+import { A11yMode, InspectorMode } from '../inspectorMode/index.js';
 import { InspectorModeDataAttributes } from '../inspectorMode/types.js';
 import { LiveUpdates } from '../liveUpdates.js';
 import { SaveEvent } from '../saveEvent.js';
@@ -25,6 +25,7 @@ vi.stubGlobal('MutationObserver', ObserverMock);
 
 describe('ContentfulLivePreview', () => {
   const receiveMessageInspectorMode = vi.fn();
+  const receiveMessageA11yMode = vi.fn();
   const receiveMessageLiveUpdates = vi.fn();
   const receiveMessageSaveEvent = vi.fn();
   const subscribeToLiveUpdates = vi.fn();
@@ -33,6 +34,9 @@ describe('ContentfulLivePreview', () => {
   (InspectorMode as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageInspectorMode,
     getTaggedElements: vi.fn(() => []),
+  }));
+  (A11yMode as Mock).mockImplementation(() => ({
+    receiveMessage: receiveMessageA11yMode,
   }));
   (LiveUpdates as Mock).mockImplementation(() => ({
     receiveMessage: receiveMessageLiveUpdates,
