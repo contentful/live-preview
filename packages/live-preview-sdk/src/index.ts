@@ -160,7 +160,7 @@ export class ContentfulLivePreview {
         });
       }
 
-      if (this.a11yMode) {
+      if (this.a11yModeEnabled) {
         this.a11yMode = new A11yMode({
           targetOrigin: this.targetOrigin,
         });

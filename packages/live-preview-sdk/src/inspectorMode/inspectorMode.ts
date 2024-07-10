@@ -110,30 +110,6 @@ export class InspectorMode {
         this.cleanup();
       }
     }
-
-    if ((data.method as any) === 'A11Y_RESOLVE_NODES') {
-      const resolvedNodes = [];
-      for (const selector of (data as any).nodes) {
-        const resolved = document.querySelector(selector.join(' '));
-        if (resolved) {
-          resolvedNodes.push({
-            selector,
-            coordinates: resolved.getBoundingClientRect(),
-            isVisible: resolved.checkVisibility({
-              checkOpacity: true,
-              checkVisibilityCSS: true,
-            }),
-          });
-        }
-      }
-      sendMessageToEditor(
-        'A11Y_RESOLVED_NODES' as any,
-        {
-          nodes: resolvedNodes,
-        } as any,
-        this.options.targetOrigin,
-      );
-    }
   };
 
   /** Listen for changes on the element via intersection and mutation observer */
