@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0-alpha.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.3...@contentful/live-preview@4.3.0-alpha.0) (2024-07-10)
+
+
+### Features
+
+* a11y scan [] ([471a7ca](https://github.com/contentful/live-preview/commit/471a7caa99090770b7c01c605c7e035b2370a1ef))
+
+
+
+
+
 ## [4.2.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.2...@contentful/live-preview@4.2.3) (2024-06-21)
 
 **Note:** Version bump only for package @contentful/live-preview
