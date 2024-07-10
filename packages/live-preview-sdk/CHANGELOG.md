@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0-alpha.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.3...@contentful/live-preview@4.3.0-alpha.4) (2024-07-10)
+
+
+### Bug Fixes
+
+* return selectors [] ([9643a2c](https://github.com/contentful/live-preview/commit/9643a2c8cd377cf3890190adea8ec098c986aa70))
+
+
+
+
+
 # [4.3.0-alpha.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.2...@contentful/live-preview@4.3.0-alpha.3) (2024-07-10)
 
 
