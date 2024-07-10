@@ -1,6 +1,7 @@
 import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
 import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
+import type { InspectorModeOptions } from './inspectorMode.js';
 import {
   InspectorModeAssetAttributes,
   InspectorModeAttributes,
@@ -8,7 +9,6 @@ import {
   InspectorModeEntryAttributes,
   InspectorModeSharedAttributes,
 } from './types.js';
-import { InspectorModeOptions } from './index.js';
 
 export type AutoTaggedElement<T = Node> = {
   element: T;
