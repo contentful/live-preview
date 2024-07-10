@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0-alpha.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.1...@contentful/live-preview@4.3.0-alpha.2) (2024-07-10)
+
+
+### Bug Fixes
+
+* react to scroll and resizing and update positions [] ([d6f72ab](https://github.com/contentful/live-preview/commit/d6f72abc0dfb8881484650dbd1fc69f84753f7ee))
+
+
+
+
+
 # [4.3.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.0...@contentful/live-preview@4.3.0-alpha.1) (2024-07-10)
 
 
