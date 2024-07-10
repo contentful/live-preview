@@ -1,5 +1,5 @@
 import { debug } from './helpers/index.js';
-import { InspectorModeOptions } from './inspectorMode/index.js';
+import type { InspectorModeOptions } from './inspectorMode/inspectorMode.js';
 import { getAllTaggedEntries } from './inspectorMode/utils.js';
 import { EntrySavedMessage, LivePreviewPostMessageMethods, MessageFromEditor } from './messages.js';
 import { SubscribeCallback } from './types.js';
