@@ -14,7 +14,7 @@ import {
   setDebugMode,
 } from './helpers/index.js';
 import { isValidMessage } from './helpers/validateMessage.js';
-import { InspectorMode } from './inspectorMode/index.js';
+import { InspectorMode, A11yMode } from './inspectorMode/index.js';
 import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types.js';
 import { getAllTaggedElements, getAllTaggedEntries } from './inspectorMode/utils.js';
 import { LiveUpdates } from './liveUpdates.js';
@@ -57,6 +57,7 @@ export interface ContentfulLivePreviewInitConfig {
   debugMode?: boolean;
   enableInspectorMode?: boolean;
   enableLiveUpdates?: boolean;
+  a11yModeEnabled?: boolean;
   /**
    * Contentful host in which the website should be shown
    * Can be `https://app.contentful.com` or `https://app.eu.contentful.com`
@@ -78,10 +79,12 @@ export interface ContentfulSubscribeConfig {
 export class ContentfulLivePreview {
   static initialized = false;
   static inspectorMode: InspectorMode | null = null;
+  static a11yMode: A11yMode | null = null;
   static liveUpdates: LiveUpdates | null = null;
   static saveEvent: SaveEvent | null = null;
   static inspectorModeEnabled = true;
   static liveUpdatesEnabled = true;
+  static a11yModeEnabled = true;
   static locale: string;
   static space?: string;
   static environment?: string;
@@ -104,6 +107,7 @@ export class ContentfulLivePreview {
       environment,
       space,
       targetOrigin,
+      a11yModeEnabled,
     } = config;
 
     // Check if running in a browser environment
@@ -122,6 +126,11 @@ export class ContentfulLivePreview {
       // toggle inspector mode based on flag
       if (typeof enableInspectorMode === 'boolean') {
         this.inspectorModeEnabled = enableInspectorMode;
+      }
+
+      // toggle a11y mode based on flag
+      if (typeof a11yModeEnabled === 'boolean') {
+        this.a11yModeEnabled = a11yModeEnabled;
       }
 
       // toggle live updates based on flag
@@ -148,6 +157,12 @@ export class ContentfulLivePreview {
           environment,
           targetOrigin: this.targetOrigin,
           ignoreManuallyTaggedElements: config.experimental?.ignoreManuallyTaggedElements,
+        });
+      }
+
+      if (this.a11yMode) {
+        this.a11yMode = new A11yMode({
+          targetOrigin: this.targetOrigin,
         });
       }
 
@@ -179,6 +194,10 @@ export class ContentfulLivePreview {
 
         if (this.inspectorModeEnabled) {
           this.inspectorMode?.receiveMessage(event.data);
+        }
+
+        if (this.a11yModeEnabled) {
+          this.a11yMode?.receiveMessage(event.data);
         }
 
         if (this.liveUpdatesEnabled) {
