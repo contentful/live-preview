@@ -109,31 +109,38 @@ export class A11yMode {
   };
 
   private updateElements = () => {
-    const resolvedNodes: A11yElement[] = [];
+    const resolvedNodes = new Map<string, A11yElement>();
     const { taggedElements } = getAllTaggedElements({
       options: { locale: this.options.locale },
     });
 
-    for (const selector of this.originalElements) {
-      const resolved = document.querySelector(selector.join(' '));
-      if (resolved) {
-        resolvedNodes.push({
-          element: resolved,
-          selector,
-          coordinates: resolved.getBoundingClientRect(),
-          isVisible: resolved.checkVisibility({
-            checkOpacity: true,
-            checkVisibilityCSS: true,
-          }),
-          isHovered: false,
-          attributes: taggedElements.find((te) => resolved === te.element)?.attributes,
-        });
+    for (const selectors of this.originalElements) {
+      for (const selector of selectors) {
+        const selectorWithoutIframe = (selector as unknown as string[]).slice(1).join(' ');
+        if (selectorWithoutIframe) {
+          if (resolvedNodes.has(selectorWithoutIframe)) {
+            continue;
+          }
+
+          const resolved = document.querySelector(selectorWithoutIframe);
+          if (resolved) {
+            resolvedNodes.set(selectorWithoutIframe, {
+              element: resolved,
+              selector: selectors,
+              coordinates: resolved.getBoundingClientRect(),
+              isVisible: resolved.checkVisibility({
+                checkOpacity: true,
+                checkVisibilityCSS: true,
+              }),
+              isHovered: false,
+              attributes: taggedElements.find((te) => resolved === te.element)?.attributes,
+            });
+          }
+        }
       }
     }
 
-    this.elements = resolvedNodes;
-
-    console.log('>> resolved elements', this.elements);
+    this.elements = [...resolvedNodes.values()];
 
     this.observersCB.forEach((cb) => cb());
     this.observersCB = [];
