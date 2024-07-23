@@ -24,6 +24,7 @@ const UNSUPPORTED_WIDGETS = [
   'assetLinkEditor',
   'assetLinksEditor',
   'assetGalleryEditor',
+  'markdown',
 ];
 
 describe('Content Source Maps with the GraphQL API', () => {
@@ -109,6 +110,79 @@ describe('Content Source Maps with the GraphQL API', () => {
           fieldType: 'Symbol',
         },
       },
+    });
+  });
+
+  test('works for Text fields, except markdown', () => {
+    const graphQLResponse: GraphQLResponse = {
+      data: {
+        post: {
+          longText: 'Title of the post',
+          markdown: 'markdown content',
+        },
+      },
+      extensions: {
+        contentSourceMaps: {
+          spaces: ['foo'],
+          environments: ['master'],
+          fieldTypes: ['Text'],
+          editorInterfaces: [
+            {
+              widgetId: 'multipleLine',
+              widgetNamespace: 'builtin',
+            },
+            {
+              widgetId: 'markdown',
+              widgetNamespace: 'builtin',
+            },
+          ],
+          fields: ['longText', 'markdown'],
+          locales: ['en-US'],
+          entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+          assets: [],
+          mappings: {
+            '/data/post/longText': {
+              source: {
+                entry: 0,
+                field: 0,
+                locale: 0,
+                fieldType: 0,
+                editorInterface: 0,
+              },
+            },
+            '/data/post/markdown': {
+              source: {
+                entry: 0,
+                field: 1,
+                locale: 0,
+                fieldType: 0,
+                editorInterface: 1,
+              },
+            },
+          },
+        },
+      },
+    };
+    const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+    testEncodingDecoding(encodedGraphQLResponse.data.post, {
+      '/longText': {
+        origin: 'contentful.com',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=longText&focusedLocale=en-US',
+        contentful: {
+          space: 'foo',
+          environment: 'master',
+          field: 'longText',
+          locale: 'en-US',
+          entity: 'a1b2c3',
+          entityType: 'Entry',
+          editorInterface: {
+            widgetId: 'multipleLine',
+            widgetNamespace: 'builtin',
+          },
+          fieldType: 'Text',
+        },
+      },
+      '/markdown': undefined,
     });
   });
 

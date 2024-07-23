@@ -86,7 +86,6 @@ export const SUPPORTED_WIDGETS: WidgetId[] = [
   'checkbox',
   'richTextEditor',
   'multipleLine',
-  'markdown',
 ];
 
 export function encodeField(
@@ -104,6 +103,12 @@ export function encodeField(
   // Process based on fieldType
   switch (fieldType) {
     case 'Symbol': {
+      const encodedValue = combine(value, hiddenStrings);
+      set(target, pointer, encodedValue);
+      break;
+    }
+
+    case 'Text': {
       const encodedValue = combine(value, hiddenStrings);
       set(target, pointer, encodedValue);
       break;
