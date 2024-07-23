@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.7.0...@contentful/content-source-maps@0.8.0) (2024-07-23)
+
+
+### Features
+
+* support long text for csm ([#807](https://github.com/contentful/live-preview/issues/807)) ([bae2dce](https://github.com/contentful/live-preview/commit/bae2dcead24eb492ffe39a609dccf3a0cc5731de))
+
+
+
+
+
 # [0.7.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.6.1...@contentful/content-source-maps@0.7.0) (2024-07-05)
 
 
