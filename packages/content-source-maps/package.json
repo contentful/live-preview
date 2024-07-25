@@ -11,6 +11,7 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
+      "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts",
       "require": "./dist/cjs/index.js",
       "default": "./dist/cjs/index.js"
@@ -36,7 +37,7 @@
     "prebuild": "rm -rf dist",
     "build": "yarn build:types && yarn build:cjs && yarn build:esm",
     "build:types": "tsc --outDir dist/types --emitDeclarationOnly",
-    "build:cjs": "swc src --config-file ../../.swcrc -d dist/cjs -C module.type=commonjs --strip-leading-paths",
+    "build:cjs": "swc src --config-file ../../.swcrc -d dist/cjs -C module.type=commonjs --strip-leading-paths --out-file-extension cjs",
     "build:esm": "swc src --config-file ../../.swcrc -d dist/esm --strip-leading-paths",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
