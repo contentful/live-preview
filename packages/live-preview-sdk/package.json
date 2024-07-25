@@ -5,26 +5,21 @@
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
   "source": "./src/index.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
-  "type": "module",
-  "files": [
-    "dist",
-    "react"
-  ],
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/cjs/index.js"
     },
-    "./react": {
-      "import": "./dist/react.js",
-      "require": "./dist/react.cjs",
-      "types": "./dist/react.d.ts"
-    }
+    "./package.json": "./package.json"
   },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/live-preview.git"
@@ -33,8 +28,15 @@
     "url": "https://github.com/contentful/live-preview/issues"
   },
   "scripts": {
-    "start": "vite build --watch",
-    "build": "vite build",
+    "start": "yarn concurrently \"yarn:watch:*\"",
+    "watch:cjs": "yarn build:cjs -w",
+    "watch:esm": "yarn build:esm -w",
+    "watch:types": "yarn build:types --watch",
+    "prebuild": "rm -rf dist",
+    "build": "yarn build:types && yarn build:cjs && yarn build:esm",
+    "build:types": "tsc --outDir dist/types --emitDeclarationOnly",
+    "build:cjs": "swc src --config-file ../../.swcrc -d dist/cjs -C module.type=commonjs --strip-leading-paths",
+    "build:esm": "swc src --config-file ../../.swcrc -d dist/esm --strip-leading-paths",
     "benchmark": "vitest bench",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
@@ -59,7 +61,6 @@
     "@types/node": "^20.1.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react-swc": "3.7.0",
     "contentful": "^10.3.4",
     "contentful-management": "^11.0.1",
     "graphql": "^16.6.0",
