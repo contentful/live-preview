@@ -5,16 +5,16 @@
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
   "source": "./src/index.ts",
-  "main": "dist/cjs/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "type": "module",
-  "module": "dist/esm/index.js",
-  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "types": "./dist/types/index.d.ts",
-      "require": "./dist/cjs/index.js",
-      "default": "./dist/cjs/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -35,9 +35,9 @@
     "watch:types": "yarn build:types --watch",
     "prebuild": "rm -rf dist",
     "build": "yarn build:types && yarn build:cjs && yarn build:esm",
-    "build:types": "tsc --outDir dist/types --emitDeclarationOnly",
-    "build:cjs": "swc src --config-file ../../.swcrc -d dist/cjs -C module.type=commonjs --strip-leading-paths  --out-file-extension cjs",
-    "build:esm": "swc src --config-file ../../.swcrc -d dist/esm --strip-leading-paths",
+    "build:types": "tsc --outDir dist --emitDeclarationOnly",
+    "build:cjs": "swc src --config-file ../../.swcrc -d dist -C module.type=commonjs --strip-leading-paths  --out-file-extension cjs",
+    "build:esm": "swc src --config-file ../../.swcrc -d dist --strip-leading-paths",
     "benchmark": "vitest bench",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
