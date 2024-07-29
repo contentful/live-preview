@@ -24,7 +24,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "react"
   ],
   "repository": {
     "type": "git",
