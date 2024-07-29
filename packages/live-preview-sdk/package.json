@@ -16,6 +16,11 @@
       "default": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
+    "./react": {
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs",
+      "types": "./dist/react.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "files": [
