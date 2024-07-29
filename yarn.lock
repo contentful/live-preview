@@ -213,10 +213,10 @@
     "@vercel/stega" "^0.1.2"
     json-pointer "^0.6.2"
 
-"@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.3.0":
-  version "16.8.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.8.1.tgz#4c3d17e235dfa37c5fb324470f119df29f621b96"
-  integrity sha512-HvH9GyL9ER+P+DR3SKAyqMXcqzUfs4BT9VGh0k8fZx2+e29fQQEL2SBGtvkY5pXNWc5eEC3ytzwAaR0CCTVTOw==
+"@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.6.1":
+  version "16.8.2"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.8.2.tgz#0ee44036a90fe382ce857c3270ed6a0d9e00de57"
+  integrity sha512-telNNx+VLVS78KcgN+HO2zj7HCGTokV3HRzjsD6oqXQEy863zB4nkDFc0cxCO5uDouGJfs0e7O+wX7HZQ30yaQ==
 
 "@esbuild/aix-ppc64@0.21.5":
   version "0.21.5"
@@ -1264,11 +1264,6 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.5.tgz#a6ce3e556e00fd9895dd872dd172ad0d4bd687f4"
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
-
-"@types/json-patch@0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@types/json-patch/-/json-patch-0.0.30.tgz#7c562173216c50529e70126ceb8e7a533f865e9b"
-  integrity sha512-MhCUjojzDhVLnZnxwPwa+rETFRDQ0ffjxYdrqOP6TBO2O0/Z64PV5tNeYApo4bc4y4frbWOrRwv/eEkXlI13Rw==
 
 "@types/json-pointer@^1.0.34":
   version "1.0.34"
@@ -2384,17 +2379,14 @@ console-control-strings@^1.1.0:
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
 contentful-management@^11.0.1:
-  version "11.29.1"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.29.1.tgz#958e79a4da650b44f7a5904dfa931aa42ce8862d"
-  integrity sha512-0o5IiKf0xUrz6XVl4cLJAxtBFNKWgpReqr+aCTjvvwIac82gkJT0j8JQKblOUHvfiUkr2fxRiJKIEf6I7jsSfg==
+  version "11.30.2"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.30.2.tgz#a0fdcb0732fe5213cafd36373c84930939bf4ea7"
+  integrity sha512-x/pWyxH9LfenRVN7H9vnx/JDShWz/L960KW9WrkyNZzisEyAZJYwp/TVHzqvNqxL8rZZgJLUA6lFm/2Z/KGKAw==
   dependencies:
-    "@contentful/rich-text-types" "^16.3.0"
-    "@types/json-patch" "0.0.30"
+    "@contentful/rich-text-types" "^16.6.1"
     axios "^1.7.2"
     contentful-sdk-core "^8.3.1"
     fast-copy "^3.0.0"
-    lodash.isplainobject "^4.0.6"
-    type-fest "^4.0.0"
 
 contentful-resolve-response@^1.8.1:
   version "1.8.1"
