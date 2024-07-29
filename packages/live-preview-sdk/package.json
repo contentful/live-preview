@@ -1,6 +1,6 @@
 {
   "name": "@contentful/live-preview",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "author": "Contentful GmbH",
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
@@ -64,7 +64,7 @@
     "@testing-library/react": "15.0.7",
     "@types/json-pointer": "^1.0.34",
     "@types/lodash.isequal": "^4.5.6",
-    "@types/node": "^20.1.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "contentful": "^10.3.4",
