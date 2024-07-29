@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
-    "@contentful/content-source-maps": "^0.6.1",
+    "@contentful/content-source-maps": "^0.8.0",
     "@contentful/rich-text-types": "^16.2.0",
     "axe-core": "4.9.1",
     "flatted": "^3.2.9",
@@ -57,7 +57,7 @@
     "@testing-library/react": "15.0.7",
     "@types/json-pointer": "^1.0.34",
     "@types/lodash.isequal": "^4.5.6",
-    "@types/node": "^20.1.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "3.7.0",

@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 # [4.3.0-alpha.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.4...@contentful/live-preview@4.3.0-alpha.5) (2024-07-11)
+## [4.3.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.1...@contentful/live-preview@4.3.2) (2024-07-29)
 
 **Note:** Version bump only for package @contentful/live-preview
 
@@ -17,6 +18,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Bug Fixes
 
 * return selectors [] ([9643a2c](https://github.com/contentful/live-preview/commit/9643a2c8cd377cf3890190adea8ec098c986aa70))
+## [4.3.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0...@contentful/live-preview@4.3.1) (2024-07-23)
+
+**Note:** Version bump only for package @contentful/live-preview
 
 
 
@@ -45,6 +49,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [4.3.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.0-alpha.0...@contentful/live-preview@4.3.0-alpha.1) (2024-07-10)
+# [4.3.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.2.3...@contentful/live-preview@4.3.0) (2024-07-05)
 
 
 ### Features
@@ -61,6 +66,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * a11y scan [] ([471a7ca](https://github.com/contentful/live-preview/commit/471a7caa99090770b7c01c605c7e035b2370a1ef))
+* **content-source-maps:** allow specify a platform to reduce the payload [] ([#785](https://github.com/contentful/live-preview/issues/785)) ([6bf1922](https://github.com/contentful/live-preview/commit/6bf1922916101951560f9c750aa1030b1aaa3d00))
 
 
 
