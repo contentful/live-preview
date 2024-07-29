@@ -1,6 +1,6 @@
 {
   "name": "@contentful/live-preview",
-  "version": "4.3.0-alpha.5",
+  "version": "4.3.0-alpha.6",
   "author": "Contentful GmbH",
   "license": "MIT",
   "description": "Preview SDK for both the field tagging connection + live content updates",
@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/contentful/live-preview#readme",
   "dependencies": {
-    "@contentful/content-source-maps": "^0.8.0",
+    "@contentful/content-source-maps": "0.8.1-alpha.0",
     "@contentful/rich-text-types": "^16.2.0",
     "axe-core": "4.9.1",
     "flatted": "^3.2.9",
