@@ -1,4 +1,4 @@
-import { version } from '../../package.json';
+import pkg from '../../package.json';
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants.js';
 import type { EditorMessage, MessageFromSDK } from '../messages.js';
 import { PostMessageMethods } from '../messages.js';
@@ -18,7 +18,7 @@ export function sendMessageToEditor(
     method,
     source: LIVE_PREVIEW_SDK_SOURCE,
     location: window.location.href,
-    version,
+    version: pkg.version,
   } as MessageFromSDK;
 
   debug.log(`Send message`, message);
