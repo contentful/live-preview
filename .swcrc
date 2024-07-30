@@ -1,0 +1,20 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "exclude": [".*\\.spec|test\\.(j|t)s$", "fixtures", "__tests__"],
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true
+    },
+    "target": "es2017",
+    "loose": false,
+    "minify": {
+      "compress": false,
+      "mangle": false
+    }
+  },
+  "module": {
+    "type": "es6"
+  },
+  "minify": false
+}
