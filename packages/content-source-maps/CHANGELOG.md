@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.8.0...@contentful/content-source-maps@0.9.0) (2024-07-30)
+
+
+### Features
+
+* setup swc [TOL-1167] ([#808](https://github.com/contentful/live-preview/issues/808)) ([4486a7b](https://github.com/contentful/live-preview/commit/4486a7b648ddd2dda3dc7a989f7b08d991a56a7e))
+
+
+
+
+
 # [0.8.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.7.0...@contentful/content-source-maps@0.8.0) (2024-07-23)
 
 

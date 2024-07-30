@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.2...@contentful/live-preview@4.4.0) (2024-07-30)
+
+
+### Features
+
+* setup swc [TOL-1167] ([#808](https://github.com/contentful/live-preview/issues/808)) ([4486a7b](https://github.com/contentful/live-preview/commit/4486a7b648ddd2dda3dc7a989f7b08d991a56a7e))
+
+
+
+
+
 ## [4.3.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.3.1...@contentful/live-preview@4.3.2) (2024-07-29)
 
 **Note:** Version bump only for package @contentful/live-preview
