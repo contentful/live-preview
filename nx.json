@@ -9,7 +9,6 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build", "prebuild"],
       "outputs": ["{projectRoot}/dist"]
     }
   }

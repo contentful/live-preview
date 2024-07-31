@@ -9,24 +9,22 @@
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "type": "module",
+  "files": [
+    "dist",
+    "react"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
-      "default": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./react": {
       "import": "./dist/react.js",
       "require": "./dist/react.cjs",
       "types": "./dist/react.d.ts"
-    },
-    "./package.json": "./package.json"
+    }
   },
-  "files": [
-    "dist",
-    "react"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/live-preview.git"
@@ -35,15 +33,8 @@
     "url": "https://github.com/contentful/live-preview/issues"
   },
   "scripts": {
-    "start": "yarn concurrently \"yarn:watch:*\"",
-    "watch:cjs": "yarn build:cjs -w",
-    "watch:esm": "yarn build:esm -w",
-    "watch:types": "yarn build:types --watch",
-    "prebuild": "rm -rf dist",
-    "build": "yarn build:types && yarn build:cjs && yarn build:esm",
-    "build:types": "tsc --outDir dist --emitDeclarationOnly",
-    "build:cjs": "swc src --config-file ../../.swcrc -d dist -C module.type=commonjs --strip-leading-paths  --out-file-extension cjs",
-    "build:esm": "swc src --config-file ../../.swcrc -d dist --strip-leading-paths",
+    "start": "vite build --watch",
+    "build": "vite build",
     "benchmark": "vitest bench",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc --noEmit",
@@ -68,13 +59,14 @@
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "contentful": "^10.3.4",
-    "contentful-management": "^11.0.1",
+    "@vitejs/plugin-react-swc": "3.7.0",
+    "contentful": "^10.12.15",
+    "contentful-management": "^11.30.2",
     "graphql": "^16.6.0",
     "jsdom": "^24.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "type-fest": "^4.0.0"
+    "type-fest": "^4.23.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
