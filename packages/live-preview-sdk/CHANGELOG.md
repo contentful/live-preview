@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.4.1...@contentful/live-preview@4.4.2) (2024-07-31)
+
+
+### Bug Fixes
+
+* **import/export:** import version correctly on the remaining place [] ([#823](https://github.com/contentful/live-preview/issues/823)) ([cab995d](https://github.com/contentful/live-preview/commit/cab995d682d66e5d84a287f713f38a0518210306))
+
+
+
+
+
 ## [4.4.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.4.0...@contentful/live-preview@4.4.1) (2024-07-30)
 
 
