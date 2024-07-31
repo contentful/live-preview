@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.4.2...@contentful/live-preview@4.5.0) (2024-07-31)
+
+
+### Features
+
+* revert swc work  ([#825](https://github.com/contentful/live-preview/issues/825)) ([d29c2c6](https://github.com/contentful/live-preview/commit/d29c2c60604c94be14609ebf9ba07a1ec2fd5cae)), closes [#808](https://github.com/contentful/live-preview/issues/808)
+
+
+
+
+
 ## [4.4.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.4.1...@contentful/live-preview@4.4.2) (2024-07-31)
 
 
