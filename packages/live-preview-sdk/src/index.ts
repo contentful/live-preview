@@ -1,11 +1,15 @@
 import {
-  encodeGraphQLResponse,
   encodeCPAResponse,
+  encodeGraphQLResponse,
   splitEncoding,
 } from '@contentful/content-source-maps';
 import { type DocumentNode } from 'graphql';
 
-import pkg from '../package.json';
+// this is required to safely import this in esm
+const pkg = await import('../package.json', {
+  assert: { type: 'json' },
+});
+
 import {
   debug,
   isInsideIframe,
@@ -39,7 +43,7 @@ import type {
 
 export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
-export const VERSION = pkg.version;
+export const VERSION = pkg.default.version;
 
 const DEFAULT_ALLOWED_ORIGINS = [
   'https://app.contentful.com',
@@ -394,4 +398,4 @@ export class ContentfulLivePreview {
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
 
 export * from './messages.js';
-export { encodeGraphQLResponse, encodeCPAResponse, splitEncoding };
+export { encodeCPAResponse, encodeGraphQLResponse, splitEncoding };

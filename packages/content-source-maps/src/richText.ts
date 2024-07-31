@@ -1,8 +1,9 @@
-import { get, set } from 'json-pointer';
+import jsonPointer from 'json-pointer';
 
 import { combine } from './encode.js';
 import type { CPAMappings, GraphQLMappings, SourceMapMetadata } from './types.js';
 
+const { get, set } = jsonPointer;
 export const encodeRichTextValue = ({
   pointer,
   mappings,

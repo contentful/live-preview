@@ -1,4 +1,7 @@
-import pkg from '../../package.json';
+// this is required to safely import this in esm
+const pkg = await import('../../package.json', {
+  assert: { type: 'json' },
+});
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants.js';
 import type { EditorMessage, MessageFromSDK } from '../messages.js';
 import { PostMessageMethods } from '../messages.js';
@@ -18,7 +21,7 @@ export function sendMessageToEditor(
     method,
     source: LIVE_PREVIEW_SDK_SOURCE,
     location: window.location.href,
-    version: pkg.version,
+    version: pkg.default.version,
   } as MessageFromSDK;
 
   debug.log(`Send message`, message);
