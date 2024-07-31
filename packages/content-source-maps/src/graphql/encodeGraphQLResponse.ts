@@ -1,4 +1,4 @@
-import { get, has } from 'json-pointer';
+import jsonPointer from 'json-pointer';
 
 import type { CreateSourceMapParams, GraphQLResponse } from '../types.js';
 import {
@@ -9,6 +9,7 @@ import {
   isSupportedWidget,
 } from '../utils.js';
 
+const { get, has } = jsonPointer;
 export const encodeGraphQLResponse = (
   originalGraphqlResponse: GraphQLResponse,
   targetOrigin?: CreateSourceMapParams['targetOrigin'],

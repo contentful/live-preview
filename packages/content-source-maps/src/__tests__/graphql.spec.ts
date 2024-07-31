@@ -1,4 +1,4 @@
-import { get } from 'json-pointer';
+import jsonPointer from 'json-pointer';
 import { describe, expect, test } from 'vitest';
 
 import { decode } from '../encode.js';
@@ -6,6 +6,7 @@ import { encodeGraphQLResponse } from '../graphql/encodeGraphQLResponse.js';
 import { GraphQLResponse } from '../types.js';
 import { testEncodingDecoding } from './utils.js';
 
+const { get } = jsonPointer;
 const UNSUPPORTED_WIDGETS = [
   'boolean',
   'objectEditor',

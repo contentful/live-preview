@@ -1,5 +1,5 @@
 import type { Asset, EntrySkeletonType } from 'contentful';
-import { get } from 'json-pointer';
+import jsonPointer from 'json-pointer';
 import { expect } from 'vitest';
 
 import { decode } from '../encode.js';
@@ -21,6 +21,7 @@ type EncodedResponse =
     }
   | Array<{ [key: string]: string }>;
 
+const { get } = jsonPointer;
 export function testEncodingDecoding(
   encodedResponse:
     | EncodedResponse

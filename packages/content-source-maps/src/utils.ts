@@ -1,4 +1,4 @@
-import { set } from 'json-pointer';
+import jsonPointer from 'json-pointer';
 
 import { combine } from './encode.js';
 import { encodeRichTextValue } from './richText.js';
@@ -14,6 +14,7 @@ import type {
   WidgetNamespace,
 } from './types.js';
 
+const { set } = jsonPointer;
 export const createSourceMapMetadata = ({
   entityId,
   entityType,

@@ -1,11 +1,11 @@
-import { get, has } from 'json-pointer';
+import jsonPointer from 'json-pointer';
 
 import type {
   CPAEntry,
   CPAEntryCollection,
+  CreateSourceMapParams,
   EditorInterfaceSource,
   FieldType,
-  CreateSourceMapParams,
 } from '../types.js';
 import {
   clone,
@@ -15,6 +15,7 @@ import {
   isSupportedWidget,
 } from '../utils.js';
 
+const { get, has } = jsonPointer;
 const applyEncoding = (
   target: CPAEntry,
   fieldTypes: FieldType[],

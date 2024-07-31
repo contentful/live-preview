@@ -11,6 +11,12 @@
     "minify": {
       "compress": false,
       "mangle": false
+    },
+    "transform": {
+      "react": {
+        "refresh": true,
+        "runtime": "automatic"
+      }
     }
   },
   "module": {
