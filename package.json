@@ -35,8 +35,6 @@
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
-    "@swc/cli": "0.4.0",
-    "@swc/core": "1.7.1",
     "@typescript-eslint/eslint-plugin": "7.0.0",
     "@typescript-eslint/parser": "6.21.0",
     "commitizen": "4.3.0",
@@ -52,6 +50,7 @@
     "prettier": "3.2.5",
     "typescript": "5.5.4",
     "vite": "5.3.5",
+    "vite-plugin-dts": "3.7.2",
     "vitest": "2.0.4"
   },
   "lint-staged": {
