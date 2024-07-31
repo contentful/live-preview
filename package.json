@@ -51,7 +51,7 @@
     "typescript": "5.5.4",
     "vite": "5.3.5",
     "vite-plugin-dts": "3.7.2",
-    "vitest": "2.0.4"
+    "vitest": "2.0.5"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
