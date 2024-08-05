@@ -214,9 +214,9 @@
     json-pointer "^0.6.2"
 
 "@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.6.1":
-  version "16.8.2"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.8.2.tgz#0ee44036a90fe382ce857c3270ed6a0d9e00de57"
-  integrity sha512-telNNx+VLVS78KcgN+HO2zj7HCGTokV3HRzjsD6oqXQEy863zB4nkDFc0cxCO5uDouGJfs0e7O+wX7HZQ30yaQ==
+  version "16.8.3"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.8.3.tgz#f0effea5d0ed23f9abfd992c9b1be8a00f4d63e9"
+  integrity sha512-vXwXDQMDbqITCWfTkU5R/q+uvXWCc1eYNvdZyjtrs0YDIYr4L7QJ2s1r4ZheIs3iVf3AFucKIHgDSpwCAm2wKA==
 
 "@esbuild/aix-ppc64@0.21.5":
   version "0.21.5"
