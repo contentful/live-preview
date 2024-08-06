@@ -205,66 +205,6 @@ describe('getAllTaggedElements', () => {
     });
 
     describe('grouping information', () => {
-      it('should group sibling elements with the same information', () => {
-        const dom = html(`
-          <div id="richtext">
-            <p id="node-1">${combine('Hello', metadata)}</p>
-            <p id="node-2">${combine('World', metadata)}</p>
-            <p id="node-3"><b>${combine('!', metadata)}</b></p>
-            <p id="node-4">${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</p>
-          </div>
-        `);
-
-        const { taggedElements: elements } = getAllTaggedElements({
-          root: dom,
-          options: { locale: 'en-US' },
-        });
-
-        expect(elements).toHaveLength(1);
-        expect(elements).toEqual([
-          {
-            attributes: {
-              entryId: 'test-entry-id',
-              environment: 'master',
-              fieldId: 'title',
-              locale: 'en-US',
-              space: 'master',
-            },
-            element: dom.getElementById('richtext'),
-          },
-        ]);
-      });
-
-      it('should group sibling elements with the same information (nested structure)', () => {
-        const dom = html(`
-          <div id="richtext">
-            <p id="node-1"><span>${combine('Hello', metadata)}</span></p>
-            <p id="node-2"><span>${combine('World', metadata)}</span></p>
-            <p id="node-3"><b>${combine('!', metadata)}</b></p>
-            <p id="node-4"><span>${combine('Lorem', metadata)} ${combine('Ipsum', metadata)}</span></p>
-          </div>
-        `);
-
-        const { taggedElements: elements } = getAllTaggedElements({
-          root: dom,
-          options: { locale: 'en-US' },
-        });
-
-        expect(elements).toHaveLength(1);
-        expect(elements).toEqual([
-          {
-            attributes: {
-              entryId: 'test-entry-id',
-              environment: 'master',
-              fieldId: 'title',
-              locale: 'en-US',
-              space: 'master',
-            },
-            element: dom.getElementById('richtext'),
-          },
-        ]);
-      });
-
       it('should not tag nested elements with the same information', () => {
         const dom = html(`
           <p id="node-1">${combine('Hello', metadata)}<strong>${combine('World', metadata)}</strong>!</p>
@@ -314,7 +254,7 @@ describe('getAllTaggedElements', () => {
           options: { locale: 'en-US' },
         });
 
-        expect(elements).toHaveLength(3);
+        expect(elements).toHaveLength(4);
         expect(elements).toEqual([
           {
             attributes: {
@@ -324,7 +264,17 @@ describe('getAllTaggedElements', () => {
               locale: 'en-US',
               space: 'master',
             },
-            element: dom.getElementById('richtext'),
+            element: dom.getElementById('node-1'),
+          },
+          {
+            attributes: {
+              entryId: 'test-entry-id',
+              environment: 'master',
+              fieldId: 'title',
+              locale: 'en-US',
+              space: 'master',
+            },
+            element: dom.getElementById('node-2'),
           },
           {
             attributes: {

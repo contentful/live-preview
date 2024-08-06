@@ -103,50 +103,6 @@ function isSameElement(a: AutoTaggedElement, b: AutoTaggedElement): boolean {
   return true;
 }
 
-function getParent(
-  child: Element,
-  sourceMap: SourceMapMetadata,
-  limit = 3,
-): { element: Element; counters: { sameInformation: number; tagged: number; all: number } } | null {
-  if (limit === 0) {
-    return null;
-  }
-
-  const element = child.parentElement;
-  if (element) {
-    const counters = {
-      sameInformation: 0,
-      tagged: 0,
-      all: 0,
-    };
-
-    let sibling = child.nextElementSibling;
-    while (sibling) {
-      const siblingSourceMap = decode(sibling.textContent || '');
-      if (siblingSourceMap) {
-        counters.tagged += 1;
-        if (siblingSourceMap.href === sourceMap.href) {
-          counters.sameInformation = +1;
-        }
-      }
-      counters.all += 1;
-      sibling = sibling.nextElementSibling;
-    }
-
-    const parentInformation = getParent(element, sourceMap, limit - 1);
-    if (parentInformation && parentInformation.counters.sameInformation >= 1) {
-      return parentInformation;
-    }
-
-    if (counters.sameInformation >= 1) {
-      // at least one more siblings has the same information
-      return { element, counters };
-    }
-  }
-
-  return null;
-}
-
 export function findStegaNodes(container: HTMLElement) {
   let baseArray: HTMLElement[] = [];
   if (typeof container.matches === 'function' && container.matches('*')) {
@@ -243,14 +199,7 @@ export function getAllTaggedElements({
       continue;
     }
 
-    // TODO: Performance optimisation: only do for richtext
-    const wrapper = getParent(node, sourceMap);
-    if (wrapper) {
-      elementsForTagging.push({ element: wrapper.element, sourceMap: sourceMap });
-    } else {
-      // No sibling element with the same information, add the element directly
-      elementsForTagging.push({ element: node, sourceMap: sourceMap });
-    }
+    elementsForTagging.push({ element: node, sourceMap: sourceMap });
   }
 
   // Filter duplicate elements, so we don't tag them again and again
