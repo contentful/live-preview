@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.0...@contentful/live-preview@4.5.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* rich text block based auto tagging ([#832](https://github.com/contentful/live-preview/issues/832)) ([dd88c29](https://github.com/contentful/live-preview/commit/dd88c29094724b632d594f7dc976248d3987a4f4))
+
+
+
+
+
 # [4.5.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.4.2...@contentful/live-preview@4.5.0) (2024-07-31)
 
 
