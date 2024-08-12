@@ -2407,9 +2407,9 @@ contentful-sdk-core@^8.1.0, contentful-sdk-core@^8.3.1:
     qs "^6.11.2"
 
 contentful@^10.12.15, contentful@^10.8.8:
-  version "10.13.1"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.13.1.tgz#8b14ea44f2816e7a109894145ae6fd161b3a26c6"
-  integrity sha512-GczP0vSWzZGKllzUOsUnCHTKuW92E9oR44uGrLdA7cpel75gJqSB2KpVBV1KT4oaUQn773MAU/J6tWNqCYadfw==
+  version "10.13.2"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.13.2.tgz#395ae06a9ccdc75fafcc07b9553333b1be075da8"
+  integrity sha512-59qQqHKAjd2Bc1XV1pqyHzhwHg4X3BMZKqPkPMptPwoXUYjion+1zytFuXyt5YsNMKVvImvFfZVab8ZOrbI6Iw==
   dependencies:
     "@contentful/content-source-maps" "^0.6.0"
     "@contentful/rich-text-types" "^16.0.2"
