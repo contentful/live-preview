@@ -1908,19 +1908,10 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@^1.6.0, axios@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.2.tgz#b625db8a7051fbea61c35a3cbb3a1daa7b9c7621"
-  integrity sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==
-  dependencies:
-    follow-redirects "^1.15.6"
-    form-data "^4.0.0"
-    proxy-from-env "^1.1.0"
-
-axios@~1.6.8:
-  version "1.6.8"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.8.tgz#66d294951f5d988a00e87a0ffb955316a619ea66"
-  integrity sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==
+axios@^1.6.0, axios@^1.7.2, axios@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.4.tgz#4c8ded1b43683c8dd362973c393f3ede24052aa2"
+  integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -2395,7 +2386,7 @@ contentful-resolve-response@^1.9.0:
   dependencies:
     fast-copy "^2.1.7"
 
-contentful-sdk-core@^8.1.0, contentful-sdk-core@^8.3.1:
+contentful-sdk-core@^8.3.1:
   version "8.3.1"
   resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-8.3.1.tgz#773d59f286d1bd8e50a3ffd9e3f4f410da6fb929"
   integrity sha512-HYy4ecFA76ERxz7P0jW7hgDcL8jH+bRckv2QfAwQ4k1yPP9TvxpZwrKnlLM69JOStxVkCXP37HvbjbFnjcoWdg==
@@ -2407,15 +2398,15 @@ contentful-sdk-core@^8.1.0, contentful-sdk-core@^8.3.1:
     qs "^6.11.2"
 
 contentful@^10.12.15, contentful@^10.8.8:
-  version "10.13.2"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.13.2.tgz#395ae06a9ccdc75fafcc07b9553333b1be075da8"
-  integrity sha512-59qQqHKAjd2Bc1XV1pqyHzhwHg4X3BMZKqPkPMptPwoXUYjion+1zytFuXyt5YsNMKVvImvFfZVab8ZOrbI6Iw==
+  version "10.14.0"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.14.0.tgz#83475af2ae4cc7a27b653fe19ec0e6e66faa92ae"
+  integrity sha512-m6r4fz2iUw6ofzWf4dWVJ+zVikx1LCwpnx9+akg22ZDVOptugJUgZAsFCHUat/S7dvkmoGJldZJgmanWcWYCAQ==
   dependencies:
     "@contentful/content-source-maps" "^0.6.0"
     "@contentful/rich-text-types" "^16.0.2"
-    axios "~1.6.8"
+    axios "^1.7.4"
     contentful-resolve-response "^1.9.0"
-    contentful-sdk-core "^8.1.0"
+    contentful-sdk-core "^8.3.1"
     json-stringify-safe "^5.0.1"
     type-fest "^4.0.0"
 
