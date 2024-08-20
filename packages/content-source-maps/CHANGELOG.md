@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.10.0...@contentful/content-source-maps@0.11.0) (2024-08-20)
+
+
+### Features
+
+* add vercel tracking query param ([#845](https://github.com/contentful/live-preview/issues/845)) ([e97c8b1](https://github.com/contentful/live-preview/commit/e97c8b1df26828ae6c3f4dc5a2d0c902eeedee10))
+
+
+
+
+
 # [0.10.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.9.0...@contentful/content-source-maps@0.10.0) (2024-07-31)
 
 
