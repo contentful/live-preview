@@ -1,4 +1,4 @@
-> ⚠️ **This feature is currently in alpha for selected customers.**
+> ⚠️ **Content Source Maps are only available on our Premium plan. Vercel Content Links are only available on Vercel Pro and Enterprise plans.**
 
 # Next.js Pages Router Content Preview API (REST) Content Source Maps example
 
