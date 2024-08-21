@@ -176,6 +176,11 @@ ContentfulLivePreview.openEntryInEditor({
 
 ## Known issues and limitations
 
+### General
+
+- If the live preview SDK is used inside of another iframe than in the contentful app, it might produce errors as it can't detect the host.
+To remove the error, you have to define the `targetOrigin` manually. ([Init Configuration](#init-configuration))
+
 ### Live updates limitations:
 
 - GraphQL filters (e.g. filters in the Array field type) or filtering using the [select query parameter](https://www.contentful.com/developers/docs/references/content-preview-api/#/reference/search-parameters/select-operator) on the Content Preview API (CPA).
