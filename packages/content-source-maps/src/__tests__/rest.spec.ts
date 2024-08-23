@@ -235,7 +235,7 @@ describe('Content Source Maps with the CPA', () => {
       const mappings = {
         '/items/0/fields/title/en-US': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -252,7 +252,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/title/af': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -269,7 +269,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/longText/en-US': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=longText&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=longText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -286,7 +286,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/longText/af': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=longText&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=longText&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -303,7 +303,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/richText/en-US/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -320,7 +320,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/richText/af/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -337,7 +337,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/richText/af/content/1/content/0/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -354,7 +354,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/includes/Entry/0/fields/title/en-US': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entry2Id/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entry2Id/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -371,7 +371,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/includes/Entry/0/fields/richText/en-US/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entry2Id/?focusedField=richText&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entry2Id/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -388,7 +388,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/includes/Asset/0/fields/title/en-US': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/assets/assetId/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/assets/assetId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -410,7 +410,7 @@ describe('Content Source Maps with the CPA', () => {
         const decodedValue = decode(item);
         expect(decodedValue).toEqual({
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=list&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=list&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -512,7 +512,7 @@ describe('Content Source Maps with the CPA', () => {
       const mappings = {
         '/items/0/fields/title': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -529,7 +529,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/items/0/fields/richText/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -551,7 +551,7 @@ describe('Content Source Maps with the CPA', () => {
         const decodedValue = decode(item);
         expect(decodedValue).toEqual({
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=list&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=list&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -722,7 +722,7 @@ describe('Content Source Maps with the CPA', () => {
       const mappings = {
         '/fields/title/en-US': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -739,7 +739,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/title/af': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -756,7 +756,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/title/nl-BE': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=nl-BE?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=nl-BE&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -773,7 +773,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/richText/en-US/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -790,7 +790,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/richText/af/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -807,7 +807,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/richText/af/content/1/content/0/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -824,7 +824,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/richText/nl-BE/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=nl-BE?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=nl-BE&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -846,7 +846,7 @@ describe('Content Source Maps with the CPA', () => {
         const decodedValue = decode(item);
         expect(decodedValue).toEqual({
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=checkboxes&focusedLocale=nl-BE?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=checkboxes&focusedLocale=nl-BE&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -933,7 +933,7 @@ describe('Content Source Maps with the CPA', () => {
       const mappings = {
         '/fields/title': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -950,7 +950,7 @@ describe('Content Source Maps with the CPA', () => {
         },
         '/fields/richText/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -1042,11 +1042,11 @@ describe('Content Source Maps with the CPA', () => {
       const mappings = {
         '/fields/title': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
         },
         '/fields/richText/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
         },
       };
 

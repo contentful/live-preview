@@ -78,7 +78,7 @@ describe('Content Source Maps with the GraphQL API', () => {
     testEncodingDecoding(encodedGraphQLResponse.data.post, {
       '/title': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -95,7 +95,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       },
       '/subtitle': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -167,7 +167,7 @@ describe('Content Source Maps with the GraphQL API', () => {
     testEncodingDecoding(encodedGraphQLResponse.data.post, {
       '/longText': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=longText&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=longText&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -227,7 +227,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       const decodedValue = decode(item);
       expect(decodedValue).toEqual({
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=list&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=list&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -349,7 +349,7 @@ describe('Content Source Maps with the GraphQL API', () => {
     testEncodingDecoding(encodedGraphQLResponse.data.post, {
       '/title': {
         origin: 'contentful.com',
-        href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -366,7 +366,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       },
       '/subtitle': {
         origin: 'contentful.com',
-        href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -465,7 +465,7 @@ describe('Content Source Maps with the GraphQL API', () => {
         const entityId = entityIds[index];
         const expected = {
           origin: 'contentful.com',
-          href: `${baseUrl}/spaces/${spaceId}/environments/${environment}/entries/${entityId}/?focusedField=${field}&focusedLocale=${locale}?source=vercel-content-link`,
+          href: `${baseUrl}/spaces/${spaceId}/environments/${environment}/entries/${entityId}/?focusedField=${field}&focusedLocale=${locale}&source=vercel-content-link`,
           contentful: {
             space: spaceId,
             environment,
@@ -550,7 +550,7 @@ describe('Content Source Maps with the GraphQL API', () => {
     testEncodingDecoding(encodedGraphQLResponse.data.postCollection.items[0], {
       '/akanTitle': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=ak?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=ak&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -567,7 +567,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       },
       '/aghemTitle': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=agq?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=agq&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -584,7 +584,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       },
       '/spanishTitle': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=es?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=es&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -788,7 +788,7 @@ describe('Content Source Maps with the GraphQL API', () => {
     testEncodingDecoding(encodedGraphQLResponse.data.post, {
       '/rte/json/content/0/content/0/value': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -805,7 +805,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       },
       '/rte/json/content/0/content/2/value': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -823,7 +823,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       // entry hyperlinks
       '/rte/json/content/0/content/3/content/0/value': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -843,7 +843,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       '/rte/json/content/0/content/4/data/uri': undefined,
       '/rte/json/content/0/content/4/content/0/value': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
           space: 'foo',
           environment: 'master',
@@ -1008,11 +1008,11 @@ describe('Content Source Maps with the GraphQL API', () => {
     testEncodingDecoding(encodedGraphQLResponse.data.post, {
       '/title': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
       },
       '/subtitle': {
         origin: 'contentful.com',
-        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US?source=vercel-content-link',
+        href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US&source=vercel-content-link',
       },
     });
   });
@@ -1261,7 +1261,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         '/rte/json/content/0/content/0/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -1278,7 +1278,7 @@ describe('Content Source Maps with the GraphQL API', () => {
         },
         '/rte/json/content/0/content/2/value': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -1295,7 +1295,7 @@ describe('Content Source Maps with the GraphQL API', () => {
         },
         '/title': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',
@@ -1354,7 +1354,7 @@ describe('Content Source Maps with the GraphQL API', () => {
       testEncodingDecoding(encodedGraphQLResponse.data.post, {
         '/title': {
           origin: 'contentful.com',
-          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US?source=vercel-content-link',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
             space: 'spaceId',
             environment: 'master',

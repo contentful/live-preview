@@ -30,7 +30,7 @@ export const createSourceMapMetadata = ({
   const basePath = `${targetOriginUrl}/spaces/${space}/environments/${environment}`;
   const entityRoute = entityType === 'Entry' ? 'entries' : 'assets';
   //href is used only by Vercel to open the entry in the Contentful web app
-  const href = `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}?source=vercel-content-link`;
+  const href = `${basePath}/${entityRoute}/${entityId}/?focusedField=${field}&focusedLocale=${locale}&source=vercel-content-link`;
 
   const result: SourceMapMetadata = {
     origin: 'contentful.com',
