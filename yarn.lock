@@ -205,14 +205,6 @@
     "@types/conventional-commits-parser" "^5.0.0"
     chalk "^5.3.0"
 
-"@contentful/content-source-maps@^0.6.0":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@contentful/content-source-maps/-/content-source-maps-0.6.1.tgz#a12828d287bdcd9f31c132f2a230bd1ac3005b77"
-  integrity sha512-IjsyhakG17OC5xtIa5agVRsnjjxiJf9HZjpDIV6Ix036Pd5YHJrbyyiF4KNEmLlIqe3hQ0kHGWEs9S/HfECmRQ==
-  dependencies:
-    "@vercel/stega" "^0.1.2"
-    json-pointer "^0.6.2"
-
 "@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.2.0", "@contentful/rich-text-types@^16.6.1":
   version "16.8.3"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.8.3.tgz#f0effea5d0ed23f9abfd992c9b1be8a00f4d63e9"
@@ -2398,11 +2390,11 @@ contentful-sdk-core@^8.3.1:
     qs "^6.11.2"
 
 contentful@^10.12.15, contentful@^10.8.8:
-  version "10.14.0"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.14.0.tgz#83475af2ae4cc7a27b653fe19ec0e6e66faa92ae"
-  integrity sha512-m6r4fz2iUw6ofzWf4dWVJ+zVikx1LCwpnx9+akg22ZDVOptugJUgZAsFCHUat/S7dvkmoGJldZJgmanWcWYCAQ==
+  version "10.15.0"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.15.0.tgz#0f8cc2887f583b283f1326357777c4e4a0764c2f"
+  integrity sha512-gkkMRf2FK1SQHMs2UKOuIeCdBXQKF/fMzIRCDL038lUScyE6mvnPu8aHrAQuUZwfcd58J0cibqT+iqj+pAVyGA==
   dependencies:
-    "@contentful/content-source-maps" "^0.6.0"
+    "@contentful/content-source-maps" "^0.11.0"
     "@contentful/rich-text-types" "^16.0.2"
     axios "^1.7.4"
     contentful-resolve-response "^1.9.0"
