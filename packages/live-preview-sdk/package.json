@@ -63,7 +63,7 @@
     "contentful": "^10.12.15",
     "contentful-management": "^11.30.2",
     "graphql": "^16.6.0",
-    "jsdom": "^24.0.0",
+    "jsdom": "^25.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "type-fest": "^4.23.0"
