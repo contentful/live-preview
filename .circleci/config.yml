@@ -5,9 +5,9 @@ orbs:
 
 executors:
   linux-node:
-    resource_class: xlarge
+    resource_class: medium
     docker:
-      - image: cimg/node:18.15.0
+      - image: cimg/node:20.17.0
 
 cache-key: &cache-key
   key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc" }}-{{ checksum "yarn.lock" }}
