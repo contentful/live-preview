@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.2](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.1...@contentful/content-source-maps@0.11.2) (2024-09-05)
+
+
+### Bug Fixes
+
+* console warnings ([#868](https://github.com/contentful/live-preview/issues/868)) ([4d36831](https://github.com/contentful/live-preview/commit/4d368317153e861d726e7c31c4450bca6b92cdd7))
+
+
+
+
+
 ## [0.11.1](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.0...@contentful/content-source-maps@0.11.1) (2024-08-23)
 
 
