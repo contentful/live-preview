@@ -111,7 +111,8 @@ const applyEncoding = (
         });
       }
     } else {
-      console.error('Pointer not found in the target', pointer, target);
+      //@TODO - add Sentry logging
+      // console.warn(`Pointer ${pointer} not found in the entry`, target);
     }
   }
 };
