@@ -87,7 +87,8 @@ export const encodeGraphQLResponse = (
         encodeField(fieldType, currentValue, hiddenStrings, target, pointer, mappings);
       }
     } else {
-      console.error(`Pointer ${pointer} not found in GraphQL data or href could not be generated.`);
+      //@TODO - add Sentry logging
+      // console.warn(`Pointer ${pointer} not found in the entry`, target);
     }
   }
   return modifiedGraphqlResponse;
