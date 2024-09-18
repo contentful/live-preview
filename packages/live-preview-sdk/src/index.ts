@@ -92,7 +92,7 @@ export class ContentfulLivePreview {
   static init(config: ContentfulLivePreviewInitConfig): Promise<InspectorMode | null> | undefined {
     if (typeof config !== 'object' || !config?.locale) {
       throw new Error(
-        "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
+        "Init function has to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
       );
     }
 
@@ -374,7 +374,7 @@ export class ContentfulLivePreview {
       return;
     }
 
-    debug.error('Please provide field id and entry id to openEntryInEditor.');
+    debug.error('Please provide field id and entry/asset id to openEntryInEditor.');
   }
 
   /**

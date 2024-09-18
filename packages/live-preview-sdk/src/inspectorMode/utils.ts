@@ -67,6 +67,16 @@ export function getManualInspectorModeAttributes(
     manuallyTagged: true,
   };
 
+  if (!sharedProps.fieldId) {
+    debug.warn('Tagged element is missing field ID attribute and cannot be tagged', {
+      id:
+        element.getAttribute(InspectorModeDataAttributes.ENTRY_ID) ??
+        element.getAttribute(InspectorModeDataAttributes.ASSET_ID),
+      sharedProps,
+    });
+    return null;
+  }
+
   const entryId = element.getAttribute(InspectorModeDataAttributes.ENTRY_ID);
   if (entryId) {
     return { ...sharedProps, entryId };
@@ -148,18 +158,16 @@ function hasTaggedParent(node: HTMLElement, taggedElements: TaggedElement[]): bo
 export function getAllTaggedElements({
   root = window.document,
   options,
-  ignoreManual,
 }: {
   root?: any;
   options: Omit<InspectorModeOptions, 'targetOrigin'>;
-  ignoreManual?: boolean;
 }): {
   taggedElements: TaggedElement[];
   manuallyTaggedCount: number;
   automaticallyTaggedCount: number;
   autoTaggedElements: AutoTaggedElement<Element>[];
 } {
-  const alreadyTagged = ignoreManual
+  const alreadyTagged = options.ignoreManuallyTaggedElements
     ? []
     : root.querySelectorAll(
         `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
@@ -180,7 +188,13 @@ export function getAllTaggedElements({
   for (const { node, text } of stegaNodes) {
     const sourceMap = decode(text);
     if (!sourceMap || !sourceMap.origin.includes('contentful.com')) {
-      debug.warn;
+      debug.warn(
+        "Element has missing or invalid ContentSourceMap, please check if you have correctly enabled ContentSourceMaps and that the element's data originates from Contentful",
+        {
+          node,
+          sourceMap,
+        },
+      );
       continue;
     }
 

@@ -1,6 +1,7 @@
 import { combine } from '@contentful/content-source-maps';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
+import { setDebugMode } from '../../helpers/debug.js';
 import { InspectorModeDataAttributes, InspectorModeEntryAttributes } from '../types.js';
 import { getAllTaggedElements } from '../utils.js';
 import { createSourceMapFixture } from './fixtures/contentSourceMap.js';
@@ -174,11 +175,15 @@ describe('getAllTaggedElements', () => {
         `<span>${combine('Test', createSourceMapFixture('ignore_origin', { origin: 'example.com' }))}</span>`,
       );
 
+      setDebugMode(true);
+      vi.spyOn(console, 'warn');
+
       const { taggedElements: elements } = getAllTaggedElements({
         root: dom,
         options: { locale: 'en-US' },
       });
       expect(elements).toEqual([]);
+      expect(console.warn).toHaveBeenCalled();
     });
 
     it('should recognize auto-tagged elements', () => {
@@ -392,8 +397,7 @@ describe('getAllTaggedElements', () => {
         manuallyTaggedCount,
       } = getAllTaggedElements({
         root: dom,
-        ignoreManual: true,
-        options: { locale: 'en-US' },
+        options: { locale: 'en-US', ignoreManuallyTaggedElements: true },
       });
 
       expect(elements.length).toEqual(1);

@@ -24,7 +24,7 @@ describe('ContentfulLivePreviewProvider', () => {
       // @ts-expect-error -- case locale not provided (e.g. JavaScript usage)
       () => render(<ContentfulLivePreviewProvider>Hello World</ContentfulLivePreviewProvider>),
     ).toThrowError(
-      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`',
+      'ContentfulLivePreviewProvider has to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`',
     );
 
     spy.mockRestore();

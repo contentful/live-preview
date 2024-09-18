@@ -91,8 +91,7 @@ describe('getAllTaggedElements', () => {
 
     const elements = getAllTaggedElements({
       root: dom,
-      ignoreManual: true,
-      options: { locale: 'en-US' },
+      options: { locale: 'en-US', ignoreManuallyTaggedElements: true },
     });
 
     expect(elements).toHaveLength(1 + 10 + 30 + 3);

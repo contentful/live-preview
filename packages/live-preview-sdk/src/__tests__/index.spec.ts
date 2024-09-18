@@ -57,7 +57,7 @@ describe('ContentfulLivePreview', () => {
 
   describe('init', () => {
     describe('should bind the message listeners', () => {
-      it('provide the data to InspectorMode and LiveUpdates', () => {
+      it.only('provide the data to InspectorMode and LiveUpdates', () => {
         const data = { source: LIVE_PREVIEW_EDITOR_SOURCE, value: 'any' };
         window.dispatchEvent(new MessageEvent('message', { data }));
 
