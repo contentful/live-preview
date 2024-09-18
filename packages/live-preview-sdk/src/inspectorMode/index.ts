@@ -23,6 +23,9 @@ type TaggedElement = {
   coordinates: DOMRect;
   element: Element;
   isVisible: boolean;
+  zIndex: number;
+  layerCoordinates: DOMRect;
+  isCoveredByOtherElement: boolean;
 };
 
 export class InspectorMode {
@@ -243,6 +246,7 @@ export class InspectorMode {
           isVisible: taggedElement.isVisible,
           attributes: taggedElement.attributes,
           isHovered: this.hoveredElement === taggedElement.element,
+          isCoveredByOtherElement: !!taggedElement.isCoveredByOtherElement,
         })),
         automaticallyTaggedCount: this.automaticallyTaggedCount,
         manuallyTaggedCount: this.manuallyTaggedCount,
@@ -250,6 +254,101 @@ export class InspectorMode {
       this.options.targetOrigin,
     );
   };
+
+  private getZIndex = (element: Element): string | null => {
+    if (window.getComputedStyle) {
+      const computedStyle = window.getComputedStyle(element);
+      if (computedStyle.zIndex) {
+        return computedStyle.zIndex;
+      }
+    }
+    return null;
+  };
+
+  private getClosestParentWithZIndex = (
+    element: Element,
+  ): { closestParent?: Element; zIndex?: string } => {
+    const zIndex = this.getZIndex(element);
+
+    if (zIndex !== 'auto' && zIndex !== null) {
+      return { zIndex, closestParent: element };
+    }
+
+    if (!element.parentElement) {
+      return {};
+    }
+
+    return this.getClosestParentWithZIndex(element.parentElement);
+  };
+
+  private doElementIntersect = (elementA: DOMRect, elementB: DOMRect): boolean => {
+    // Check if the two elements intersect
+    if (
+      elementA.left < elementB.right &&
+      elementA.right > elementB.left &&
+      elementA.top < elementB.bottom &&
+      elementA.bottom > elementB.top
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
+   * 1. Gets the z-index of the element or the closest parent with a z-index
+   * 2. Calculates the bounding boxes for the tagged elements and the layer they are on
+   */
+  private addCoordinatesAndLayerAttributesToTaggedElements = (
+    taggedElements: Partial<TaggedElement>[],
+  ): Partial<TaggedElement>[] => {
+    return taggedElements.map(({ element, attributes }) => {
+      const { closestParent, zIndex } = this.getClosestParentWithZIndex(element!);
+      const elementCoordinates = element!.getBoundingClientRect();
+      const layerCoordinates = closestParent
+        ? closestParent.getBoundingClientRect()
+        : elementCoordinates;
+      const nextElement = {
+        element,
+        coordinates: elementCoordinates,
+        attributes,
+        zIndex: zIndex ? Number(zIndex) : 0,
+        layerCoordinates,
+      };
+      return nextElement;
+    });
+  };
+
+  /**
+   * 1. Checks if the element is visible
+   * 2. Checks if the element is covered by another element with a higher z-index
+   */
+  private addVisibilityAttributesToTaggedElements = (taggedElements: Partial<TaggedElement>[]) =>
+    taggedElements.map((taggedElement, currentIndex) => {
+      const { element, layerCoordinates, zIndex } = taggedElement;
+      const isVisible = element!.checkVisibility({
+        checkOpacity: true,
+        checkVisibilityCSS: true,
+      });
+
+      for (let otherIndex = 0; otherIndex < taggedElements.length; otherIndex++) {
+        if (currentIndex === otherIndex) {
+          continue;
+        }
+
+        const otherElement = taggedElements[otherIndex];
+        const { layerCoordinates: otherParentCoordinates, zIndex: otherZIndex } = otherElement;
+
+        if (
+          zIndex! < otherZIndex! &&
+          this.doElementIntersect(layerCoordinates!, otherParentCoordinates!)
+        ) {
+          return { ...taggedElement, isVisible, isCoveredByOtherElement: true };
+        }
+      }
+
+      return { ...taggedElement, isVisible, isCoveredByOtherElement: false };
+    });
 
   /**
    * Finds all elements that have all inspector mode attributes
@@ -260,15 +359,11 @@ export class InspectorMode {
       options: this.options,
     });
 
-    const nextElements = taggedElements.map(({ element, attributes }) => ({
-      element,
-      coordinates: element.getBoundingClientRect(),
-      attributes,
-      isVisible: element.checkVisibility({
-        checkOpacity: true,
-        checkVisibilityCSS: true,
-      }),
-    }));
+    const taggedElementsWithCalculatedAttributes =
+      this.addCoordinatesAndLayerAttributesToTaggedElements(taggedElements);
+    const nextElements = this.addVisibilityAttributesToTaggedElements(
+      taggedElementsWithCalculatedAttributes,
+    );
 
     if (isEqual(nextElements, this.taggedElements)) {
       return;
@@ -279,7 +374,7 @@ export class InspectorMode {
     this.observersCB = [];
 
     // update elements and watch them
-    this.taggedElements = nextElements;
+    this.taggedElements = nextElements as TaggedElement[];
     taggedElements.forEach(({ element }) => this.observe(element));
 
     // update the counters for telemetry
