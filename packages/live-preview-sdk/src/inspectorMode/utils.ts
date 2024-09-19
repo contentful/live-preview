@@ -317,7 +317,6 @@ export const getAllLayersInDocument = (
       });
     }
   }
-  console.log({ elementsAfter: Array.from(allElements) });
   return layers;
 };
 
@@ -378,14 +377,13 @@ const addCoordinatesAndLayerAttributesToTaggedElements = (
     const layerCoordinates = closestParent
       ? closestParent.getBoundingClientRect()
       : elementCoordinates;
-    const nextElement = {
+    return {
       element,
       coordinates: elementCoordinates,
       attributes,
       zIndex: zIndex ? Number(zIndex) : 0,
       layerCoordinates,
     };
-    return nextElement;
   });
 };
 
