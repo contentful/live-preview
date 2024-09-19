@@ -8,7 +8,7 @@ import {
   type InspectorModeAttributes,
   type InspectorModeChangedMessage,
 } from './types.js';
-import { getAllTaggedElements } from './utils.js';
+import { addCalculatedAttributesToTaggedElements, getAllTaggedElements } from './utils.js';
 
 export type InspectorModeOptions = {
   locale: string;
@@ -255,115 +255,6 @@ export class InspectorMode {
     );
   };
 
-  private getZIndex = (element: Element): string | null => {
-    if (window.getComputedStyle) {
-      const computedStyle = window.getComputedStyle(element);
-      if (computedStyle.zIndex) {
-        return computedStyle.zIndex;
-      }
-    }
-    return null;
-  };
-
-  private getClosestParentWithZIndex = (
-    element: Element,
-  ): { closestParent?: Element; zIndex?: string } => {
-    const zIndex = this.getZIndex(element);
-
-    if (zIndex !== 'auto' && zIndex !== null) {
-      return { zIndex, closestParent: element };
-    }
-
-    if (!element.parentElement) {
-      return {};
-    }
-
-    return this.getClosestParentWithZIndex(element.parentElement);
-  };
-
-  private doElementIntersect = (elementA: DOMRect, elementB: DOMRect): boolean => {
-    // Check if the two elements intersect
-    if (
-      elementA.left < elementB.right &&
-      elementA.right > elementB.left &&
-      elementA.top < elementB.bottom &&
-      elementA.bottom > elementB.top
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
-  /**
-   * 1. Gets the z-index of the element or the closest parent with a z-index
-   * 2. Calculates the bounding boxes for the tagged elements and the layer they are on
-   */
-  private addCoordinatesAndLayerAttributesToTaggedElements = (
-    taggedElements: Partial<TaggedElement>[],
-  ): Partial<TaggedElement>[] => {
-    return taggedElements.map(({ element, attributes }) => {
-      const { closestParent, zIndex } = this.getClosestParentWithZIndex(element!);
-      const elementCoordinates = element!.getBoundingClientRect();
-      const layerCoordinates = closestParent
-        ? closestParent.getBoundingClientRect()
-        : elementCoordinates;
-      const nextElement = {
-        element,
-        coordinates: elementCoordinates,
-        attributes,
-        zIndex: zIndex ? Number(zIndex) : 0,
-        layerCoordinates,
-      };
-      return nextElement;
-    });
-  };
-
-  private getAllLayersInDocument = (): { zIndex: number; coordinates: DOMRect }[] => {
-    const allElements = document.querySelectorAll('*');
-    const layers = [];
-    for (const element of allElements) {
-      const zIndex = this.getZIndex(element);
-      if (zIndex !== 'auto' && zIndex !== null) {
-        layers.push({
-          zIndex: Number(zIndex),
-          coordinates: element.getBoundingClientRect(),
-        });
-      }
-    }
-    return layers;
-  };
-
-  /**
-   * 1. Checks if the element is visible
-   * 2. Checks if the element is covered by a layer of higher z-index
-   */
-  private addVisibilityAttributesToTaggedElements = (
-    taggedElements: Partial<TaggedElement>[],
-    layersInDocument: { zIndex: number; coordinates: DOMRect }[],
-  ) =>
-    taggedElements.map((taggedElement) => {
-      const { element, layerCoordinates, zIndex } = taggedElement;
-      const isVisible = element!.checkVisibility({
-        checkOpacity: true,
-        checkVisibilityCSS: true,
-      });
-
-      for (let layerIndex = 0; layerIndex < layersInDocument.length; layerIndex++) {
-        const layer = layersInDocument[layerIndex];
-        const { coordinates: otherParentCoordinates, zIndex: layerZIndex } = layer;
-
-        if (
-          zIndex! < layerZIndex! &&
-          this.doElementIntersect(layerCoordinates!, otherParentCoordinates!)
-        ) {
-          return { ...taggedElement, isVisible, isCoveredByOtherElement: true };
-        }
-      }
-
-      return { ...taggedElement, isVisible, isCoveredByOtherElement: false };
-    });
-
   /**
    * Finds all elements that have all inspector mode attributes
    * and sends them to the editor
@@ -373,13 +264,7 @@ export class InspectorMode {
       options: this.options,
     });
 
-    const layersInDocument = this.getAllLayersInDocument();
-    const taggedElementsWithCalculatedAttributes =
-      this.addCoordinatesAndLayerAttributesToTaggedElements(taggedElements);
-    const nextElements = this.addVisibilityAttributesToTaggedElements(
-      taggedElementsWithCalculatedAttributes,
-      layersInDocument,
-    );
+    const nextElements = addCalculatedAttributesToTaggedElements(taggedElements);
 
     if (isEqual(nextElements, this.taggedElements)) {
       return;
