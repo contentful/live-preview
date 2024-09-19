@@ -319,28 +319,42 @@ export class InspectorMode {
     });
   };
 
+  private getAllLayersInDocument = (): { zIndex: number; coordinates: DOMRect }[] => {
+    const allElements = document.querySelectorAll('*');
+    const layers = [];
+    for (const element of allElements) {
+      const zIndex = this.getZIndex(element);
+      if (zIndex !== 'auto' && zIndex !== null) {
+        layers.push({
+          zIndex: Number(zIndex),
+          coordinates: element.getBoundingClientRect(),
+        });
+      }
+    }
+    return layers;
+  };
+
   /**
    * 1. Checks if the element is visible
-   * 2. Checks if the element is covered by another element with a higher z-index
+   * 2. Checks if the element is covered by a layer of higher z-index
    */
-  private addVisibilityAttributesToTaggedElements = (taggedElements: Partial<TaggedElement>[]) =>
-    taggedElements.map((taggedElement, currentIndex) => {
+  private addVisibilityAttributesToTaggedElements = (
+    taggedElements: Partial<TaggedElement>[],
+    layersInDocument: { zIndex: number; coordinates: DOMRect }[],
+  ) =>
+    taggedElements.map((taggedElement) => {
       const { element, layerCoordinates, zIndex } = taggedElement;
       const isVisible = element!.checkVisibility({
         checkOpacity: true,
         checkVisibilityCSS: true,
       });
 
-      for (let otherIndex = 0; otherIndex < taggedElements.length; otherIndex++) {
-        if (currentIndex === otherIndex) {
-          continue;
-        }
-
-        const otherElement = taggedElements[otherIndex];
-        const { layerCoordinates: otherParentCoordinates, zIndex: otherZIndex } = otherElement;
+      for (let layerIndex = 0; layerIndex < layersInDocument.length; layerIndex++) {
+        const layer = layersInDocument[layerIndex];
+        const { coordinates: otherParentCoordinates, zIndex: layerZIndex } = layer;
 
         if (
-          zIndex! < otherZIndex! &&
+          zIndex! < layerZIndex! &&
           this.doElementIntersect(layerCoordinates!, otherParentCoordinates!)
         ) {
           return { ...taggedElement, isVisible, isCoveredByOtherElement: true };
@@ -359,10 +373,12 @@ export class InspectorMode {
       options: this.options,
     });
 
+    const layersInDocument = this.getAllLayersInDocument();
     const taggedElementsWithCalculatedAttributes =
       this.addCoordinatesAndLayerAttributesToTaggedElements(taggedElements);
     const nextElements = this.addVisibilityAttributesToTaggedElements(
       taggedElementsWithCalculatedAttributes,
+      layersInDocument,
     );
 
     if (isEqual(nextElements, this.taggedElements)) {
