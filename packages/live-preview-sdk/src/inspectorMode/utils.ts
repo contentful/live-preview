@@ -16,12 +16,12 @@ export type AutoTaggedElement<T = Node> = {
   sourceMap: SourceMapMetadata;
 };
 
-interface TaggedElement {
+export interface TaggedElement {
   element: Element;
   attributes: InspectorModeAttributes | null;
+  isHovered?: boolean;
   isVisible?: boolean;
-  zIndex?: number;
-  layerCoordinates?: DOMRect;
+  coordinates?: DOMRect;
   isCoveredByOtherElement?: boolean;
 }
 
@@ -276,130 +276,52 @@ export function getAllTaggedEntries({
   ];
 }
 
-const getZIndex = (element: Element): string | null => {
-  if (window.getComputedStyle) {
-    const computedStyle = window.getComputedStyle(element);
-    if (computedStyle.zIndex) {
-      return computedStyle.zIndex;
-    }
-  }
-  return null;
+const isElementOverlapped = (element: Element, coordinates: DOMRect, root = window.document) => {
+  const { top, right, bottom, left } = coordinates;
+  const topLeft = root.elementFromPoint(left, top);
+  const topRight = root.elementFromPoint(right, top);
+  const bottomLeft = root.elementFromPoint(left, bottom);
+  const bottomRight = root.elementFromPoint(right, bottom);
+
+  return (
+    topLeft === element || topRight === element || bottomLeft === element || bottomRight === element
+  );
 };
 
-const getClosestParentWithZIndex = (
-  element: Element,
-): { closestParent?: Element; zIndex?: string } => {
-  const zIndex = getZIndex(element);
-
-  if (zIndex !== 'auto' && zIndex !== null) {
-    return { zIndex, closestParent: element };
-  }
-
-  if (!element.parentElement) {
-    return {};
-  }
-
-  return getClosestParentWithZIndex(element.parentElement);
-};
-
-export const getAllLayersInDocument = (
-  root = window.document,
-): { zIndex: number; coordinates: DOMRect }[] => {
-  const allElements = root.querySelectorAll('*');
-
-  const layers = [];
-  for (const element of allElements) {
-    const zIndex = getZIndex(element);
-    if (zIndex !== 'auto' && zIndex !== null) {
-      layers.push({
-        zIndex: Number(zIndex),
-        coordinates: element.getBoundingClientRect(),
-      });
-    }
-  }
-  return layers;
-};
-
-const doElementIntersect = (elementA: DOMRect, elementB: DOMRect): boolean => {
-  // Check if the two elements intersect
-  if (
-    elementA.left < elementB.right &&
-    elementA.right > elementB.left &&
-    elementA.top < elementB.bottom &&
-    elementA.bottom > elementB.top
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
-/**
- * 1. Checks if the element is visible
- * 2. Checks if the element is covered by a layer of higher z-index
- */
-const addVisibilityAttributesToTaggedElements = (
+const addVisibilityToTaggedElements = (
   taggedElements: Partial<TaggedElement>[],
-  layersInDocument: { zIndex: number; coordinates: DOMRect }[],
+  root = window.document,
 ) =>
-  taggedElements.map((taggedElement) => {
-    const { element, layerCoordinates, zIndex } = taggedElement;
-    const isVisible = element!.checkVisibility({
+  taggedElements.map((taggedElement) => ({
+    ...taggedElement,
+    isVisible: taggedElement.element!.checkVisibility({
       checkOpacity: true,
       checkVisibilityCSS: true,
-    });
+    }),
+    isCoveredByOtherElement: !isElementOverlapped(
+      taggedElement.element!,
+      taggedElement.coordinates!,
+      root,
+    ),
+  }));
 
-    for (let layerIndex = 0; layerIndex < layersInDocument.length; layerIndex++) {
-      const layer = layersInDocument[layerIndex];
-      const { coordinates: otherParentCoordinates, zIndex: layerZIndex } = layer;
-
-      if (
-        zIndex! < layerZIndex! &&
-        doElementIntersect(layerCoordinates!, otherParentCoordinates!)
-      ) {
-        return { ...taggedElement, isVisible, isCoveredByOtherElement: true };
-      }
-    }
-
-    return { ...taggedElement, isVisible, isCoveredByOtherElement: false };
-  });
-
-/**
- * 1. Gets the z-index of the element or the closest parent with a z-index
- * 2. Calculates the bounding boxes for the tagged elements and the layer they are on
- */
-const addCoordinatesAndLayerAttributesToTaggedElements = (
+const addCoordinatesToTaggedElements = (
   taggedElements: Partial<TaggedElement>[],
-): Partial<TaggedElement>[] => {
-  return taggedElements.map(({ element, attributes }) => {
-    const { closestParent, zIndex } = getClosestParentWithZIndex(element!);
-    const elementCoordinates = element!.getBoundingClientRect();
-    const layerCoordinates = closestParent
-      ? closestParent.getBoundingClientRect()
-      : elementCoordinates;
-    return {
-      element,
-      coordinates: elementCoordinates,
-      attributes,
-      zIndex: zIndex ? Number(zIndex) : 0,
-      layerCoordinates,
-    };
-  });
-};
+): Partial<TaggedElement>[] =>
+  taggedElements.map(({ element, attributes }) => ({
+    element,
+    coordinates: element!.getBoundingClientRect(),
+    attributes,
+  }));
 
 /**
- * applies the attributes that we cannot simply get from the tagged elements itself
+ * Applies the attributes that we cannot simply get from the tagged elements itself
  * but need to calculate based on the current state of the document
  */
 export const addCalculatedAttributesToTaggedElements = (
   taggedElements: Partial<TaggedElement>[],
   root = window.document,
 ): TaggedElement[] => {
-  const layersInDocument = getAllLayersInDocument(root);
-  const taggedElementsWithCalculatedAttributes =
-    addCoordinatesAndLayerAttributesToTaggedElements(taggedElements);
-  return addVisibilityAttributesToTaggedElements(
-    taggedElementsWithCalculatedAttributes,
-    layersInDocument,
-  ) as TaggedElement[];
+  const taggedElementWithCoordinates = addCoordinatesToTaggedElements(taggedElements);
+  return addVisibilityToTaggedElements(taggedElementWithCoordinates, root) as TaggedElement[];
 };
