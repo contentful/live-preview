@@ -325,7 +325,7 @@ const addCoordinatesToTaggedElements = (
  * but need to calculate based on the current state of the document
  */
 export const addCalculatedAttributesToTaggedElements = (
-  taggedElements: Partial<TaggedElement>[],
+  taggedElements: PrecaulculatedTaggedElement[],
   root = window.document,
 ): TaggedElement[] => {
   const taggedElementWithCoordinates = addCoordinatesToTaggedElements(taggedElements);
