@@ -5,10 +5,13 @@ import { type MessageFromEditor } from '../messages.js';
 import {
   InspectorModeDataAttributes,
   InspectorModeEventMethods,
-  type InspectorModeAttributes,
   type InspectorModeChangedMessage,
 } from './types.js';
-import { getAllTaggedElements } from './utils.js';
+import {
+  addCalculatedAttributesToTaggedElements,
+  getAllTaggedElements,
+  TaggedElement,
+} from './utils.js';
 
 export type InspectorModeOptions = {
   locale: string;
@@ -16,13 +19,6 @@ export type InspectorModeOptions = {
   environment?: string;
   targetOrigin: string[];
   ignoreManuallyTaggedElements?: boolean;
-};
-
-type TaggedElement = {
-  attributes: InspectorModeAttributes | null;
-  coordinates: DOMRect;
-  element: Element;
-  isVisible: boolean;
 };
 
 export class InspectorMode {
@@ -239,10 +235,11 @@ export class InspectorMode {
       {
         elements: this.taggedElements.map((taggedElement) => ({
           // Important: do not add `element` as it can't be cloned by sendMessage
-          coordinates: taggedElement.coordinates,
-          isVisible: taggedElement.isVisible,
+          coordinates: taggedElement.coordinates!,
+          isVisible: !!taggedElement.isVisible,
           attributes: taggedElement.attributes,
           isHovered: this.hoveredElement === taggedElement.element,
+          isCoveredByOtherElement: !!taggedElement.isCoveredByOtherElement,
         })),
         automaticallyTaggedCount: this.automaticallyTaggedCount,
         manuallyTaggedCount: this.manuallyTaggedCount,
@@ -260,15 +257,7 @@ export class InspectorMode {
       options: this.options,
     });
 
-    const nextElements = taggedElements.map(({ element, attributes }) => ({
-      element,
-      coordinates: element.getBoundingClientRect(),
-      attributes,
-      isVisible: element.checkVisibility({
-        checkOpacity: true,
-        checkVisibilityCSS: true,
-      }),
-    }));
+    const nextElements = addCalculatedAttributesToTaggedElements(taggedElements);
 
     if (isEqual(nextElements, this.taggedElements)) {
       return;
@@ -279,7 +268,7 @@ export class InspectorMode {
     this.observersCB = [];
 
     // update elements and watch them
-    this.taggedElements = nextElements;
+    this.taggedElements = nextElements as TaggedElement[];
     taggedElements.forEach(({ element }) => this.observe(element));
 
     // update the counters for telemetry

@@ -16,9 +16,16 @@ export type AutoTaggedElement<T = Node> = {
   sourceMap: SourceMapMetadata;
 };
 
-interface TaggedElement {
+interface PrecaulculatedTaggedElement {
   element: Element;
   attributes: InspectorModeAttributes | null;
+}
+
+export interface TaggedElement extends PrecaulculatedTaggedElement {
+  isHovered: boolean;
+  isVisible: boolean;
+  coordinates: DOMRect;
+  isCoveredByOtherElement: boolean;
 }
 
 const isTaggedElement = (node?: Node | null): boolean => {
@@ -132,7 +139,10 @@ function getNodeText(node: HTMLElement): string {
     .join('');
 }
 
-function hasTaggedParent(node: HTMLElement, taggedElements: TaggedElement[]): boolean {
+function hasTaggedParent(
+  node: HTMLElement,
+  taggedElements: PrecaulculatedTaggedElement[],
+): boolean {
   for (const tagged of taggedElements) {
     if (tagged.element === node || tagged.element.contains(node)) {
       return true;
@@ -154,7 +164,7 @@ export function getAllTaggedElements({
   options: Omit<InspectorModeOptions, 'targetOrigin'>;
   ignoreManual?: boolean;
 }): {
-  taggedElements: TaggedElement[];
+  taggedElements: PrecaulculatedTaggedElement[];
   manuallyTaggedCount: number;
   automaticallyTaggedCount: number;
   autoTaggedElements: AutoTaggedElement<Element>[];
@@ -166,7 +176,7 @@ export function getAllTaggedElements({
       );
 
   //Spread operator is necessary to convert the NodeList to an array
-  const taggedElements: TaggedElement[] = [...alreadyTagged]
+  const taggedElements: PrecaulculatedTaggedElement[] = [...alreadyTagged]
     .map((element: Element) => ({
       element,
       attributes: getManualInspectorModeAttributes(element, options),
@@ -261,7 +271,7 @@ export function getAllTaggedEntries({
   return [
     ...new Set(
       getAllTaggedElements({ options })
-        .taggedElements.map((element: TaggedElement) => {
+        .taggedElements.map((element: PrecaulculatedTaggedElement) => {
           if (element.attributes && 'entryId' in element.attributes) {
             return element.attributes.entryId;
           }
@@ -271,3 +281,53 @@ export function getAllTaggedEntries({
     ),
   ];
 }
+
+const isElementOverlapped = (element: Element, coordinates: DOMRect, root = window.document) => {
+  const { top, right, bottom, left } = coordinates;
+  const topLeft = root.elementFromPoint(left, top);
+  const topRight = root.elementFromPoint(right, top);
+  const bottomLeft = root.elementFromPoint(left, bottom);
+  const bottomRight = root.elementFromPoint(right, bottom);
+
+  return (
+    topLeft === element || topRight === element || bottomLeft === element || bottomRight === element
+  );
+};
+
+const addVisibilityToTaggedElements = (
+  taggedElements: Partial<TaggedElement>[],
+  root = window.document,
+) =>
+  taggedElements.map((taggedElement) => ({
+    ...taggedElement,
+    isVisible: taggedElement.element!.checkVisibility({
+      checkOpacity: true,
+      checkVisibilityCSS: true,
+    }),
+    isCoveredByOtherElement: !isElementOverlapped(
+      taggedElement.element!,
+      taggedElement.coordinates!,
+      root,
+    ),
+  }));
+
+const addCoordinatesToTaggedElements = (
+  taggedElements: Partial<TaggedElement>[],
+): Partial<TaggedElement>[] =>
+  taggedElements.map(({ element, attributes }) => ({
+    element,
+    coordinates: element!.getBoundingClientRect(),
+    attributes,
+  }));
+
+/**
+ * Applies the attributes that we cannot simply get from the tagged elements itself
+ * but need to calculate based on the current state of the document
+ */
+export const addCalculatedAttributesToTaggedElements = (
+  taggedElements: PrecaulculatedTaggedElement[],
+  root = window.document,
+): TaggedElement[] => {
+  const taggedElementWithCoordinates = addCoordinatesToTaggedElements(taggedElements);
+  return addVisibilityToTaggedElements(taggedElementWithCoordinates, root) as TaggedElement[];
+};
