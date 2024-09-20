@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.6...@contentful/live-preview@4.5.7) (2024-09-20)
+
+
+### Bug Fixes
+
+* adding new property to tagged elements that are overlapped by others [TOL-2408] ([#894](https://github.com/contentful/live-preview/issues/894)) ([ba4d1c8](https://github.com/contentful/live-preview/commit/ba4d1c81a11fa2708020b2e35281ffecb44c23f6))
+
+
+
+
+
 ## [4.5.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.5...@contentful/live-preview@4.5.6) (2024-09-16)
 
 **Note:** Version bump only for package @contentful/live-preview
