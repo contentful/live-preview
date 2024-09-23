@@ -43,7 +43,7 @@
     "json-pointer": "^0.6.2"
   },
   "devDependencies": {
-    "chokidar": "4.0.0",
+    "chokidar": "4.0.1",
     "contentful": "^10.8.8"
   }
 }
