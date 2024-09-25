@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.9](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.8...@contentful/live-preview@4.5.9) (2024-09-25)
+
+
+### Bug Fixes
+
+* improve error messaging ([#893](https://github.com/contentful/live-preview/issues/893)) ([5b87339](https://github.com/contentful/live-preview/commit/5b8733984b2c721fe12b6b9755afd5b75b2eae85))
+
+
+
+
+
 ## [4.5.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.7...@contentful/live-preview@4.5.8) (2024-09-23)
 
 **Note:** Version bump only for package @contentful/live-preview
