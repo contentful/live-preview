@@ -69,7 +69,7 @@ describe('init', () => {
 
   it('warns about invalid init call (missing locale)', () => {
     expect(ContentfulLivePreview.init).toThrow(
-      "Init function have to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
+      "Init function has to be called with a locale configuration (for example: `ContentfulLivePreview.init({ locale: 'en-US'})`)",
     );
   });
 

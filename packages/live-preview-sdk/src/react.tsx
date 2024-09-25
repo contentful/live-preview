@@ -62,7 +62,7 @@ export function ContentfulLivePreviewProvider({
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>): ReactElement {
   if (!locale) {
     throw new Error(
-      'ContentfulLivePreviewProvider have to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`',
+      'ContentfulLivePreviewProvider has to be called with a locale property (for example: `<ContentfulLivePreviewProvider locale="en-US">{children}</ContentfulLivePreviewProvider>`',
     );
   }
 
