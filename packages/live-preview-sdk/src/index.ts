@@ -345,6 +345,7 @@ export class ContentfulLivePreview {
     return this.liveUpdatesEnabled;
   }
 
+  //TODO: Rename to openEntityInEditor, as assets can also be opened. Would be breaking change
   static openEntryInEditor(props: LivePreviewProps): void {
     const defaultProps = {
       locale: this.locale,
@@ -374,7 +375,7 @@ export class ContentfulLivePreview {
       return;
     }
 
-    debug.error('Please provide field id and entry/asset id to openEntryInEditor.');
+    debug.error('Please provide field id and entry/asset id to openEntryInEditor.', { ...props });
   }
 
   /**

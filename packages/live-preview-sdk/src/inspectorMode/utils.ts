@@ -68,7 +68,7 @@ export function getManualInspectorModeAttributes(
   };
 
   if (!sharedProps.fieldId) {
-    debug.warn('Tagged element is missing field ID attribute and cannot be tagged', {
+    debug.warn('Element is missing field ID attribute and cannot be tagged', {
       id:
         element.getAttribute(InspectorModeDataAttributes.ENTRY_ID) ??
         element.getAttribute(InspectorModeDataAttributes.ASSET_ID),
