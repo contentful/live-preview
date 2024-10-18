@@ -6,15 +6,17 @@ export function createSourceMapFixture(
   entityId: string,
   overrides?: {
     origin?: string;
+    entityType?: 'Entry' | 'Asset';
     contentful?: Partial<Omit<ContentfulMetadata, 'entity'>>;
   },
 ): SourceMapMetadata {
   const origin = overrides?.origin ?? 'contentful.com';
-  const space = overrides?.contentful?.space ?? 'master';
-  const environment = overrides?.contentful?.environment ?? 'master';
-  const entityType = overrides?.contentful?.entityType ?? 'Entry';
-  const locale = overrides?.contentful?.locale ?? 'en-US';
-  const field = overrides?.contentful?.field ?? 'title';
+  const space = 'master';
+  const environment = 'master';
+  const entityType = overrides?.entityType ?? 'Entry';
+  const entityTypeUrl = entityType === 'Entry' ? 'entries' : 'assets';
+  const locale = 'en-US';
+  const field = 'title';
   const editorInterface = overrides?.contentful?.editorInterface ?? {
     widgetNamespace: 'builtin',
     widgetId: 'singleLine',
@@ -22,15 +24,9 @@ export function createSourceMapFixture(
   const fieldType = overrides?.contentful?.fieldType ?? 'Symbol';
 
   return {
-    href: `https://app.${origin}/spaces/${space}/environments/${environment}/entries/${entityId}?focusedField=${field}&focusedLocale=${locale}`,
+    href: `https://app.${origin}/spaces/${space}/environments/${environment}/${entityTypeUrl}/${entityId}?focusedField=${field}&focusedLocale=${locale}`,
     origin,
     contentful: {
-      space,
-      environment,
-      entity: entityId,
-      entityType,
-      field,
-      locale,
       editorInterface,
       fieldType,
     },

@@ -238,7 +238,7 @@ describe('getAllTaggedElements', () => {
       it('should tag elements with different information separately', () => {
         const referenceMetadata = createSourceMapFixture('reference');
         const globeMetadata = createSourceMapFixture('globe', {
-          contentful: { entityType: 'Asset' },
+          entityType: 'Asset',
         });
 
         const dom = html(`
@@ -306,9 +306,9 @@ describe('getAllTaggedElements', () => {
     });
 
     it('should tag the images correctly by prefering the wrapping picture or figure', () => {
-      const img1 = createSourceMapFixture('img1', { contentful: { entityType: 'Asset' } });
-      const img2 = createSourceMapFixture('img2', { contentful: { entityType: 'Asset' } });
-      const img3 = createSourceMapFixture('img3', { contentful: { entityType: 'Asset' } });
+      const img1 = createSourceMapFixture('img1', { entityType: 'Asset' });
+      const img2 = createSourceMapFixture('img2', { entityType: 'Asset' });
+      const img3 = createSourceMapFixture('img3', { entityType: 'Asset' });
 
       const dom = html(`
         <div>

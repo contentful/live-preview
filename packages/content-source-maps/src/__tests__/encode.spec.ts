@@ -9,12 +9,6 @@ describe('Stega Function Tests', () => {
     origin: 'example.com',
     href: 'https://example.com/page',
     contentful: {
-      space: 'space-id',
-      environment: 'master',
-      entity: 'entity-id',
-      entityType: 'Article',
-      field: 'title',
-      locale: 'en-US',
       editorInterface: {
         widgetNamespace: 'builtin',
         widgetId: 'singleLine',

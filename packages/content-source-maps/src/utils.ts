@@ -36,12 +36,6 @@ export const createSourceMapMetadata = ({
     origin: 'contentful.com',
     href,
     contentful: {
-      space,
-      environment,
-      field,
-      locale,
-      entity: entityId,
-      entityType,
       editorInterface,
       fieldType,
     },
@@ -50,10 +44,6 @@ export const createSourceMapMetadata = ({
   // If the user has specified a platform, we remove the fields that are not relevant to that platform
   if (platform === 'vercel') {
     delete result.contentful;
-  }
-
-  if (platform === 'contentful') {
-    delete result.href;
   }
 
   return result;

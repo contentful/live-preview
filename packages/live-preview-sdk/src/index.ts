@@ -16,7 +16,11 @@ import {
 import { isValidMessage } from './helpers/validateMessage.js';
 import { InspectorMode } from './inspectorMode/index.js';
 import { InspectorModeDataAttributes, type InspectorModeTags } from './inspectorMode/types.js';
-import { getAllTaggedElements, getAllTaggedEntries } from './inspectorMode/utils.js';
+import {
+  getAllTaggedElements,
+  getAllTaggedEntries,
+  parseAttributesFromHref,
+} from './inspectorMode/utils.js';
 import { LiveUpdates } from './liveUpdates.js';
 import {
   LivePreviewPostMessageMethods,
@@ -395,4 +399,4 @@ export class ContentfulLivePreview {
 export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants.js';
 
 export * from './messages.js';
-export { encodeGraphQLResponse, encodeCPAResponse, splitEncoding };
+export { encodeGraphQLResponse, encodeCPAResponse, splitEncoding, parseAttributesFromHref };
