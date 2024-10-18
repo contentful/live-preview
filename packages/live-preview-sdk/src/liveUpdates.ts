@@ -34,17 +34,6 @@ export class LiveUpdates {
 
       const subscription = this.subscriptions.get(subscriptionId);
 
-      if (!data.sys || !data.sys.id) {
-        debug.error(
-          'Received an update with missing `sys.id`, please provide `sys.id` in order to enable live updates',
-          {
-            data,
-            subscriptionId,
-          },
-        );
-        return;
-      }
-
       if (subscription) {
         subscription.callback(data);
         subscription.data = data;
