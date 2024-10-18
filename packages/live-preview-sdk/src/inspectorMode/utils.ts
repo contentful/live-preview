@@ -267,7 +267,7 @@ export function getAllTaggedElements({
         });
         continue;
       }
-    } else if (sourceMap.contentful) {
+    } else if (sourceMap.contentful && isLegacyContentfulData(sourceMap.contentful)) {
       // Older SDK versions might not have HREF (if platform was set to 'contentful'), so we need to extract the attributes from sourceMap.contentful
       const contentfulData = sourceMap.contentful;
       if (
@@ -495,4 +495,23 @@ export function parseAttributesFromHref(href: string): {
     console.warn('Invalid href URL', { href, error });
     return null;
   }
+}
+
+function isLegacyContentfulData(data: any): data is {
+  entity: string;
+  field: string;
+  locale: string;
+  space: string;
+  environment: string;
+  entityType: 'Asset' | 'Entry';
+} {
+  return (
+    data &&
+    typeof data.entity === 'string' &&
+    typeof data.field === 'string' &&
+    typeof data.locale === 'string' &&
+    typeof data.space === 'string' &&
+    typeof data.environment === 'string' &&
+    (data.entityType === 'Asset' || data.entityType === 'Entry')
+  );
 }
