@@ -117,10 +117,11 @@ export interface ContentSourceMapsLookup {
   editorInterfaces: EditorInterfaceSource[];
 }
 
-export interface GraphQLResponse {
-  data: any;
+export interface GraphQLResponse<TData = any> {
+  data: TData;
   extensions: {
-    contentSourceMaps: GraphQLContentSourceMaps;
+    contentSourceMaps?: GraphQLContentSourceMaps;
+    [key: string]: any;
   };
 }
 
