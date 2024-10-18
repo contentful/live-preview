@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.12...@contentful/live-preview@4.5.13) (2024-10-18)
+
+
+### Bug Fixes
+
+* remove wrong sys check ([#926](https://github.com/contentful/live-preview/issues/926)) ([a520f8a](https://github.com/contentful/live-preview/commit/a520f8a3cf06375c511a6190cbce11b9640740af))
+
+
+
+
+
 ## [4.5.12](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.11...@contentful/live-preview@4.5.12) (2024-10-18)
 
 
