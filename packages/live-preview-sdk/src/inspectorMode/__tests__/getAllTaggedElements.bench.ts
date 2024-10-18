@@ -61,7 +61,7 @@ describe('getAllTaggedElements', () => {
           <div id="img">
             <img
               src="./picture.jpg"
-              alt="${combine('Some alt text for the picture', createSourceMapFixture('img-1', { contentful: { entityType: 'Asset' } }))}"
+              alt="${combine('Some alt text for the picture', createSourceMapFixture('img-1', { entityType: 'Asset' }))}"
             />
           </div>
           <div id="picture">
@@ -69,7 +69,7 @@ describe('getAllTaggedElements', () => {
               <source srcset="/lion-potrait.jpg" media="(orientation: portrait)" />
               <img
                 src="/lion-298-332.jpg"
-                alt="${combine('A lion staring at the sun', createSourceMapFixture('img-2', { contentful: { entityType: 'Asset' } }))}"
+                alt="${combine('A lion staring at the sun', createSourceMapFixture('img-2', { entityType: 'Asset' }))}"
               />
             </picture>
           </div>
@@ -79,11 +79,11 @@ describe('getAllTaggedElements', () => {
                 <span>
                   <img
                     src="/elephant.jpg"
-                    alt="${combine('Elephant at sunset', createSourceMapFixture('img-3', { contentful: { entityType: 'Asset' } }))})}"
+                    alt="${combine('Elephant at sunset', createSourceMapFixture('img-3', { entityType: 'Asset' }))})}"
                   />
                 </span>
               </span>
-              <figcaption>${combine('An elephant at sunset', createSourceMapFixture('img-3', { contentful: { entityType: 'Asset' } }))})}</figcaption>
+              <figcaption>${combine('An elephant at sunset', createSourceMapFixture('img-3', { entityType: 'Asset' }))})}</figcaption>
             </figure>
           </div>
         </div>

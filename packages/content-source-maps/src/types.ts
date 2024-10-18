@@ -7,12 +7,6 @@ import type {
 } from 'contentful';
 
 type ContentfulMetadata = {
-  space: string;
-  environment: string;
-  entity: string;
-  entityType: string;
-  field: string;
-  locale: string;
   editorInterface: {
     widgetNamespace: string;
     widgetId: string;
@@ -29,7 +23,7 @@ export type SourceMapMetadata = {
 
 export type CreateSourceMapParams = {
   entityId: string;
-  entityType: string;
+  entityType: 'Entry' | 'Asset';
   space: string;
   environment: string;
   field: string;
@@ -123,10 +117,11 @@ export interface ContentSourceMapsLookup {
   editorInterfaces: EditorInterfaceSource[];
 }
 
-export interface GraphQLResponse {
-  data: any;
+export interface GraphQLResponse<TData = any> {
+  data: TData;
   extensions: {
-    contentSourceMaps: GraphQLContentSourceMaps;
+    contentSourceMaps?: GraphQLContentSourceMaps;
+    [key: string]: any;
   };
 }
 

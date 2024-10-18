@@ -1,6 +1,6 @@
 import { get, has } from 'json-pointer';
 
-import type { CreateSourceMapParams, GraphQLResponse } from '../types.js';
+import type { CreateSourceMapParams } from '../types.js';
 import {
   clone,
   createSourceMapMetadata,
@@ -9,11 +9,11 @@ import {
   isSupportedWidget,
 } from '../utils.js';
 
-export const encodeGraphQLResponse = (
-  originalGraphqlResponse: GraphQLResponse,
+export const encodeGraphQLResponse = <TResponse extends { data: any; extensions: any }>(
+  originalGraphqlResponse: TResponse,
   targetOrigin?: CreateSourceMapParams['targetOrigin'],
   platform?: CreateSourceMapParams['platform'],
-): GraphQLResponse => {
+): TResponse => {
   if (
     !originalGraphqlResponse ||
     !originalGraphqlResponse.extensions ||
@@ -25,9 +25,7 @@ export const encodeGraphQLResponse = (
     );
     return originalGraphqlResponse;
   }
-  const modifiedGraphqlResponse = clone(
-    originalGraphqlResponse as unknown as Record<string, unknown>,
-  ) as unknown as GraphQLResponse;
+  const modifiedGraphqlResponse = clone(originalGraphqlResponse);
   const {
     spaces,
     environments,

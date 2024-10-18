@@ -80,12 +80,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'title',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -97,12 +91,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'subtitle',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -169,12 +157,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=longText&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'longText',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'multipleLine',
             widgetNamespace: 'builtin',
@@ -229,12 +211,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=list&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'list',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           fieldType: 'Array',
           editorInterface: {
             widgetId: 'listInput',
@@ -351,12 +327,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'title',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -368,12 +338,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.eu.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=subtitle&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'subtitle',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -458,7 +422,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         const baseUrl = 'https://app.contentful.com';
         const spaceId = 'foo';
         const environment = 'master';
-        const entityType = 'Entry';
         const field = 'title';
         const locale = 'en-US';
         const entityIds = ['a1b2c3', 'd4e5f6', 'g7h8i9'];
@@ -467,12 +430,6 @@ describe('Content Source Maps with the GraphQL API', () => {
           origin: 'contentful.com',
           href: `${baseUrl}/spaces/${spaceId}/environments/${environment}/entries/${entityId}/?focusedField=${field}&focusedLocale=${locale}&source=vercel-content-link`,
           contentful: {
-            space: spaceId,
-            environment,
-            field,
-            locale,
-            entity: entityId,
-            entityType,
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -552,12 +509,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=ak&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'title',
-          locale: 'ak',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -569,12 +520,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=agq&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'title',
-          locale: 'agq',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -586,12 +531,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=es&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'title',
-          locale: 'es',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'singleLine',
             widgetNamespace: 'builtin',
@@ -790,12 +729,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'rte',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'richTextEditor',
             widgetNamespace: 'builtin',
@@ -807,12 +740,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'rte',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'richTextEditor',
             widgetNamespace: 'builtin',
@@ -825,12 +752,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'rte',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'richTextEditor',
             widgetNamespace: 'builtin',
@@ -845,12 +766,6 @@ describe('Content Source Maps with the GraphQL API', () => {
         origin: 'contentful.com',
         href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
         contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'rte',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
           editorInterface: {
             widgetId: 'richTextEditor',
             widgetNamespace: 'builtin',
@@ -1017,93 +932,6 @@ describe('Content Source Maps with the GraphQL API', () => {
     });
   });
 
-  test('adds only the `contentful` parameter in the encoding if platform `contentful` is configured', () => {
-    const graphQLResponse: GraphQLResponse = {
-      data: {
-        post: {
-          title: 'Title of the post',
-          subtitle: 'Subtitle of the post',
-        },
-      },
-      extensions: {
-        contentSourceMaps: {
-          spaces: ['foo'],
-          environments: ['master'],
-          fieldTypes: ['Symbol'],
-          editorInterfaces: [
-            {
-              widgetId: 'singleLine',
-              widgetNamespace: 'builtin',
-            },
-          ],
-          fields: ['title', 'subtitle'],
-          locales: ['en-US'],
-          entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
-          assets: [],
-          mappings: {
-            '/data/post/title': {
-              source: {
-                entry: 0,
-                field: 0,
-                locale: 0,
-                fieldType: 0,
-                editorInterface: 0,
-              },
-            },
-            '/data/post/subtitle': {
-              source: {
-                entry: 0,
-                field: 1,
-                locale: 0,
-                fieldType: 0,
-                editorInterface: 0,
-              },
-            },
-          },
-        },
-      },
-    };
-    const encodedGraphQLResponse = encodeGraphQLResponse(
-      graphQLResponse,
-      'https://app.contentful.com',
-      'contentful',
-    );
-    testEncodingDecoding(encodedGraphQLResponse.data.post, {
-      '/title': {
-        origin: 'contentful.com',
-        contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'title',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
-          editorInterface: {
-            widgetId: 'singleLine',
-            widgetNamespace: 'builtin',
-          },
-          fieldType: 'Symbol',
-        },
-      },
-      '/subtitle': {
-        origin: 'contentful.com',
-        contentful: {
-          space: 'foo',
-          environment: 'master',
-          field: 'subtitle',
-          locale: 'en-US',
-          entity: 'a1b2c3',
-          entityType: 'Entry',
-          editorInterface: {
-            widgetId: 'singleLine',
-            widgetNamespace: 'builtin',
-          },
-          fieldType: 'Symbol',
-        },
-      },
-    });
-  });
-
   describe('editor interfaces', () => {
     UNSUPPORTED_WIDGETS.forEach((widget) => {
       test(`does not encode ${widget}`, () => {
@@ -1263,12 +1091,6 @@ describe('Content Source Maps with the GraphQL API', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'rte',
-            locale: 'en-US',
-            entity: 'a1b2c3',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -1280,12 +1102,6 @@ describe('Content Source Maps with the GraphQL API', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=rte&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'rte',
-            locale: 'en-US',
-            entity: 'a1b2c3',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -1297,12 +1113,6 @@ describe('Content Source Maps with the GraphQL API', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'a1b2c3',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -1356,12 +1166,6 @@ describe('Content Source Maps with the GraphQL API', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'a1b2c3',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'radio',
               widgetNamespace: 'app',

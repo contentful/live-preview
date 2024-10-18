@@ -183,13 +183,13 @@ export function getAllTaggedElements({
         `[${InspectorModeDataAttributes.ASSET_ID}][${InspectorModeDataAttributes.FIELD_ID}], [${InspectorModeDataAttributes.ENTRY_ID}][${InspectorModeDataAttributes.FIELD_ID}]`,
       );
 
-  //Spread operator is necessary to convert the NodeList to an array
+  // Spread operator is necessary to convert the NodeList to an array
   const taggedElements: PrecaulculatedTaggedElement[] = [...alreadyTagged]
     .map((element: Element) => ({
       element,
       attributes: getManualInspectorModeAttributes(element, options),
     }))
-    //filter out elements that don't have the necessary attributes
+    // Filter out elements that don't have the necessary attributes
     .filter(({ attributes }) => attributes !== null);
   const elementsForTagging: AutoTaggedElement<Element>[] = [];
 
@@ -232,9 +232,84 @@ export function getAllTaggedElements({
   );
 
   for (const { element, sourceMap } of uniqElementsForTagging) {
-    if (!sourceMap.contentful) {
+    let inspectorModeAttributes: InspectorModeAttributes | null = null;
+
+    if (sourceMap.href) {
+      // Newer SDK versions will always have HREF, so we can use that to extract the attributes
+      const attributes = parseAttributesFromHref(sourceMap.href);
+
+      if (!attributes) {
+        // parseAttributesFromHref already logs a warning
+        continue;
+      }
+
+      if (attributes.entityType === 'Asset') {
+        inspectorModeAttributes = {
+          fieldId: attributes.fieldId,
+          locale: attributes.locale,
+          space: attributes.space,
+          environment: attributes.environment,
+          assetId: attributes.entityId,
+        } as InspectorModeAssetAttributes;
+      } else if (attributes.entityType === 'Entry') {
+        inspectorModeAttributes = {
+          fieldId: attributes.fieldId,
+          locale: attributes.locale,
+          space: attributes.space,
+          environment: attributes.environment,
+          entryId: attributes.entityId,
+        } as InspectorModeEntryAttributes;
+      } else {
+        // This should not happen, but adding a warning just in case
+        debug.warn('Unknown entityType', {
+          element,
+          sourceMap,
+        });
+        continue;
+      }
+    } else if (sourceMap.contentful && isLegacyContentfulData(sourceMap.contentful)) {
+      // Older SDK versions might not have HREF (if platform was set to 'contentful'), so we need to extract the attributes from sourceMap.contentful
+      const contentfulData = sourceMap.contentful;
+      if (
+        !contentfulData.entity ||
+        !contentfulData.field ||
+        !contentfulData.locale ||
+        !contentfulData.space ||
+        !contentfulData.environment
+      ) {
+        debug.warn(
+          'Element has missing information in their ContentSourceMap, please check if you have restricted the platform for the encoding. (Missing parameters in `contentful`)',
+          {
+            element,
+            sourceMap,
+          },
+        );
+        continue;
+      }
+
+      const attributes: InspectorModeSharedAttributes = {
+        fieldId: contentfulData.field,
+        locale: contentfulData.locale,
+        space: contentfulData.space,
+        environment: contentfulData.environment,
+      };
+
+      if (contentfulData.entityType === 'Asset') {
+        (attributes as InspectorModeAssetAttributes).assetId = contentfulData.entity;
+        inspectorModeAttributes = attributes as InspectorModeAssetAttributes;
+      } else if (contentfulData.entityType === 'Entry') {
+        (attributes as InspectorModeEntryAttributes).entryId = contentfulData.entity;
+        inspectorModeAttributes = attributes as InspectorModeEntryAttributes;
+      } else {
+        debug.warn('Unknown entityType in contentful data', {
+          element,
+          sourceMap,
+        });
+        continue;
+      }
+    } else {
       debug.warn(
-        'Element has missing information in their ContentSourceMap, please check if you have restricted the platform for the encoding. (Missing parameter: `contentful`)',
+        'Element has neither href nor contentful data in their ContentSourceMap, unable to extract attributes.',
         {
           element,
           sourceMap,
@@ -243,22 +318,9 @@ export function getAllTaggedElements({
       continue;
     }
 
-    const attributes: InspectorModeSharedAttributes = {
-      fieldId: sourceMap.contentful.field,
-      locale: sourceMap.contentful.locale,
-      space: sourceMap.contentful.space,
-      environment: sourceMap.contentful.environment,
-    };
-
-    if (sourceMap.contentful.entityType === 'Asset') {
-      (attributes as InspectorModeAssetAttributes).assetId = sourceMap.contentful.entity;
-    } else if (sourceMap.contentful.entityType === 'Entry') {
-      (attributes as InspectorModeEntryAttributes).entryId = sourceMap.contentful.entity;
-    }
-
     taggedElements.push({
       element,
-      attributes: attributes as InspectorModeAttributes,
+      attributes: inspectorModeAttributes,
     });
   }
 
@@ -345,3 +407,111 @@ export const addCalculatedAttributesToTaggedElements = (
   const taggedElementWithCoordinates = addCoordinatesToTaggedElements(taggedElements);
   return addVisibilityToTaggedElements(taggedElementWithCoordinates, root) as TaggedElement[];
 };
+
+/**
+ * Parses a Contentful `href` URL to extract shared attributes, including the entity ID and entity type.
+ *
+ * @param {string} href - The URL containing Contentful parameters.
+ * @returns {InspectorModeSharedAttributes | null} An object containing `entityId`, `entityType`, `fieldId`, `locale`, `space`, and `environment`, or `null` if parsing fails.
+ *
+ * The function extracts:
+ * - `entityId` and `entityType` from the path segments (`entries/` or `assets/`).
+ * - `fieldId` from the `focusedField` query parameter.
+ * - `locale` from the `focusedLocale` query parameter.
+ * - `space` from the path segment following `spaces/`.
+ * - `environment` from the path segment following `environments/`.
+ *
+ * If any of these elements are missing or the URL is malformed, the function logs a warning and returns `null`.
+ */
+export function parseAttributesFromHref(href: string): {
+  entityId: string;
+  entityType: 'Entry' | 'Asset';
+  fieldId: string;
+  locale: string;
+  space: string;
+  environment: string;
+} | null {
+  try {
+    const url = new URL(href);
+
+    // Extract query parameters
+    const fieldId = url.searchParams.get('focusedField');
+    const locale = url.searchParams.get('focusedLocale');
+
+    // Extract path segments
+    const pathSegments = url.pathname.split('/').filter(Boolean);
+
+    const spaceIndex = pathSegments.indexOf('spaces');
+    const environmentIndex = pathSegments.indexOf('environments');
+
+    const space = spaceIndex !== -1 ? pathSegments[spaceIndex + 1] : undefined;
+    const environment = environmentIndex !== -1 ? pathSegments[environmentIndex + 1] : undefined;
+
+    // Determine entityType and entityId
+    let entityType: 'Entry' | 'Asset' | undefined;
+    let entityId: string | undefined;
+
+    const entriesIndex = pathSegments.indexOf('entries');
+    const assetsIndex = pathSegments.indexOf('assets');
+
+    if (entriesIndex !== -1) {
+      entityType = 'Entry';
+      entityId = pathSegments[entriesIndex + 1];
+    } else if (assetsIndex !== -1) {
+      entityType = 'Asset';
+      entityId = pathSegments[assetsIndex + 1];
+    }
+
+    // Check for missing required attributes
+    if (!entityType || !entityId) {
+      console.warn('Unable to determine entityType or entityId from href', { href });
+      return null;
+    }
+
+    if (!fieldId) {
+      console.warn('Missing focusedField query parameter in href', { href });
+      return null;
+    }
+
+    if (!locale) {
+      console.warn('Missing focusedLocale query parameter in href', { href });
+      return null;
+    }
+
+    if (!space || !environment) {
+      console.warn('Missing space or environment in href path', { href });
+      return null;
+    }
+
+    return {
+      entityId,
+      entityType,
+      fieldId,
+      locale,
+      space,
+      environment,
+    };
+  } catch (error) {
+    console.warn('Invalid href URL', { href, error });
+    return null;
+  }
+}
+
+function isLegacyContentfulData(data: any): data is {
+  entity: string;
+  field: string;
+  locale: string;
+  space: string;
+  environment: string;
+  entityType: 'Asset' | 'Entry';
+} {
+  return (
+    data &&
+    typeof data.entity === 'string' &&
+    typeof data.field === 'string' &&
+    typeof data.locale === 'string' &&
+    typeof data.space === 'string' &&
+    typeof data.environment === 'string' &&
+    (data.entityType === 'Asset' || data.entityType === 'Entry')
+  );
+}

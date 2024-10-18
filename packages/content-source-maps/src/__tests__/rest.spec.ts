@@ -237,12 +237,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -254,12 +248,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -271,12 +259,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=longText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'longText',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'multipleLine',
               widgetNamespace: 'builtin',
@@ -288,12 +270,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=longText&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'longText',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'multipleLine',
               widgetNamespace: 'builtin',
@@ -305,12 +281,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -322,12 +292,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -339,12 +303,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -356,12 +314,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entry2Id/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'entry2Id',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -373,12 +325,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entry2Id/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'en-US',
-            entity: 'entry2Id',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -390,12 +336,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/assets/assetId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'assetId',
-            entityType: 'Asset',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -412,12 +352,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=list&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'list',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             fieldType: 'Array',
             editorInterface: {
               widgetId: 'tagEditor',
@@ -514,12 +448,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -531,12 +459,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -553,12 +475,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=list&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'list',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             fieldType: 'Array',
             editorInterface: {
               widgetId: 'listInput',
@@ -724,12 +640,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -741,12 +651,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -758,12 +662,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=nl-BE&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'nl-BE',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -775,12 +673,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -792,12 +684,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -809,12 +695,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=af&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'af',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -826,12 +706,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=nl-BE&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'nl-BE',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -848,12 +722,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=checkboxes&focusedLocale=nl-BE&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'checkboxes',
-            locale: 'nl-BE',
-            entity: 'entryId',
-            entityType: 'Entry',
             fieldType: 'Array',
             editorInterface: {
               widgetId: 'checkbox',
@@ -935,12 +803,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'singleLine',
               widgetNamespace: 'builtin',
@@ -952,12 +814,6 @@ describe('Content Source Maps with the CPA', () => {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
           contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
             editorInterface: {
               widgetId: 'richTextEditor',
               widgetNamespace: 'builtin',
@@ -1047,51 +903,6 @@ describe('Content Source Maps with the CPA', () => {
         '/fields/richText/content/0/content/0/value': {
           origin: 'contentful.com',
           href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=richText&focusedLocale=en-US&source=vercel-content-link',
-        },
-      };
-
-      testEncodingDecoding(encodedCPAResponse, mappings);
-    });
-
-    test('setting the platform to contentful removes the href information', () => {
-      const encodedCPAResponse = encodeCPAResponse(
-        response,
-        'https://app.contentful.com',
-        'contentful',
-      ) as CPAEntry;
-
-      const mappings = {
-        '/fields/title': {
-          origin: 'contentful.com',
-          contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'title',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
-            editorInterface: {
-              widgetId: 'singleLine',
-              widgetNamespace: 'builtin',
-            },
-            fieldType: 'Symbol',
-          },
-        },
-        '/fields/richText/content/0/content/0/value': {
-          origin: 'contentful.com',
-          contentful: {
-            space: 'spaceId',
-            environment: 'master',
-            field: 'richText',
-            locale: 'en-US',
-            entity: 'entryId',
-            entityType: 'Entry',
-            editorInterface: {
-              widgetId: 'richTextEditor',
-              widgetNamespace: 'builtin',
-            },
-            fieldType: 'RichText',
-          },
         },
       };
 
