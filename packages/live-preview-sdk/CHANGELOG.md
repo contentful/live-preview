@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.12](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.11...@contentful/live-preview@4.5.12) (2024-10-18)
+
+
+### Bug Fixes
+
+* remove redundant contentful info CSM [NONE] ([#925](https://github.com/contentful/live-preview/issues/925)) ([c3b0452](https://github.com/contentful/live-preview/commit/c3b04526355929f75886358f7ae2823e882806b1))
+
+
+
+
+
 ## [4.5.11](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.10...@contentful/live-preview@4.5.11) (2024-10-14)
 
 **Note:** Version bump only for package @contentful/live-preview

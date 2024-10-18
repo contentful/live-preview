@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.6](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.5...@contentful/content-source-maps@0.11.6) (2024-10-18)
+
+
+### Bug Fixes
+
+* remove redundant contentful info CSM [NONE] ([#925](https://github.com/contentful/live-preview/issues/925)) ([c3b0452](https://github.com/contentful/live-preview/commit/c3b04526355929f75886358f7ae2823e882806b1))
+
+
+
+
+
 ## [0.11.5](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.4...@contentful/content-source-maps@0.11.5) (2024-10-14)
 
 **Note:** Version bump only for package @contentful/content-source-maps
