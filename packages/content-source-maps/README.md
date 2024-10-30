@@ -138,6 +138,8 @@ const dataWithAutoTagging = encodeCPAResponse(data);
   <ContentfulLivePreviewProvider experimental={{ ignoreManuallyTaggedElements: true }} />
   ```
 
+- For usage with @apollo/client, a custom link is needed to add the extensions to forward the extionsions to the response. [Example](../../examples/content-source-maps-apollo/lib/api-graphql.ts)
+
 ## Limitations
 
 - Markdown support is currently in development.
