@@ -1,8 +1,8 @@
-> ⚠️ **This feature is currently in alpha for selected customers.**
+> ⚠️ **Content Source Maps are only available on our Premium plan. Vercel Content Links are only available on Vercel Pro and Enterprise plans.**
 
-# Next.js App Router GraphQL Content Source Maps example
+# Next.js App Router GraphQL with Apollo Content Source Maps example
 
-This is an example project that demonstrates how to use Content Source Maps with a Next.js App Router application. It is using the GraphQL API of Contentful.
+This is an example project that demonstrates how to use Content Source Maps with a Next.js App Router application. It is using the GraphQL API of Contentful using Apollo.
 
 ## What?
 
