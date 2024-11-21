@@ -8,6 +8,13 @@ export interface Post {
   slug: string;
   title: string;
   description: string;
+  banner: {
+    sys: Sys;
+    title: string;
+    file: {
+      url: string;
+    };
+  };
 }
 
 interface PostCollection {
@@ -21,13 +28,22 @@ interface FetchResponse {
 }
 
 const POST_GRAPHQL_FIELDS = `
-__typename
-sys {
-  id
-}
-slug
-title
-description
+  __typename
+  sys {
+    id
+  }
+  slug
+  title
+  description
+  banner {
+    sys {
+      id
+    }
+    title
+    file {
+      url
+    }
+  }
 `;
 
 async function fetchGraphQL(query: string, draftMode = false): Promise<FetchResponse> {
