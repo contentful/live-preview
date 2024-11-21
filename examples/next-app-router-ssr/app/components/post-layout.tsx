@@ -22,6 +22,17 @@ export default function PostLayout({ post }: { post: Post }) {
       >
         {post.description}
       </p>
+      {post.banner && (
+        <img
+          {...ContentfulLivePreview.getProps({
+            entryId: post.banner.sys.id,
+            fieldId: 'title',
+            locale: 'en-US',
+          })}
+          alt={post.banner.title}
+          src={post.banner.url}
+        />
+      )}
     </>
   );
 }
