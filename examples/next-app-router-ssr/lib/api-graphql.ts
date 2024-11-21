@@ -11,9 +11,7 @@ export interface Post {
   banner: {
     sys: Sys;
     title: string;
-    file: {
-      url: string;
-    };
+    url: string;
   };
 }
 
@@ -40,9 +38,7 @@ const POST_GRAPHQL_FIELDS = `
       id
     }
     title
-    file {
-      url
-    }
+    url
   }
 `;
 

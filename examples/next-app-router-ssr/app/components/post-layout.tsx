@@ -30,7 +30,7 @@ export default function PostLayout({ post }: { post: Post }) {
             locale: 'en-US',
           })}
           alt={post.banner.title}
-          src={post.banner.file.url}
+          src={post.banner.url}
         />
       )}
     </>
