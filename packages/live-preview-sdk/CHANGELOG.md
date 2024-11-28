@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.14...@contentful/live-preview@4.5.15) (2024-11-28)
+
+
+### Bug Fixes
+
+* not hiding elements that share borders [TOL-2545] ([#965](https://github.com/contentful/live-preview/issues/965)) ([876d539](https://github.com/contentful/live-preview/commit/876d539b37a1bb5630747aad211755614f85a4ba))
+
+
+
+
+
 ## [4.5.14](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.13...@contentful/live-preview@4.5.14) (2024-11-04)
 
 **Note:** Version bump only for package @contentful/live-preview
