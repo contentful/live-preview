@@ -360,13 +360,16 @@ export function getAllTaggedEntries({
 
 const isElementOverlapped = (element: Element, coordinates: DOMRect, root = window.document) => {
   const { top, right, bottom, left } = coordinates;
-  const topLeft = root.elementFromPoint(left, top);
-  const topRight = root.elementFromPoint(right, top);
-  const bottomLeft = root.elementFromPoint(left, bottom);
-  const bottomRight = root.elementFromPoint(right, bottom);
+  const topLeft = root.elementFromPoint(left + 1, top + 1);
+  const topRight = root.elementFromPoint(right - 1, top + 1);
+  const bottomLeft = root.elementFromPoint(left + 1, bottom - 1);
+  const bottomRight = root.elementFromPoint(right - 1, bottom - 1);
 
-  return (
-    topLeft === element || topRight === element || bottomLeft === element || bottomRight === element
+  return !(
+    topLeft === element &&
+    topRight === element &&
+    bottomLeft === element &&
+    bottomRight === element
   );
 };
 
@@ -380,7 +383,7 @@ const addVisibilityToTaggedElements = (
       checkOpacity: true,
       checkVisibilityCSS: true,
     }),
-    isCoveredByOtherElement: !isElementOverlapped(
+    isCoveredByOtherElement: isElementOverlapped(
       taggedElement.element!,
       taggedElement.coordinates!,
       root,
