@@ -1,7 +1,6 @@
 import { Blog, getAllBlogsWithSlug, getBlog } from '@/lib/contentful/api';
 
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import {
   useContentfulInspectorMode,
   useContentfulLiveUpdates,
@@ -67,16 +66,6 @@ export default function BlogPage({ blog }: { blog: Blog }) {
                 fieldId: 'file',
               })}
             />
-            <div className="space-y-4 md:space-y-6">
-              <div className="space-y-2">
-                <div
-                  className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400"
-                  {...inspectorProps({ fieldId: 'details' })}
-                >
-                  {documentToReactComponents(updatedBlog.fields.details)}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

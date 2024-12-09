@@ -5,7 +5,6 @@
 */
 'use client';
 
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import Image from 'next/image';
 import {
   useContentfulInspectorMode,
@@ -56,16 +55,6 @@ export const Blog = ({ blog }: { blog: BlogProps }) => {
                 fieldId: 'file',
               })}
             />
-            <div className="space-y-4 md:space-y-6">
-              <div className="space-y-2">
-                <div
-                  className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400"
-                  {...inspectorProps({ fieldId: 'details' })}
-                >
-                  {documentToReactComponents(updatedBlog.details.json)}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

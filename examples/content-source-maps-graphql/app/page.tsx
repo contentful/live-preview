@@ -2,7 +2,7 @@ import { draftMode } from 'next/headers';
 import { getAllPostsForHome } from '../lib/api-graphql';
 
 export default async function Home() {
-  const { isEnabled } = draftMode();
+  const { isEnabled } = await draftMode();
   const posts = await getAllPostsForHome(isEnabled);
 
   return (
