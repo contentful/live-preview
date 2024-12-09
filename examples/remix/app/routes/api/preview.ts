@@ -2,17 +2,9 @@ import { gql } from 'graphql-request';
 import { json, redirect } from '@remix-run/node';
 import type { LoaderFunction } from '@remix-run/node';
 
-import { contentful } from '../../../lib/contentful.server';
+import { getEntryBySlug } from '../../../lib/contentful.server';
 import { previewModeCookie } from '../../utils/preview-mode.server';
 import { parseCookie } from '../../utils/parse-cookie.server';
-
-type QueryResponse = {
-  postCollection: {
-    items: {
-      slug: string;
-    }[];
-  };
-};
 
 const getPostQuery = gql`
   query Post($slug: String!) {
@@ -35,13 +27,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   // Check if the provided `slug` exists
-  const data = (await contentful.request(
-    getPostQuery,
-    { slug },
-    {
-      authorization: `Bearer ${process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN}`,
-    }
-  )) as QueryResponse;
+  const data = await getEntryBySlug({
+    spaceId: process.env.CONTENTFUL_SPACE_ID || '',
+    accessToken: process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN || '',
+    query: getPostQuery,
+    slug,
+    preview: true
+  });
 
   // If the slug doesn't exist prevent preview from being enabled
   if (!data.postCollection.items.length) {
