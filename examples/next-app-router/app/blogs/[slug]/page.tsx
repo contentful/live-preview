@@ -13,8 +13,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function BlogPage({ params }: { params: { slug: string } }) {
-  const { isEnabled } = draftMode();
+export default async function BlogPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
+  const { isEnabled } = await draftMode();
   const blog = await getBlog(params.slug, isEnabled);
 
   if (!blog) {
