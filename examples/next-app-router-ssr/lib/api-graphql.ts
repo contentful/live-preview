@@ -34,6 +34,7 @@ const POST_GRAPHQL_FIELDS = `
   title
   description
   banner {
+    __typename
     sys {
       id
     }
