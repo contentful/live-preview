@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.18](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.17...@contentful/live-preview@4.5.18) (2024-12-09)
+
+
+### Reverts
+
+* Revert "chore: update react version (#980)" (#982) ([e224540](https://github.com/contentful/live-preview/commit/e224540d6ea770132f7468cba4f87a75b2ba2986)), closes [#980](https://github.com/contentful/live-preview/issues/980) [#982](https://github.com/contentful/live-preview/issues/982)
+
+
+
+
+
 ## [4.5.17](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.16...@contentful/live-preview@4.5.17) (2024-12-09)
 
 **Note:** Version bump only for package @contentful/live-preview
