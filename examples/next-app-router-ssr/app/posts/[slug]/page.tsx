@@ -3,12 +3,12 @@ import { getAllPostsWithSlug, getPost } from '../../../lib/api-graphql';
 
 import PostLayout from '../../components/post-layout';
 
-export default async function Post({ params }: { params: { slug: string } }) {
-  const { isEnabled } = draftMode();
+export default async function Post(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
+  const { isEnabled } = await draftMode();
 
   const { post } = await getPost(params.slug, isEnabled);
 
-  console.log({ post, isEnabled });
   if (!post) {
     const formattedPost = `Post ${params.slug} not found`;
     return <h1>{formattedPost}</h1>;
