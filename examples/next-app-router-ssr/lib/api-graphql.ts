@@ -34,6 +34,7 @@ const POST_GRAPHQL_FIELDS = `
   title
   description
   banner {
+    __typename
     sys {
       id
     }
@@ -107,7 +108,6 @@ export async function getAllPostsForHome(draftMode: boolean): Promise<Post[] | u
     draftMode,
   );
 
-  console.log(entries);
   return extractPostEntries(entries);
 }
 
