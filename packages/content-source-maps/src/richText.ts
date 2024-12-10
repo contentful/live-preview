@@ -15,15 +15,27 @@ export const encodeRichTextValue = ({
   hiddenStrings: SourceMapMetadata;
 }) => {
   const source = mappings[pointer];
-  // remove old pointer to rich text field as we will just be mapping the text nodes
-  delete mappings[pointer];
 
-  const textNodes = findRichTextNodes(data, pointer);
-  for (const textNode of textNodes) {
-    mappings[textNode] = source;
-    const currentTextNodeValue = get(data, textNode);
-    const encodedValue = combine(currentTextNodeValue, hiddenStrings);
-    set(data, textNode, encodedValue);
+  // Only proceed with mapping if we have a valid source
+  if (source) {
+    // We can now safely delete the original pointer as we've preserved the source
+    delete mappings[pointer];
+
+    const textNodes = findRichTextNodes(data, pointer);
+    for (const textNode of textNodes) {
+      mappings[textNode] = source;
+      const currentTextNodeValue = get(data, textNode);
+      const encodedValue = combine(currentTextNodeValue, hiddenStrings);
+      set(data, textNode, encodedValue);
+    }
+  } else {
+    // If there's no source mapping, just encode the text nodes without creating mappings
+    const textNodes = findRichTextNodes(data, pointer);
+    for (const textNode of textNodes) {
+      const currentTextNodeValue = get(data, textNode);
+      const encodedValue = combine(currentTextNodeValue, hiddenStrings);
+      set(data, textNode, encodedValue);
+    }
   }
 };
 
