@@ -4,26 +4,10 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { gql } from 'graphql-request';
 
-import { contentful } from '../../lib/contentful.server';
+import { getEntries } from '../../lib/contentful.server';
 import { isPreviewMode } from '../utils/preview-mode.server';
 import { PreviewBanner } from '../components/preview-banner';
-
-type QueryResponse = {
-  postCollection: {
-    items: Post[];
-  };
-};
-
-type Post = {
-  title: string;
-  description: string;
-  slug: string;
-};
-
-type LoaderData = {
-  posts: Post[];
-  preview: boolean;
-};
+import type { LoaderData, Post } from '../../types';
 
 const getPostQuery = gql`
   query Post($preview: Boolean!) {
@@ -44,18 +28,12 @@ const getPostQuery = gql`
 
 export const loader: LoaderFunction = async ({ request }) => {
   const preview = await isPreviewMode(request);
-
-  const API_TOKEN = preview
-    ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
-    : process.env.CONTENTFUL_ACCESS_TOKEN;
-
-  const data = (await contentful.request(
-    getPostQuery,
-    { preview },
-    {
-      authorization: `Bearer ${API_TOKEN}`,
-    }
-  )) as QueryResponse;
+  const data = await getEntries({
+    spaceId: process.env.CONTENTFUL_SPACE_ID || '',
+    accessToken: preview ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN || '' : process.env.CONTENTFUL_ACCESS_TOKEN || '',
+    query: getPostQuery,
+    preview
+  })
 
   return json({
     posts: data.postCollection.items,
@@ -69,7 +47,7 @@ export default function Index() {
   return (
     <>
       {preview && <PreviewBanner />}
-      {posts.map((post) => (
+      {posts && posts.map((post: Post) => (
         <a key={post.title} href={`/${post.slug}`}>
           {post.title}
         </a>
