@@ -1,4 +1,4 @@
-import { Entry, createClient, EntrySys } from 'contentful';
+import { createClient, EntrySys } from 'contentful';
 
 type PostFields = {
   title: string;

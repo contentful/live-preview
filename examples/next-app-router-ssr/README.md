@@ -31,9 +31,10 @@ To run this project, you will need to add the following environment variables to
 
 You will need to set up a content model within your Contentful space. For this project, we need a `Post` content type with the following fields:
 
-- `slug`
-- `title`
-- `description`
+- `slug` - short text
+- `title` - short text
+- `description` - short text
+- `banner` - single media field
 
 Once you've set up the `Post` content model, you can populate it with some example entries.
 

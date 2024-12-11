@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.7](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.6...@contentful/content-source-maps@0.11.7) (2024-12-10)
+
+
+### Bug Fixes
+
+* undefined mappings in csm ([#986](https://github.com/contentful/live-preview/issues/986)) ([2071efe](https://github.com/contentful/live-preview/commit/2071efe5370c90d5a9d3a60cb55435e60140017c))
+
+
+
+
+
 ## [0.11.6](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.5...@contentful/content-source-maps@0.11.6) (2024-10-18)
 
 

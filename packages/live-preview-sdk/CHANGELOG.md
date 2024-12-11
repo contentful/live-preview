@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.0...@contentful/live-preview@4.6.1) (2024-12-10)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+# [4.6.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.18...@contentful/live-preview@4.6.0) (2024-12-10)
+
+
+### Features
+
+* support react 19 ([#983](https://github.com/contentful/live-preview/issues/983)) ([a33ebe2](https://github.com/contentful/live-preview/commit/a33ebe2d8a7037ca184ca5af132b21678eb9a8b6))
+
+
+
+
+
+## [4.5.18](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.17...@contentful/live-preview@4.5.18) (2024-12-09)
+
+
+### Reverts
+
+* Revert "chore: update react version (#980)" (#982) ([e224540](https://github.com/contentful/live-preview/commit/e224540d6ea770132f7468cba4f87a75b2ba2986)), closes [#980](https://github.com/contentful/live-preview/issues/980) [#982](https://github.com/contentful/live-preview/issues/982)
+
+
+
+
+
+## [4.5.17](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.16...@contentful/live-preview@4.5.17) (2024-12-09)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
 ## [4.5.16](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.5.15...@contentful/live-preview@4.5.16) (2024-12-02)
 
 **Note:** Version bump only for package @contentful/live-preview

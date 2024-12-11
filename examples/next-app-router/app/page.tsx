@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function Home() {
-  const { isEnabled } = draftMode();
+  const { isEnabled } = await draftMode();
   const blogs = await getAllBlogs(3, isEnabled);
 
   return (

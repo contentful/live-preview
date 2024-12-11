@@ -87,7 +87,7 @@ Next, add these fields (you don't have to modify the settings unless specified):
 - `details` - **Rich text** field
 - `date` - **Date and time** field
 - `author` - **Text** field (type **short text**)
-- `category` - **Text** field (type **short text**)
+- `categoryName` - **Text** field (type **short text**)
 - `heroImage` - **Media** field (type **one file**)
 
 Save the content type and continue.
