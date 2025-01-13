@@ -8044,9 +8044,9 @@ type-fest@^0.8.1:
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
 type-fest@^4.0.0, type-fest@^4.23.0:
-  version "4.30.2"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.30.2.tgz#d94429edde1f7deacf554741650aab394197a4cc"
-  integrity sha512-UJShLPYi1aWqCdq9HycOL/gwsuqda1OISdBO3t8RlXQC4QvtuIz4b5FCfe2dQIWEpmlRExKmcTBfP1r9bhY7ig==
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.32.0.tgz#55bacdd6f2cf1392b7e9cde894e9b1d726807e97"
+  integrity sha512-rfgpoi08xagF3JSdtJlCwMq9DGNDE0IMh3Mkpc1wUypg9vPi786AiqeBBKcqvIkq42azsBM85N490fyZjeUftw==
 
 typed-array-buffer@^1.0.2:
   version "1.0.2"
