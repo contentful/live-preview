@@ -165,6 +165,7 @@ export class ContentfulLivePreview {
             environment: this.environment,
             targetOrigin: this.targetOrigin,
           },
+          inspectorModeEnabled: this.inspectorModeEnabled,
         });
       }
 
