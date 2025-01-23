@@ -60,7 +60,6 @@ export class SaveEvent {
         }
       } else {
         this.subscription(entity);
-        window.location.reload();
       }
     }
   }
