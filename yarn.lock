@@ -2533,9 +2533,9 @@ console-control-strings@^1.1.0:
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
 contentful-management@^11.30.2:
-  version "11.43.2"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.43.2.tgz#1fa876715fe76eded04d0e6142d886932683918c"
-  integrity sha512-l+yhTH/Fctp7v2uwWlALvht4EyA3eZbzPVN4WZBwBXPPqvP56xEZtJ6D1FOl6BnjJgnszlSpKoGw0piFrnI1LA==
+  version "11.45.1"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.45.1.tgz#0eb3c7d9b75c7f19d26fdda2fa4367df4ff4a939"
+  integrity sha512-Nvz80qfKFlaiOYCx5EdhXdZ7TKYlqOzV6hYSFWQDuChLDacHTLshiMH28ktcKntyUSVqQnZzVAOKN8jMM213Ag==
   dependencies:
     "@contentful/rich-text-types" "^16.6.1"
     axios "^1.7.9"
