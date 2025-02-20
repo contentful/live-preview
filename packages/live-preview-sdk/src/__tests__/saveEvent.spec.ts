@@ -27,6 +27,7 @@ describe('SaveEvent', () => {
     const saveEvent = new SaveEvent({
       locale,
       options: { locale: 'en-US', targetOrigin: ['http://localhost:1234'] },
+      inspectorModeEnabled: true,
     });
     saveEvent.subscribe(callback);
     saveEvent.receiveMessage({
@@ -46,6 +47,7 @@ describe('SaveEvent', () => {
     const saveEvent = new SaveEvent({
       locale,
       options: { locale: 'en-US', targetOrigin: ['http://localhost:1234'] },
+      inspectorModeEnabled: true,
     });
     saveEvent.subscribe(callback);
     saveEvent.receiveMessage({
@@ -55,5 +57,24 @@ describe('SaveEvent', () => {
     });
 
     expect(callback).not.toHaveBeenCalled();
+  });
+  it('should always call the subscription if inspector mode is disabled', () => {
+    const callback = vi.fn();
+    const entry = { sys: { id: '2' } } as Entry;
+
+    const saveEvent = new SaveEvent({
+      locale,
+      options: { locale: 'en-US', targetOrigin: ['http://localhost:1234'] },
+      inspectorModeEnabled: false,
+    });
+    saveEvent.subscribe(callback);
+    saveEvent.receiveMessage({
+      data: {},
+      method: LivePreviewPostMessageMethods.ENTRY_SAVED,
+      contentType,
+      entity: entry,
+    });
+
+    expect(callback).toHaveBeenCalledTimes(1);
   });
 });
