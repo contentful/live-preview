@@ -28,8 +28,9 @@ const applyEncoding = (
 
   const { contentSourceMaps } = target.sys;
 
+  // Skip if there are no source maps
+  // For example if an entry has only one unsupported field
   if (!contentSourceMaps) {
-    console.error('Content source maps data is missing');
     return;
   }
 
@@ -130,7 +131,6 @@ export const encodeCPAResponse = (
   if (modifiedCPAResponse.sys && 'items' in (modifiedCPAResponse as CPAEntryCollection)) {
     const collection = modifiedCPAResponse as CPAEntryCollection;
     if (!collection.sys?.contentSourceMapsLookup) {
-      console.error('Content source maps lookup data is missing');
       return collection;
     }
     const {
