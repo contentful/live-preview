@@ -5,7 +5,7 @@ import {
 } from '@contentful/content-source-maps';
 import { type DocumentNode } from 'graphql';
 
-import { version } from '../package.json';
+import pkg from '../package.json' assert { type: 'json' };
 import {
   debug,
   isInsideIframe,
@@ -43,7 +43,7 @@ import type {
 
 export type { LivePreviewAssetProps, LivePreviewEntryProps, LivePreviewProps };
 
-export const VERSION = version;
+export const VERSION = pkg.version;
 
 const DEFAULT_ALLOWED_ORIGINS = [
   'https://app.contentful.com',
