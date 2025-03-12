@@ -3,9 +3,12 @@
 Live preview SDK for both the inspector mode connection + live content updates by [Contentful](https://www.contentful.com/).
 
 > [!IMPORTANT]
-> :rocket: **Major Performance Boost for Live Updates!**
+> :rocket: **Major Performance Boost for Live Updates!** (2025-02-26)
+>
 > We've drastically improved Live Updates, making them up to **14× faster** for complex, nested content models. Previously, these updates could take several seconds—now, with our new technical approach, they happen almost instantly.
-Enjoy a smoother, more responsive experience! :dash::sparkles:
+> Enjoy a smoother, more responsive experience! :dash::sparkles:
+>
+> (Requirement: @contentful/live-preview >= 3.0.0)
 
 <details>
 <summary>Table of contents</summary>
@@ -191,7 +194,6 @@ To remove the error, you have to define the `targetOrigin` manually. ([Init Conf
 - GraphQL filters (e.g. filters in the Array field type) or filtering using the [select query parameter](https://www.contentful.com/developers/docs/references/content-preview-api/#/reference/search-parameters/select-operator) on the Content Preview API (CPA).
 - We currently do not support multiple locales within a single GraphQL query or a single CPA response.
 - Live updates works only with untransformed data. Ensure that the response from the CPA or GraphQL is provided to the hook in its original form, with any potential transformations applied afterwards.
-- Cross-space links are not supported with live preview as [Cross-space references](https://www.contentful.com/help/cross-space-references/) resolution is not implemented in the Content Preview API.
 
 ## Example Integrations
 
