@@ -3,9 +3,12 @@
 Live preview SDK for both the inspector mode connection + live content updates by [Contentful](https://www.contentful.com/).
 
 > [!IMPORTANT]
-> :rocket: **Major Performance Boost for Live Updates!**
+> :rocket: **Major Performance Boost for Live Updates!** (2025-02-26)
+>
 > We've drastically improved Live Updates, making them up to **14× faster** for complex, nested content models. Previously, these updates could take several seconds—now, with our new technical approach, they happen almost instantly.
-Enjoy a smoother, more responsive experience! :dash::sparkles:
+> Enjoy a smoother, more responsive experience! :dash::sparkles:
+>
+> (Requirement: @contentful/live-preview >= 3.0.0)
 
 <details>
 <summary>Table of contents</summary>
