@@ -6,6 +6,7 @@ import type {
   EditorInterfaceSource,
   FieldType,
   CreateSourceMapParams,
+  CPAAsset,
 } from '../types.js';
 import {
   clone,
@@ -16,7 +17,7 @@ import {
 } from '../utils.js';
 
 const applyEncoding = (
-  target: CPAEntry,
+  target: CPAEntry | CPAAsset,
   fieldTypes: FieldType[],
   editorInterfaces: EditorInterfaceSource[],
   targetOrigin?: CreateSourceMapParams['targetOrigin'],

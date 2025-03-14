@@ -1,5 +1,6 @@
 import type {
   AssetSys,
+  Asset as ContentfulAsset,
   Entry as ContentfulEntry,
   EntryCollection as ContentfulEntryCollection,
   EntrySys as ContentfulEntrySys,
@@ -139,6 +140,11 @@ export interface CPAEntry<TFields extends EntrySkeletonType = EntrySkeletonType>
   extends ContentfulEntry<TFields> {
   sys: ExtendedSys;
   fields: TFields['fields'];
+}
+
+export interface CPAAsset extends ContentfulAsset {
+  sys: ExtendedAssetSys;
+  fields: ContentfulAsset['fields'];
 }
 
 export interface CPAEntryCollection<TFields extends EntrySkeletonType = EntrySkeletonType>
