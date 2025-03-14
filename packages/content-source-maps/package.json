@@ -1,7 +1,7 @@
 {
   "name": "@contentful/content-source-maps",
   "author": "Contentful GmbH",
-  "version": "0.11.7",
+  "version": "0.11.9",
   "description": "Base SDK for building Content Source Maps with Contentful",
   "license": "MIT",
   "main": "./dist/index.cjs",
@@ -43,7 +43,7 @@
     "json-pointer": "^0.6.2"
   },
   "devDependencies": {
-    "chokidar": "4.0.1",
+    "chokidar": "4.0.3",
     "contentful": "^11.1.3"
   }
 }

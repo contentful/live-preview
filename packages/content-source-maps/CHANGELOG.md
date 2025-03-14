@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.9](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.8...@contentful/content-source-maps@0.11.9) (2025-02-20)
+
+**Note:** Version bump only for package @contentful/content-source-maps
+
+
+
+
+
+## [0.11.8](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.7...@contentful/content-source-maps@0.11.8) (2025-02-14)
+
+
+### Bug Fixes
+
+* do not error when no source maps ([#1050](https://github.com/contentful/live-preview/issues/1050)) ([a164b89](https://github.com/contentful/live-preview/commit/a164b89028ff7b80f444c1b46b97d0a7750f3af5))
+
+
+
+
+
 ## [0.11.7](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.6...@contentful/content-source-maps@0.11.7) (2024-12-10)
 
 

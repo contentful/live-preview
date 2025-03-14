@@ -7,11 +7,21 @@ import { SubscribeCallback } from './types.js';
 export class SaveEvent {
   locale: string;
   options: InspectorModeOptions;
+  inspectorModeEnabled: boolean;
   subscription: SubscribeCallback | undefined;
 
-  constructor({ locale, options }: { locale: string; options: InspectorModeOptions }) {
+  constructor({
+    locale,
+    options,
+    inspectorModeEnabled,
+  }: {
+    locale: string;
+    options: InspectorModeOptions;
+    inspectorModeEnabled: boolean;
+  }) {
     this.locale = locale;
     this.options = options;
+    this.inspectorModeEnabled = inspectorModeEnabled;
   }
 
   public subscribe(cb: SubscribeCallback): VoidFunction {
@@ -42,9 +52,13 @@ export class SaveEvent {
   ): void {
     if (message.method === LivePreviewPostMessageMethods.ENTRY_SAVED && this.subscription) {
       const { entity } = message as EntrySavedMessage;
-      const entries = getAllTaggedEntries({ options: this.options });
+      if (this.inspectorModeEnabled) {
+        const entries = getAllTaggedEntries({ options: this.options });
 
-      if (entries.includes(entity.sys.id)) {
+        if (entries.includes(entity.sys.id)) {
+          this.subscription(entity);
+        }
+      } else {
         this.subscription(entity);
       }
     }

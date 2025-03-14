@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.9](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.8...@contentful/live-preview@4.6.9) (2025-02-27)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [4.6.8](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.7...@contentful/live-preview@4.6.8) (2025-02-20)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [4.6.7](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.6...@contentful/live-preview@4.6.7) (2025-02-14)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [4.6.6](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.5...@contentful/live-preview@4.6.6) (2025-02-10)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [4.6.5](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.4...@contentful/live-preview@4.6.5) (2025-01-23)
+
+
+### Bug Fixes
+
+* trigger save event also when inspector mode is disabled ([#1027](https://github.com/contentful/live-preview/issues/1027)) ([b300e74](https://github.com/contentful/live-preview/commit/b300e74f5295f650dde8da3811d51b43939b7a2c))
+
+
+
+
+
+## [4.6.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.3...@contentful/live-preview@4.6.4) (2025-01-13)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [4.6.3](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.2...@contentful/live-preview@4.6.3) (2024-12-16)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
+## [4.6.2](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.1...@contentful/live-preview@4.6.2) (2024-12-16)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
 ## [4.6.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.0...@contentful/live-preview@4.6.1) (2024-12-10)
 
 **Note:** Version bump only for package @contentful/live-preview
