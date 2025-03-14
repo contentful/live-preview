@@ -1,4 +1,4 @@
-import pkg from '../../package.json' assert { type: 'json' };
+import pkg from '../../package.json' with { type: 'json' };
 import { LIVE_PREVIEW_SDK_SOURCE } from '../constants.js';
 import type { EditorMessage, MessageFromSDK } from '../messages.js';
 import { PostMessageMethods } from '../messages.js';

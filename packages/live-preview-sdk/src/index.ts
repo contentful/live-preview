@@ -5,7 +5,7 @@ import {
 } from '@contentful/content-source-maps';
 import { type DocumentNode } from 'graphql';
 
-import pkg from '../package.json' assert { type: 'json' };
+import pkg from '../package.json' with { type: 'json' };
 import {
   debug,
   isInsideIframe,
