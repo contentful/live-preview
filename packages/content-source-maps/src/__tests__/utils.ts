@@ -53,6 +53,7 @@ export function createEntry({
   const sys: ExtendedSys = {
     createdAt: '2024-02-16T12:44:21.109Z',
     updatedAt: '2024-02-16T12:44:21.109Z',
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -103,6 +104,7 @@ export function createAsset({
   const sys: ExtendedAssetSys = {
     createdAt: '2024-02-16T12:44:21.109Z',
     updatedAt: '2024-02-16T12:44:21.109Z',
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -159,6 +161,7 @@ export function createCPAEntryCollection({
 }): CPAEntryCollection {
   return {
     sys: {
+      publishedVersion: 1,
       createdAt: '2024-02-16T12:44:21.109Z',
       updatedAt: '2024-02-16T12:44:21.109Z',
       space: {
