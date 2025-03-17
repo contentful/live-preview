@@ -49,7 +49,7 @@
     "lint-staged": "15.5.0",
     "prettier": "3.2.5",
     "typescript": "5.8.2",
-    "vite": "6.2.1",
+    "vite": "6.2.2",
     "vite-plugin-dts": "4.3.0",
     "vitest": "3.0.8"
   },
