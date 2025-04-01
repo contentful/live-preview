@@ -12,4 +12,6 @@ This is an example project that demonstrates how to use Content Source Maps with
 
 It uses the [Contentful JS Client SDK](https://github.com/contentful/contentful.js) to fetch Content Source Maps for preview content. The SDK will return with the content that includes the hidden metadata to enable live preview inspector mode and Vercel Content Links.
 
+We are also using live updates by passing the encoded result into `useContentfulLiveUpdates`.
+
 For more information around Content Source Maps check out the [README](https://github.com/contentful/live-preview/tree/main/packages/content-source-maps) for Content Source Maps.

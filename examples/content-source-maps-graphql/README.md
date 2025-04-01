@@ -12,4 +12,6 @@ This is an example project that demonstrates how to use Content Source Maps with
 
 It uses the GraphQL query level directive `@contentSourceMaps` to generate Content Source Maps for preview content. This content is parsed through the `encodeGraphQLResponse` function from the Live Preview SDK. It returns with the content that includes the hidden metadata to enable live preview inspector mode and Vercel Content Links.
 
+We are also using live updates by passing the encoded result into `useContentfulLiveUpdates`.
+
 For more information around Content Source Maps check out the [README](https://github.com/contentful/live-preview/tree/main/packages/content-source-maps) for Content Source Maps.
