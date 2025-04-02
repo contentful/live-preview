@@ -120,6 +120,24 @@ import { encodeCPAResponse } from '@contentful/live-preview';
 const dataWithAutoTagging = encodeCPAResponse(data);
 ```
 
+## Combining Live Updates & Content Source Maps
+
+If you’re using live updates and inspector mode with Content Source Maps together, then pass the encoded result into `useContentfulLiveUpdates`.
+
+```jsx
+import { encodeGraphQLResponse } from '@contentful/live-preview';
+import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+
+export default function Page({ initialGraphQLResponse }) {
+  // 1. Encode the full response first (including extensions):
+  const encoded = encodeGraphQLResponse(initialGraphQLResponse);
+  // 2. Then pass that encoded data to the live updates hook:
+  const updated = useContentfulLiveUpdates(encoded);
+
+  return <h1>{updated.data?.myEntry?.title}</h1>;
+}
+```
+
 ## Troubleshooting / Tips
 
 - Under certain circumstances, such as when applying letter-spacing in CSS, fields may display styles that weren't intended. In these cases, you can utilize the `splitEncoding` function provided by the Live Preview SDK to retrieve the content and remove any hidden metadata.

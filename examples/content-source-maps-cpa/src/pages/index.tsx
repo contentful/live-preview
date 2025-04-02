@@ -1,18 +1,20 @@
 import { GetStaticProps } from 'next';
-import { Post, getAllPostsForHome } from '../../lib/api-rest';
+import { Post as PostType, getAllPostsForHome } from '../../lib/api-rest';
+import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
-const Index = ({ posts }: { posts: Post[] }) => {
+const Post = ({ post }: { post: PostType }) => {
   return (
-    <>
-      <ul>
-        {posts &&
-          posts.map((post, i) => (
-            <li key={i}>
-              <h1>{post.fields.title}</h1>
-            </li>
-          ))}
-      </ul>
-    </>
+    <li>
+      <h1>{post.fields.title}</h1>
+    </li>
+  );
+};
+
+const Index = ({ posts }: { posts: PostType[] }) => {
+  const updatedPosts = useContentfulLiveUpdates(posts);
+
+  return (
+    <ul>{updatedPosts && updatedPosts.map((post) => <Post key={post.sys.id} post={post} />)}</ul>
   );
 };
 
