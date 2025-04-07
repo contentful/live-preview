@@ -48,7 +48,7 @@
     "lerna": "8.2.1",
     "lint-staged": "15.5.0",
     "prettier": "3.2.5",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "vite": "6.2.5",
     "vite-plugin-dts": "4.3.0",
     "vitest": "3.0.9"
