@@ -1,3 +1,4 @@
+import type { Block, Inline, Node } from '@contentful/rich-text-types';
 import { get, set } from 'json-pointer';
 
 import { combine } from './encode.js';
@@ -39,11 +40,15 @@ export const encodeRichTextValue = ({
   }
 };
 
+function isNode(node: Node): node is Block | Inline {
+  return 'content' in node && !!node.content;
+}
+
 const findRichTextNodes = (data: Node, currentPath = ''): string[] => {
   const textNodes = [];
   const node = get(data, currentPath);
 
-  if (node.content) {
+  if (isNode(node)) {
     for (let i = 0; i < node.content.length; i++) {
       if (node.content[i].nodeType === 'text') {
         textNodes.push(`${currentPath}/content/${i}/value`);
