@@ -2573,10 +2573,10 @@ contentful-sdk-core@^9.0.1:
   optionalDependencies:
     "@rollup/rollup-linux-x64-gnu" "^4.18.0"
 
-contentful@11.5.22, contentful@^11.1.3:
-  version "11.5.22"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.5.22.tgz#cea1d7b7cbf33bc50deff10af979df588e9bc95f"
-  integrity sha512-Qptc8jDPFqR4e0q1+p7mvAxTriCcH3TSDIK6E5/rgIMrbTOTsXyoPnw4JkNBQMLrg7CchHIWgXTM0SIjwJe67A==
+contentful@11.5.23, contentful@^11.1.3:
+  version "11.5.23"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.5.23.tgz#2d0d99603507466ff1f246ace4132787a993057c"
+  integrity sha512-Jp1dAuxb7YbN0OCUU19ObJguJ9+l4VEUYYmf9xBPb4s//52SzAOIxvab/gFECA9DC41yjMdo1J03dE96bxUc2w==
   dependencies:
     "@contentful/content-source-maps" "^0.11.8"
     "@contentful/rich-text-types" "^16.6.1"
