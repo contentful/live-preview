@@ -1568,10 +1568,10 @@
   resolved "https://registry.yarnpkg.com/@vercel/stega/-/stega-0.1.2.tgz#0c20c5c9419c4288b1de58a64b5f9f26c763b25f"
   integrity sha512-P7mafQXjkrsoyTRppnt0N21udKS9wUmLXHRyP9saLXLHw32j/FgUJ3FscSWgvSqRs4cj7wKZtwqJEvWJ2jbGmA==
 
-"@vitejs/plugin-react-swc@3.10.0":
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react-swc/-/plugin-react-swc-3.10.0.tgz#e52cce1ec51d1d8e59233b49b84888a426226e3d"
-  integrity sha512-ZmkdHw3wo/o/Rk05YsXZs/DJAfY2CdQ5DUAjoWji+PEr+hYADdGMCGgEAILbiKj+CjspBTuTACBcWDrmC8AUfw==
+"@vitejs/plugin-react-swc@3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react-swc/-/plugin-react-swc-3.10.1.tgz#260de78382296d7c1142d2a093e6c786cd17b55c"
+  integrity sha512-FmQvN3yZGyD9XW6IyxE86Kaa/DnxSsrDQX1xCR1qojNpBLaUop+nLYFvhCkJsq8zOupNjCRA9jyhPGOJsSkutA==
   dependencies:
     "@rolldown/pluginutils" "1.0.0-beta.9"
     "@swc/core" "^1.11.22"
