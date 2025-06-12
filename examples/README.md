@@ -4,11 +4,11 @@ This README provides a comprehensive overview of our various example projects to
 
 ## next-app-router (recommended)
 
-This example uses [client components](https://nextjs.org/docs/app/getting-started/server-and-client-components), enabling the page to update in real time as changes are made. No need to manually save for updates to take effect.
+This example uses a combination of [react server and client components](https://nextjs.org/docs/app/getting-started/server-and-client-components). The data is initially fetched in a server component and passed to a client component. The client component then imports the Live Preview SDK and the live updates hook, which handles rehydrating the page to enable real-time updates.
 
 ## next-app-router-rsc
 
-This example uses [server components](https://nextjs.org/docs/app/getting-started/server-and-client-components). A lightweight standalone script initializes the Live Preview SDK and triggers revalidation via a specified endpoint whenever changes are saved in Contentful. Your preview site is automatically reloaded following each auto-save event, which occurs every 5 seconds.
+This example _only_ uses [react server components](https://nextjs.org/docs/app/getting-started/server-and-client-components). A lightweight standalone script initializes the Live Preview SDK and triggers revalidation via a specified endpoint whenever changes are saved in Contentful. Your preview site is automatically reloaded following each auto-save event, which occurs every 5 seconds.
 
 ## next-pages-router
 
