@@ -187,7 +187,7 @@ ContentfulLivePreview.openEntryInEditor({
 ### General
 
 - If the live preview SDK is used inside of another iframe than in the contentful app, it might produce errors as it can't detect the host.
-To remove the error, you have to define the `targetOrigin` manually. ([Init Configuration](#init-configuration))
+  To remove the error, you have to define the `targetOrigin` manually. ([Init Configuration](#init-configuration))
 
 ### Live updates limitations:
 
@@ -220,7 +220,7 @@ npm install @contentful/live-preview
 2. Once you've got the data from Contentful, then you can initialize the live preview. You can use the `ContentfulLivePreview` class' [init function](#init-configuration).
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Live Preview Example</title>
@@ -239,7 +239,7 @@ npm install @contentful/live-preview
 You can use the provided helper function `getProps()`.
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Live Preview Example</title>
@@ -280,7 +280,7 @@ You can use the provided helper function `getProps()`.
 4.To use the live updates feature you will have to subscribe for changes for **each** entry/asset, to get updates when a field is edited in Contentful.
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Live Preview Example</title>
@@ -317,7 +317,7 @@ That's it! You should now be able to use the Contentful Live Preview SDK with va
 #### Integration with Next.js
 
 You can find an example for the NextJS Pages Router implementation in the [examples/nextjs-graphql](./examples/nextjs-graphql/) folder.
-If you are using the app router you can look at this [example](./examples/nextjs-13-app-router-graphql/) or for only serverside rendering this [example](./examples/next-13-app-router-ssr/) instead.
+If you are using the app router you can look at this [example](./examples/nextjs-13-app-router-graphql/) or for using react server components only, use this [example](./examples/next-app-router-rsc/) instead.
 
 To use the Contentful Live Preview SDK with [Next.js](https://nextjs.org), you can either use one of the Contentful starter templates, or do the following steps to add it to an existing project.
 
@@ -352,10 +352,13 @@ This provides the possibility to only enable live updates and inspector mode ins
 import { ContentfulLivePreviewProvider } from '@contentful/live-preview/react';
 
 const CustomApp = ({ Component, pageProps }) => (
-  <ContentfulLivePreviewProvider locale="en-US" enableInspectorMode={pageProps.draftMode} enableLiveUpdates={pageProps.draftMode}>
+  <ContentfulLivePreviewProvider
+    locale="en-US"
+    enableInspectorMode={pageProps.draftMode}
+    enableLiveUpdates={pageProps.draftMode}>
     <Component {...pageProps} />
   </ContentfulLivePreviewProvider>
-)
+);
 ```
 
 3. Add field tagging and live updates to your component

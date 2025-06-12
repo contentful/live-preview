@@ -4,29 +4,27 @@ This README provides a comprehensive overview of our various example projects to
 
 ## next-app-router (recommended)
 
-- Client-Side Hydration: This setup integrates client components, facilitating the client-side hydration of HTML, CSS, and JavaScript. This feature enables the use of hooks for instant live updates directly in the browser.
-- Real-Time Live Updates: Features a live update system that allows fields to dynamically update as edits are made, providing immediate feedback without requiring a save action.
+This example uses [client components](https://nextjs.org/docs/app/getting-started/server-and-client-components), enabling the page to update in real time as changes are made. No need to manually save for updates to take effect.
 
-## next-14-app-router-ssr
+## next-app-router-rsc
 
-- Server-Side Rendering (SSR) Focus: This example exclusively utilizes server-side rendering, with minimal client-side interactions limited to loading the Live Preview SDK in a standalone script.
-- Conditional Revalidation: Configured to trigger a revalidation process through a designated endpoint whenever changes are saved in Contentful, it then forcefully reloads the iframe, effective after 5-seconds..
+This example uses [server components](https://nextjs.org/docs/app/getting-started/server-and-client-components). A lightweight standalone script initializes the Live Preview SDK and triggers revalidation via a specified endpoint whenever changes are saved in Contentful. Your preview site is automatically reloaded following each auto-save event, which occurs every 5 seconds.
 
 ## next-pages-router
 
-- Integration with Pages Router: Demonstrates how to utilize the `@contentful/live-preview` SDK within a Next.js Pages Router setup.
+This example demonstrates how to utilize the `@contentful/live-preview` SDK within a Next.js Pages Router setup.
 
 ## Remix
 
-- Remix Framework Compatibility: Provides an example of how to integrate the `@contentful/live-preview` SDK with a Remix application.
+This example demonstrates how to utilize the `@contentful/live-preview` SDK within a Remix application.
 
 ## Vanilla JS
 
-- Offers a basic demonstration of employing the `@contentful/live-preview` SDK within a straightforward Vanilla JavaScript environment.
+This example demonstrates how to utilize the `@contentful/live-preview` SDK within a straightforward Vanilla JavaScript environment.
 
 ## Gatsby
 
-- Limited Gatsby Support: Currently, while Inspector Mode is operational in Gatsby, there is an issue with live updates. Due to Gatsby's unique processing of data from the Content Preview API into its GraphQL schema, live updates via the Live Preview SDK are not supported.
+Currently, while Inspector Mode is operational in Gatsby, there is an issue with live updates. Due to Gatsby's unique processing of data from the Content Preview API / Contentful Sync API into its GraphQL schema, live updates via the Live Preview SDK are not supported.
 
 ## Content Source Maps GraphQL
 
