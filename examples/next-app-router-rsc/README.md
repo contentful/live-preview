@@ -1,14 +1,12 @@
-# Next.js GraphQL Contentful live preview SDK example
+# Next.js App Router RSC example (using GraphQL)
 
-This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that runs **only** on the server.
+This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js application that _only_ uses [React Server Component](https://nextjs.org/docs/app/getting-started/server-and-client-components)s
 
-You will have to setup a revalidate endpoint in order for us to invalidate your page cache as shown [here](./app/api/revalidate/route.ts)
+You will have to setup a revalidate endpoint in order for us to invalidate your page as shown [here](./app/api/revalidate/route.ts)
 
-The live preview SDK will be in a separate [script](./public/_live-preview.ts). Once a save event is detected it will call your revalidation endpoint which will load the new changes on the page
+The live preview SDK will be initialised in a minimal standalone [script](./public/_live-preview.ts). Once a save event is detected (every 5 seconds) it will call your revalidation endpoint which will load the new changes on the page.
 
-The SDK also enables the inspector mode for your application.
-
-It's important that you use the CPA (Content Preview API) when using this functionality.
+This example also enables the inspector mode.
 
 ## 1. Installation
 
