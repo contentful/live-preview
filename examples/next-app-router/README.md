@@ -1,6 +1,6 @@
-# Next.js App Router GraphQL Contentful live preview SDK example
+# Next.js App Router example (using GraphQL)
 
-This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js App Router application. It is using the GraphQL API of Contentful.
+This is an example project that demonstrates how to use the `@contentful/live-preview` SDK with a Next.js App Router application. It utilises a combination of [client and server components](https://nextjs.org/docs/app/getting-started/server-and-client-components). The data is initially fetched in a server component and passed to a client component. The client component then imports the Live Preview SDK and the live updates hook, which handles rehydrating the page to enable real-time updates. It is using the GraphQL API of Contentful.
 
 ## Step 1. Installation
 
