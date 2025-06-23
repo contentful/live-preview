@@ -227,10 +227,10 @@
     "@types/conventional-commits-parser" "^5.0.0"
     chalk "^5.3.0"
 
-"@contentful/rich-text-types@17.0.0", "@contentful/rich-text-types@^17.0.0":
-  version "17.0.0"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-17.0.0.tgz#f58badfe01fa10860e065c02fd584f428a70ecc6"
-  integrity sha512-x50t6sILzFHBdFpAo0foJRnH8fHWyidheWhAv3uwt9aOnNqTh893gxyoc3Q0RVEZxXfHpTi+O9gmakHcdlRdTA==
+"@contentful/rich-text-types@17.0.1", "@contentful/rich-text-types@^17.0.0":
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-17.0.1.tgz#9b5d8520decc0630756231415e6f4f2d6776b166"
+  integrity sha512-T+btHJY9mdLeZ1Sn2GcWLiG93gwBvovBxR73/tjUeIYsosBM3dkOdMRKXzBV9ghcuE1q+QP0TbyxA77hYIF9Jw==
   dependencies:
     is-plain-obj "^3.0.0"
 
