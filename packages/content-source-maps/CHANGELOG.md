@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.21](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.20...@contentful/content-source-maps@0.11.21) (2025-06-23)
+
+**Note:** Version bump only for package @contentful/content-source-maps
+
+
+
+
+
 ## [0.11.20](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.19...@contentful/content-source-maps@0.11.20) (2025-06-16)
 
 **Note:** Version bump only for package @contentful/content-source-maps
