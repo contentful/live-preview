@@ -2604,19 +2604,6 @@ contentful-sdk-core@^9.0.1:
   optionalDependencies:
     "@rollup/rollup-linux-x64-gnu" "^4.18.0"
 
-contentful@11.7.5:
-  version "11.7.5"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.7.5.tgz#e775829f6f16477811473999c841c085257f5881"
-  integrity sha512-aOK1JMOVZAwnIsmmAvXOSgqbuzrGl34uRDT9DYIDXydawkpeatf7ofOKozTShZXKYbqurkecvKMChfehhZ4qJA==
-  dependencies:
-    "@contentful/content-source-maps" "^0.11.8"
-    "@contentful/rich-text-types" "^16.6.1"
-    axios "^1.8.4"
-    contentful-resolve-response "^1.9.0"
-    contentful-sdk-core "^9.0.1"
-    json-stringify-safe "^5.0.1"
-    type-fest "^4.0.0"
-
 contentful@11.7.6:
   version "11.7.6"
   resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.7.6.tgz#f098e394025d5443233197ad6255aa2c09a8d01c"
@@ -8224,10 +8211,10 @@ undici-types@~6.20.0:
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.20.0.tgz#8171bf22c1f588d1554d55bf204bc624af388433"
   integrity sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==
 
-undici-types@~7.8.0:
-  version "7.8.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.8.0.tgz#de00b85b710c54122e44fbfd911f8d70174cd294"
-  integrity sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==
+undici-types@~6.21.0:
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
+  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 unicorn-magic@^0.1.0:
   version "0.1.0"
