@@ -45,6 +45,6 @@
   "devDependencies": {
     "@contentful/rich-text-types": "17.0.1",
     "chokidar": "4.0.3",
-    "contentful": "11.7.5"
+    "contentful": "11.7.6"
   }
 }
