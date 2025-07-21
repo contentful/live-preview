@@ -7,7 +7,7 @@ executors:
   linux-node:
     resource_class: medium
     docker:
-      - image: cimg/node:20.17.0
+      - image: cimg/node:lts
 
 cache-key: &cache-key
   key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc" }}-{{ checksum "yarn.lock" }}
