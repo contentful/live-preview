@@ -1,10 +1,28 @@
 package:$1:
-  - packages/([^/]+)/.*
+  - changed-files:
+      - packages/([^/]+)/.*
+
+examples:
+  - changed-files:
+      - examples/**/*
+
+feature:
+  - head-branch: ['^feature', 'feature']
+
+issue:
+  - head-branch: ['^fix', 'fix']
+
+dependency:
+  - head-branch: ['^deps', 'deps']
 
 configuration:
-  - .circleci/**/*
-  - .dependabot/**/*
-  - .github/**/*
-  - tsconfig.json
-  - .eslintrc.js
-  - .prettierrc
+  - changed-files:
+      - .circleci/**/*
+      - .dependabot/**/*
+      - .github/**/*
+      - tsconfig.base.json
+      - tsconfig.json
+      - .eslintrc.cjs
+      - .prettierrc
+      - lerna.json
+      - .nvrmrc
