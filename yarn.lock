@@ -2584,10 +2584,10 @@ console-control-strings@^1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-contentful-management@11.54.2:
-  version "11.54.2"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.54.2.tgz#78ee947f8b5d2b093366652b98bc73de8706cf40"
-  integrity sha512-UdRZtP/1StRh8SgJCT3awbL6NV+Q1ygwm+yxQpaZZ3MZHOeoBroVyKTVI+GZyy8JaJN2qPHN1A3mjtv/eafZzw==
+contentful-management@11.54.3:
+  version "11.54.3"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-11.54.3.tgz#7fa25a36f64a7077b2a5d91bbf295ac32dca9f29"
+  integrity sha512-/2aGKLBW5pUytB4Q3mpza80wgs5rf9Rg+q/ps0txrWgWQBbE1ZSeX5Yg6e+ogVIKvV28JgfBKRndAVZE4LFdaw==
   dependencies:
     "@contentful/rich-text-types" "^16.6.1"
     axios "^1.8.4"
