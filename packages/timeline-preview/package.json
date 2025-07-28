@@ -1,0 +1,43 @@
+{
+  "name": "@contentful/timeline-preview",
+  "author": "Contentful GmbH",
+  "version": "1.0.0",
+  "description": "Base SDK for building a timeline preview with Contentful",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/live-preview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/live-preview/issues"
+  },
+  "homepage": "https://github.com/contentful/live-preview#readme",
+  "scripts": {
+    "start": "vite build --watch",
+    "build": "vite build",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "tsc": "tsc --noEmit",
+    "test": "vitest --watch",
+    "test:ci": "vitest run",
+    "coverage": "vitest --coverage",
+    "prepublish": "yarn build"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
