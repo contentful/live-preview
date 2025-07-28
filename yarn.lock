@@ -2080,13 +2080,13 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@^1.7.4, axios@^1.8.4:
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
-  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
+axios@^1.11.0, axios@^1.7.4, axios@^1.8.4:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.11.0.tgz#c2ec219e35e414c025b2095e8b8280278478fdb6"
+  integrity sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==
   dependencies:
     follow-redirects "^1.15.6"
-    form-data "^4.0.0"
+    form-data "^4.0.4"
     proxy-from-env "^1.1.0"
 
 balanced-match@^1.0.0:
@@ -2599,14 +2599,14 @@ contentful-sdk-core@^9.0.1:
   optionalDependencies:
     "@rollup/rollup-linux-x64-gnu" "^4.18.0"
 
-contentful@11.7.8:
-  version "11.7.8"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.7.8.tgz#81ad471939a32f2ee4f0b8cc80e277d3aac274c3"
-  integrity sha512-LzdTGr0AZ897jHMzU/ZSbcY++BAGltbjYo3p4hH4xWjUnFS0jlOT2G2/c+lxyPxQM8PCFKFvNhaiSVaJpQucHg==
+contentful@11.7.14:
+  version "11.7.14"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.7.14.tgz#bb732c7a94561d762e90f43351647c1c66865c6f"
+  integrity sha512-AJlksM5NE/8LcELuzB46WKQEnFFMX+cURuaIzuObElV/Eq8vGAf/UtAFe377q+f5gs/xaUGmtM/C2SHWXZFkHQ==
   dependencies:
     "@contentful/content-source-maps" "^0.11.8"
     "@contentful/rich-text-types" "^16.6.1"
-    axios "^1.8.4"
+    axios "^1.11.0"
     contentful-resolve-response "^1.9.0"
     contentful-sdk-core "^9.0.1"
     json-stringify-safe "^5.0.1"
@@ -3897,7 +3897,7 @@ foreground-child@^3.1.0:
     cross-spawn "^7.0.0"
     signal-exit "^4.0.1"
 
-form-data@^4.0.0:
+form-data@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.4.tgz#784cdcce0669a9d68e94d11ac4eea98088edd2c4"
   integrity sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==
