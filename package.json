@@ -38,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "8.40.0",
     "commitizen": "4.3.1",
-    "concurrently": "9.2.0",
+    "concurrently": "9.2.1",
     "eslint": "8.57.1",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-import-helpers": "2.0.0",
