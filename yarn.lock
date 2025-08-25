@@ -993,10 +993,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@rolldown/pluginutils@1.0.0-beta.30":
-  version "1.0.0-beta.30"
-  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.30.tgz#ac55a2215c78a54ba67276524ac3dc8c195316d0"
-  integrity sha512-whXaSoNUFiyDAjkUF8OBpOm77Szdbk5lGNqFe6CbVbJFrhCCPinCbRA3NjawwlNHla1No7xvXXh+CpSxnPfUEw==
+"@rolldown/pluginutils@1.0.0-beta.32":
+  version "1.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.32.tgz#40a51db68a3c967183a9d58c5f5179adf6214cce"
+  integrity sha512-QReCdvxiUZAPkvp1xpAg62IeNzykOFA6syH2CnClif4YmALN1XKpB39XneL80008UbtMShthSVDKmrx05N1q/g==
 
 "@rollup/pluginutils@^5.1.4":
   version "5.2.0"
@@ -1581,12 +1581,12 @@
   resolved "https://registry.yarnpkg.com/@vercel/stega/-/stega-0.1.2.tgz#0c20c5c9419c4288b1de58a64b5f9f26c763b25f"
   integrity sha512-P7mafQXjkrsoyTRppnt0N21udKS9wUmLXHRyP9saLXLHw32j/FgUJ3FscSWgvSqRs4cj7wKZtwqJEvWJ2jbGmA==
 
-"@vitejs/plugin-react-swc@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react-swc/-/plugin-react-swc-4.0.0.tgz#bcf1dfff53f4e434d0aa664bcbcf5c45839e8ccc"
-  integrity sha512-4A1dThI578v07mpG4M+ziNn6lmlMlhtVCheL+2WLvClnLvEULi8rpAZThn2oEKn3GtFXFTOeko6eLRhx2V2kgA==
+"@vitejs/plugin-react-swc@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react-swc/-/plugin-react-swc-4.0.1.tgz#c6b9f6be06f6eb00293e47a56617bb50e3171678"
+  integrity sha512-NQhPjysi5duItyrMd5JWZFf2vNOuSMyw+EoZyTBDzk+DkfYD8WNrsUs09sELV2cr1P15nufsN25hsUBt4CKF9Q==
   dependencies:
-    "@rolldown/pluginutils" "1.0.0-beta.30"
+    "@rolldown/pluginutils" "1.0.0-beta.32"
     "@swc/core" "^1.13.2"
 
 "@vitest/expect@3.2.4":
