@@ -232,10 +232,10 @@
     "@types/conventional-commits-parser" "^5.0.0"
     chalk "^5.3.0"
 
-"@contentful/rich-text-types@17.2.0", "@contentful/rich-text-types@^17.0.0":
-  version "17.2.0"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-17.2.0.tgz#7845cbafacca4b7bbbf373aac89581ccadbb6d55"
-  integrity sha512-XAfVYrYkvT8573KPxWujl96ZyMZSjON6l4FK2kBT1Si0nc0b/BVkCfBn269/D3t4szSdwt7ui380aB7viAsB1Q==
+"@contentful/rich-text-types@17.2.2":
+  version "17.2.2"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-17.2.2.tgz#2be7a99b05f5fff4573e6dce7a752aabca39c50c"
+  integrity sha512-Mpq62n2zNHc1Z2GbExd8yiJD4esFjv+0efi/zziYRIbhvlakvIALYJbt720agoGg62QLPrX3r3e8U/iGSRiaqQ==
   dependencies:
     "@lingui/core" "^5.4.1"
     is-plain-obj "^3.0.0"
@@ -244,6 +244,14 @@
   version "16.8.5"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.8.5.tgz#832c8b428612f5181908bc1033c6ef9f48f1ce83"
   integrity sha512-q18RJuJCOuYveGiCIjE5xLCQc5lZ3L2Qgxrlg/H2YEobDFqdtmklazRi1XwEWaK3tMg6yVXBzKKkQfLB4qW14A==
+
+"@contentful/rich-text-types@^17.0.0":
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-17.2.0.tgz#7845cbafacca4b7bbbf373aac89581ccadbb6d55"
+  integrity sha512-XAfVYrYkvT8573KPxWujl96ZyMZSjON6l4FK2kBT1Si0nc0b/BVkCfBn269/D3t4szSdwt7ui380aB7viAsB1Q==
+  dependencies:
+    "@lingui/core" "^5.4.1"
+    is-plain-obj "^3.0.0"
 
 "@csstools/color-helpers@^5.0.1":
   version "5.0.1"
