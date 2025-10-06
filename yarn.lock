@@ -2936,12 +2936,12 @@ contentful-management@11.60.1:
     fast-copy "^3.0.0"
     globals "^15.15.0"
 
-contentful-resolve-response@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/contentful-resolve-response/-/contentful-resolve-response-1.9.0.tgz#7a89e6f332d32b98c6e98af9406ce7aa64707711"
-  integrity sha512-LtgPx/eREpHXOX82od48zFZbFhXzYw/NfUoYK4Qf1OaKpLzmYPE4cAY4aD+rxVgnMM5JN/mQaPCsofUlJRYEUA==
+contentful-resolve-response@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/contentful-resolve-response/-/contentful-resolve-response-1.9.4.tgz#a0206be0218af38db5280894b7fc748cbfeb68d9"
+  integrity sha512-8qu2dM2IMoVQhBhp81BVGB9ISantPmPTZ3EELGxuM8e/t+jSe+xmsVk5yHE+a9AYMBKSwgupBnkjGZE4RzFowQ==
   dependencies:
-    fast-copy "^2.1.7"
+    fast-copy "^3.0.2"
 
 contentful-sdk-core@^9.0.1:
   version "9.0.1"
@@ -2956,15 +2956,15 @@ contentful-sdk-core@^9.0.1:
   optionalDependencies:
     "@rollup/rollup-linux-x64-gnu" "^4.18.0"
 
-contentful@11.8.1:
-  version "11.8.1"
-  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.8.1.tgz#3fadcc048dc98a9606ff5e759f39d10c9fe67ac5"
-  integrity sha512-EoSDFCEfoUgBvSQRZXTGB+lVxNRgWAd+pJMq2lg6zoqRdkt86h2SkUqF652e8sx45ykvlOqH7hC0sg4DG9jpgA==
+contentful@11.8.4:
+  version "11.8.4"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-11.8.4.tgz#beca4845f986204fe690486dfff952345b02f279"
+  integrity sha512-IBlItmyUneaIYEytG/oqv1GgySxDsKuyOltMxljoU0PigB6NNQ+OOhLm+3xcgO+LKpn4zh2pDyoRJoJANc2S0A==
   dependencies:
     "@contentful/content-source-maps" "^0.11.33"
     "@contentful/rich-text-types" "^16.6.1"
     axios "^1.12.2"
-    contentful-resolve-response "^1.9.0"
+    contentful-resolve-response "^1.9.4"
     contentful-sdk-core "^9.0.1"
     json-stringify-safe "^5.0.1"
     type-fest "^4.0.0"
@@ -4089,11 +4089,6 @@ external-editor@^3.0.3:
     chardet "^0.7.0"
     iconv-lite "^0.4.24"
     tmp "^0.0.33"
-
-fast-copy@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/fast-copy/-/fast-copy-2.1.7.tgz#affc9475cb4b555fb488572b2a44231d0c9fa39e"
-  integrity sha512-ozrGwyuCTAy7YgFCua8rmqmytECYk/JYAMXcswOcm0qvGoE3tPb7ivBeIHTOK2DiapBhDZgacIhzhQIKU5TCfA==
 
 fast-copy@^3.0.0, fast-copy@^3.0.2:
   version "3.0.2"
