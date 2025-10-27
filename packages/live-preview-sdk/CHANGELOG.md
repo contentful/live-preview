@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.51](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.50...@contentful/live-preview@4.6.51) (2025-10-27)
+
+**Note:** Version bump only for package @contentful/live-preview
+
+
+
+
+
 ## [4.6.50](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.49...@contentful/live-preview@4.6.50) (2025-10-20)
 
 **Note:** Version bump only for package @contentful/live-preview
