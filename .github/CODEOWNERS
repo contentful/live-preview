@@ -1,3 +1,2 @@
-# Team Tolkien
-
-./               @contentful/team-tolkien
+.                           @contentful/team-sparks
+packages/timeline-preview   @contentful/team-tolkien
