@@ -1,12 +1,13 @@
-> ⚠️ **Timeline is currently in beta (preview center) and will be only available on Premium plan.**
+> ⚠️ **Timeline is only available on selected plans**
 
 # Timeline
 
 - Timeline enables marketers to plan and preview multiple upcoming content updates with ease. Each entry in the content model can hold several future versions, helping teams coordinate releases over time.
+- This package exposes some utilities to parse the timeline token in the preview URL.
 
 ## Installation
 
-Install the Live Preview SDK:
+Install the package:
 
 ```bash
 npm install @contentful/timeline-preview
