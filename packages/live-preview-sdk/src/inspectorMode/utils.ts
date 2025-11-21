@@ -1,6 +1,7 @@
 import { decode, type SourceMapMetadata } from '@contentful/content-source-maps';
 import { VERCEL_STEGA_REGEX } from '@vercel/stega';
 
+import { VOID_HTML_ELEMENTS } from '../constants.js';
 import { debug } from '../helpers/debug.js';
 import { InspectorModeOptions } from './index.js';
 import {
@@ -517,4 +518,16 @@ function isLegacyContentfulData(data: any): data is {
     typeof data.environment === 'string' &&
     (data.entityType === 'Asset' || data.entityType === 'Entry')
   );
+}
+
+export function getTaggedElementSnapshot(taggedElement: TaggedElement) {
+  if (VOID_HTML_ELEMENTS.has(taggedElement.element.tagName.toUpperCase())) {
+    return {
+      [taggedElement.element.tagName.toLowerCase()]: Array.from(taggedElement.element.attributes)
+        .map((a) => `${a.name}="${a.value}"`)
+        .join(' '),
+    };
+  } else {
+    return { [taggedElement.element.tagName.toLowerCase()]: taggedElement.element.innerHTML };
+  }
 }
