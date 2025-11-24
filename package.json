@@ -43,7 +43,7 @@
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-import-helpers": "2.0.0",
     "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-react-hooks": "7.0.1",
     "husky": "9.1.7",
     "lerna": "9.0.1",
     "lint-staged": "16.2.7",
