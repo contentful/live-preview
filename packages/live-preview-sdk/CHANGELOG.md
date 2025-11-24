@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.58...@contentful/live-preview@4.7.0) (2025-11-24)
+
+
+### Features
+
+* include tagged element snapshot in InspectorMode output [TOL-2721] ([#1402](https://github.com/contentful/live-preview/issues/1402)) ([0daded0](https://github.com/contentful/live-preview/commit/0daded0bca3ca2193646f5dae3965af7e08d0fda))
+
+
+
+
+
 ## [4.6.58](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.57...@contentful/live-preview@4.6.58) (2025-11-24)
 
 **Note:** Version bump only for package @contentful/live-preview
