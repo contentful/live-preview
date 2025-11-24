@@ -10,6 +10,7 @@ import {
 import {
   addCalculatedAttributesToTaggedElements,
   getAllTaggedElements,
+  getTaggedElementSnapshot,
   TaggedElement,
 } from './utils.js';
 
@@ -240,6 +241,7 @@ export class InspectorMode {
           attributes: taggedElement.attributes,
           isHovered: this.hoveredElement === taggedElement.element,
           isCoveredByOtherElement: !!taggedElement.isCoveredByOtherElement,
+          snapshot: getTaggedElementSnapshot(taggedElement),
         })),
         automaticallyTaggedCount: this.automaticallyTaggedCount,
         manuallyTaggedCount: this.manuallyTaggedCount,
