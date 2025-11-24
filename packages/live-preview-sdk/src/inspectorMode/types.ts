@@ -56,6 +56,7 @@ export type InspectorModeElement = {
   coordinates: DOMRect;
   isVisible: boolean;
   isHovered: boolean;
+  snapshot?: Record<string, string>;
 };
 
 export type InspectorModeScrollMessage = Record<string, never>;
