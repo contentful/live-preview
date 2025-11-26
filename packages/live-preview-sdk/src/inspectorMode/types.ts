@@ -69,10 +69,12 @@ export type InspectorModeTaggedElementsMessage = {
   elements: Array<InspectorModeElement>;
   manuallyTaggedCount: number;
   automaticallyTaggedCount: number;
+  releaseId?: string;
 };
 
 export type InspectorModeChangedMessage = {
   /** @deprecated use method instead */
   action: InspectorModeEventMethods.INSPECTOR_MODE_CHANGED;
   isInspectorActive: boolean;
+  releaseId?: string;
 };

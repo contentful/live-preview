@@ -35,6 +35,7 @@ export class InspectorMode {
   private taggedElements: TaggedElement[] = [];
   private manuallyTaggedCount: number = 0;
   private automaticallyTaggedCount: number = 0;
+  private releaseId?: string;
 
   private intersectionObserver: IntersectionObserver;
 
@@ -95,7 +96,8 @@ export class InspectorMode {
   // Handles incoming messages from Contentful
   public receiveMessage = (data: MessageFromEditor): void => {
     if (data.method === InspectorModeEventMethods.INSPECTOR_MODE_CHANGED) {
-      const { isInspectorActive } = data as InspectorModeChangedMessage;
+      const { isInspectorActive, releaseId } = data as InspectorModeChangedMessage;
+      this.releaseId = releaseId;
       if (isInspectorActive) {
         this.init();
       } else {
@@ -245,6 +247,7 @@ export class InspectorMode {
         })),
         automaticallyTaggedCount: this.automaticallyTaggedCount,
         manuallyTaggedCount: this.manuallyTaggedCount,
+        ...(this.releaseId !== undefined && { releaseId: this.releaseId }),
       },
       this.options.targetOrigin,
     );
