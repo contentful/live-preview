@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.7.0...@contentful/live-preview@4.8.0) (2025-12-02)
+
+
+### Features
+
+* on inspector mode, add optional releaseId for received and send message ([#1413](https://github.com/contentful/live-preview/issues/1413)) ([2923d96](https://github.com/contentful/live-preview/commit/2923d9648d14a5e190c4f670848499b5dc5305c1))
+
+
+
+
+
 # [4.7.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.6.58...@contentful/live-preview@4.7.0) (2025-11-24)
 
 
