@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.8.0...@contentful/live-preview@4.8.1) (2025-12-03)
+
+
+### Bug Fixes
+
+* return sdk version when posting message method is CONNECTED ([#1422](https://github.com/contentful/live-preview/issues/1422)) ([05b2634](https://github.com/contentful/live-preview/commit/05b2634042e7000d8101beb72588f6774acbedff))
+
+
+
+
+
 # [4.8.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.7.0...@contentful/live-preview@4.8.0) (2025-12-02)
 
 
