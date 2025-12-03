@@ -235,6 +235,7 @@ export class ContentfulLivePreview {
           isLiveUpdatesEnabled: this.liveUpdatesEnabled,
           manuallyTaggedElementCount: manuallyTaggedCount,
           automaticallyTaggedElementCount: automaticallyTaggedCount,
+          version: pkg.version,
         } as ConnectedMessage,
         this.targetOrigin,
       );
