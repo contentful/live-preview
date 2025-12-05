@@ -1,6 +1,7 @@
-import { GetStaticProps } from 'next';
-import { Post as PostType, getAllPostsForHome } from '../../lib/api-rest';
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+import { GetStaticProps } from 'next';
+
+import { Post as PostType, getAllPostsForHome } from '../../lib/api-rest';
 
 const Post = ({ post }: { post: PostType }) => {
   return (
