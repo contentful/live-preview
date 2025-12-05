@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@contentful/live-preview": "^4.6.0",
-    "next": "15.4.7",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "next": "15.4.8",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "autoprefixer": "^10.0.1",
     "contentful-import": "^9.4.38",
     "eslint": "^8",
@@ -27,7 +27,7 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1"
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
   }
 }
