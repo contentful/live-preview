@@ -58,7 +58,7 @@
     "@types/lodash.isequal": "4.5.8",
     "@types/node": "24.10.1",
     "@types/react": "19.2.6",
-    "@types/react-dom": "19.1.6",
+    "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react-swc": "4.2.2",
     "contentful": "11.9.0",
     "contentful-management": "11.63.1",
