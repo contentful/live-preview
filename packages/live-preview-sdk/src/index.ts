@@ -71,7 +71,8 @@ export interface ContentfulLivePreviewInitConfig {
     ignoreManuallyTaggedElements?: boolean;
     /**
      * If an element is partially or fully covered by another element, hide the outlines in inspector mode.
-     * This uses the native function `document.elementFromPoint()` at all four corner of the element to determine if it's covered.
+     * This uses the native function `document.elementFromPoint()` at all four corner of the element.
+     * If at least two out of the four corners are not covered, the element is considered visible.
      */
     hideCoveredElementOutlines?: boolean;
   };

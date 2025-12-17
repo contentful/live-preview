@@ -366,12 +366,25 @@ const isElementOverlapped = (element: Element, coordinates: DOMRect, root = wind
   const bottomLeft = root.elementFromPoint(left + 1, bottom - 1);
   const bottomRight = root.elementFromPoint(right - 1, bottom - 1);
 
-  return !(
-    topLeft === element &&
-    topRight === element &&
-    bottomLeft === element &&
-    bottomRight === element
-  );
+  // Check if the visible element is the same as the target element or a child of it.
+  // The latter is important for rich text blocks where the corners might be part of an inner node, e.g. a paragraph.
+  const isCorrectElement = (visibleElement: Element | null) => {
+    if (!visibleElement) {
+      return false;
+    }
+    return element === visibleElement || element.contains(visibleElement);
+  };
+
+  // Heuristical approach to determine if an element is overlapped by checking its corners:
+  // If at least two corners are visible, we consider the element visible enough to render its outlines.
+  const visibleCorners = [
+    isCorrectElement(topLeft),
+    isCorrectElement(topRight),
+    isCorrectElement(bottomLeft),
+    isCorrectElement(bottomRight),
+  ].filter(Boolean).length;
+
+  return visibleCorners < 2;
 };
 
 const addVisibilityToTaggedElements = (
