@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.8.4...@contentful/live-preview@4.9.0) (2025-12-17)
+
+
+### Features
+
+* introduce experimental flag to hide covered outlines [SPA-3509] ([#1439](https://github.com/contentful/live-preview/issues/1439)) ([fae42ad](https://github.com/contentful/live-preview/commit/fae42adfcf6d922a5b6569917bd09bd5f5f40825))
+
+
+
+
+
 ## [4.8.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.8.3...@contentful/live-preview@4.8.4) (2025-12-15)
 
 **Note:** Version bump only for package @contentful/live-preview
