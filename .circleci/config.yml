@@ -89,7 +89,6 @@ workflows:
             branches:
               only:
                 - canary
-                - feat/SPA-3509-hide-overlapped-outlines
           requires:
             - lint
             - unit-tests
