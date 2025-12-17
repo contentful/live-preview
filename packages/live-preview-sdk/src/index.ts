@@ -69,6 +69,11 @@ export interface ContentfulLivePreviewInitConfig {
 
   experimental?: {
     ignoreManuallyTaggedElements?: boolean;
+    /**
+     * If an element is partially or fully covered by another element, hide the outlines in inspector mode.
+     * This uses the native function `document.elementFromPoint()` at all four corner of the element to determine if it's covered.
+     */
+    hideCoveredElementOutlines?: boolean;
   };
 }
 
@@ -235,6 +240,7 @@ export class ContentfulLivePreview {
           isLiveUpdatesEnabled: this.liveUpdatesEnabled,
           manuallyTaggedElementCount: manuallyTaggedCount,
           automaticallyTaggedElementCount: automaticallyTaggedCount,
+          hideCoveredElementOutlines: config.experimental?.hideCoveredElementOutlines,
           version: pkg.version,
         } as ConnectedMessage,
         this.targetOrigin,
