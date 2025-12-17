@@ -158,6 +158,19 @@ export default function Page({ initialGraphQLResponse }) {
 
 - For usage with @apollo/client, a custom link is needed to add the extensions to forward the extionsions to the response. [Example](../../examples/content-source-maps-apollo/lib/api-graphql.ts)
 
+- Per default, the inspector mode renders all available outlines despite being overlapped by other elements. If you want to not render outlines for overlapped elements, you can enable this behaviour through an experimental feature flag:
+
+  ```jsx
+  <ContentfulLivePreviewProvider experimental={{ hideCoveredElementOutlines: true }} />
+  ```
+
+  ```js
+  ContentfulLivePreview.init({
+    // ...
+    experimental: { hideCoveredElementOutlines: true },
+  });
+  ```
+
 ## Limitations
 
 - Markdown support is currently in development.
