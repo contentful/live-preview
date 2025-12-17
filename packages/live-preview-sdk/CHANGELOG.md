@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0-alpha.1](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.9.0-alpha.0...@contentful/live-preview@4.9.0-alpha.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* adjust ConnecteMessage type to include new experimental flag ([13d1ee2](https://github.com/contentful/live-preview/commit/13d1ee21adfbe892a2ef8bc01f0849043a1b6df6))
+
+
+
+
+
 # [4.9.0-alpha.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.8.4...@contentful/live-preview@4.9.0-alpha.0) (2025-12-17)
 
 
