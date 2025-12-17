@@ -87,7 +87,9 @@ workflows:
           context: vault
           filters:
             branches:
-              only: canary
+              only:
+                - canary
+                - feat/SPA-3509-hide-overlapped-outlines
           requires:
             - lint
             - unit-tests
