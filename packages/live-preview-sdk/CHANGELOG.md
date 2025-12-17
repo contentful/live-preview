@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0-alpha.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.8.4...@contentful/live-preview@4.9.0-alpha.0) (2025-12-17)
+
+
+### Bug Fixes
+
+* consider at least two corners for it to be visibile ([9ce4280](https://github.com/contentful/live-preview/commit/9ce4280b0af40e2b4a6743d430e0c4c46bc6ef93))
+
+
+### Features
+
+* hide covered outlines when experimental flag is activated through SDK ([1f237be](https://github.com/contentful/live-preview/commit/1f237bec00e9f0d794227711405a167cf9009563))
+
+
+
+
+
 ## [4.8.4](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.8.3...@contentful/live-preview@4.8.4) (2025-12-15)
 
 **Note:** Version bump only for package @contentful/live-preview
