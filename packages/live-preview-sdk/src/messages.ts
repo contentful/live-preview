@@ -41,6 +41,7 @@ export type ConnectedMessage = {
   manuallyTaggedElementCount: number;
   isInspectorEnabled: boolean;
   isLiveUpdatesEnabled: boolean;
+  hideCoveredElementOutlines?: boolean;
   version: string;
 };
 
