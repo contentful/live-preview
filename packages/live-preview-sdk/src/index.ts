@@ -72,7 +72,7 @@ export interface ContentfulLivePreviewInitConfig {
     /**
      * If an element is partially or fully covered by another element, hide the outlines in inspector mode.
      * This uses the native function `document.elementFromPoint()` at all four corner of the element.
-     * If at least two out of the four corners are not covered, the element is considered visible.
+     * If at least two out of the four corners are visible, the whole element is considered visible.
      */
     hideCoveredElementOutlines?: boolean;
   };
