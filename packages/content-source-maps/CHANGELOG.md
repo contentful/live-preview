@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.44...@contentful/content-source-maps@0.12.0) (2025-12-22)
+
+
+### Features
+
+* introduce experimental flag to hide covered outlines [SPA-3509] ([#1439](https://github.com/contentful/live-preview/issues/1439)) ([fae42ad](https://github.com/contentful/live-preview/commit/fae42adfcf6d922a5b6569917bd09bd5f5f40825))
+
+
+
+
+
 ## [0.11.44](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.43...@contentful/content-source-maps@0.11.44) (2025-12-15)
 
 **Note:** Version bump only for package @contentful/content-source-maps
