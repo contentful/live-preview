@@ -119,6 +119,21 @@ import { ContentfulLivePreview } from '@contentful/live-preview';
 </h1>
 ```
 
+#### Outlines in Inspector Mode
+
+Per default, the inspector mode renders all available outlines despite being overlapped by other elements. If you want to not render outlines for overlapped elements, you can enable this behaviour through an experimental feature flag:
+
+```jsx
+<ContentfulLivePreviewProvider experimental={{ hideCoveredElementOutlines: true }} />
+```
+
+```js
+ContentfulLivePreview.init({
+  // ...
+  experimental: { hideCoveredElementOutlines: true },
+});
+```
+
 ### Live Updates
 
 Live updates allow you to make changes in your editor and see the updates in real time. The updates are only happening on the **client-side** and in the live preview environment of [Contentful](https://app.contentful.com).
