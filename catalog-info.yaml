@@ -22,3 +22,5 @@ spec:
   type: url
   targets:
     - ./packages/live-preview-sdk/catalog-info.yaml
+    - ./packages/content-source-maps/catalog-info.yaml
+    - ./packages/timeline-preview/catalog-info.yaml

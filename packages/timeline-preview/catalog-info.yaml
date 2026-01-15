@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: timeline-preview
+  description: |
+    JavaScript library for Contentful's timeline preview functionality
+  annotations:
+    circleci.com/project-slug: github/contentful/live-preview
+    github.com/project-slug: contentful/live-preview
+    backstage.io/source-location: url:https://github.com/contentful/live-preview/tree/main/packages/timeline-preview/
+spec:
+  type: library
+  lifecycle: production
+  owner: group:team-content-authoring-and-publishing
