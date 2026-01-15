@@ -8,11 +8,10 @@ metadata:
     circleci.com/project-slug: github/contentful/live-preview
     github.com/project-slug: contentful/live-preview
     backstage.io/source-location: url:https://github.com/contentful/live-preview/
-    contentful.com/ci-alert-slack: prd-co-sparks-alerts
 spec:
   type: library
   lifecycle: production
-  owner: group:team-sparks
+  owner: group:team-experience-assembly
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Location
