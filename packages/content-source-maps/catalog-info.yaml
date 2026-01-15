@@ -1,13 +1,13 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: live-preview
+  name: content-source-maps
   description: |
-    JavaScript library for Contentful's live preview functionality (inspectorMode and live updates)
+    JavaScript library for working with the Content Source Maps
   annotations:
     circleci.com/project-slug: github/contentful/live-preview
     github.com/project-slug: contentful/live-preview
-    backstage.io/source-location: url:https://github.com/contentful/live-preview/tree/main/packages/live-preview-sdk/
+    backstage.io/source-location: url:https://github.com/contentful/live-preview/tree/main/packages/content-source-maps/
 spec:
   type: library
   lifecycle: production
