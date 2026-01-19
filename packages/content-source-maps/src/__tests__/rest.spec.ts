@@ -909,4 +909,78 @@ describe('Content Source Maps with the CPA', () => {
       testEncodingDecoding(encodedCPAResponse, mappings);
     });
   });
+
+  describe('Ninetailed reserved fields', () => {
+    const entry = createEntry({
+      id: 'entryId',
+      contentType: 'ctId',
+      fields: {
+        title: {
+          'en-US': 'English title',
+        },
+        nt_experience_id: {
+          'en-US': 'experience-123',
+        },
+        nt_name: {
+          'en-US': 'Test Experience',
+        },
+      },
+      contentSourceMaps: {
+        sys: { type: 'ContentSourceMaps' },
+        mappings: {
+          'fields/title': {
+            source: {
+              fieldType: 0,
+              editorInterface: 0,
+            },
+          },
+          'fields/nt_experience_id': {
+            source: {
+              fieldType: 0,
+              editorInterface: 0,
+            },
+          },
+          'fields/nt_name': {
+            source: {
+              fieldType: 0,
+              editorInterface: 0,
+            },
+          },
+        },
+      },
+      contentSourceMapsLookup: {
+        sys: {
+          type: 'ContentSourceMapsLookup',
+        },
+        fieldTypes: ['Symbol'],
+        editorInterfaces: [{ widgetId: 'singleLine', widgetNamespace: 'builtin' }],
+      },
+    });
+
+    test('should skip encoding for Ninetailed reserved fields', () => {
+      const encodedEntry = encodeCPAResponse(entry, 'https://app.contentful.com') as CPAEntry;
+
+      const mappings = {
+        '/fields/title/en-US': {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/spaceId/environments/master/entries/entryId/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
+          contentful: {
+            editorInterface: { widgetId: 'singleLine', widgetNamespace: 'builtin' },
+            fieldType: 'Symbol',
+          },
+        },
+      };
+
+      // Title field should be encoded
+      expect(encodedEntry.fields.title['en-US']).not.toBe('English title');
+      const decodedTitle = decode(encodedEntry.fields.title['en-US']);
+      expect(decodedTitle).toEqual(mappings['/fields/title/en-US']);
+
+      // nt_experience_id should NOT be encoded
+      expect(encodedEntry.fields.nt_experience_id['en-US']).toBe('experience-123');
+
+      // nt_name should NOT be encoded
+      expect(encodedEntry.fields.nt_name['en-US']).toBe('Test Experience');
+    });
+  });
 });

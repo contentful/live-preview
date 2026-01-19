@@ -16,6 +16,20 @@ import {
   isSupportedWidget,
 } from '../utils.js';
 
+const NINETAILED_RESERVED_FIELDS = [
+  'nt_experiences',
+  'nt_name',
+  'nt_description',
+  'nt_audience_id',
+  'nt_rules',
+  'nt_metadata',
+  'nt_experience_id',
+  'nt_type',
+  'nt_config',
+  'nt_audience',
+  'nt_variants',
+];
+
 const applyEncoding = (
   target: CPAEntry | CPAAsset,
   fieldTypes: FieldType[],
@@ -67,6 +81,12 @@ const applyEncoding = (
         console.error('Field name could not be extracted from the pointer', formattedPointer);
         return;
       }
+
+      // Skip encoding for Ninetailed reserved fields
+      if (NINETAILED_RESERVED_FIELDS.includes(field)) {
+        continue;
+      }
+
       const locale = target.sys.locale;
 
       // Determine if we are dealing with multiple locale values in the response or just a single locale
