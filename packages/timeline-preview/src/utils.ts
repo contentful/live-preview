@@ -5,14 +5,14 @@ export type TimelinePreviewToken = {
   timestamp?: string;
 };
 
-const DELIMETER = ';';
+const DELIMITER = ';';
 
 export function buildTimelinePreviewToken({ releaseId, timestamp }: TimelinePreviewToken): string {
   if (!releaseId && !timestamp) {
     throw new Error('Either releaseId or timestamp must be provided');
   }
 
-  return [releaseId, timestamp].join(DELIMETER);
+  return encodeURIComponent([releaseId, timestamp].join(DELIMITER));
 }
 
 function toOptional(value: string | undefined): string | undefined {
@@ -20,7 +20,7 @@ function toOptional(value: string | undefined): string | undefined {
 }
 
 export function parseTimelinePreviewToken(token: string): TimelinePreviewToken {
-  const [releaseId, timestamp] = token.split(DELIMETER).map(toOptional);
+  const [releaseId, timestamp] = decodeURIComponent(token).split(DELIMITER).map(toOptional);
   return {
     releaseId,
     timestamp,
