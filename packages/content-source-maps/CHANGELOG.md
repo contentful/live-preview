@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.44...@contentful/content-source-maps@0.12.0) (2026-01-26)
+
+
+### Bug Fixes
+
+* skip encoding for Ninetailed fields ([#1473](https://github.com/contentful/live-preview/issues/1473)) ([c5cb6d3](https://github.com/contentful/live-preview/commit/c5cb6d3ba9c1c7cac568e2ca1370b0a6875989a8))
+
+
+### Features
+
+* introduce experimental flag to hide covered outlines [SPA-3509] ([#1439](https://github.com/contentful/live-preview/issues/1439)) ([fae42ad](https://github.com/contentful/live-preview/commit/fae42adfcf6d922a5b6569917bd09bd5f5f40825))
+
+
+
+
+
 ## [0.11.44](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.43...@contentful/content-source-maps@0.11.44) (2025-12-15)
 
 **Note:** Version bump only for package @contentful/content-source-maps

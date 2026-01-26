@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/contentful/live-preview/compare/@contentful/timeline-preview@1.1.0...@contentful/timeline-preview@1.1.1) (2026-01-26)
+
+
+### Bug Fixes
+
+* encode timeline token delimiter [ZEND-7495] ([#1481](https://github.com/contentful/live-preview/issues/1481)) ([7028698](https://github.com/contentful/live-preview/commit/702869851ee3c116833d1e2971413832befac086))
+
+
+
+
+
 # 1.1.0 (2025-07-28)
 
 
