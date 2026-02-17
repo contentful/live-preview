@@ -20,7 +20,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `frame-ancestors 'self' https://app.contentful.com`,
+            value: `frame-ancestors 'self' https://app.contentful.com http://localhost:3001`,
           },
         ],
       },
