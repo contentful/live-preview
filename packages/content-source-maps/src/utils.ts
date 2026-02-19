@@ -54,6 +54,35 @@ export const isBuiltinNamespace = (namespace: WidgetNamespace) =>
 export const isSupportedWidget = (widgetId: WidgetId) => SUPPORTED_WIDGETS.includes(widgetId);
 
 /**
+ * Ninetailed reserved fields that should not be encoded.
+ * Includes both snake_case (CPA/REST) and camelCase (GraphQL) variants.
+ */
+const NINETAILED_RESERVED_FIELDS_CT = [
+  'nt_experiences',
+  'nt_name',
+  'nt_description',
+  'nt_audience_id',
+  'nt_rules',
+  'nt_metadata',
+  'nt_experience_id',
+  'nt_type',
+  'nt_config',
+  'nt_audience',
+  'nt_variants',
+];
+
+const NINETAILED_RESERVED_FIELDS_GRAPHQL = NINETAILED_RESERVED_FIELDS_CT.map((field) =>
+  field.replace(/_([a-z])/g, (_, char) => char.toUpperCase()),
+);
+
+const NINETAILED_RESERVED_FIELDS = [
+  ...NINETAILED_RESERVED_FIELDS_CT,
+  ...NINETAILED_RESERVED_FIELDS_GRAPHQL,
+];
+
+export const isNinetailedField = (field: string) => NINETAILED_RESERVED_FIELDS.includes(field);
+
+/**
  * Clones the incoming element into a new one, to prevent modification on the original object
  * Hint: It uses the structuredClone which is only available in modern browsers,
  * for older one it uses the JSON.parse(JSON.stringify) hack.

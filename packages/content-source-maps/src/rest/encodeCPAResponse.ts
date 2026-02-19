@@ -13,22 +13,9 @@ import {
   createSourceMapMetadata,
   encodeField,
   isBuiltinNamespace,
+  isNinetailedField,
   isSupportedWidget,
 } from '../utils.js';
-
-const NINETAILED_RESERVED_FIELDS = [
-  'nt_experiences',
-  'nt_name',
-  'nt_description',
-  'nt_audience_id',
-  'nt_rules',
-  'nt_metadata',
-  'nt_experience_id',
-  'nt_type',
-  'nt_config',
-  'nt_audience',
-  'nt_variants',
-];
 
 const applyEncoding = (
   target: CPAEntry | CPAAsset,
@@ -83,7 +70,7 @@ const applyEncoding = (
       }
 
       // Skip encoding for Ninetailed reserved fields
-      if (NINETAILED_RESERVED_FIELDS.includes(field)) {
+      if (isNinetailedField(field)) {
         continue;
       }
 
