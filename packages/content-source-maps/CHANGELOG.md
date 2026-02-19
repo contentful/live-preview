@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.12.0...@contentful/content-source-maps@0.12.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* skip encoding of ninetailed fields in graphql response ([#1517](https://github.com/contentful/live-preview/issues/1517)) ([e6229e3](https://github.com/contentful/live-preview/commit/e6229e3bfc13af39b53b753aebec85d6b766e087))
+
+
+
+
+
 # [0.12.0](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.11.44...@contentful/content-source-maps@0.12.0) (2026-01-26)
 
 
