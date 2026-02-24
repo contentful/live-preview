@@ -57,15 +57,15 @@
     "@types/json-pointer": "1.0.34",
     "@types/lodash.isequal": "4.5.8",
     "@types/node": "25.1.0",
-    "@types/react": "19.2.7",
+    "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react-swc": "4.2.2",
     "contentful": "11.9.0",
     "contentful-management": "11.69.1",
     "graphql": "16.12.0",
     "jsdom": "27.4.0",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "type-fest": "5.4.3"
   },
   "peerDependencies": {
