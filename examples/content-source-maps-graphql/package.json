@@ -6,11 +6,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "@contentful/live-preview": "^4.6.0",
+    "@contentful/live-preview": "^4.9.4",
     "@types/node": "20.2.3",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "graphql-request": "^6.1.0",
+    "graphql-tag": "^2.12.6",
     "next": "15.5.10",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
