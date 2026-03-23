@@ -118,13 +118,13 @@
     tinyexec "^1.0.0"
     yargs "^17.0.0"
 
-"@commitlint/config-conventional@20.4.2":
-  version "20.4.2"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-20.4.2.tgz#58c114116bcf2b8e91467307f5d3bf9167ce6579"
-  integrity sha512-rwkTF55q7Q+6dpSKUmJoScV0f3EpDlWKw2UPzklkLS4o5krMN1tPWAVOgHRtyUTMneIapLeQwaCjn44Td6OzBQ==
+"@commitlint/config-conventional@20.4.3":
+  version "20.4.3"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-20.4.3.tgz#2a345479c95cb19e6232c7b0e465bc5a26f9aa79"
+  integrity sha512-9RtLySbYQAs8yEqWEqhSZo9nYhbm57jx7qHXtgRmv/nmeQIjjMcwf6Dl+y5UZcGWgWx435TAYBURONaJIuCjWg==
   dependencies:
-    "@commitlint/types" "^20.4.0"
-    conventional-changelog-conventionalcommits "^9.1.0"
+    "@commitlint/types" "^20.4.3"
+    conventional-changelog-conventionalcommits "^9.2.0"
 
 "@commitlint/config-validator@^20.4.0":
   version "20.4.0"
@@ -2926,10 +2926,10 @@ conventional-changelog-angular@^8.2.0:
   dependencies:
     compare-func "^2.0.0"
 
-conventional-changelog-conventionalcommits@^9.1.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-9.2.0.tgz#112a836a8ecafae3e893d7323405216414a49048"
-  integrity sha512-fCf+ODjseueTV09wVBoC0HXLi3OyuBJ+HfE3L63Khxqnr99f9nUcnQh3a15lCWHlGLihyZShW/mVVkBagr9JvQ==
+conventional-changelog-conventionalcommits@^9.2.0:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-9.3.0.tgz#763e66613f49c13567f6319987e9f45ae41eda24"
+  integrity sha512-kYFx6gAyjSIMwNtASkI3ZE99U1fuVDJr0yTYgVy+I2QG46zNZfl2her+0+eoviG82c5WQvW1jMt1eOQTeJLodA==
   dependencies:
     compare-func "^2.0.0"
 
