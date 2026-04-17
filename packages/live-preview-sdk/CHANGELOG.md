@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.10.0](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.9.13...@contentful/live-preview@4.10.0) (2026-04-17)
+
+
+### Features
+
+* **sdk:** export internal types from public index for bundler resolution [SPA-4097] ([#1596](https://github.com/contentful/live-preview/issues/1596)) ([01963df](https://github.com/contentful/live-preview/commit/01963df8bc6943eae2a92ae44ed64b89ebae8dbe))
+
+
+
+
+
 ## [4.9.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.9.12...@contentful/live-preview@4.9.13) (2026-04-13)
 
 **Note:** Version bump only for package @contentful/live-preview
