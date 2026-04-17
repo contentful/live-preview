@@ -409,3 +409,10 @@ export { LIVE_PREVIEW_EDITOR_SOURCE, LIVE_PREVIEW_SDK_SOURCE } from './constants
 
 export * from './messages.js';
 export { encodeGraphQLResponse, encodeCPAResponse, splitEncoding, parseAttributesFromHref };
+
+export type { Argument, SubscribeCallback } from './types.js';
+export {
+  InspectorModeDataAttributes,
+  type InspectorModeEntryTags,
+  type InspectorModeTags,
+} from './inspectorMode/types.js';
