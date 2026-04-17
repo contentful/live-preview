@@ -2,9 +2,16 @@
 import { Mock, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { isInsideIframe, sendMessageToEditor } from '../helpers/index.js';
-import { ContentfulLivePreview, LIVE_PREVIEW_EDITOR_SOURCE } from '../index.js';
+import {
+  ContentfulLivePreview,
+  LIVE_PREVIEW_EDITOR_SOURCE,
+  type Argument,
+  type SubscribeCallback,
+  InspectorModeDataAttributes,
+  type InspectorModeEntryTags,
+  type InspectorModeTags,
+} from '../index.js';
 import { InspectorMode } from '../inspectorMode/index.js';
-import { InspectorModeDataAttributes } from '../inspectorMode/types.js';
 import { LiveUpdates } from '../liveUpdates.js';
 import { SaveEvent } from '../saveEvent.js';
 
@@ -180,5 +187,39 @@ describe('ContentfulLivePreview', () => {
 
       expect(result).toBeNull();
     });
+  });
+});
+
+describe('public type exports', () => {
+  it('exports InspectorModeDataAttributes with correct values', () => {
+    expect(InspectorModeDataAttributes.FIELD_ID).toBe('data-contentful-field-id');
+    expect(InspectorModeDataAttributes.ENTRY_ID).toBe('data-contentful-entry-id');
+    expect(InspectorModeDataAttributes.ASSET_ID).toBe('data-contentful-asset-id');
+    expect(InspectorModeDataAttributes.LOCALE).toBe('data-contentful-locale');
+    expect(InspectorModeDataAttributes.SPACE).toBe('data-contentful-space');
+    expect(InspectorModeDataAttributes.ENVIRONMENT).toBe('data-contentful-environment');
+  });
+
+  it('Argument type is usable as a type annotation', () => {
+    const data: Argument = { id: '1' };
+    expect(data).toBeDefined();
+  });
+
+  it('SubscribeCallback type is usable as a type annotation', () => {
+    const cb: SubscribeCallback = (_data: Argument) => {};
+    expect(cb).toBeDefined();
+  });
+
+  it('InspectorModeEntryTags type is usable as a type annotation', () => {
+    const tags: InspectorModeEntryTags = {
+      [InspectorModeDataAttributes.FIELD_ID]: 'title',
+      [InspectorModeDataAttributes.ENTRY_ID]: 'entry-123',
+    };
+    expect(tags).toBeDefined();
+  });
+
+  it('InspectorModeTags type accepts null', () => {
+    const tags: InspectorModeTags = null;
+    expect(tags).toBeNull();
   });
 });
