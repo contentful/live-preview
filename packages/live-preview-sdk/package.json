@@ -61,7 +61,7 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react-swc": "4.3.0",
     "contentful": "11.9.0",
-    "contentful-management": "12.3.2",
+    "contentful-management": "12.3.3",
     "graphql": "16.13.2",
     "jsdom": "29.0.2",
     "react": "19.2.1",
