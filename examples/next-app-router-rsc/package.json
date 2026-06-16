@@ -23,7 +23,7 @@
     "@types/react-dom": "19.2.3",
     "eslint": "8.47.0",
     "eslint-config-next": "15.0.4",
-    "vite": "6.4.2",
+    "vite": "6.4.3",
     "typescript": "5.1.6"
   },
   "overrides": {
