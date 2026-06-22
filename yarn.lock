@@ -100,15 +100,15 @@
   dependencies:
     css-tree "^3.0.0"
 
-"@commitlint/cli@21.0.1":
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-21.0.1.tgz#34e77fca6f98cfa24fc03ce3e3060ac280828e63"
-  integrity sha512-8vq10krmbJwBkvzXKhbs4o4JQEVscd3pqOlWuDUaDBwbeL694/P33UC29tZQFTAgPU9fVJ2+f2m3zw16yKWxHg==
+"@commitlint/cli@21.0.2":
+  version "21.0.2"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-21.0.2.tgz#34f006f2ffa77ade13a6bfe97296290f99aaddeb"
+  integrity sha512-YMmfLbqBg+ZRvvmPhc+cilSQFrh/AgzVgCT1U/OifmUZEwPbvCtA8rN//YNaF9d5eoZphxVMGYtmwA2QgQORgg==
   dependencies:
     "@commitlint/format" "^21.0.1"
-    "@commitlint/lint" "^21.0.1"
-    "@commitlint/load" "^21.0.1"
-    "@commitlint/read" "^21.0.1"
+    "@commitlint/lint" "^21.0.2"
+    "@commitlint/load" "^21.0.2"
+    "@commitlint/read" "^21.0.2"
     "@commitlint/types" "^21.0.1"
     tinyexec "^1.0.0"
     yargs "^18.0.0"
@@ -158,7 +158,7 @@
     "@commitlint/types" "^21.0.1"
     semver "^7.6.0"
 
-"@commitlint/lint@^21.0.1":
+"@commitlint/lint@^21.0.2":
   version "21.0.2"
   resolved "https://registry.yarnpkg.com/@commitlint/lint/-/lint-21.0.2.tgz#59d61922edc16fa4ea1280990d7b1c4b10def278"
   integrity sha512-PnUmLYGeGLfW8oVatR9KpNxSHYAnJOEWlMZzfdeFOUq6WUrFx1fGQaWCWJqMoIll/xPM+GdfJV+tKHZVHhl0Fg==
@@ -168,7 +168,7 @@
     "@commitlint/rules" "^21.0.2"
     "@commitlint/types" "^21.0.1"
 
-"@commitlint/load@>6.1.1", "@commitlint/load@^21.0.1":
+"@commitlint/load@>6.1.1", "@commitlint/load@^21.0.2":
   version "21.0.2"
   resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-21.0.2.tgz#8db08c9f2544ce34843acd8a944f0bb8e86edffc"
   integrity sha512-lwUE70hN0/qE/ZRROhbaX65ly/FF12DrqfReLCESo37M0OQCFAf2jRS+2tSCSORq+bm4Kdju7qNDj46uc1QzTA==
@@ -197,7 +197,7 @@
     conventional-changelog-angular "^8.2.0"
     conventional-commits-parser "^6.3.0"
 
-"@commitlint/read@^21.0.1":
+"@commitlint/read@^21.0.2":
   version "21.0.2"
   resolved "https://registry.yarnpkg.com/@commitlint/read/-/read-21.0.2.tgz#9f96814c00d073dd782b22ad4858dfab9e515bf5"
   integrity sha512-BtsrnLVycSSKf4Q0gMch4giCj5NNlmcbhc8ra5vONgGtP2IjRDo33bEFtr5Pm+2N+5fXGWb2MksWPrspPfdhdw==
