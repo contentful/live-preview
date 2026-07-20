@@ -35,7 +35,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.1.0",
     "@commitlint/config-conventional": "21.0.2",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/eslint-plugin": "8.62.1",
     "@typescript-eslint/parser": "8.61.1",
     "commitizen": "4.3.2",
     "concurrently": "10.0.3",
