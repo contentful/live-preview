@@ -204,6 +204,17 @@ ContentfulLivePreview.openEntryInEditor({
 - If the live preview SDK is used inside of another iframe than in the contentful app, it might produce errors as it can't detect the host.
   To remove the error, you have to define the `targetOrigin` manually. ([Init Configuration](#init-configuration))
 
+### Next.js App Router
+
+In `@contentful/live-preview` 4.9.13 and newer, importing from `@contentful/live-preview` in a server module while importing from `@contentful/live-preview/react` in client modules can cause Next.js to load the SDK singleton twice. Live updates may stop working, and complex previews can become unresponsive or crash.
+
+As a workaround, avoid importing from `@contentful/live-preview` in server modules. Import server-side utilities such as `splitEncoding` directly from `@contentful/content-source-maps`, and keep React APIs imported from `@contentful/live-preview/react`:
+
+```ts
+// Server module
+import { splitEncoding } from '@contentful/content-source-maps';
+```
+
 ### Live updates limitations:
 
 - GraphQL filters (e.g. filters in the Array field type) or filtering using the [select query parameter](https://www.contentful.com/developers/docs/references/content-preview-api/#/reference/search-parameters/select-operator) on the Content Preview API (CPA).
