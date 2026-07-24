@@ -59,7 +59,7 @@
     "@types/node": "25.9.2",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react-swc": "4.3.0",
+    "@vitejs/plugin-react-swc": "4.3.2",
     "contentful": "11.9.0",
     "contentful-management": "12.8.0",
     "graphql": "16.14.2",
