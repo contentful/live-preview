@@ -114,15 +114,7 @@
     tinyexec "^1.0.0"
     yargs "^18.0.0"
 
-"@commitlint/config-conventional@21.0.2":
-  version "21.0.2"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-21.0.2.tgz#10858dd7f499edd6336a748247d005b81efd5b54"
-  integrity sha512-P/ZRhryQmkj0Z0dY9FOoRwe3xkwJyyAdtXwt01NT2kuZttcG2CNYp1q5Ci3u+nDT2jcbJRw2kt13Czl1qKNPfg==
-  dependencies:
-    "@commitlint/types" "^21.0.1"
-    conventional-changelog-conventionalcommits "^9.2.0"
-
-"@commitlint/config-conventional@^21.1.0":
+"@commitlint/config-conventional@21.2.0", "@commitlint/config-conventional@^21.1.0":
   version "21.2.0"
   resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-21.2.0.tgz#9ce2b1f5a24e94883ed1e4c5530fb1b8c1d531eb"
   integrity sha512-Qf8WRDVcyVd14if6VTWenebxFbKnVnbzPUJjlzjkyJGeHK2xCGd63Dr1XZzj0plXKQb9P0BfOxoc1HVeCo2BWQ==
@@ -249,7 +241,7 @@
   dependencies:
     escalade "^3.2.0"
 
-"@commitlint/types@^21.0.1", "@commitlint/types@^21.1.0", "@commitlint/types@^21.2.0":
+"@commitlint/types@^21.1.0", "@commitlint/types@^21.2.0":
   version "21.2.0"
   resolved "https://registry.yarnpkg.com/@commitlint/types/-/types-21.2.0.tgz#da93897b416f788323f639cce6045310aeb03096"
   integrity sha512-7zVFCDB2reMvJH5dmbKnOQPjZEvjdJTH8jc0U/PIPU1r3/+vf5pD1HlfitV2MWsWXrvu7u39iY1lyLUPOaN0Gw==
@@ -3008,13 +3000,6 @@ conventional-changelog-conventionalcommits@^10.0.0:
   integrity sha512-n4Kr1HFMTf3iMbES0TMxKIcYtUUv4rKqyQQp2JwfOEfFCOfGT3Tq4mCyJ8S9/YPyWhydjfKrrvnyl+gCjA+mJQ==
   dependencies:
     "@conventional-changelog/template" "^1.2.1"
-
-conventional-changelog-conventionalcommits@^9.2.0:
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-9.3.0.tgz#763e66613f49c13567f6319987e9f45ae41eda24"
-  integrity sha512-kYFx6gAyjSIMwNtASkI3ZE99U1fuVDJr0yTYgVy+I2QG46zNZfl2her+0+eoviG82c5WQvW1jMt1eOQTeJLodA==
-  dependencies:
-    compare-func "^2.0.0"
 
 conventional-changelog-core@5.0.1:
   version "5.0.1"
