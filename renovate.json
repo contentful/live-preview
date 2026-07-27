@@ -1,6 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
+  "extends": ["local>contentful/renovate-config:defaultNxMonorepo"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["prettier"],
+      "enabled": false,
+      "description": "Disable prettier updates — see https://github.com/lerna/lerna/issues/3765"
+    },
+    {
+      "matchPackageNames": ["vite-plugin-dts"],
+      "enabled": false
+    }
   ]
 }
