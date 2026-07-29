@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.3](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.12.2...@contentful/content-source-maps@0.12.3) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vercel/stega to ^1.1.0 ([#1719](https://github.com/contentful/live-preview/issues/1719)) ([e2cce2c](https://github.com/contentful/live-preview/commit/e2cce2c6178566b21b00841c18940922fe09d941))
+
+
+
+
+
 ## [0.12.2](https://github.com/contentful/live-preview/compare/@contentful/content-source-maps@0.12.1...@contentful/content-source-maps@0.12.2) (2026-04-27)
 
 **Note:** Version bump only for package @contentful/content-source-maps
