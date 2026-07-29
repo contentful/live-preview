@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.16](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.10.15...@contentful/live-preview@4.10.16) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency flatted to ^3.4.3 ([#1721](https://github.com/contentful/live-preview/issues/1721)) ([8d9ab7c](https://github.com/contentful/live-preview/commit/8d9ab7c827ce40a7dcc7b7021c91580500beddc9))
+
+
+
+
+
 ## [4.10.15](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.10.14...@contentful/live-preview@4.10.15) (2026-07-29)
 
 **Note:** Version bump only for package @contentful/live-preview
