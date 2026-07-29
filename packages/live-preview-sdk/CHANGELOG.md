@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.14](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.10.13...@contentful/live-preview@4.10.14) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @contentful/rich-text-types to ^17.2.7 ([#1718](https://github.com/contentful/live-preview/issues/1718)) ([4cdc7c9](https://github.com/contentful/live-preview/commit/4cdc7c947737027b1bb72ff26bfc63ef566dd014))
+
+
+
+
+
 ## [4.10.13](https://github.com/contentful/live-preview/compare/@contentful/live-preview@4.10.12...@contentful/live-preview@4.10.13) (2026-07-27)
 
 **Note:** Version bump only for package @contentful/live-preview
