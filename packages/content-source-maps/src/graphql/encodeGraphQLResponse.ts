@@ -6,6 +6,7 @@ import {
   createSourceMapMetadata,
   encodeField,
   isBuiltinNamespace,
+  isNinetailedField,
   isSupportedWidget,
 } from '../utils.js';
 
@@ -56,6 +57,11 @@ export const encodeGraphQLResponse = <TResponse extends { data: any; extensions:
     const locale = locales[source.locale];
     const editorInterface = editorInterfaces[source.editorInterface];
     const fieldType = fieldTypes[source.fieldType];
+
+    // Skip Ninetailed reserved fields
+    if (isNinetailedField(field)) {
+      continue;
+    }
 
     // Skip unsupported widgets
     if (

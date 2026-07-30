@@ -1176,4 +1176,99 @@ describe('Content Source Maps with the GraphQL API', () => {
       });
     });
   });
+
+  describe('Ninetailed reserved fields', () => {
+    test('does not encode Ninetailed reserved fields (nt_ prefix)', () => {
+      const graphQLResponse: GraphQLResponse = {
+        data: {
+          post: {
+            title: 'Title of the post',
+            ntExperienceId: 'experience-123',
+            ntName: 'Test Experience',
+            ntAudienceId: 'audience-456',
+          },
+        },
+        extensions: {
+          contentSourceMaps: {
+            spaces: ['foo'],
+            environments: ['master'],
+            fieldTypes: ['Symbol'],
+            editorInterfaces: [
+              {
+                widgetId: 'singleLine',
+                widgetNamespace: 'builtin',
+              },
+            ],
+            fields: ['title', 'ntExperienceId', 'ntName', 'ntAudienceId'],
+            locales: ['en-US'],
+            entries: [{ space: 0, environment: 0, id: 'a1b2c3' }],
+            assets: [],
+            mappings: {
+              '/data/post/title': {
+                source: {
+                  entry: 0,
+                  field: 0,
+                  locale: 0,
+                  fieldType: 0,
+                  editorInterface: 0,
+                },
+              },
+              '/data/post/ntExperienceId': {
+                source: {
+                  entry: 0,
+                  field: 1,
+                  locale: 0,
+                  fieldType: 0,
+                  editorInterface: 0,
+                },
+              },
+              '/data/post/ntName': {
+                source: {
+                  entry: 0,
+                  field: 2,
+                  locale: 0,
+                  fieldType: 0,
+                  editorInterface: 0,
+                },
+              },
+              '/data/post/ntAudienceId': {
+                source: {
+                  entry: 0,
+                  field: 3,
+                  locale: 0,
+                  fieldType: 0,
+                  editorInterface: 0,
+                },
+              },
+            },
+          },
+        },
+      };
+      const encodedGraphQLResponse = encodeGraphQLResponse(graphQLResponse);
+
+      // Title should be encoded
+      testEncodingDecoding(encodedGraphQLResponse.data.post, {
+        '/title': {
+          origin: 'contentful.com',
+          href: 'https://app.contentful.com/spaces/foo/environments/master/entries/a1b2c3/?focusedField=title&focusedLocale=en-US&source=vercel-content-link',
+          contentful: {
+            editorInterface: {
+              widgetId: 'singleLine',
+              widgetNamespace: 'builtin',
+            },
+            fieldType: 'Symbol',
+          },
+        },
+        // Ninetailed fields should NOT be encoded
+        '/ntExperienceId': undefined,
+        '/ntName': undefined,
+        '/ntAudienceId': undefined,
+      });
+
+      // Verify that Ninetailed fields retain their original values
+      expect(encodedGraphQLResponse.data.post.ntExperienceId).toBe('experience-123');
+      expect(encodedGraphQLResponse.data.post.ntName).toBe('Test Experience');
+      expect(encodedGraphQLResponse.data.post.ntAudienceId).toBe('audience-456');
+    });
+  });
 });
