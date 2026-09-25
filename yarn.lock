@@ -288,7 +288,7 @@
     "@vercel/stega" "^0.1.2"
     json-pointer "^0.6.2"
 
-"@contentful/rich-text-types@17.2.7", "@contentful/rich-text-types@^17.2.7":
+"@contentful/rich-text-types@17.2.7", "@contentful/rich-text-types@^17.0.0", "@contentful/rich-text-types@^17.2.7":
   version "17.2.7"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-17.2.7.tgz#fdb485298c0fb18504277ac75ea8738f0bc6e208"
   integrity sha512-aIdozk8vk5gsYcallOrwEiL6+GSlMXZorDOmiVELfpbVaXMJPJPlf2CBw3LUzviAqCw0UPQcKHHCwG7SdY7u5w==
@@ -2930,14 +2930,14 @@ console-control-strings@^1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-contentful-management@12.18.0:
-  version "12.18.0"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-12.18.0.tgz#539462537de48eb0df1cdf6baa42fd64b021b635"
-  integrity sha512-lxKZ711KxM16XZG20bUyinmVy1Rk0fQ5YQ1955oUXY27mnSg11vUeFlNTR641RXB/FD2ghqbXwntLxqjm7G9gA==
+contentful-management@12.18.1:
+  version "12.18.1"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-12.18.1.tgz#5c41faf26bbacdbaa447438ace330f1818b1812c"
+  integrity sha512-kcjV2jQQ1PSqPnWdrOQGktmKqtiyApxn7b/mAkDGN3n6Ow3WOc8S36MJDNMrKjDNOLWzVPiLue+z7u2PdY/vEw==
   dependencies:
-    "@contentful/rich-text-types" "^16.6.1"
+    "@contentful/rich-text-types" "^17.0.0"
     axios "^1.15.0"
-    contentful-sdk-core "^9.4.4"
+    contentful-sdk-core "^10.0.0"
     fast-copy "^3.0.0"
     globals "^15.15.0"
     process "^0.11.10"
@@ -2949,7 +2949,19 @@ contentful-resolve-response@^1.9.4:
   dependencies:
     fast-copy "^3.0.2"
 
-contentful-sdk-core@^9.0.1, contentful-sdk-core@^9.4.4:
+contentful-sdk-core@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-10.0.0.tgz#26ca06612f9751c889849366f2aa0f6ab12766b1"
+  integrity sha512-4uNgDmAWYqvjQpc/nNQ2GkY/DuyFBivcoPPFFqvT9pWyQqLgxb46gTKdk5sc3YxjLv5tLSDKksRG/OC1uRbktw==
+  dependencies:
+    fast-copy "^3.0.2"
+    lodash "^4.17.23"
+    process "^0.11.10"
+    qs "^6.15.0"
+  optionalDependencies:
+    "@rollup/rollup-linux-x64-gnu" "^4.18.0"
+
+contentful-sdk-core@^9.0.1:
   version "9.4.4"
   resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-9.4.4.tgz#ff698f45505183104b4c2859b486c7ee2fcb8607"
   integrity sha512-61MfMyMU23dqCEOTHaHGys16tK2D0tbDe67GPcl6JkfbCcnhtmgTMLUbBnimW5wQse1mNmwS7lK2BNsz+rlFjA==
