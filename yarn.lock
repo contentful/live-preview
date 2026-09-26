@@ -2890,16 +2890,16 @@ console-control-strings@^1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-contentful-management@12.18.1:
-  version "12.18.1"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-12.18.1.tgz#5c41faf26bbacdbaa447438ace330f1818b1812c"
-  integrity sha512-kcjV2jQQ1PSqPnWdrOQGktmKqtiyApxn7b/mAkDGN3n6Ow3WOc8S36MJDNMrKjDNOLWzVPiLue+z7u2PdY/vEw==
+contentful-management@12.18.2:
+  version "12.18.2"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-12.18.2.tgz#0f99959ae7ca12ed93d42b2bf43d8ce7b691841f"
+  integrity sha512-a2D1YB2Zd/VR8voTEH8fjG/JckezaBnsYrmYHBhoeOcdo3iA61NuDWry+DWEewDbRi5BrtVqby1tck8PUI16uA==
   dependencies:
     "@contentful/rich-text-types" "^17.0.0"
     axios "^1.15.0"
     contentful-sdk-core "^10.0.0"
-    fast-copy "^3.0.0"
-    globals "^15.15.0"
+    fast-copy "^4.0.0"
+    globals "^17.0.0"
     process "^0.11.10"
 
 contentful-resolve-response@^1.9.4:
@@ -4060,10 +4060,15 @@ exsolve@^1.0.7:
   resolved "https://registry.yarnpkg.com/exsolve/-/exsolve-1.0.7.tgz#3b74e4c7ca5c5f9a19c3626ca857309fa99f9e9e"
   integrity sha512-VO5fQUzZtI6C+vx4w/4BWJpg3s/5l+6pRQEHzFRM8WFi4XffSP1Z+4qi7GbjWbvRQEbdIco5mIMq+zX4rPuLrw==
 
-fast-copy@^3.0.0, fast-copy@^3.0.2:
+fast-copy@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/fast-copy/-/fast-copy-3.0.2.tgz#59c68f59ccbcac82050ba992e0d5c389097c9d35"
   integrity sha512-dl0O9Vhju8IrcLndv2eU4ldt1ftXMqqfgN4H1cpmGV7P6jeB9FwpN9a2c8DPGE1Ys88rNUJVYDHq73CGAGOPfQ==
+
+fast-copy@^4.0.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/fast-copy/-/fast-copy-4.1.1.tgz#e39f2d403aa77a7e10628e3d8d4d8ed4b2ac5256"
+  integrity sha512-A4QTJmuiztpGtr6AMeJts9R4hbj2ZBUwtOaKrG6rw2y7t6+IaJKjz5M3XDs8BUznxDH43FVc6A0y/gWlMl4UtA==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -4561,10 +4566,10 @@ globals@^13.19.0:
   dependencies:
     type-fest "^0.20.2"
 
-globals@^15.15.0:
-  version "15.15.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-15.15.0.tgz#7c4761299d41c32b075715a4ce1ede7897ff72a8"
-  integrity sha512-7ACyT3wmyp3I61S4fG682L0VA2RGD9otkqGJIwNUMF1SWUombIIk+af1unuDYgMm082aHYwD+mzJvv9Iu8dsgg==
+globals@^17.0.0:
+  version "17.12.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-17.12.0.tgz#910a368b8f093d3feb3f77a56dcefa05647d698e"
+  integrity sha512-cezEd/DTyyht9cvSSURyygXPfy04GtWO/5e6ZPvH7fCtjKz9PYOmuawphw1Ctd1f6C+5JypXfGD7ahNMXvevBA==
 
 globalthis@^1.0.3:
   version "1.0.3"
