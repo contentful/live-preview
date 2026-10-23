@@ -2836,10 +2836,10 @@ confbox@^0.2.2:
   resolved "https://registry.yarnpkg.com/confbox/-/confbox-0.2.2.tgz#8652f53961c74d9e081784beed78555974a9c110"
   integrity sha512-1NB+BKqhtNipMsov4xI/NnhCKp9XG9NamYp5PVm9klAT0fsrNPjaFICsCFhNhwZJKNh7zB/3q8qXz0E9oaMNtQ==
 
-contentful-management@12.18.2:
-  version "12.18.2"
-  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-12.18.2.tgz#0f99959ae7ca12ed93d42b2bf43d8ce7b691841f"
-  integrity sha512-a2D1YB2Zd/VR8voTEH8fjG/JckezaBnsYrmYHBhoeOcdo3iA61NuDWry+DWEewDbRi5BrtVqby1tck8PUI16uA==
+contentful-management@12.19.2:
+  version "12.19.2"
+  resolved "https://registry.yarnpkg.com/contentful-management/-/contentful-management-12.19.2.tgz#e3053ad31279d5648fbe6e87ec8901e1783125da"
+  integrity sha512-cPbH5ZZMtU5kkjv192TCUl5qE7Xzqla4TVHD0Iw8cQ8ddOONMZ61+VJ/KSX81WQaVDHKUsqv63kpQRzmK/0AMw==
   dependencies:
     "@contentful/rich-text-types" "^17.0.0"
     axios "^1.15.0"
