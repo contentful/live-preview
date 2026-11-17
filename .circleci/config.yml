@@ -17,10 +17,12 @@ commands:
     steps:
       - run:
           name: Enable Corepack
-          # Makes `yarn` resolve to the version declared in `packageManager`. Installed into the user
-          # prefix because the image's global bin directory is not writable.
+          # Newer Node images no longer bundle Corepack, so it is installed into the user prefix (the
+          # image's global directory is not writable). `corepack enable` then makes `yarn` resolve to
+          # the version declared in `packageManager`.
           command: |
-            mkdir -p "$HOME/.local/bin"
+            export PATH="$HOME/.local/bin:$PATH"
+            npm install --global --prefix "$HOME/.local" corepack@0.35.0
             corepack enable --install-directory "$HOME/.local/bin"
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
 
