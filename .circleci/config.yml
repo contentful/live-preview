@@ -13,19 +13,33 @@ cache-key: &cache-key
   key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc" }}-{{ checksum "yarn.lock" }}
 
 commands:
+  enable_corepack:
+    steps:
+      - run:
+          name: Enable Corepack
+          # Newer Node images no longer bundle Corepack, so it is installed into the user prefix (the
+          # image's global directory is not writable). `corepack enable` then makes `yarn` resolve to
+          # the version declared in `packageManager`.
+          command: |
+            export PATH="$HOME/.local/bin:$PATH"
+            npm install --global --prefix "$HOME/.local" corepack@0.35.0
+            corepack enable --install-directory "$HOME/.local/bin"
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
+
   yarn_install:
     steps:
       - restore_cache: *cache-key
+      - enable_corepack
       - vault/get-secrets:
           template-preset: 'semantic-release'
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_READ_TOKEN}" > ~/.npmrc
           echo "@contentful:registry=https://npm.pkg.github.com" >> ~/.npmrc
-      - run: yarn install --prefer-offline --pure-lockfile
+      - run: yarn install --immutable
       - save_cache:
           <<: *cache-key
           paths:
-            - ~/.cache/yarn
+            - ~/.yarn/berry/cache
 
 jobs:
   lint:
@@ -34,8 +48,10 @@ jobs:
       - checkout
       - yarn_install
       - run: yarn lint
-      - run: yarn tsc
+      # Yarn 4 does not run the root `prepublish` on install, so the packages are built before the
+      # type check resolves them.
       - run: yarn build
+      - run: yarn tsc
   unit-tests:
     executor: linux-node
     steps:
