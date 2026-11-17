@@ -47,3 +47,6 @@ dist-ssr
 react/dist/*
 
 .nx
+
+# Yarn
+.yarn/

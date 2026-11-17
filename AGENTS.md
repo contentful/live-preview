@@ -16,7 +16,7 @@ For a fuller map of the system, read [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## Working in the repository
 
-- Use the Node.js version in `.nvmrc` and Yarn Classic; install dependencies with `yarn install`.
+- Use the Node.js version in `.nvmrc` and Yarn 4 (enable it with `corepack enable`); install dependencies with `yarn install`, then build with `yarn build` before running `yarn tsc`.
 - Run commands from the repository root unless a package-local command is specifically required.
 - Build all packages with `yarn build`.
 - Run static checks with `yarn lint` and `yarn tsc`.
